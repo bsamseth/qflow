@@ -1,0 +1,6 @@
+# Ignore the compphys repo. Just in the local folder for convenience.
+ComputationalPhysics2
+
+
+# Ignore build directories
+build*
