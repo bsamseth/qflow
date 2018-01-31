@@ -3,6 +3,7 @@
 
 #include <random>
 #include <cassert>
+#include <ostream>
 #include <armadillo>
 
 namespace VMC {
@@ -28,6 +29,10 @@ enum class AnalyticAcceleration {
     OFF = 0, ON
 };
 
+struct Results {
+    double E, E2, variance, alpha, beta;
+};
+
 template<Dimensions Dims, bool Squared>
 double norm(const arma::mat &u) {
     double res = 0;
@@ -43,13 +48,13 @@ template<int N_Particles,
          AnalyticAcceleration Accelerate>
 class VMCSolver {
 private:
-    const double _mass, _omega_ho, _omega_z, _a, _h, _h2, _step_length;
+    const double _omega_ho, _omega_z, _a, _h, _h2, _step_length;
     double _alpha = 0.5, _beta = 1;
 
 public:
-    VMCSolver(double mass = 1, double omega_ho = 1, double omega_z = 1,
+    VMCSolver(double omega_ho = 1, double omega_z = 1,
               double a = 0, double h = 0.001, double step_length = 1) :
-        _mass(mass), _omega_ho(omega_ho*omega_ho),
+        _omega_ho(omega_ho*omega_ho),
         _omega_z(omega_z*omega_z), _a(a),
         _h(h), _h2(1/(h*h)), _step_length(step_length) {}
 
@@ -63,7 +68,7 @@ public:
                 pot += _omega_ho * norm<Dims, true>(R.row(i));
             }
         }
-        return 0.5 * _mass * pot;
+        return 0.5 * pot;
     }
 
     double V_int(const arma::mat &R) const {
@@ -114,10 +119,10 @@ public:
                 R(i, d) -= 2*_h;
                 Ek += Psi(R);      // Psi(R - h)
                 R(i, d) += _h;
-                printf("i=%d: d^2/dx_%d^2 = %.10f\n", i, d, Ek - old);
+//                printf("i=%d: d^2/dx_%d^2 = %.10f\n", i, d, Ek - old);
             }
         }
-        return -0.5 / _mass * Ek * _h2;
+        return -0.5 * Ek * _h2;
     }
 
     double E_local(arma::mat &R) const {
@@ -138,12 +143,12 @@ public:
             else
                 assert(false);  // TODO
         }
-        printf("E_L = %.10f + %.10f - 0.5 * %.10f = %.10f\n", V_ext(R), V_int(R), E_L,
-               V_ext(R)+V_int(R)-0.5*E_L);
+//        printf("E_L = %.10f + %.10f - 0.5 * %.10f = %.10f\n", V_ext(R), V_int(R), E_L,
+//               V_ext(R)+V_int(R)-0.5*E_L);
         return V_ext(R) + V_int(R) - 0.5 * E_L;
     }
 
-    void run(const int n_cycles) const {
+    Results run_MC(const int n_cycles) const {
         arma::mat::fixed<N_Particles, Dims> R_old;
         arma::mat::fixed<N_Particles, Dims> R_new;
         double E_sum = 0, E2_sum = 0;
@@ -183,18 +188,54 @@ public:
                 E_sum += E;
                 E2_sum += E*E;
 
-                printf("E = %.16f\n", E);
+//                printf("E = %.16f\n", E);
             }
         }
         double energy = E_sum / (n_cycles * N_Particles);
         double energy_squared = E2_sum / (n_cycles * N_Particles);
         double variance = energy_squared - energy*energy;
-        std::cout << "Energy = " << energy;
-        std::cout << " Energy (squared sum) = " << energy_squared;
-        std::cout << " Variance = " << variance;
-        std::cout << std::endl;
+        return {energy, energy_squared, variance, _alpha, _beta};
     }
 
+    Results vmc(const int n_cycles,
+             std::ostream &out,
+             const double alpha_min, const double alpha_max, const double alpha_step = 1,
+             const double beta_min = 1, const double beta_max = 1, const double beta_step = 1) {
+
+        // Used to store best results.
+        Results best = {0, 0, std::numeric_limits<double>::max(), 0, 0};
+
+        // Define variational space.
+        const int n_alpha = (alpha_max - alpha_min) / alpha_step + 1;
+        const int n_beta  = (beta_max  - beta_min ) / beta_step  + 1;
+        arma::vec alpha = arma::linspace<arma::vec>(alpha_min, alpha_max, n_alpha);
+        arma::vec beta  = arma::linspace<arma::vec>(beta_min, beta_max, n_beta);
+
+        // Write header to stream.
+        out << "# alpha beta <E> <E^2>\n";
+
+        // For every combination of parameters,
+        // write the results of MC to the stream.
+        for (int a = 0; a < n_alpha; ++a) {
+            _alpha = alpha(a);
+            for (int b = 0; b < n_beta; ++b) {
+                _beta = beta(b);
+                Results res = run_MC(n_cycles);
+                out << _alpha << " "
+                    << _beta  << " "
+                    << res.E  << " "
+                    << res.E2 << "\n";
+
+                // New best parameter choice?
+                if (res.variance < best.variance)
+                    best = res;
+            }
+        }
+        // Flush when you are done.
+        out << std::flush;
+
+        return best;
+    }
 };
 } // namespace VMC
 #endif // VMCSOLVER_H
