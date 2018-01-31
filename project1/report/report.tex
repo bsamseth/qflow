@@ -1,0 +1,220 @@
+\documentclass[]{article}
+\usepackage{preamble}
+% \usepackage{fullpage}
+\usepackage{dsfont}
+
+
+\title{ \small
+University of Oslo\\
+FYS4411\\
+Computational physics II: Quantum mechanical systems\\
+\huge Project 1 }
+\author{\textsc{Bendik Samseth}}
+\date{\today}
+\begin{document}
+\maketitle
+
+
+\section{Introduction}
+The aim of this project is to use the Variational Monte Carlo
+(VMC) method and evaluate the ground state energy of a trapped, hard
+sphere Bose gas for different numbers of particles with a specific
+trial wave function.
+
+This trial wave function is used to study the sensitivity of
+condensate and non-condensate properties to the hard sphere radius
+and the number of particles.  The trap we will use is a spherical (S)
+or an elliptical (E) harmonic trap in one, two and finally three
+dimensions, with the latter given by
+
+\begin{equation}
+    V_{ext}(\mathbf{r}) = 
+    \Bigg\{
+        \begin{array}{ll}
+            \frac{1}{2}m\omega_{ho}^2r^2 & (S)\\
+            \strut
+            \frac{1}{2}m[\omega_{ho}^2(x^2+y^2) + \omega_z^2z^2] & (E)
+            \label{trap_eqn}
+        \end{array}
+\end{equation}
+ where (S) stands for symmetric and
+
+\begin{equation}
+    H = \sum_i^N \left(\frac{-\hbar^2}{2m}{\bigtriangledown }_{i}^2 +V_{ext}({\mathbf{r}}_i)\right)  +
+     \sum_{i<j}^{N} V_{int}({\mathbf{r}}_i,{\mathbf{r}}_j),
+\end{equation}
+as the two-body Hamiltonian of the system.  Here $\omega_{ho}^2$
+defines the trap potential strength.  In the case of the elliptical
+trap, $V_{ext}(x,y,z)$, $\omega_{ho}=\omega_{\perp}$ is the trap
+frequency in the perpendicular or $xy$ plane and $\omega_z$ the
+frequency in the $z$ direction.  The mean square vibrational
+amplitude of a single boson at $T=0K$ in the trap (\ref{trap_eqn}) is
+$\langle x^2\rangle=(\hbar/2m\omega_{ho})$ so that $a_{ho} \equiv
+(\hbar/m\omega_{ho})^{\frac{1}{2}}$ defines the characteristic length
+of the trap.  The ratio of the frequencies is denoted
+$\lambda=\omega_z/\omega_{\perp}$ leading to a ratio of the trap
+lengths $(a_{\perp}/a_z)=(\omega_z/\omega_{\perp})^{\frac{1}{2}} =
+\sqrt{\lambda}$.
+
+We will represent the inter-boson interaction by a pairwise,
+repulsive potential
+
+\begin{equation}
+    V_{int}(|\mathbf{r}_i-\mathbf{r}_j|) =  \Bigg\{
+        \begin{array}{ll}
+            \infty & {|\mathbf{r}_i-\mathbf{r}_j|} \leq {a}\\
+            0 & {|\mathbf{r}_i-_r\mathbf{r}_j|} > {a}
+        \end{array}
+\end{equation}
+where $a$ is the so-called hard-core diameter of the bosons.
+Clearly, $V_{int}(|\mathbf{r}_i-\mathbf{r}_j|)$ is zero if the bosons are
+separated by a distance $|\mathbf{r}_i-\mathbf{r}_j|$ greater than $a$ but
+infinite if they attempt to come within a distance $|\mathbf{r}_i-\mathbf{r}_j| \leq a$.
+
+Our trial wave function for the ground state with $N$ atoms is given by
+
+\begin{equation}
+    \Psi_T(\mathbf{r})=\Psi_T(\mathbf{r}_1, \mathbf{r}_2, \dots \mathbf{r}_N,\alpha,\beta)=\prod_i g(\alpha,\beta,\mathbf{r}_i)\prod_{i<j}f(a,|\mathbf{r}_i-\mathbf{r}_j|),
+    \label{eq:trialwf}
+\end{equation}
+where $\alpha$ and $\beta$ are variational parameters. The
+single-particle wave function is proportional to the harmonic
+oscillator function for the ground state, i.e.,
+
+\begin{equation}
+    g(\alpha,\beta,\mathbf{r}_i)= \exp{[-\alpha(x_i^2+y_i^2+\beta z_i^2)]}.
+\end{equation}
+For spherical traps we have $\beta = 1$ and for non-interacting
+bosons ($a=0$) we have $\alpha = 1/2a_{ho}^2$.  The correlation wave
+function is
+
+\begin{equation}
+    f(a,|\mathbf{r}_i-\mathbf{r}_j|)=\Bigg\{
+        \begin{array}{ll}
+            0 & {|\mathbf{r}_i-\mathbf{r}_j|} \leq {a}\\
+            (1-\frac{a}{|\mathbf{r}_i-\mathbf{r}_j|}) & {|\mathbf{r}_i-\mathbf{r}_j|} > {a}.
+        \end{array}
+\end{equation}
+
+We wish to evaluate the expectation value of the Hamiltonian, which we can approximate using the
+trial wavefunction as
+\begin{align}
+    E[H] = \expval{H} = \frac{\int \dd{\vec R} \Psi^*_T H \Psi_T}{\int
+    \Psi_T^*\Psi_T}.
+\end{align}
+The probability of $\vec R$, under the trial wavefunction, is
+\begin{align}
+    P(\vec R, \alpha) &= \frac{\abs{\Psi_T}^2}{\int \dd{\vec R}\abs{\Psi_T}^2}.
+\end{align}
+We finally define a new quantity, called the local energy:
+\begin{align}
+    E_L(\vec R, \vec \alpha) &= \frac{1}{\Psi_T}H\Psi_T\label{eq:E_L}
+\end{align}
+We can now rewrite $\expval{H}$ as follows:
+\begin{align}
+    \begin{split}
+        \expval{H} &= \int \dd{\vec R} P(\vec R,\vec\alpha) E_L(\vec R,\vec\alpha)\\
+    &\approx
+    \frac{1}{N}\sum_{i=1}^N E_L(\vec R_i,\vec\alpha),
+    \end{split}
+\end{align}
+where $R_i$ are randomly drawn positions from the PDF $P(\vec R, \vec\alpha)$.
+We have therefore that estimating the average value of $E_L$ yields an
+approximated value for $\expval{H}$, which must be an upper bound on the
+ground state energy, $E_0$. By the variational principle, if we minimize
+$\expval{H}$ under the variational parameters, we find an estimate for the true
+ground state energy of the system.
+
+
+\section{Finding an Analytical Expression for $E_L$}
+The hard part of the expression for $E_L$ is
+\begin{align}
+    \frac{1}{\Psi_L}\sum_{k}^N\laplacian_k{\Psi_L}.
+\end{align}
+To get going, we rewrite the wavefunction as
+\begin{align}
+    \Psi_L(\vec R) &= \prod_i \phi(\vec r_i)\exp(\sum_{i<j}u(r_{ij})),
+\end{align}
+where $r_{ij} = \norm{\vec r_{ij}} = \norm{\vec r_i - \vec r_j}$, $u(r_{ij}) =
+\ln f(r_{ij})$, and $\phi(\vec r_i)=g(\alpha,\beta,\vec r_i)$.
+In order to evaluate this, we first evaluate some expressions we will need.
+
+\begin{align*}
+    \grad_k{\Psi_T(\vec r)}  
+    &= \grad_k{\prod_i \phi(\vec r_i)\exp(\sum_{i<j}u(r_{ij}))}\\
+    &= \prod_{i\neq k} \phi(\vec r_i)\exp(\sum_{i<j}u(r_{ij}))\grad_k{\phi(\vec
+    r_k)} + \prod_{i} \phi(\vec r_i)\grad_k{\exp(\sum_{i<j}u(r_{ij}))}\\
+    &= \Psi_T\qty[\frac{\grad_k \phi(\vec r_k)}{\phi(\vec r_k)} + \sum_{j\neq k}
+    \grad u(r_{kj})].\\
+    \grad_k u(r_{kj}) &= u'(r_{kj})\grad_k \sqrt{\norm{\vec r_k - \vec r_j}^2}
+    \\
+    &= u'(r_{kj})\frac{1}{2r_{kj}}\grad_k\qty(\norm{\vec r_k}^2-2\vec r_k\vdot\vec
+    r_j+\norm{r_j}^2)\\
+    &= u'(r_{kj})\frac{\vec r_{kj}}{r_{kj}}.\\
+    \grad_k\vdot\frac{\vec r_{kj}}{r_{kj}} &= \frac{\grad_k\vdot\qty(\vec r_k - \vec
+    r_j) - \qty(\vec r_k-\vec r_j)\vdot\grad_k r_{kj}}{r_{kj}^2}\\
+    &= \frac{2}{r_{kj}}.\\
+    \laplacian_k u(r_{kj}) &= \grad_k\vdot u'(r_{kj})\frac{\vec
+    r_{kj}}{r_{kj}} \\
+    &= u'(r_{kj})\frac{2}{r_{kj}} + \frac{\vec r_{kj}}{r_{kj}}\vdot \grad_k
+    u'(r_{kj})\\
+    &= u''(r_{kj}) + \frac{2}{r_{kj}}u'(r_{kj}).
+\end{align*}
+\begin{align*}
+    u'(r_{ij}) &\equiv \pdv{}{r_{ij}}\ln(1-\frac{a}{r_{ij}})\\
+    &= \frac{a}{r_{ij}(r_{ij}-a)}.\\
+    u''(r_{ij}) &= \pdv[2]{}{r_{ij}} \ln(1-\frac{a}{r_{ij}})\\
+    &= \frac{a(a-2r_{ij})}{r_{ij}^2(r_{ij}-a)^2}.\\
+    \frac{\grad_k \phi(\vec r_k)}{\phi(\vec r_k)} &= 
+    - 2\alpha\mqty(x\\y\\\beta z).\\
+    \frac{\laplacian_k \phi(\vec r_k)}{\phi(\vec r_k)} &=
+    2\alpha\qty[2\alpha x^2 + 2\alpha y^2 + 2\alpha\beta^2z^2 - d(\beta)].
+\end{align*}
+where, $d(\beta) = 1, 2$, or $2 + \beta$ for one, two and three dimensions,
+respectively.
+Then, with all this in place, we get:
+\begin{align*}
+    \frac{1}{\Psi_L}\laplacian_k{\Psi_L} &= \frac{1}{\Psi_L}\grad_k\vdot\qty{
+    \Psi_T\qty[\frac{\grad_k \phi(\vec r_k)}{\phi(\vec r_k)} + \sum_{j\neq k}
+    \grad u(r_{kj})]
+    }\\
+    &= \frac{\laplacian_k \phi(\vec r_k)}{\phi(\vec r_{k})} +
+    \frac{\grad_k\qty(\phi(\vec r_k)) \vdot \qty(\sum_{j\neq k} \grad_k
+    u(r_{kj}))}{\phi(\vec r_k)}
+    + \sum_{j\neq k}\laplacian_k u(r_{kj})\\
+    &+ \qty[
+        \qty(\frac{\grad_k \phi(\vec r_{k})}{\phi(\vec r_k)} 
+        + \sum_{j\neq k}\grad_k u(r_{kj})    )
+        \vdot
+        \qty(\sum_{j\neq k} \grad_k u(r_{kj})   )]\\
+    &= \frac{\laplacian_k \phi(\vec r_k)}{\phi(\vec r_k)}
+    + 2 \frac{\grad_k \phi(\vec r_k)}{\phi(\vec r_k)}\vdot
+    \sum_{j\neq k}\qty( \frac{\vec r_{kj}}{r_{kj}}u'(r_{kj}))\\
+    &+ \sum_{i,j \neq k} \frac{\vec r_{ki}\vdot\vec r_{kj}}{r_{ki}r_{kj}}
+    u'(r_{ki})u'(r_{kj})
+    + \sum_{j\neq k}\qty(u''(r_{kj}) + \frac{2}{r_{kj}}u'(r_{kj}))\\
+    &= 2\alpha\qty[2\alpha x^2 + 2\alpha y^2 + 2\alpha\beta^2z^2 - \beta - 2]\\
+    &- 4\alpha\mqty(x\\y\\\beta z)\vdot
+    \qty[ \sum_{j\neq k} \frac{\vec r_{kj}}{r_{kj}}
+    \frac{a}{r_{kj}(r_{kj}-a)}]\\
+    &+  \sum_{i,j\neq k} \frac{\vec r_{ki}\vdot\vec r_{kj}}{r_{ki}r_{kj}}
+    \frac{a}{r_{ki}(r_{ki}-a)}\frac{a}{r_{kj}(r_{kj}-a)}\\
+    &+ \sum_{j\neq k} \qty(
+    \frac{a(a-2r_{kj})}{r_{kj}^2(r_{kj}-a)^2} +
+    \frac{2}{r_{kj}}\frac{a}{r_{kj}(r_{kj}-a)}
+    ).\numberthis\label{eq:E_L-part-final}
+\end{align*}
+We may note that without interactions ($a=0$), this simplifies to only the first
+term, as all the other terms are proportional to $a$.
+
+The complete expression for the local energy is then:
+\begin{align*}
+    E_L &= \frac{1}{\Psi_T}H\Psi_T\\
+    &= \sum_{i}V_{ext}(\vec r_i) + \sum_{i<j}V_{int}(\vec r_i,\vec r_j)
+    - \frac{\hbar^2}{2m}\sum_k
+    \frac{1}{\Psi_T}\laplacian_k\Psi_T\numberthis\label{eq:E_L-final}
+\end{align*}
+where we substitute in \eqref{eq:E_L-part-final} in the final sum.
+\printbibliography
+
+\end{document}
