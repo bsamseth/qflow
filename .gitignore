@@ -4,3 +4,4 @@ ComputationalPhysics2
 
 # Ignore build directories
 build*
+CMakeLists.txt.user*
