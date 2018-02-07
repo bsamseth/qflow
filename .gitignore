@@ -5,6 +5,8 @@ ComputationalPhysics2
 # Ignore build directories
 build*
 
+# Ignore QT generated CMake list files.
+CMakeLists.txt.user*
 
 # The following is a copy of github/gitignore/master/tex.gitignore
 #
@@ -234,3 +236,4 @@ TSWLatexianTemp*
 
 # standalone packages
 *.sta
+=======
