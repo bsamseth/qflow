@@ -8,7 +8,7 @@
 
 namespace VMC {
 
-std::default_random_engine rand_gen;
+std::mt19937_64 rand_gen;
 std::uniform_real_distribution<double> unif(0, 1);
 std::uniform_real_distribution<double> centered(-0.5, 0.5);
 
