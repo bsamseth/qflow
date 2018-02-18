@@ -53,7 +53,7 @@ private:
 
 public:
     VMCSolver(double omega_ho = 1, double omega_z = 1,
-              double a = 0, double h = 0.001, double step_length = 1) :
+              double a = 0.0043, double h = 0.001, double step_length = 1) :
         _omega_ho(omega_ho*omega_ho),
         _omega_z(omega_z*omega_z), _a(a),
         _h(h), _h2(1/(h*h)), _step_length(step_length) {}
@@ -128,20 +128,50 @@ public:
 
         double E_L = 0;
         for (int k = 0; k < N_Particles; ++k) {
-            const arma::mat::fixed<1, Dims> r_k = R.row(k);
-            arma::mat::fixed<1, Dims> r_k_skewed = r_k;
+
+            // r_k = R(k, :)
+            // r_k_skewed = {x_k, y_k, _beta * z_k} if Dims == 3
+            //               r_k                    otherwise.
+            const auto r_k = R.row(k);
+            arma::rowvec::fixed<Dims> r_k_skewed = R.row(k);
             if (Dims == Dimensions::DIM_3)
-                r_k_skewed(0, 2) *= _beta;
+                r_k_skewed(2) *= _beta;
+
+
+            // First term, no interaction.
             E_L += 2*_alpha * (2*_alpha * norm<Dims, true>(r_k_skewed)
                                - (Dims == Dimensions::DIM_3 ? 2 + _beta : Dims));
 
+
+            // Remaining terms are only for interaction, may be removed by compiler.
             if (Interaction == InteractionType::OFF)
                 continue;
-            else
-                assert(false);  // TODO
+
+            arma::rowvec::fixed<Dims> term = {0};
+            for (int j = 0; j < N_Particles; ++j) {  // j != k.
+                if (j == k) continue;
+
+                const auto r_kj = r_k - R.row(j);
+                const double r_kj_2 = norm<Dims, true>(r_kj);
+                const double r_kj_norm = std::sqrt(r_kj_2);
+
+                term += r_kj * (_a / (r_kj_2 * (r_kj_norm - _a)));
+
+                E_L += _a * (_a - 2 * r_kj_norm) / (r_kj_2 * (r_kj_norm - _a) * (r_kj_norm - _a))
+                        + 2 * _a / (r_kj_2 * (r_kj_norm - _a));
+
+                for (int i = 0; i < N_Particles; ++i) {  // i != k.
+                    if (i == k) continue;
+
+                    const auto r_ki = r_k - R.row(i);
+                    const double r_ki_2 = norm<Dims, true>(r_ki);
+                    const double r_ki_norm = std::sqrt(r_kj_2);
+
+                    E_L += arma::dot(r_ki, r_kj) * (_a * _a / (r_ki_2 * r_kj_2 * (r_ki_norm - _a) * (r_kj_norm - _a)));
+                }
+            }
+            E_L -= 4 * _alpha * arma::dot(r_k_skewed, term);
         }
-//        printf("E_L = %.10f + %.10f - 0.5 * %.10f = %.10f\n", V_ext(R), V_int(R), E_L,
-//               V_ext(R)+V_int(R)-0.5*E_L);
         return V_ext(R) + V_int(R) - 0.5 * E_L;
     }
 
@@ -149,6 +179,7 @@ public:
         arma::mat::fixed<N_Particles, Dims> R_old;
         arma::mat::fixed<N_Particles, Dims> R_new;
         double E_sum = 0, E2_sum = 0;
+
         // Random initial starting point.
         for (int i = 0; i < N_Particles; ++i) {
             for (int d = 0; d < Dims; ++d) {
