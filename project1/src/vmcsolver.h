@@ -109,17 +109,14 @@ public:
     }
 
     double E_kinetic(arma::mat &R) const {
-        double Ek = 0;
+        double Ek = - 2 * N_Particles * Dims * Psi(R);
         for (int i = 0; i < N_Particles; ++i) {
             for (int d = 0; d < Dims; ++d) {
-                double old = Ek;
-                Ek -= 2 * Psi(R);  // -2 * Psi(R)
                 R(i, d) += _h;
                 Ek += Psi(R);      // Psi(R + h)
                 R(i, d) -= 2*_h;
                 Ek += Psi(R);      // Psi(R - h)
                 R(i, d) += _h;
-//                printf("i=%d: d^2/dx_%d^2 = %.10f\n", i, d, Ek - old);
             }
         }
         return -0.5 * Ek * _h2;
