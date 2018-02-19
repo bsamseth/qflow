@@ -69,10 +69,10 @@ public:
                 std::ostream &out,
                 const double alpha_min,
                 const double alpha_max,
-                const double alpha_step = 1,
+                const double alpha_n,
                 const double beta_min = 1,
                 const double beta_max = 1,
-                const double beta_step = 1);
+                const double beta_n = 1);
 };
 
 }  // namespace VMC

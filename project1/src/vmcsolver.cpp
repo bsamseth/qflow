@@ -186,32 +186,31 @@ Results VMCSolver::run_MC(const int n_cycles) const {
     return {energy, energy_squared, variance, _alpha, _beta};
 }
 
-Results VMCSolver::vmc(const int n_cycles,
+Results VMCSolver::vmc(
+            const int n_cycles,
             std::ostream &out,
             const double alpha_min,
             const double alpha_max,
-            const double alpha_step,
+            const double alpha_n,
             const double beta_min,
             const double beta_max,
-            const double beta_step) {
+            const double beta_n) {
 
     // Used to store best results.
     Results best = {0, 0, std::numeric_limits<double>::max(), 0, 0};
 
-    // Define variational space.
-    const int n_alpha = (alpha_max - alpha_min) / alpha_step + 1;
-    const int n_beta  = (beta_max  - beta_min ) / beta_step  + 1;
-    const auto alpha = arma::linspace<arma::vec>(alpha_min, alpha_max, n_alpha);
-    const auto beta  = arma::linspace<arma::vec>(beta_min, beta_max, n_beta);
+    // Define variational space.;
+    const auto alpha = arma::linspace<arma::vec>(alpha_min, alpha_max, alpha_n);
+    const auto beta  = arma::linspace<arma::vec>(beta_min, beta_max, beta_n);
 
     // Write header to stream.
     out << "# alpha beta <E> <E^2>\n";
 
     // For every combination of parameters,
     // write the results of MC to the stream.
-    for (int a = 0; a < n_alpha; ++a) {
+    for (int a = 0; a < alpha_n; ++a) {
         _alpha = alpha(a);
-        for (int b = 0; b < n_beta; ++b) {
+        for (int b = 0; b < beta_n; ++b) {
             _beta = beta(b);
             Results res = run_MC(n_cycles);
             out << _alpha << " "
