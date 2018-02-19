@@ -179,11 +179,11 @@ Results VMCSolver::run_MC(const int n_cycles) const {
 
         }
     }
-    printf("Accepted rate: %.0f %%\n", 100 * accepted_moves / (double) (n_cycles * _config.n_particles));
     double energy = E_sum / (n_cycles * _config.n_particles);
     double energy_squared = E2_sum / (n_cycles * _config.n_particles);
     double variance = energy_squared - energy*energy;
-    return {energy, energy_squared, variance, _alpha, _beta};
+    double acceptance_rate = accepted_moves / (double) (n_cycles * _config.n_particles);
+    return {energy, energy_squared, variance, _alpha, _beta, acceptance_rate};
 }
 
 Results VMCSolver::vmc(
@@ -197,7 +197,8 @@ Results VMCSolver::vmc(
             const double beta_n) {
 
     // Used to store best results.
-    Results best = {0, 0, std::numeric_limits<double>::max(), 0, 0};
+    Results best;
+    best.variance = std::numeric_limits<double>::max();
 
     // Define variational space.;
     const auto alpha = arma::linspace<arma::vec>(alpha_min, alpha_max, alpha_n);

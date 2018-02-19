@@ -24,7 +24,7 @@ enum class AnalyticAcceleration {
 };
 
 struct Results {
-    double E, E2, variance, alpha, beta;
+    double E, E2, variance, alpha, beta, acceptance_rate;
 };
 
 struct VMCConfiguration {
@@ -76,5 +76,16 @@ public:
 };
 
 }  // namespace VMC
+
+inline std::ostream& operator<<(std::ostream &strm, const VMC::Results &r) {
+    return strm << "E = "  << r.E  << ", "
+                << "E2 = " << r.E2 << ", "
+                << "Var = " << r.variance << ", "
+                << "alpha = " << r.alpha << ", "
+                << "beta = " << r.beta << ", "
+                << "acceptance rate = " << r.acceptance_rate;
+}
+
+
 
 #endif // VMCSOLVER_HPP
