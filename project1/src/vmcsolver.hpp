@@ -2,6 +2,7 @@
 #define VMCSOLVER_HPP
 
 #include <ostream>
+#include <iomanip>
 #include <armadillo>
 
 namespace VMC {
@@ -83,12 +84,15 @@ public:
 }  // namespace VMC
 
 inline std::ostream& operator<<(std::ostream &strm, const VMC::Results &r) {
+    strm.precision(6);
+    strm << std::scientific;
     return strm << "E = "  << r.E  << ", "
                 << "E2 = " << r.E2 << ", "
                 << "Var = " << r.variance << ", "
                 << "alpha = " << r.alpha << ", "
                 << "beta = " << r.beta << ", "
-                << "acceptance rate = " << r.acceptance_rate;
+                << "acceptance rate = "
+                << std::fixed << std::setprecision(3) <<  r.acceptance_rate;
 }
 
 
