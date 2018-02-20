@@ -7,7 +7,7 @@ include_directories(${ARMADILLO_INCLUDE_DIRS})
 
 
 # Set options common for all build types.
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -W -fopenmp")
 
 # Compile VMC sources.
 set(SOURCE_FILES "vmcsolver.cpp")
