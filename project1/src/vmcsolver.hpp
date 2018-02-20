@@ -57,9 +57,9 @@ public:
 
     double V_ext(const arma::mat &R) const;
 
-    double V_int(const arma::mat &R) const;
+    double V_int() const;
 
-    double Psi_f(const arma::mat &R) const;
+    double Psi_f() const;
 
     double Psi_g(const arma::mat &R) const;
 

@@ -54,10 +54,10 @@ double VMCSolver::V_ext(const arma::mat &R) const {
     return 0.5 * pot;
 }
 
-double VMCSolver::V_int(const arma::mat &R) const {
+double VMCSolver::V_int() const {
     if (_config.interaction == InteractionType::OFF) return 0;
-    for (unsigned i = 0; i < _config.n_particles; ++i) {
-        for (unsigned j = i + 1; j < _config.n_particles; ++j) {
+    for (int i = 0; i < _config.n_particles; ++i) {
+        for (int j = i + 1; j < _config.n_particles; ++j) {
             if (dist(i, j) <= _config.a)
                 return std::numeric_limits<double>::max();
         }
@@ -65,7 +65,7 @@ double VMCSolver::V_int(const arma::mat &R) const {
     return 0;
 }
 
-double VMCSolver::Psi_f(const arma::mat &R) const {
+double VMCSolver::Psi_f() const {
     if (_config.interaction == InteractionType::OFF) return 1;
     double f = 1;
     for (int i = 0; i < _config.n_particles; ++i) {
@@ -81,14 +81,14 @@ double VMCSolver::Psi_f(const arma::mat &R) const {
 
 double VMCSolver::Psi_g(const arma::mat &R) const {
     double g = 0;
-    for (unsigned i = 0; i < _config.n_particles; ++i) {
+    for (int i = 0; i < _config.n_particles; ++i) {
         g += arma::dot(R.col(i), R.col(i));
     }
     return std::exp(-_alpha * g);
 }
 
 double VMCSolver::Psi(const arma::mat &R) const {
-    return Psi_g(R) * Psi_f(R);
+    return Psi_g(R) * Psi_f();
 }
 
 double VMCSolver::E_kinetic(arma::mat &R) {
@@ -125,7 +125,7 @@ double VMCSolver::E_kinetic(arma::mat &R) {
 
 double VMCSolver::E_local(arma::mat &R) {
     if (_config.acceleration == AnalyticAcceleration::OFF)
-        return E_kinetic(R) / Psi(R) + V_ext(R) + V_int(R);
+        return E_kinetic(R) / Psi(R) + V_ext(R) + V_int();
 
     double E_L = 0;
     for (int k = 0; k < _config.n_particles; ++k) {
@@ -142,7 +142,7 @@ double VMCSolver::E_local(arma::mat &R) {
         // First term, no interaction.
         E_L += 2*_alpha * (2*_alpha * arma::dot(r_k_skewed, r_k_skewed)
                            - (_config.dims == Dimensions::DIM_3 ? 2 + _beta :
-                                                                  _config.dims));
+                                                                 (int) _config.dims));
 
 
         // Remaining terms are only for interaction.
@@ -175,7 +175,7 @@ double VMCSolver::E_local(arma::mat &R) {
         }
         E_L -= 4 * _alpha * arma::dot(r_k_skewed, term);
     }
-    return V_ext(R) + V_int(R) - 0.5 * E_L;
+    return V_ext(R) + V_int() - 0.5 * E_L;
 }
 
 Results VMCSolver::run_MC(const int n_cycles) {
