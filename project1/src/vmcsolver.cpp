@@ -16,18 +16,14 @@ VMCSolver::VMCSolver(const VMCConfiguration &config) : _config(config) {
     dist  = arma::zeros<arma::mat>(_config.n_particles, _config.n_particles);
 }
 
-void VMCSolver::initialize_distance_matrix() {
+void VMCSolver::initialize_distance_matrix(const arma::mat &R) {
+
+    // Initialize dist as an upper triangluar matrix of distances
+    // based on the positions in R.
 
     for (int i = 0; i < _config.n_particles; ++i) {
         for (int j = i + 1; j < _config.n_particles; ++j) {
-
-            // It is assumed that upon initialization, R_old == R_new.
-            // Asserted as a simplification by only checking the first dimension,
-            // as this is the only one guarateed to be present. It is extremely
-            // unlikely that they are equal be chance while the other dims are different.
-            assert(R_old(i, 0) == R_new(i, 0));
-
-            dist(i, j) = arma::norm(R_old.row(i) - R_old.row(j));
+            dist(i, j) = arma::norm(R.row(i) - R.row(j));
         }
     }
 }
@@ -179,7 +175,7 @@ Results VMCSolver::run_MC(const int n_cycles) {
         }
     }
 
-    initialize_distance_matrix();
+    initialize_distance_matrix(R_old);
 
     int accepted_moves = 0;
     for (int cycle = 1; cycle <= n_cycles; ++cycle) {
@@ -211,7 +207,6 @@ Results VMCSolver::run_MC(const int n_cycles) {
             double E = E_local(R_new);
             E_sum += E;
             E2_sum += E*E;
-
         }
     }
     double energy = E_sum / (n_cycles * _config.n_particles);

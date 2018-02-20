@@ -51,7 +51,7 @@ private:
 public:
     VMCSolver(const VMCConfiguration &config);
 
-    void initialize_distance_matrix();
+    void initialize_distance_matrix(const arma::mat &R);
 
     void update_distance_matrix(int particle, const arma::mat &R);
 
