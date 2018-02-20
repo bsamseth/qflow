@@ -1,5 +1,6 @@
 #include <random>
 #include <cassert>
+#include <omp.h>
 
 #include "vmcsolver.hpp"
 
@@ -128,6 +129,10 @@ double VMCSolver::E_local(arma::mat &R) {
         return E_kinetic(R) / Psi(R) + V_ext(R) + V_int();
 
     double E_L = 0;
+    const bool no_interaction = _config.interaction == InteractionType::OFF;
+    const int one_body_beta_term = - (_config.dims == Dimensions::DIM_3 ?
+                                          2 + _beta : (int) _config.dims);
+
     for (int k = 0; k < _config.n_particles; ++k) {
 
         // r_k = R(:, k)
@@ -140,13 +145,11 @@ double VMCSolver::E_local(arma::mat &R) {
 
 
         // First term, no interaction.
-        E_L += 2*_alpha * (2*_alpha * arma::dot(r_k_skewed, r_k_skewed)
-                           - (_config.dims == Dimensions::DIM_3 ? 2 + _beta :
-                                                                 (int) _config.dims));
+        E_L += 2*_alpha * (2*_alpha * arma::dot(r_k_skewed, r_k_skewed) + one_body_beta_term);
 
 
         // Remaining terms are only for interaction.
-        if (_config.interaction == InteractionType::OFF)
+        if (no_interaction)
             continue;
 
 
