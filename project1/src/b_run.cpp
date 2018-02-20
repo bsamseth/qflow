@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
             for (auto analytic : analytic_on_off) {
                 config.acceleration = analytic;
 
-                if (analytic == AnalyticAcceleration::OFF and n_particles > 10) continue;
+                if (analytic == AnalyticAcceleration::OFF and n_particles > 100) continue;
 
                 auto start_time = chrono::high_resolution_clock::now();
 
