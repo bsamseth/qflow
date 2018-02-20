@@ -45,9 +45,12 @@ class VMCSolver {
 private:
     const VMCConfiguration _config;
     double _alpha = 0.5, _beta = 1;
+    arma::mat dist, R_old, R_new;
 
 public:
     VMCSolver(const VMCConfiguration &config);
+
+    void initialize_distance_matrix();
 
     double V_ext(const arma::mat &R) const;
 
@@ -63,7 +66,7 @@ public:
 
     double E_local(arma::mat &R) const;
 
-    Results run_MC(const int n_cycles) const;
+    Results run_MC(const int n_cycles);
 
     Results vmc(const int n_cycles,
                 std::ostream &out,

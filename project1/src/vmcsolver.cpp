@@ -10,9 +10,40 @@ std::uniform_real_distribution<double> unif(0, 1);
 std::uniform_real_distribution<double> centered(-0.5, 0.5);
 std::normal_distribution<double> rnorm(0, 1);
 
-VMCSolver::VMCSolver(const VMCConfiguration &config) : _config(config) {}
+VMCSolver::VMCSolver(const VMCConfiguration &config) : _config(config) {
+    R_old = arma::zeros<arma::mat>(_config.n_particles, _config.dims);
+    R_new = arma::zeros<arma::mat>(_config.n_particles, _config.dims);
+    dist  = arma::zeros<arma::mat>(_config.n_particles, _config.n_particles);
+}
+
+void VMCSolver::initialize_distance_matrix() {
+
+    for (int i = 0; i < _config.n_particles; ++i) {
+        for (int j = i + 1; j < _config.n_particles; ++j) {
+
+            // It is assumed that upon initialization, R_old == R_new.
+            assert(R_old(i, j) == R_new(i, j));
+
+            dist(i, j) = arma::norm(R_old.row(i) - R_old.row(j));
+        }
+    }
+}
+
+void VMCSolver::update_distance_matrix(int particle, const arma::mat &R) {
+
+    // Update row particle. Only work on upper half of matrix.
+    for (unsigned other = particle + 1; other < _config.n_particles; ++other) {
+        dist(particle, other) = arma::norm(R.row(particle) - R.row(other));
+    }
+
+    // Update col particle. Only work on upper half of matrix.
+    for (unsigned other = 0; other < particle; ++other) {
+        dist(other, particle) = arma::norm(R.row(other) - R.row(particle));
+    }
+}
 
 double VMCSolver::V_ext(const arma::mat &R) const {
+
     double pot = 0;
     for (unsigned i = 0; i < R.n_rows; ++i) {
         if (_config.ho_type == HOType::ELLIPTICAL and _config.dims == Dimensions::DIM_3) {
@@ -134,7 +165,7 @@ double VMCSolver::E_local(arma::mat &R) const {
     return V_ext(R) + V_int(R) - 0.5 * E_L;
 }
 
-Results VMCSolver::run_MC(const int n_cycles) const {
+Results VMCSolver::run_MC(const int n_cycles) {
     arma::mat R_old (_config.n_particles, _config.dims);
     arma::mat R_new (arma::size(R_old));
     double E_sum = 0, E2_sum = 0;
@@ -145,6 +176,8 @@ Results VMCSolver::run_MC(const int n_cycles) const {
             R_old(i, d) = R_new(i, d) = _config.step_length * centered(rand_gen);
         }
     }
+
+    initialize_distance_matrix();
 
     int accepted_moves = 0;
     for (int cycle = 1; cycle <= n_cycles; ++cycle) {
