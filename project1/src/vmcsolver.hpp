@@ -7,6 +7,8 @@
 
 namespace VMC {
 
+using Real = double;
+
 namespace Constants {
 } // namespace Constants
 
@@ -25,7 +27,7 @@ enum class AnalyticAcceleration {
 };
 
 struct Results {
-    double E, E2, variance, alpha, beta, acceptance_rate;
+    Real E, E2, variance, alpha, beta, acceptance_rate;
 };
 
 struct VMCConfiguration {
@@ -34,51 +36,51 @@ struct VMCConfiguration {
     HOType ho_type;
     InteractionType interaction;
     AnalyticAcceleration acceleration;
-    double omega_ho;
-    double omega_z;
-    double a;
-    double h;
-    double h2;
-    double step_length;
+    Real omega_ho;
+    Real omega_z;
+    Real a;
+    Real h;
+    Real h2;
+    Real step_length;
 };
 
 class VMCSolver {
 private:
     const VMCConfiguration _config;
-    double _alpha = 0.5, _beta = 1;
-    arma::mat dist, R_old, R_new;
+    Real _alpha = 0.5, _beta = 1;
+    arma::Mat<Real> dist, R_old, R_new;
 
 public:
     VMCSolver(const VMCConfiguration &config);
 
-    void initialize_distance_matrix(const arma::mat &R);
+    void initialize_distance_matrix(const arma::Mat<Real> &R);
 
-    void update_distance_matrix(int particle, const arma::mat &R);
+    void update_distance_matrix(int particle, const arma::Mat<Real> &R);
 
-    double V_ext(const arma::mat &R) const;
+    Real V_ext(const arma::Mat<Real> &R) const;
 
-    double V_int() const;
+    Real V_int() const;
 
-    double Psi_f() const;
+    Real Psi_f() const;
 
-    double Psi_g(const arma::mat &R) const;
+    Real Psi_g(const arma::Mat<Real> &R) const;
 
-    double Psi(const arma::mat &R) const;
+    Real Psi(const arma::Mat<Real> &R) const;
 
-    double E_kinetic(arma::mat &R);
+    Real E_kinetic(arma::Mat<Real> &R);
 
-    double E_local(arma::mat &R);
+    Real E_local(arma::Mat<Real> &R);
 
     Results run_MC(const int n_cycles);
 
     Results vmc(const int n_cycles,
                 std::ostream &out,
-                const double alpha_min,
-                const double alpha_max,
-                const double alpha_n,
-                const double beta_min = 1,
-                const double beta_max = 1,
-                const double beta_n = 1);
+                const Real alpha_min,
+                const Real alpha_max,
+                const int alpha_n,
+                const Real beta_min = 1,
+                const Real beta_max = 1,
+                const int beta_n = 1);
 };
 
 }  // namespace VMC
