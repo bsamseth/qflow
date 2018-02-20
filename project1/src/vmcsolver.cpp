@@ -22,7 +22,10 @@ void VMCSolver::initialize_distance_matrix() {
         for (int j = i + 1; j < _config.n_particles; ++j) {
 
             // It is assumed that upon initialization, R_old == R_new.
-            assert(R_old(i, j) == R_new(i, j));
+            // Asserted as a simplification by only checking the first dimension,
+            // as this is the only one guarateed to be present. It is extremely
+            // unlikely that they are equal be chance while the other dims are different.
+            assert(R_old(i, 0) == R_new(i, 0));
 
             dist(i, j) = arma::norm(R_old.row(i) - R_old.row(j));
         }
