@@ -52,6 +52,8 @@ public:
 
     void initialize_distance_matrix();
 
+    void update_distance_matrix(int particle, const arma::mat &R);
+
     double V_ext(const arma::mat &R) const;
 
     double V_int(const arma::mat &R) const;

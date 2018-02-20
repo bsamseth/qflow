@@ -32,18 +32,17 @@ void VMCSolver::initialize_distance_matrix() {
 void VMCSolver::update_distance_matrix(int particle, const arma::mat &R) {
 
     // Update row particle. Only work on upper half of matrix.
-    for (unsigned other = particle + 1; other < _config.n_particles; ++other) {
+    for (int other = particle + 1; other < _config.n_particles; ++other) {
         dist(particle, other) = arma::norm(R.row(particle) - R.row(other));
     }
 
     // Update col particle. Only work on upper half of matrix.
-    for (unsigned other = 0; other < particle; ++other) {
+    for (int other = 0; other < particle; ++other) {
         dist(other, particle) = arma::norm(R.row(other) - R.row(particle));
     }
 }
 
 double VMCSolver::V_ext(const arma::mat &R) const {
-
     double pot = 0;
     for (unsigned i = 0; i < R.n_rows; ++i) {
         if (_config.ho_type == HOType::ELLIPTICAL and _config.dims == Dimensions::DIM_3) {
