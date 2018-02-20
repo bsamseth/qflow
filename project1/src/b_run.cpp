@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
                 auto end_time = chrono::high_resolution_clock::now();
                 int milli_time = chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count();
 
-                printf("Dims = %d, N = %d, Analytic = %s: ",
+                printf("Dims = %d, N = %3d, Analytic = %3s: ",
                        config.dims, config.n_particles,
                        config.acceleration == AnalyticAcceleration::ON ? "ON" : "OFF");
                 cout << result;
