@@ -58,8 +58,7 @@ double VMCSolver::V_int(const arma::mat &R) const {
     if (_config.interaction == InteractionType::OFF) return 0;
     for (unsigned i = 0; i < R.n_rows; ++i) {
         for (unsigned j = i + 1; j < R.n_rows; ++j) {
-            auto r_ij = R.row(i) - R.row(j);
-            if (arma::dot(r_ij, r_ij) <= _config.a * _config.a)
+            if (dist(i, j) <= _config.a)
                 return std::numeric_limits<double>::max();
         }
     }
@@ -71,7 +70,7 @@ double VMCSolver::Psi_f(const arma::mat &R) const {
     double f = 1;
     for (unsigned i = 0; i < R.n_rows; ++i) {
         for (unsigned j = i + 1; j < R.n_rows; ++j) {
-            double r_ij = arma::norm(R.row(i) - R.row(j));
+            const double r_ij = dist(i, j);
             if (r_ij <= _config.a)
                 return 0;
             f *= (1 - _config.a / r_ij);
@@ -92,24 +91,39 @@ double VMCSolver::Psi(const arma::mat &R) const {
     return Psi_g(R) * Psi_f(R);
 }
 
-double VMCSolver::E_kinetic(arma::mat &R) const {
+double VMCSolver::E_kinetic(arma::mat &R) {
 
     double Ek = - 2 * (_config.n_particles * _config.dims) * Psi(R);
 
     for (unsigned i = 0; i < R.n_rows; ++i) {
         for (unsigned d = 0; d < R.n_cols; ++d) {
-            auto temp = R(i, d);
+
+            // Storing a temporary instead of adding/subtracting away
+            // the changes should help avoid accumulating rounding errors.
+            const auto temp = R(i, d);
+
+            // Psi(R) depends on the dist matrix being updated after changes.
+            // Only needed if interaction is on.
+
             R(i, d) = temp + _config.h;
+            if (_config.interaction == InteractionType::ON) update_distance_matrix(i, R);
+
             Ek += Psi(R);      // Psi(R + h)
+
             R(i, d) = temp - _config.h;
+            if (_config.interaction == InteractionType::ON) update_distance_matrix(i, R);
+
             Ek += Psi(R);      // Psi(R - h)
+
+            // Reset distance.
             R(i, d) = temp;
+            if (_config.interaction == InteractionType::ON) update_distance_matrix(i, R);
         }
     }
     return -0.5 * Ek * _config.h2;
 }
 
-double VMCSolver::E_local(arma::mat &R) const {
+double VMCSolver::E_local(arma::mat &R) {
     if (_config.acceleration == AnalyticAcceleration::OFF)
         return E_kinetic(R) / Psi(R) + V_ext(R) + V_int(R);
 
@@ -131,16 +145,17 @@ double VMCSolver::E_local(arma::mat &R) const {
                                                                   _config.dims));
 
 
-        // Remaining terms are only for interaction, may be removed by compiler.
+        // Remaining terms are only for interaction.
         if (_config.interaction == InteractionType::OFF)
             continue;
+
 
         arma::rowvec term (R.n_cols);
         for (unsigned j = 0; j < R.n_rows; ++j) {  // j != k.
             if (j == k) continue;
 
             const auto r_kj = r_k - R.row(j);
-            const double r_kj_norm = arma::norm(r_kj);
+            const double r_kj_norm = dist(std::min(k, j), std::max(k, j));
             const double r_kj_2 = r_kj_norm * r_kj_norm;
 
             term += r_kj * (_config.a / (r_kj_2 * (r_kj_norm - _config.a)));
@@ -152,7 +167,7 @@ double VMCSolver::E_local(arma::mat &R) const {
                 if (i == k) continue;
 
                 const auto r_ki = r_k - R.row(i);
-                const double r_ki_norm = arma::norm(r_ki);
+                const double r_ki_norm = dist(std::min(k, i), std::max(k, i));
                 const double r_ki_2 = r_ki_norm * r_ki_norm;
 
                 E_L += arma::dot(r_ki, r_kj) * (_config.a * _config.a / (r_ki_2 * r_kj_2 * (r_ki_norm - _config.a) * (r_kj_norm - _config.a)));
@@ -185,6 +200,9 @@ Results VMCSolver::run_MC(const int n_cycles) {
             for (int d = 0; d < _config.dims; ++d) {
                 R_new(i, d) = R_old(i, d) + _config.step_length * centered(rand_gen);
             }
+
+            update_distance_matrix(i, R_new);
+
             double Psi_new = Psi(R_new);
 
             // New move accepted?
@@ -198,6 +216,7 @@ Results VMCSolver::run_MC(const int n_cycles) {
             }
             else {
                 // Restore new <- old.
+                update_distance_matrix(i, R_old);
                 for (int d = 0; d < _config.dims; ++d) {
                     R_new(i, d) = R_old(i, d);
                 }

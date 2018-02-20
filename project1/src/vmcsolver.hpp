@@ -65,9 +65,9 @@ public:
 
     double Psi(const arma::mat &R) const;
 
-    double E_kinetic(arma::mat &R) const;
+    double E_kinetic(arma::mat &R);
 
-    double E_local(arma::mat &R) const;
+    double E_local(arma::mat &R);
 
     Results run_MC(const int n_cycles);
 
