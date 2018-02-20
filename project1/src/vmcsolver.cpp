@@ -14,7 +14,7 @@ VMCSolver::VMCSolver(const VMCConfiguration &config) : _config(config) {}
 
 double VMCSolver::V_ext(const arma::mat &R) const {
     double pot = 0;
-    for (int i = 0; i < R.n_rows; ++i) {
+    for (unsigned i = 0; i < R.n_rows; ++i) {
         if (_config.ho_type == HOType::ELLIPTICAL and _config.dims == Dimensions::DIM_3) {
             pot += _config.omega_ho * (R(i, 0)*R(i, 0) + R(i, 1)*R(i, 1))
                  + _config.omega_z  *  R(i, 2)*R(i, 2);
@@ -27,8 +27,8 @@ double VMCSolver::V_ext(const arma::mat &R) const {
 
 double VMCSolver::V_int(const arma::mat &R) const {
     if (_config.interaction == InteractionType::OFF) return 0;
-    for (int i = 0; i < R.n_rows; ++i) {
-        for (int j = i + 1; j < R.n_rows; ++j) {
+    for (unsigned i = 0; i < R.n_rows; ++i) {
+        for (unsigned j = i + 1; j < R.n_rows; ++j) {
             auto r_ij = R.row(i) - R.row(j);
             if (arma::dot(r_ij, r_ij) <= _config.a * _config.a)
                 return std::numeric_limits<double>::max();
@@ -40,8 +40,8 @@ double VMCSolver::V_int(const arma::mat &R) const {
 double VMCSolver::Psi_f(const arma::mat &R) const {
     if (_config.interaction == InteractionType::OFF) return 1;
     double f = 1;
-    for (int i = 0; i < R.n_rows; ++i) {
-        for (int j = i + 1; j < R.n_rows; ++j) {
+    for (unsigned i = 0; i < R.n_rows; ++i) {
+        for (unsigned j = i + 1; j < R.n_rows; ++j) {
             double r_ij = arma::norm(R.row(i) - R.row(j));
             if (r_ij <= _config.a)
                 return 0;
@@ -53,7 +53,7 @@ double VMCSolver::Psi_f(const arma::mat &R) const {
 
 double VMCSolver::Psi_g(const arma::mat &R) const {
     double g = 0;
-    for (int i = 0; i < R.n_rows; ++i) {
+    for (unsigned i = 0; i < R.n_rows; ++i) {
         g += arma::dot(R.row(i), R.row(i));
     }
     return std::exp(-_alpha * g);
@@ -67,8 +67,8 @@ double VMCSolver::E_kinetic(arma::mat &R) const {
 
     double Ek = - 2 * (_config.n_particles * _config.dims) * Psi(R);
 
-    for (int i = 0; i < R.n_rows; ++i) {
-        for (int d = 0; d < R.n_cols; ++d) {
+    for (unsigned i = 0; i < R.n_rows; ++i) {
+        for (unsigned d = 0; d < R.n_cols; ++d) {
             auto temp = R(i, d);
             R(i, d) = temp + _config.h;
             Ek += Psi(R);      // Psi(R + h)
@@ -85,7 +85,7 @@ double VMCSolver::E_local(arma::mat &R) const {
         return E_kinetic(R) / Psi(R) + V_ext(R) + V_int(R);
 
     double E_L = 0;
-    for (int k = 0; k < R.n_rows; ++k) {
+    for (unsigned k = 0; k < R.n_rows; ++k) {
 
         // r_k = R(k, :)
         // r_k_skewed = {x_k, y_k, _beta * z_k} if Dims == 3
@@ -107,7 +107,7 @@ double VMCSolver::E_local(arma::mat &R) const {
             continue;
 
         arma::rowvec term (R.n_cols);
-        for (int j = 0; j < R.n_rows; ++j) {  // j != k.
+        for (unsigned j = 0; j < R.n_rows; ++j) {  // j != k.
             if (j == k) continue;
 
             const auto r_kj = r_k - R.row(j);
@@ -119,7 +119,7 @@ double VMCSolver::E_local(arma::mat &R) const {
             E_L += _config.a * (_config.a - 2 * r_kj_norm) / (r_kj_2 * (r_kj_norm - _config.a) * (r_kj_norm - _config.a))
                     + 2 * _config.a / (r_kj_2 * (r_kj_norm - _config.a));
 
-            for (int i = 0; i < R.n_rows; ++i) {  // i != k.
+            for (unsigned i = 0; i < R.n_rows; ++i) {  // i != k.
                 if (i == k) continue;
 
                 const auto r_ki = r_k - R.row(i);
@@ -201,18 +201,18 @@ Results VMCSolver::vmc(
     best.variance = std::numeric_limits<double>::max();
 
     // Define variational space.;
-    const auto alpha = arma::linspace<arma::vec>(alpha_min, alpha_max, alpha_n);
-    const auto beta  = arma::linspace<arma::vec>(beta_min, beta_max, beta_n);
+    const auto alphas = arma::linspace<arma::vec>(alpha_min, alpha_max, alpha_n);
+    const auto betas  = arma::linspace<arma::vec>(beta_min, beta_max, beta_n);
 
     // Write header to stream.
     out << "# alpha beta <E> <E^2>\n";
 
     // For every combination of parameters,
     // write the results of MC to the stream.
-    for (int a = 0; a < alpha_n; ++a) {
-        _alpha = alpha(a);
-        for (int b = 0; b < beta_n; ++b) {
-            _beta = beta(b);
+    for (const auto &alpha : alphas) {
+        _alpha = alpha;
+        for (const auto &beta : betas) {
+            _beta = beta;
             Results res = run_MC(n_cycles);
             out << _alpha << " "
                 << _beta  << " "
