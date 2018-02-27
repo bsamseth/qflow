@@ -34,6 +34,8 @@ void VMCImportanceSolver::quantum_force(const arma::Mat<Real> &R, arma::Col<Real
             Q_force += r_kj * _config.a / (r_kj_norm * r_kj_norm * (r_kj_norm - _config.a));
         }
     }
+
+    Q_force *= 2;
 }
 
 Results VMCImportanceSolver::run_MC(const int n_cycles) {
