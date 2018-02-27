@@ -23,9 +23,7 @@ void VMCSolver::initialize_distance_matrix(const arma::Mat<Real> &R) {
     // based on the positions in R.
 
     for (int i = 0; i < _config.n_particles; ++i) {
-        for (int j = i + 1; j < _config.n_particles; ++j) {
-            dist(i, j) = arma::norm(R.col(i) - R.col(j));
-        }
+        update_distance_matrix(i, R);
     }
 }
 
@@ -213,16 +211,12 @@ Results VMCSolver::run_MC(const int n_cycles) {
                 accepted_moves++;
                 // Update old <- new.
                 Psi_old = Psi_new;
-                for (int d = 0; d < _config.dims; ++d) {
-                    R_old(d, i) = R_new(d, i);
-                }
+                R_old.col(i) = R_new.col(i);
             }
             else {
                 // Restore new <- old.
                 update_distance_matrix(i, R_old);
-                for (int d = 0; d < _config.dims; ++d) {
-                    R_new(d, i) = R_old(d, i);
-                }
+                R_new.col(i) = R_old.col(i);
             }
 
             // Update averages.
