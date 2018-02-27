@@ -10,7 +10,7 @@ include_directories(${ARMADILLO_INCLUDE_DIRS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -W -fopenmp")
 
 # Compile VMC sources.
-set(SOURCE_FILES "vmcsolver.cpp")
+set(SOURCE_FILES "vmcsolver.cpp" "vmcimportancesolver.cpp")
 add_library(engine ${SOURCE_FILES})
 
 
@@ -18,4 +18,12 @@ add_library(engine ${SOURCE_FILES})
 add_executable(b_run.x b_run.cpp)
 add_dependencies(b_run.x engine)
 target_link_libraries(b_run.x engine ${ARMADILLO_LIBRARIES})
+
+
+# Add executable c_run.x
+add_executable(c_run.x c_run.cpp)
+add_dependencies(c_run.x engine)
+target_link_libraries(c_run.x engine ${ARMADILLO_LIBRARIES})
+
+
 

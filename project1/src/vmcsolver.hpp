@@ -9,6 +9,12 @@ namespace VMC {
 
 using Real = double;
 
+extern std::mt19937_64 rand_gen;
+extern std::uniform_real_distribution<Real> unif;
+extern std::uniform_real_distribution<Real> centered;
+extern std::normal_distribution<Real> rnorm;
+
+
 namespace Constants {
 } // namespace Constants
 
@@ -42,10 +48,11 @@ struct VMCConfiguration {
     Real h;
     Real h2;
     Real step_length;
+    Real time_step;
 };
 
 class VMCSolver {
-private:
+protected:
     const VMCConfiguration _config;
     Real _alpha = 0.5, _beta = 1;
     arma::Mat<Real> dist, R_old, R_new;
@@ -71,7 +78,7 @@ public:
 
     Real E_local(arma::Mat<Real> &R);
 
-    Results run_MC(const int n_cycles);
+    virtual Results run_MC(const int n_cycles);
 
     Results vmc(const int n_cycles,
                 std::ostream &out,
@@ -82,6 +89,7 @@ public:
                 const Real beta_max = 1,
                 const int beta_n = 1);
 };
+
 
 }  // namespace VMC
 
