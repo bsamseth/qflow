@@ -12,15 +12,12 @@ void VMCImportanceSolver::quantum_force(const arma::Mat<Real> &R, arma::Col<Real
 
     int k = particle;  // Shorthand within function.
 
-    // Reset force vector and recalculate.
-    Q_force.fill(0);
-
     const auto r_k = R.col(k);
     arma::Col<Real> r_k_skewed = R.col(k);
     if (_config.dims == Dimensions::DIM_3)
         r_k_skewed(2) *= _beta;
 
-    Q_force += -2 * _alpha * r_k_skewed;
+    Q_force = -2 * _alpha * r_k_skewed;
 
     // Other terms are only relevant with interaction enabled.
     if (_config.interaction == InteractionType::ON) {
