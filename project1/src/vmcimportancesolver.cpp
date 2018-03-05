@@ -45,7 +45,7 @@ Results VMCImportanceSolver::run_MC(const int n_cycles) {
     // Random initial starting point.
     for (int i = 0; i < _config.n_particles; ++i) {
         for (int d = 0; d < _config.dims; ++d) {
-            R_old(d, i) = R_new(d, i) = _config.step_length * centered(rand_gen);
+            R_old(d, i) = R_new(d, i) = rnorm(rand_gen) * std::sqrt(_config.time_step);
         }
     }
 
@@ -66,7 +66,7 @@ Results VMCImportanceSolver::run_MC(const int n_cycles) {
             // Alt: R_new.col(i) = R_old.col(i) + (centered(rand_gen) * std::sqrt(_config.time_step)
             //                                     + 0.5 * _config.time_step * Q_force_old);
             for (int d = 0; d < _config.dims; ++d) {
-                R_new(d, i) = R_old(d, i) + centered(rand_gen) * std::sqrt(_config.time_step)
+                R_new(d, i) = R_old(d, i) + rnorm(rand_gen) * std::sqrt(_config.time_step)
                                           + 0.5 * _config.time_step * Q_force_old(d);
             }
 
@@ -80,7 +80,11 @@ Results VMCImportanceSolver::run_MC(const int n_cycles) {
             quantum_force(R_new, Q_force_new, i);
 
             // The ratio of the Greens funcitons: G(R_old, R_new, dt) / G(R_new, R_old, dt).
-            double green = std::exp(- 0.5 * arma::dot(Q_force_new + Q_force_old, R_new.col(i) - R_old.col(i)));
+            double green = std::exp(0.25 * arma::dot(
+                                        Q_force_old + Q_force_new,
+                                        0.5 * _config.time_step * (Q_force_old-Q_force_new)
+                                            + 2 * (R_old.col(i) - R_new.col(i))
+                                        ));
 
             double acceptance_prob = green * (Psi_new * Psi_new) / (Psi_old * Psi_old);
 
