@@ -2,7 +2,12 @@
 \usepackage{preamble}
 % \usepackage{fullpage}
 \usepackage{dsfont}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{paralist}
 
+\newcommand{\drawfrom}{\overset{\mathrm{d}}{=}}
+\newcommand{\setfrom}{\overset{\mathrm{d}}{\leftarrow}}
 
 \title{ \small
 University of Oslo\\
@@ -24,7 +29,8 @@ condensate and non-condensate properties to the hard sphere radius
 and the number of particles.  
 
 \section{Theory}
-The trap we will use is a spherical (S)
+\subsection{Physical System}
+\textbf{The trap} we will use is a spherical (S)
 or an elliptical (E) harmonic trap in one, two and finally three
 dimensions, with the latter given by
 
@@ -38,7 +44,7 @@ dimensions, with the latter given by
             \label{trap_eqn}
         \end{array}
 \end{equation}
-The Hamiltonian of the system will be
+\textbf{The Hamiltonian} of the system will be
 \begin{equation}
     H = \sum_i^N \left(\frac{-\hbar^2}{2m}{\bigtriangledown }_{i}^2 +V_{ext}({\mathbf{r}}_i)\right)  +
      \sum_{i<j}^{N} V_{int}({\mathbf{r}}_i,{\mathbf{r}}_j),
@@ -59,7 +65,7 @@ Note: In the rest of this report, as well as in accompanying source code, we
 will use natural units with $\hbar = m = 1$.
 \vspace{0.2cm}\hrule\vspace{0.3cm}
 
-We will represent the inter-boson interaction by a pairwise,
+We will represent \textbf{the inter-boson interaction} by a pairwise,
 repulsive potential:
 \begin{equation}
     V_{int}(|\mathbf{r}_i-\mathbf{r}_j|) =  \Bigg\{
@@ -73,7 +79,7 @@ Clearly, $V_{int}(|\mathbf{r}_i-\mathbf{r}_j|)$ is zero if the bosons are
 separated by a distance $|\mathbf{r}_i-\mathbf{r}_j|$ greater than $a$ but
 infinite if they attempt to come within a distance $|\mathbf{r}_i-\mathbf{r}_j| \leq a$.
 
-Our trial wave function for the ground state with $N$ atoms will be given by
+\textbf{The trial wave function} for the ground state with $N$ atoms will be given by
 \begin{align}
     \begin{split}
     \Psi_T(\mathbf{r})&=\Psi_T(\mathbf{r}_1, \mathbf{r}_2, \dots
@@ -89,8 +95,8 @@ oscillator function for the ground state, i.e., we define $g(\alpha,\beta,\mathb
     g(\alpha,\beta,\mathbf{r}_i)= \exp[-\alpha(x_i^2+y_i^2+\beta z_i^2)].
 \end{equation}
 For spherical traps we have $\beta = 1$ and for non-interacting
-bosons ($a=0$) we have $\alpha = 1/2a_{ho}^2$ resulting in the exact wavefuntion.  The correlation wave
-function is
+bosons ($a=0$) we have $\alpha = 1/2a_{ho}^2$ resulting in the exact wave
+function. The correlation wave function is
 
 \begin{equation}
     f(a,|\mathbf{r}_i-\mathbf{r}_j|)=\Bigg\{
@@ -100,11 +106,10 @@ function is
         \end{array}
 \end{equation}
 
-
-\subsection{Defining the Objective}
-We wish to evaluate the expectation value of the Hamiltonian. We cannot do this
-without the true wavefunction of the system, something we do not possess.
-We can, however, approximate the energy with the trial wavefunction.
+\subsection{The Objective}
+Our objective is to evaluate the expectation value of the Hamiltonian. We cannot do this
+without the true wave function of the system, something we do not possess.
+We can, however, approximate the energy with the trial wave function.
 \begin{align}
     E[H] = \expval{H} = \frac{\int \dd{\vec R} \Psi^*_T H \Psi_T}{\int
     \Psi_T^*\Psi_T}.
@@ -112,12 +117,12 @@ We can, however, approximate the energy with the trial wavefunction.
 where $\vec R$ is the matrix containing all the positions of the particles in
 the system, $\vec R = [\vec r_1, \vec r_2, \dots, \vec r_N]$.
 In order to numerically evaluate this integral we first manipulate it a bit.
-The probability density at position $\vec R$, under the trial wavefunction, is
+The probability density at position $\vec R$, under the trial wave function, is
 \begin{align}
     P(\vec R, \vec \alpha) &= \frac{\abs{\Psi_T}^2}{\int \dd{\vec R}\abs{\Psi_T}^2}.
 \end{align}
 where $\vec \alpha$ is used for shorthand and represents the vector of all the variational parameters.
-We finally define a new quantity, called the local energy:
+We finally define a new quantity, called \textbf{the local energy}:
 \begin{align}
     E_L(\vec R, \vec \alpha) &= \frac{1}{\Psi_T}H\Psi_T\label{eq:E_L}
 \end{align}
@@ -127,7 +132,7 @@ Combining these two definitions we can now rewrite $\expval{H}$ as follows:
         \expval{H} &= \int \dd{\vec R} P(\vec R,\vec\alpha) E_L(\vec R,\vec\alpha)\\
         &\approx
         \frac{1}{N}\sum_{i=1}^N E_L(\vec R_i,\vec\alpha),
-    \end{split}
+    \end{split}\label{eq:the-objective}
 \end{align}
 where $R_i$ are randomly drawn positions from the PDF $P(\vec R, \vec\alpha)$.
 We have therefore that estimating the average value of $E_L$ yields an
@@ -136,18 +141,52 @@ ground state energy, $E_0$. By the variational principle, if we minimize
 $\expval{H}$ under the variational parameters, we find an estimate for the true
 ground state energy of the system.
 
-
-\subsection{Finding an Analytical Expression for $E_L$}
-As the local energy will is the quantity we are interested in computing for a
+\subsection{Calculating the Local Energy $E_L$}
+As the local energy is the quantity we are interested in computing for a
 large set of positions we would do well to consider how best to evaluate this
-expression effectively. Straight forward numerical derivation is of course an
-option, but this is likely to be quite time-expensive to do.
+expression effectively. For this we have two alternative approaches,
+\begin{inparaenum}[1)]
+    \item numerical differentiation and
+    \item finding an analytic, direct expression.
+\end{inparaenum}
+
+\subsubsection{Numerical differentiation}
+We may set up an algorithm for the numerical approximation of the local energy
+as shown in Algorithm~\ref{alg:E_L-numeric}.
+\begin{algorithm}[H]
+    \caption{Calculate the local energy $E_L$ using numerical differentiation.}
+    \label{alg:E_L-numeric}
+    \begin{algorithmic}[1]
+        \REQUIRE $\vec R = [\vec r_1,\vec r_2,\dots,\vec r_N]$, $D=\text{dimensions}$
+        \ENSURE $y = E_L$
+        \STATE $y = -2\times N\times D\times  \Psi_T(\vec R)$
+        \FOR{$i = 1$ \TO $N$}
+            \FOR{$d = 1$ \TO $D$}
+                \STATE $\vec R_+\leftarrow \vec R + h \vec e_{i, d}$
+                \STATE $\vec R_-\leftarrow \vec R - h \vec e_{i, d}$
+                \STATE $y\leftarrow y + \Psi_T(\vec R_+) + \Psi_T(\vec R_-)$
+            \ENDFOR
+        \ENDFOR
+        \STATE $y\leftarrow -\flatfrac{y}{2h^2}$
+        \STATE $y\leftarrow \flatfrac{y}{\Psi_T(\vec R)}+\sum_{i=1}^N V_{ext} + \sum_{i<j}^N V_{int} $
+    \end{algorithmic}
+\end{algorithm}
+An evaluation of $E_L$ using this algorithm would be $\mathcal{O}(N^3\times
+D)=\mathcal{O}(N^3)$ with interaction, and $\mathcal{O}(N^2)$ without interaction, from
+the complexity of $\Psi_T$.
+
+
+
+\subsubsection{Finding an Analytical Expression for $E_L$}
+Straight forward numerical differentiation is of course an
+option, but this is likely to be quite time-expensive to do. We will here try to
+speed up the calculation by producing a direct formula.
 
 The hard part of the expression for $E_L$ is
 \begin{align}
     \frac{1}{\Psi_L}\sum_{k}^N\laplacian_k{\Psi_L}.
 \end{align}
-To get going, we rewrite the wavefunction as
+To get going, we rewrite the wave function as
 \begin{align}
     \Psi_L(\vec R) &= \prod_i \phi(\vec r_i)\exp(\sum_{i<j}u(r_{ij})),
 \end{align}
@@ -193,7 +232,7 @@ The second term may be evaluated as follows:
 \end{align}
 
 Now we can find the Laplacian by taking the divergence of
-\eqref{eq:grad-trail-wf}
+\eqref{eq:grad-trail-wf}:
 \begin{align*}
 \frac{1}{\Psi_L}\laplacian_k{\Psi_L} &= \frac{1}{\Psi_L}\grad_k\vdot
     \Psi_T\qty[\frac{\grad_k \phi(\vec r_k)}{\phi(\vec r_k)} + \sum_{j\neq k}
@@ -204,7 +243,7 @@ Now we can find the Laplacian by taking the divergence of
     u(r_{kj}))}{\phi(\vec r_k)}\\
     &+ \left[
         \qty(\frac{\grad_k \phi(\vec r_{k})}{\phi(\vec r_k)} 
-        + \sum_{j\neq k}\grad_k u(r_{kj})    )\\
+        + \sum_{j\neq k}\grad_k u(r_{kj})    )\right.\\
         &\left.\vdot
         \qty(\sum_{j\neq k} \grad_k u(r_{kj})   )\right] \\
     &= \frac{\laplacian_k \phi(\vec r_k)}{\phi(\vec r_k)}
@@ -256,10 +295,9 @@ Inserting all of this back into \eqref{eq:almost-done-EL} we get:
     \frac{a}{r_{ki}(r_{ki}-a)}\frac{a}{r_{kj}(r_{kj}-a)}\\
     &+ \sum_{j\neq k} \qty(
     \frac{a(a-2r_{kj})}{r_{kj}^2(r_{kj}-a)^2} +
-    \frac{2}{r_{kj}}\frac{a}{r_{kj}(r_{kj}-a)}
-    ).
+    \frac{2}{r_{kj}}\frac{a}{r_{kj}(r_{kj}-a)}).
     \end{split} \label{eq:E_L-part-final}
-\end{align*}
+\end{align}
 We may note that without interactions ($a=0$), this simplifies to only the first
 term, as all the other terms are proportional to $a$.
 
@@ -267,26 +305,253 @@ The complete expression for the local energy is then:
 \begin{align*}
     E_L &= \frac{1}{\Psi_T}H\Psi_T\\
     &= \sum_{i}V_{ext}(\vec r_i) + \sum_{i<j}V_{int}(\vec r_i,\vec r_j)
-    - \frac{\hbar^2}{2m}\sum_k
+    - \frac{1}{2}\sum_k
     \frac{1}{\Psi_T}\laplacian_k\Psi_T\numberthis\label{eq:E_L-final}
 \end{align*}
-where we substitute in \eqref{eq:E_L-part-final} in the final sum.
+where we substitute in \eqref{eq:E_L-part-final} in the final sum. A single
+evaluation of the local energy is then $\mathcal{O}(N^3)$ with interaction,
+and $\mathcal{O}(N)$ without.
+
+We can see that without interaction we obtain a linear-time expression, compared
+to quadratic-time using numerical differentiation. With interaction we have
+not been able to improve the complexity in terms of Big-O. This does not,
+however, mean that no improvement is obtained. A closer look shows that the
+numerical approach uses more evaluations by a constant factor of about three.
+This stems from the three wave function evaluations used in the central
+difference approximation of the second derivative. The analytic approach is
+closer to using a single evaluation, although the exact ratio is hard to define
+as the wave function is not directly used here.
+
+In summary, we will expect a significant speedup using the analytic expression
+both with and without interaction enabled. 
 
 
-\subsection{Finding an Analytical Expression for the Quantum Drift Force}
+\subsection{Calculating the Quantum Drift Force}
 Anticipating its later use, we will also find an expression for the so called
 quantum drift force, which we shall use when we consider importance sampling.
 For now, we just give its definition:
 \begin{align}
-    \vec F_k = \frac{2\grad_k\Psi_T}{\Psi_T}
+    \vec F_k = \frac{2\grad_k\Psi_T}{\Psi_T}\label{eq:Q-force-def}
 \end{align}
 This is interpreted as the force acting on particle $k$ due to the trap and/or
-presence of other particles. Luckily this can now be quickly evaluated due to
+presence of other particles. As a physical justification for why $\vec F_k$
+takes this form we can see that $\vec F_k$ is
+proportional with the gradient of $\Psi_T$, which we can intuitively understand
+as a force pushing the particle towards regions of space with higher
+probability. 
+
+Luckily this can now be quickly evaluated due to
 the results of the previous section,
 \begin{align}
     \vec F_k = 2\qty[\sum_{j\neq k}\frac{\vec r_{kj}}{r_{kj}}
-    \frac{a}{r_{kj}(r_{kj}-a)} - 2\alpha\hat{\vec r}_k].\label{eq:Q-force}
+    \frac{a}{r_{kj}(r_{kj}-a)} - 2\alpha\hat{\vec
+    r}_k].\label{eq:Q-force-explicit}
 \end{align}
+With interaction this is $\mathcal{O}(N)$, and without ($a=0$) it simplifies to $\mathcal{O}(1)$.
+
+For brevity, we may later use the notation $\vec F(\vec R) = [\vec F_1, \vec
+F_2,\dots,\vec F_N]$, denoting the matrix of all the individual forces on each
+particle.
+
+
+
+\section{Algorithms}
+In \eqref{eq:the-objective} we reformulated our objective of estimating the ground state energy of the
+system, $\expval{H}$, to minimizing the average local energy, $\expval{E_L(\vec \alpha)}$ w.r. to
+the variational parameters $\vec \alpha = (\alpha, \beta)$. Key to this
+reformulation was that the local energy had to be sampled with positions $\vec
+R$ that where drawn from the PDF $P(\vec R, \vec\alpha)$. As $P$ is far from any
+standard PDF with a known inverse CDF, we cannot trivially generate such
+samples. In addition, the normalisation term in its denominator is
+computationally expensive to compute. These limitations make the
+\textit{Metropolis-Hastings algorithm} the obvious choice to solve this problem. This
+algorithm provides a way to generate random samples from a PDF where we only
+know the probabilities up to a proportionality constant.
+
+\subsection{Simple Metropolis-Hastings}
+The algorithm in its
+simplest form is described in Algorithm~\ref{alg:metropolis-simple}.
+
+\begin{algorithm}[H]
+    \caption{The Metropolis-Hastings algorithm in its simplest form, as it
+    pertains to our specific application.}
+    \label{alg:metropolis-simple}
+    \begin{algorithmic}[1]
+        \REQUIRE $M$, generates $M\times N$ samples.
+        \ENSURE $\text{samples} \setfrom P(\vec R, \vec\alpha)$
+        \STATE $\text{samples} \leftarrow \text{empty list}$
+        \STATE $\vec R \leftarrow \text{randomly initialized matrix of positions}$
+        \FOR{$M$ iterations}
+            \FOR{every particle $i\in[1, N]$}
+                \STATE $\Delta \vec{r} \leftarrow \text{random perturbation vector}$
+                \STATE $\vec R^*\leftarrow \vec R $
+                \STATE $\vec R^*_i \leftarrow \vec R^{*}_i+ \Delta \vec{r}$ 
+                \STATE $q \leftarrow \flatfrac{\abs{\Psi_T(\vec R^*)}^2}{\abs{\Psi_T(\vec R)}^2}$
+                \STATE $r \setfrom \text{Unif}(0, 1)$
+                \IF{ $r\leq q$ }
+                    \STATE $\vec R \leftarrow \vec R^*$
+                \ENDIF
+                \STATE Append $\vec R$ to samples
+            \ENDFOR
+        \ENDFOR
+    \end{algorithmic}
+\end{algorithm}
+
+In this algorithm we move around in position space randomly, accepting new
+positions biased towards areas of space where $P(\vec R,\vec\alpha)$ is higher.
+We choose to move one particle at a time based on computational efficiency, as
+recalculating the local energy can be done more easily when we know only one
+particle has moved.
+
+With the generated list of positions we may produce and average for the local
+energy, and therefore an estimate for an upper bound on the ground state energy. 
+
+\subsubsection{Limitations}
+This algorithm has two major drawbacks. Firstly, the samples generated are not
+independent. It is quite clear from the algorithm that the probability of
+drawing a certain position is highly dependent on what position we were at
+previously. The has implications on how we perform our statistical analysis, as
+we must attempt to correct for this limitation. More on this in
+section~\ref{sec:statistical-analisys}.
+
+Secondly this algorithm will be quite ineffective in that a significant portion
+of the suggested moves (new positions, $\vec R^*$ in
+Algorithm~\ref{alg:metropolis-simple}) will be rejected. This is because the new
+positions are generated at random, which might cause us to wander around in
+regions of position space that are of very little significance, and it might
+take a while before we (by chance) stumble upon a more high-probability region.
+The effect is then a list of samples that may not be an accurate representation
+of the PDF we were trying to approximate to begin with. This will be especially
+true for smaller sample sizes, were these defects will account for a larger
+proportion of the samples.
+
+
+\subsection{Metropolis-Hastings with Importance Sampling}
+The first limitation of the simple algorithm (not i.i.d.) is inherent to this
+kind of sampling, and is hard to avoid. We may, however, attempt to remedy the
+second limitation by guiding the random walker towards more promising regions of
+position space by proposing new positions in a smarter way than purely randomly.
+
+\subsubsection{Physical Motivation of Results}
+We will limit our selfs to a superficial derivation, focusing only on giving a
+physical motivation for the results we end up using, as it is outside the scope
+of this project to derive this rigorously.
+
+\paragraph{Better generation of new positions:}$\,$\\
+A reasonable assumption is to say that particles will tend towards regions of
+space where $\abs{\Psi_T}^2$ is larger. We may say that this is the result of a
+force, namely the quantum drift force given in \eqref{eq:Q-force-def}, as we
+know this force pushes particles towards regions where $\Psi_T$ is large. In
+addition, as this a quantum system, we expect some degree of random motion as
+well. This intuitive view is exactly what is described by
+the Langevin equation,
+\begin{align}
+    \pdv{\vec r_k}{t} = D\vec F_k(\vec r_k) + \vec\eta,\label{eq:Langevin}
+\end{align}
+which describes how the position of a particle changes with time. Here, $D$ is
+a constant scalar referred to as the drift coefficient. We set
+$D=\flatfrac{1}{2}$, originating from the same factor in the kinetic energy. The
+term $\vec\eta$ is a vector of
+uniformly distributed random values, giving the particle some random motion in each
+dimension.
+
+Solving the Langevin equation we can obtain new positions at some time
+$t+\Delta t$. Using Euler's method we get:
+\begin{align}
+    \vec r^* = \vec r + \frac{1}{2}\vec F_k(\vec r_k)\Delta t + \vec \xi\sqrt{\Delta
+    t}\label{eq:Langevin-solution},
+\end{align}
+given a time step $\Delta t$, and where $\vec \xi$ is the normally distributed
+equivalent of $\vec \eta$. 
+
+\paragraph{Adjusting the acceptance probability:}$\,$\\
+In Algorithm~\ref{alg:metropolis-simple} the acceptance probability for a new
+position $\vec R^*$ was
+\begin{align}
+    q(\vec R^*, \vec R) = \frac{\abs{\Psi_T(\vec R^*)}^2}{\abs{\Psi_T(\vec
+    R)}^2}\label{eq:q-simple}.
+\end{align}
+This was based on the transition probability for going to $\vec R^*$ from $\vec
+R$ being uniform. When the transition probabilities are different depending on 
+where we are and where we want to go, the acceptance probability has to be
+modified in order for the algorithm to work as advertised. In general, we have 
+the following form for $q(\vec R^*, \vec R)$ in our case:
+\begin{align}
+    q(\vec R^*, \vec R) &= \frac{T_{j\rightarrow i}}{T_{i\rightarrow j}}\frac{\abs{\Psi_T(\vec R^*)}^2}{\abs{\Psi_T(\vec
+    R)}^2},\label{eq:q-full}
+\end{align}
+where $T_{i\rightarrow j}$ is the transition probability from the original state
+$i$ into the new state $j$. We see that a uniform transition probability gives
+us back \eqref{eq:q-simple}. We need therefore an expression for the transition
+probabilities when we use the improved generation of new positions.
+
+
+To this end, we consider the \textit{Fokker-Planck} equation, which for one
+dimension and one particle can be written as
+\begin{align}
+    \pdv{\Psi_T}{t} = D\pdv{}{x}\qty(\pdv{}{x} - F)\Psi_T,\label{eq:Fokker-Planck}
+\end{align}
+which describes the time-evolution of a probability distribution under the
+influence of a drift force and random impulses. We let $\Psi_T$ play the role of the
+probability distribution. The factor $D$ is as before, and $F$ is here the
+one-dimensional, one-particle analog to $\vec F$. In
+fact, this equation is the origin of the specific form of $\vec F$ presented in
+\eqref{eq:Q-force-def}. 
+
+Equation \eqref{eq:Fokker-Planck} yields a solution given by
+the following Green's function (for one particle):
+\begin{align}
+    G(\vec r_k^*, \vec r_k, \Delta t) &\propto 
+    \exp[- \frac{\norm{\vec r_k^* - \vec r_k - D\Delta t \vec F_k(\vec r_k)}^2}{4D\Delta t} ].
+\end{align}
+This is interpreted as the probability of transitioning to position $\vec r_k^*$
+from position $\vec r$ in a time interval $\Delta t$. Equation~\eqref{eq:q-full}
+needs only the ratio of these probabilities, so we may simplify this as
+\begin{align}
+    \frac{G(\vec r_k, \vec r_k^*, \Delta t)}{G(\vec r_k^*, \vec r_k, \Delta t)} = 
+    \exp\left.\begin{cases}
+        \qty[\vec F_k(\vec r_k) + \vec F_k(\vec r_k^*)]\\
+        \qqtext{}\qqtext{}\bullet\\
+        \qty[D\Delta t \qty(\vec F_k(\vec r_k)-\vec F_k(\vec r_k^*)) + 2\vec r_k
+        - 2\vec r_k^*]
+    \end{cases}\right\}\label{eq:Greens-ratio}
+\end{align}
+We may then finally insert this ratio into~\eqref{eq:q-full}.
+
+
+
+\subsubsection{Improved Algorithm}
+We are now ready to present the proper Metropolis-Hastings algorithm, with
+importance sampling used to increase the number of accepted transitions.
+
+\begin{algorithm}[H]
+    \caption{The Metropolis-Hastings algorithm, with importance sampling, as it
+    pertains to our specific application.}
+    \label{alg:metropolis-simple}
+    \begin{algorithmic}[1]
+        \REQUIRE $M$, generates $M\times N$ samples.
+        \ENSURE $\text{samples} \setfrom P(\vec R, \vec\alpha)$
+        \STATE $\text{samples} \leftarrow \text{empty list}$
+        \STATE $\vec R \leftarrow \text{randomly initialized matrix of positions}$
+        \FOR{$M$ iterations}
+            \FOR{every particle $i\in[1, N]$}
+                \STATE $\Delta\vec r_i^* \leftarrow \frac{1}{2}\vec
+                F_i(\vec r_i)\Delta t + \vec \xi\sqrt{\Delta t}$
+                \STATE $\vec R^*\leftarrow \vec R $
+                \STATE $\vec R^*_i \leftarrow \vec R^{*}_i+ \Delta \vec r_i^*$ 
+                \STATE $q \leftarrow \flatfrac{\abs{\Psi_T(\vec R^*)}^2}{\abs{\Psi_T(\vec R)}^2}$
+                \STATE $q \leftarrow q \times \flatfrac{G(\vec r_k, \vec r_k^*,
+                    \Delta t)}{G(\vec r_k^*, \vec r_k, \Delta t)}$
+                \STATE $r \setfrom \text{Unif}(0, 1)$
+                \IF{ $r\leq q$ }
+                    \STATE $\vec R \leftarrow \vec R^*$
+                \ENDIF
+                \STATE Append $\vec R$ to samples
+            \ENDFOR
+        \ENDFOR
+    \end{algorithmic}
+\end{algorithm}
+
 
 
 \printbibliography
