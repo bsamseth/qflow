@@ -96,13 +96,13 @@ public:
 inline std::ostream& operator<<(std::ostream &strm, const VMC::Results &r) {
     strm.precision(6);
     strm << std::scientific;
-    return strm << "E = "  << r.E  << ", "
-                << "E2 = " << r.E2 << ", "
-                << "Var = " << r.variance << ", "
-                << "alpha = " << r.alpha << ", "
-                << "beta = " << r.beta << ", "
-                << "acceptance rate = "
-                << std::fixed << std::setprecision(3) <<  r.acceptance_rate;
+    return strm << r.E  << ", "
+                << r.E2 << ", "
+                << r.variance << ", "
+                << r.alpha << ", "
+                << r.beta << ", "
+                << std::fixed << std::setprecision(3)
+                << r.acceptance_rate;
 }
 
 

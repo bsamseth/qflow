@@ -52,6 +52,8 @@ int main(int argc, char *argv[])
             { AnalyticAcceleration::ON, AnalyticAcceleration::OFF };
     vector<double> time_steps {0.01, 0.001, 0.0001};
 
+
+    printf("Dims, Number of particles, Use analytic expressions, time step, Energy, Energy^2, Variance, alpha, beta, acceptance rate, time(ms)\n");
     for (auto dims : dimensions) {
         config.dims = dims;
         for (auto n_particles : particles) {
@@ -77,19 +79,18 @@ int main(int argc, char *argv[])
                     auto end_time = chrono::high_resolution_clock::now();
                     int milli_time = chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count();
 
-                    printf("Dims = %d, N = %3d, Analytic = %3s, dt = %.2e: ",
+
+                    printf("%d, %3d, %3s, %5e, ",
                            config.dims, config.n_particles,
                            config.acceleration == AnalyticAcceleration::ON ? "ON" : "OFF",
-                           config.time_step);
+                           dt);
                     cout << result;
-                    printf(" : in time %d ms\n", milli_time);
+                    printf(", %d\n", milli_time);
                     cout << flush;
                 }
             }
         }
     }
-
-    cout << "Done!" << endl;
 
     return 0;
 }

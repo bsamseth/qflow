@@ -38,8 +38,6 @@ int main(int argc, char *argv[])
     config.ho_type = HOType::SYMMETRIC;
     config.interaction = InteractionType::OFF;
     config.omega_ho = 1;
-    config.omega_z = 1;
-    config.a = 0.0043;
     config.h = 0.001;
     config.h2 = 1 / (config.h * config.h);
     config.step_length = 1;
@@ -52,6 +50,7 @@ int main(int argc, char *argv[])
     vector<AnalyticAcceleration> analytic_on_off
             { AnalyticAcceleration::ON, AnalyticAcceleration::OFF };
 
+    printf("Dims, Number of particles, Use analytic expressions, Energy, Energy^2, Variance, alpha, beta, acceptance rate, time(ms)\n");
     for (auto dims : dimensions) {
         config.dims = dims;
         for (auto n_particles : particles) {
@@ -75,17 +74,15 @@ int main(int argc, char *argv[])
                 auto end_time = chrono::high_resolution_clock::now();
                 int milli_time = chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count();
 
-                printf("Dims = %d, N = %3d, Analytic = %3s: ",
+                printf("%d, %3d, %3s, ",
                        config.dims, config.n_particles,
                        config.acceleration == AnalyticAcceleration::ON ? "ON" : "OFF");
                 cout << result;
-                printf(" : in time %d ms\n", milli_time);
+                printf(", %d\n", milli_time);
                 cout << flush;
             }
         }
     }
-
-    cout << "Done!" << endl;
 
     return 0;
 }
