@@ -35,12 +35,15 @@ void VMCImportanceSolver::quantum_force(const arma::Mat<Real> &R, arma::Col<Real
     Q_force *= 2;
 }
 
-Results VMCImportanceSolver::run_MC(const int n_cycles) {
+Results VMCImportanceSolver::run_MC(const int n_cycles, std::ostream *out, const double alpha, const double beta) {
     arma::Mat<Real> R_old (_config.dims, _config.n_particles);
     arma::Mat<Real> R_new (_config.dims, _config.n_particles);
     arma::Col<Real> Q_force_old (_config.dims);
     arma::Col<Real> Q_force_new (_config.dims);
     Real E_sum = 0, E2_sum = 0;
+
+    this->_alpha = alpha;
+    this->_beta = beta;
 
     // Random initial starting point.
     for (int i = 0; i < _config.n_particles; ++i) {
@@ -107,6 +110,11 @@ Results VMCImportanceSolver::run_MC(const int n_cycles) {
             Real E = E_local(R_new);
             E_sum += E;
             E2_sum += E*E;
+
+            if (out != nullptr) {
+                (*out) << E << "\n";
+            }
+
         }
     }
 

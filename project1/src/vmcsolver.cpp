@@ -179,10 +179,13 @@ Real VMCSolver::E_local(arma::Mat<Real> &R) {
     return V_ext(R) + V_int() - 0.5 * E_L;
 }
 
-Results VMCSolver::run_MC(const int n_cycles) {
+Results VMCSolver::run_MC(const int n_cycles, std::ostream *out, const double alpha, const double beta) {
     arma::Mat<Real> R_old (_config.dims, _config.n_particles);
     arma::Mat<Real> R_new (_config.dims, _config.n_particles);
     Real E_sum = 0, E2_sum = 0;
+
+    this->_alpha = alpha;
+    this->_beta = beta;
 
     // Random initial starting point.
     for (int i = 0; i < _config.n_particles; ++i) {
@@ -223,6 +226,10 @@ Results VMCSolver::run_MC(const int n_cycles) {
             Real E = E_local(R_new);
             E_sum += E;
             E2_sum += E*E;
+
+            if (out != nullptr) {
+                (*out) << E << "\n";
+            }
         }
     }
     Real energy = E_sum / (n_cycles * _config.n_particles);
@@ -255,10 +262,8 @@ Results VMCSolver::vmc(const int n_cycles,
     // For every combination of parameters,
     // write the results of MC to the stream.
     for (const auto &alpha : alphas) {
-        _alpha = alpha;
         for (const auto &beta : betas) {
-            _beta = beta;
-            Results res = run_MC(n_cycles);
+            Results res = run_MC(n_cycles, nullptr, alpha, beta);
             out << _alpha << " "
                 << _beta  << " "
                 << res.E  << " "

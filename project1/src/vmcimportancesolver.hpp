@@ -12,7 +12,7 @@ public:
 
     void quantum_force(const arma::Mat<Real> &R, arma::Col<Real> &Q_force, int particle);
 
-    Results run_MC(const int n_cycles);
+    virtual Results run_MC(const int n_cycles, std::ostream *out = nullptr, const double alpha = 0.5, const double beta = 1);
 };
 
 } // namespace VMC

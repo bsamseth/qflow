@@ -78,7 +78,7 @@ public:
 
     Real E_local(arma::Mat<Real> &R);
 
-    virtual Results run_MC(const int n_cycles);
+    virtual Results run_MC(const int n_cycles, std::ostream *out = nullptr, const double alpha = 0.5, const double beta = 1);
 
     Results vmc(const int n_cycles,
                 std::ostream &out,
