@@ -26,4 +26,7 @@ add_dependencies(c_run.x engine)
 target_link_libraries(c_run.x engine ${ARMADILLO_LIBRARIES})
 
 
-
+# Add executable run_mc.x
+add_executable(run_mc.x run_mc.cpp)
+add_dependencies(run_mc.x engine)
+target_link_libraries(run_mc.x engine ${ARMADILLO_LIBRARIES})
