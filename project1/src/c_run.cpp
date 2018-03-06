@@ -63,9 +63,6 @@ int main(int argc, char *argv[])
                 for (auto dt : time_steps) {
                     config.time_step = dt;
 
-                    // 100+ particles without analytic acceleration takes too long. Don't bother.
-                    if (analytic == AnalyticAcceleration::OFF and n_particles > 100) continue;
-
                     auto start_time = chrono::high_resolution_clock::now();
 
                     VMCImportanceSolver vmc(config);
