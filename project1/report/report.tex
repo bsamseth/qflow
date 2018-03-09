@@ -5,6 +5,10 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{paralist}
+\usepackage{csvsimple}
+
+\sisetup{range-phrase=-}
+
 
 \newcommand{\drawfrom}{\overset{\mathrm{d}}{=}}
 \newcommand{\setfrom}{\overset{\mathrm{d}}{\leftarrow}}
@@ -140,6 +144,33 @@ approximated value for $\expval{H}$. This value is in turn be an upper bound on 
 ground state energy, $E_0$. By the variational principle, if we minimize
 $\expval{H}$ under the variational parameters, we find an estimate for the true
 ground state energy of the system.
+
+\subsubsection{Exact Result for Simple System}
+
+It will be useful to be able to compare our results with exact analytical
+results where we have these. In the case of the symmetric harmonic oscillator
+trap, ignoring any iteractions between the bosons, we have an exact form for the
+ground state energy:
+\begin{align}
+    E_0 = \sum_{i=1}^N\sum_{d=1}^{D=\{1,2,3\}} \frac{\hbar \omega_{ho}}{2} 
+    = \frac{N\times D}{2},\label{eq:exact-ground-state}
+\end{align}
+for $N$ independent bosons in $D$ dimensions (the two sums goes
+over all the degrees of freedom in the system). This follows from the setting
+$\alpha=\flatfrac{1}{2}$ (and $\beta=1$) in $\Psi_T$, and using $a=0$ (no
+interaction). 
+
+We also have an exact value for the variance of the energy in this case:
+\begin{align}
+    \begin{split}
+        \sigma_E^2 &= \expval{H^2} - \expval{H}^2\\
+            &= \expval{H^2}{\Psi}-\expval{H}{\Psi}^2\\
+            &= \expval{E^2}{\Psi}-\expval{E}{\Psi}^2\\
+            &= E^2\braket{\Psi} - \qty(E\braket{\Psi})^2= 0.
+    \end{split}\label{eq:var-zero-when-exact}
+\end{align}
+This follows when we have the exact wavefunction, which satisfies the time
+independent Schrödinger equation, $H\ket{\Psi}=E\ket{\Psi}$.
 
 \subsection{Calculating the Local Energy $E_L$}
 As the local energy is the quantity we are interested in computing for a
@@ -512,8 +543,8 @@ needs only the ratio of these probabilities, so we may simplify this as
     \exp\left.\begin{cases}
         \qty[\vec F_k(\vec r_k) + \vec F_k(\vec r_k^*)]\\
         \qqtext{}\qqtext{}\bullet\\
-        \qty[D\Delta t \qty(\vec F_k(\vec r_k)-\vec F_k(\vec r_k^*)) + 2\vec r_k
-        - 2\vec r_k^*]
+        \left[D\Delta t \qty(\vec F_k(\vec r_k)-\vec F_k(\vec r_k^*)) \right.\\
+        \left. + 2\vec r_k - 2\vec r_k^*\right]
     \end{cases}\right\}\label{eq:Greens-ratio}
 \end{align}
 We may then finally insert this ratio into~\eqref{eq:q-full}.
@@ -527,7 +558,7 @@ importance sampling used to increase the number of accepted transitions.
 \begin{algorithm}[H]
     \caption{The Metropolis-Hastings algorithm, with importance sampling, as it
     pertains to our specific application.}
-    \label{alg:metropolis-simple}
+    \label{alg:metropolis-importance}
     \begin{algorithmic}[1]
         \REQUIRE $M$, generates $M\times N$ samples.
         \ENSURE $\text{samples} \setfrom P(\vec R, \vec\alpha)$
@@ -551,6 +582,57 @@ importance sampling used to increase the number of accepted transitions.
         \ENDFOR
     \end{algorithmic}
 \end{algorithm}
+
+
+\section{Results}
+
+\subsection{Standard Metropolis VMC}
+
+We now apply the standard Metropolis sampling algorithm described in 
+Algorithm\ref{alg:metropolis-simple} to a variety of different settings.
+Table~\ref{tab:simple-metro} shows selected results. 
+
+We see that all the results have $\expval{E_L}$
+equal (within numerical precision) to the exact result. In addition, the variance is also equal to
+or extremely close to zero, as we expect to observe when we use the correct form
+for the exact wavefunction. This is strong evidence that the codes developed are
+correct.
+
+We can see the already motioned downside of using the simple Metropolis
+algorithm in the reported acceptance rate. We can see that about
+$\SIrange{15}{25}{\percent}$ of the suggested moves are dropped, which means a
+significant amount of work has been wasted.
+
+Perhaps most interesting is to look at the time spent on each configuration. If
+we compare the durations for $N=100$ and $N=500$ with analytical expressions
+turned on, we see the time increasing by a factor of~$\sim 25$, which is the
+square of the factor we increased $N$ by. Looking at the expressions involved in
+Algorithm~\ref{alg:metropolis-simple}, we see that this is exactly what we would
+expect.
+
+Similarly, comparing the run times with numerical differentiation, we observe
+that time scales as $\mathcal{O}(N^3)$, resulting in quite substantial running
+times. It is quite clear that the use of analytic expressions is far superior.
+We can, however, remember to expect the difference to be reduced when we include
+interaction, as this reduced the analytical approach to the same complexity as
+the numerical one.
+
+
+\begin{table*}
+    \centering
+    \caption{Selected results using the standard Metropolis sampling algorithm.
+    All runs have been made with $\alpha=\flatfrac{1}{2}$, $\beta=1$, with a
+    symmetric trap with strength $\omega_{ho}=1$ and 100 MC cycles.}
+    \label{tab:simple-metro}
+    \begin{tabular}{|l|c|c|c|c|c|c|}\hline%
+        \bfseries Analytic & \bfseries Dimensions & \bfseries particles & 
+        $\expval{E_L}$ & $\text{Var}(E_L)$ & Acceptance Rate & Time (ms)
+        \csvreader[head to column names]{../results/vmc_configurations.csv}{}
+        {\\\hline\csvcoliii & \csvcoli & \csvcolii & \csvcoliv & \csvcolvi &
+        \csvcolix & \csvcolx}\\\hline
+    \end{tabular}
+\end{table*}
+
 
 
 
