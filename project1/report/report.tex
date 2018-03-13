@@ -6,6 +6,8 @@
 \usepackage{algorithmic}
 \usepackage{paralist}
 \usepackage{csvsimple}
+\usepackage{longtable}
+\usepackage{booktabs}
 
 \sisetup{range-phrase=-}
 
@@ -586,17 +588,22 @@ importance sampling used to increase the number of accepted transitions.
 
 \section{Results}
 
-\subsection{Standard Metropolis VMC}
+\subsection{Standard Metropolis Sampling}
+
+\subsubsection{Comparison of Configurations of Parameters}
 
 We now apply the standard Metropolis sampling algorithm described in 
 Algorithm\ref{alg:metropolis-simple} to a variety of different settings.
-Table~\ref{tab:simple-metro} shows selected results. 
+Table~\ref{tab:simple-metro} shows selected results obtained using
+$\alpha=\flatfrac{1}{2}$, which corresponds to running with the exact
+wavefunction. 
 
 We see that all the results have $\expval{E_L}$
-equal (within numerical precision) to the exact result. In addition, the variance is also equal to
+equal (within numerical precision) to the exact result, following
+\eqref{eq:exact-ground-state}. In addition, the variance is also equal to
 or extremely close to zero, as we expect to observe when we use the correct form
 for the exact wavefunction. This is strong evidence that the codes developed are
-correct.
+correct, at least for the non-interacting case.
 
 We can see the already motioned downside of using the simple Metropolis
 algorithm in the reported acceptance rate. We can see that about
@@ -608,30 +615,217 @@ we compare the durations for $N=100$ and $N=500$ with analytical expressions
 turned on, we see the time increasing by a factor of~$\sim 25$, which is the
 square of the factor we increased $N$ by. Looking at the expressions involved in
 Algorithm~\ref{alg:metropolis-simple}, we see that this is exactly what we would
-expect.
+expect, namely that the algorithm has time complexity $\mathcal{O}(N^2)$.
 
-Similarly, comparing the run times with numerical differentiation, we observe
+Similarly, comparing the run times for numerical differentiation, we observe
 that time scales as $\mathcal{O}(N^3)$, resulting in quite substantial running
 times. It is quite clear that the use of analytic expressions is far superior.
-We can, however, remember to expect the difference to be reduced when we include
+We can, however, expect the difference between the to approaches to be reduced when we include
 interaction, as this reduced the analytical approach to the same complexity as
 the numerical one.
 
-
-\begin{table*}
-    \centering
+\onecolumn
+\begin{center}
+\begin{longtable}{|c|c|c|c|c|c|c|}
     \caption{Selected results using the standard Metropolis sampling algorithm.
     All runs have been made with $\alpha=\flatfrac{1}{2}$, $\beta=1$, with a
     symmetric trap with strength $\omega_{ho}=1$ and 100 MC cycles.}
     \label{tab:simple-metro}
-    \begin{tabular}{|l|c|c|c|c|c|c|}\hline%
-        \bfseries Analytic & \bfseries Dimensions & \bfseries particles & 
-        $\expval{E_L}$ & $\text{Var}(E_L)$ & Acceptance Rate & Time (ms)
-        \csvreader[head to column names]{../results/vmc_configurations.csv}{}
-        {\\\hline\csvcoliii & \csvcoli & \csvcolii & \csvcoliv & \csvcolvi &
-        \csvcolix & \csvcolx}\\\hline
-    \end{tabular}
-\end{table*}
+
+\hline 
+    \multicolumn{1}{|c|}{Analytic} &
+    \multicolumn{1}{c|}{Dimensions} &
+    \multicolumn{1}{c|}{Particles} &
+    \multicolumn{1}{c|}{$\expval{H}$} &
+    \multicolumn{1}{c|}{$\text{Var}(E_L)$} &
+    \multicolumn{1}{c|}{Acceptance Rate} &
+    \multicolumn{1}{c|}{Time (s)}  \\ \hline
+\endfirsthead
+
+\multicolumn{7}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\hline 
+    \multicolumn{1}{|c|}{Analytic} &
+    \multicolumn{1}{c|}{Dimensions} &
+    \multicolumn{1}{c|}{Particles} &
+    \multicolumn{1}{c|}{$\expval{H}$} &
+    \multicolumn{1}{c|}{$\text{Var}(E_L)$} &
+    \multicolumn{1}{c|}{Acceptance Rate} &
+    \multicolumn{1}{c|}{Time (s)} \\ \hline
+\endhead
+
+\hline \multicolumn{7}{|r|}{{Continued on next page}} \\ \hline
+\endfoot
+
+\hline
+\endlastfoot
+
+\csvreader[head to column names]{../results/vmc_configurations.csv}{}
+    {\csvcoliii & \csvcoli & \csvcolii & \csvcoliv & \csvcolv & \csvcolvi &
+    \csvcolvii\\} 
+
+\end{longtable}
+\end{center}
+\twocolumn
+
+
+
+\subsubsection{Varying the Variational Parameters}
+
+Figure~\ref{fig:var-alpha-plot-noimp} shows a plot of the expected energy, and
+corresponding variance, for a $1D$ system of one particle, using $10^4$ Monte
+Carlo cycles, as a function of the variational parameter $\alpha$.
+
+We can see a minimum in both graphs, both centered around the ideal value
+$\alpha=\flatfrac{1}{2}$. The energy graph is, however, a bit jagged, and the
+actual minimum has been found to be a little left of what we would expect. The
+curve gets smoother as we increase the number of samples, and extending to
+$10^5$ samples yield a {\lq perfect\rq} graph, and this is easily within our
+computational reach. The low value of $10^4$ was used to give a visual
+difference to the result in the next section, when we include importance
+sampling.
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{../results/var-alpha-plot-noimp-10000.png}
+    \caption{Plot of average local energy and accompanying population variance,
+    as functions of the variational parameter $\alpha$. The minimum of both
+    graphs are marked, and is expected to be placed at
+    $\alpha=\flatfrac{1}{2}$. Results shown are for $1D$, one particle and
+    $10^{4}$ Monte Carlo cycles.}
+    \label{fig:var-alpha-plot-noimp}
+\end{figure*}
+
+\onecolumn
+\begin{center}
+\begin{longtable}{|c|c|c|c|c|c|c|c|}
+    \caption{Selected results using improved Metropolis-Hastings sampling algorithm.
+    All runs have been made with $\alpha=\flatfrac{1}{2}$, $\beta=1$, with a
+    symmetric trap with strength $\omega_{ho}=1$ and 100 MC cycles.}
+    \label{tab:importance-metro} \\
+
+\hline 
+    \multicolumn{1}{|c|}{Analytic} &
+    \multicolumn{1}{c|}{Dimensions} &
+    \multicolumn{1}{c|}{Particles} &
+    \multicolumn{1}{c|}{$\Delta t$} &
+    \multicolumn{1}{c|}{$\expval{H}$} &
+    \multicolumn{1}{c|}{$\text{Var}(E_L)$} &
+    \multicolumn{1}{c|}{Acceptance Rate} &
+    \multicolumn{1}{c|}{Time (s)}  \\ \hline
+\endfirsthead
+
+\multicolumn{8}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\hline 
+    \multicolumn{1}{|c|}{Analytic} &
+    \multicolumn{1}{c|}{Dimensions} &
+    \multicolumn{1}{c|}{Particles} &
+    \multicolumn{1}{c|}{$\Delta t$} &
+    \multicolumn{1}{c|}{$\expval{H}$} &
+    \multicolumn{1}{c|}{$\text{Var}(E_L)$} &
+    \multicolumn{1}{c|}{Acceptance Rate} &
+    \multicolumn{1}{c|}{Time (s)} \\ \hline
+\endhead
+
+\hline \multicolumn{8}{|r|}{{Continued on next page}} \\ \hline
+\endfoot
+
+\hline
+\endlastfoot
+
+\csvreader[head to column names]{../results/vmc_imp_configurations.csv}{}
+    {\csvcoliii & \csvcoli & \csvcolii & \csvcoliv & \csvcolv & \csvcolvi &
+    \csvcolvii & \csvcolviii\\}
+
+\end{longtable}
+\end{center}
+\twocolumn
+
+
+
+
+\subsection{Metropolis-Hastings Sampling}
+\subsubsection{Comparison of Configurations of Parameters}
+
+We now apply the improved Metropolis-Hastings sampling algorithm described in 
+Algorithm\ref{alg:metropolis-importance} to a variety of different settings.
+Table~\ref{tab:importance-metro} shows selected results obtained using
+$\alpha=\flatfrac{1}{2}$, which corresponds to running with the exact
+wavefunction. 
+
+We see once again that all the results have $\expval{E_L}$
+equal (within numerical precision) to the exact result, and very low variance,
+indicating that the implementation works as it should.
+
+The acceptance rates are now quite interesting. We see that for $\Delta t \leq
+0.1$, we have~$\sim\SI{100}{\percent}$ acceptance of new moves, indicating that
+the proposed moves are quite probable and therefore more likely to be accepted
+by the sampling algorithm. When $\Delta t$ is to large, however, the result
+become unstable. At this point the randomness in \eqref{eq:Langevin-solution}
+dominates, with steps larger than what allows for convergence. We may tune this
+parameter as we wish, so choosing a value that is small enough for the
+acceptance rate to be close to one, but also not so small that we would need an
+excessive amount of MC cycles in order to have any exploration in space. Setting
+$\Delta t=0.1$ seems to work well in this case, and will be used unless
+otherwise stated.
+
+The run times reported have not changed in any significant way, as would be
+expected, as adding importance sampling did not change the complexity of the algorithm.
+
+
+\subsubsection{Varying the Variational Parameters}
+Figure~\ref{fig:var-alpha-plot-imp} shows a plot of the expected energy, and
+corresponding variance, for the same system and number of MC cycles as that
+shown in Figure~\ref{fig:var-alpha-plot-noimp}. In this version we have enabled
+importance sampling.
+
+We can see a very similar result as before, with the notable exception that the
+line is less jagged. This implies that the sampling results are more stable.
+This is due to the improved exploration of the integration space which
+importance sampling gives us. We conclude therefore that the improved algorithm
+allows us better, more stable results, compared with the simple sampler. This
+allows us to compute less MC samples in order to obtain good enough results,
+something which is highly desired for an application where we are constantly
+fighting against the large time complexity of this kind of system.
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{../results/var-alpha-plot-imp-10000.png}
+    \caption{Plot of average local energy and accompanying population variance,
+    as functions of the variational parameter $\alpha$. The minimum of both
+    graphs are marked, and is expected to be placed at
+    $\alpha=\flatfrac{1}{2}$. Results shown are for $1D$, one particle and
+    $10^{4}$ Monte Carlo cycles, using the Metropolis-Hastings sampling
+    algorithm.}
+    \label{fig:var-alpha-plot-imp}
+\end{figure*}
+
+
+To get a better view of the effect of $\Delta t$ on the Metropolis-Hastings
+sampling algorithm, Figure~\ref{fig:var-alpha-plot-imp-dts} shows the same graph
+as before, but for a set of different values for $\Delta t$. From this plot it
+becomes very clear that choosing the correct value for this parameter will be
+very important when we try to find the optimal variational parameters. We see
+that the apparent minima appear on both the left and the right of the ideal
+value. Small values tend to not increase the energy when we increase alpha, and
+too large numbers makes the energy plot approach a straight line with minimum at
+the lowest alpha tried. Neither of these behaviours are desired, so some care
+has to be taken in ensuring that we apply a value that gives results we expect.
+
+All values are to some extent usable given enough MC samples, but an unrealistic
+number might be needed for $\Delta t$ values far away from the optimum.
+Figure~\ref{fig:var-alpha-plot-imp-dts} provides further evidence that $\Delta
+t=0.1$ is a sensible choice.
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{../results/var-alpha-plot-imp-dts-10000.png}
+    \caption{The same plot as shown in Figure~\ref{fig:var-alpha-plot-imp},
+    shown for multiple different values for $\Delta t$. We see that both too
+    large, and to small values yield less than ideal results.}
+    \label{fig:var-alpha-plot-imp-dts}
+\end{figure*}
 
 
 
