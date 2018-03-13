@@ -94,14 +94,11 @@ public:
 }  // namespace VMC
 
 inline std::ostream& operator<<(std::ostream &strm, const VMC::Results &r) {
-    strm.precision(6);
-    strm << std::scientific;
     return strm << r.E  << ", "
                 << r.E2 << ", "
                 << r.variance << ", "
                 << r.alpha << ", "
                 << r.beta << ", "
-                << std::fixed << std::setprecision(3)
                 << r.acceptance_rate;
 }
 
