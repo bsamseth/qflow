@@ -228,7 +228,7 @@ Results VMCSolver::run_MC(const int n_cycles, std::ostream *out, const double al
             E2_sum += E*E;
 
             if (out != nullptr) {
-                (*out) << E << "\n";
+                out->write(reinterpret_cast<const char*>(&E), sizeof(E));
             }
         }
     }

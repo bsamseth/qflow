@@ -19,10 +19,9 @@ int main(int argc, char *argv[])
 {
     if (argc - 1 < 14) {
         printf("Usage: ./main.x analytic[0=OFF,1=ON] importance[0=OFF,1=ON] ho_type[0=sym,1=elip] dims n_particles n_cycles "
-               "alpha beta time_step step_length omega_ho omega_z a h\n");
+               "alpha beta time_step step_length omega_ho omega_z a h filename\n");
         return 0;
     }
-
 
     // Default configs.
     VMCConfiguration config;
@@ -44,26 +43,29 @@ int main(int argc, char *argv[])
     config.h2          = 1 / (config.h * config.h);
 
 
-    cout.precision(6);
-    cout << std::scientific;
-
     VMCSolver *vmc;
     if (use_importance)
         vmc = new VMCImportanceSolver(config);
     else
         vmc = new VMCSolver(config);
 
+    ofstream out (argv[15], ios::out | ios::binary);
+    if (!out.is_open()) {
+        cout << "Error opening file: " << argv[15] << endl;
+        return 1;
+    }
+
     auto start_time = chrono::high_resolution_clock::now();
 
-
-    Results result = vmc->run_MC(n_cycles, &cout, alpha, beta);
-
+    Results result = vmc->run_MC(n_cycles, &out, alpha, beta);
 
     auto end_time = chrono::high_resolution_clock::now();
-    int milli_time = chrono::duration_cast<chrono::milliseconds>(end_time - start_time).count();
+    long long micro_time = chrono::duration_cast<chrono::microseconds>(end_time - start_time).count();
 
-    cout << "# " << result << endl;
-    cout << "# In time: " << milli_time << " ms\n";
+    cout.precision(16);
+    cout << scientific << result << ", " << micro_time / (double) 1e6 << "\n";
+
+    out.close();
 
     return 0;
 }
