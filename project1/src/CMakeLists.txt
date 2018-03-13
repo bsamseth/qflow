@@ -13,19 +13,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -W -fopenmp")
 set(SOURCE_FILES "vmcsolver.cpp" "vmcimportancesolver.cpp")
 add_library(engine ${SOURCE_FILES})
 
-
-# Add executable b_run.x
-add_executable(b_run.x b_run.cpp)
-add_dependencies(b_run.x engine)
-target_link_libraries(b_run.x engine ${ARMADILLO_LIBRARIES})
-
-
-# Add executable c_run.x
-add_executable(c_run.x c_run.cpp)
-add_dependencies(c_run.x engine)
-target_link_libraries(c_run.x engine ${ARMADILLO_LIBRARIES})
-
-
 # Add executable run_mc.x
 add_executable(run_mc.x run_mc.cpp)
 add_dependencies(run_mc.x engine)
