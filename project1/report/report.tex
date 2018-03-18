@@ -586,6 +586,204 @@ importance sampling used to increase the number of accepted transitions.
 \end{algorithm}
 
 
+\section{Evaluating the Validity of Results}
+
+Once one of the above algorithms has been used to obtain numerical results,
+these are of little use to us as scientist if we know nothing about the
+certainty with which we can trust our the answers we get. To that end we would
+like to make an estimate of the magnitude of the error in our results.
+
+There are two main sources of errors that enter our results, namely 
+\begin{inparaenum}[1)]
+    \item systematic error and
+    \item statistical error.
+\end{inparaenum}
+The systematic error comes from our assumptions about how we model the quantum
+mechanical system, i.e. the form of the Hamiltonian, the ansatz for our
+wavefunction, the hyper-parameters used in the computation etc. This error is
+intrinsic to our approach and is hard to both quantify and avoid.
+
+More of interest to us is therefore the statistical error, as we \textit{can} in
+fact make an estimate for this. 
+
+\subsection{Standard Estimate of the Standard Error of the Mean}
+
+The quantity we are looking to estimate is the
+standard error of the mean local energy, typically defined as
+\begin{align}
+    \sigma_{\bar E_L} = \sqrt{\frac{\sigma_{E_L}^2}{n}}= \sqrt{\frac{1}{n}
+    \qty[\expval{E_L^2} - \expval{E_L}^2]} \label{eq:SE-def},
+\end{align}
+where $n$ denotes the number of samples\footnote{Upper case $N$ will be used for
+the number of particles in the system, lower case $n$ for the number of
+samples.}, and $\sigma_{E_L}^2$ is the true population variance for the local energy. We
+do not know the underlying population variance, and so we estimate this by the
+sample variance instead:
+\begin{align}
+    \hat\sigma_{\bar E_L} = \sqrt{\frac{\hat\sigma_{E_L}^2}{n}}=
+    \sqrt{\frac{1}{n}
+    \qty[\widehat{\expval{E_L^2}} - \bar{E}_L^2]}
+    \label{eq:SE-est-def}.
+\end{align}
+
+There is, however, a complication that should be taken into account when we
+estimate this quantity, namely that our $E_L$ samples will not be drawn
+independently. The above estimation for the standard error is based on the
+central limit theorem, and key to this is the assumption that the samples should
+be independently drawn. 
+
+Inherent to the Monte Carlo sampling techniques is that the value
+of a sample at one point in time is in fact correlated to the sample before it.
+Figure~\ref{fig:time-series-example} shows an example of consecutive samples
+obtained using Algorithm~\ref{alg:metropolis-importance}. Although the values
+vary quite a bit, we still see that if the values are very low it takes some
+time before it can get large again, and vice versa.
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../results/time-series-example.png}
+    \caption{Example time series of local energy values obtained from a
+    simulation using Algorithm~\ref{alg:metropolis-importance}. Energies shown
+    are a small snippet of energies obtained for a system of one boson in one
+    dimension.}
+    \label{fig:time-series-example}
+\end{figure*}
+
+The effect of this is that using \eqref{eq:SE-est-def} directly as the measure for
+the statistical error will tend to \textit{underestimate} its true value.
+
+\subsection{Adjusting for Correlated Samples}
+
+We can make the error estimate in \eqref{eq:SE-est-def} less biased by replacing
+the sample variance by the sample \textit{covariance}:
+\begin{align}
+    \begin{split}
+        \hat{\sigma}_{\bar{ E_L}} &= \sqrt{\frac{\text{Cov}(E_L)}{n}}\\
+        &= \sqrt{\frac{1}{n^2}\sum_{i,j}\qty(E_{L,i} - \bar{E}_L)\qty(E_{L,j}-\bar{E}_L)},
+    \end{split}
+    \label{eq:SE-est-covar-def}
+\end{align}
+which we can rewrite in terms of the uncorrelated and correlated contributions
+to the error as follows:
+\begin{align}
+    \begin{split}
+    \hat{\sigma}^2_{\bar{E_L}} &=
+        \frac{\hat{\sigma}^2_{E_L}}{n}
+    + \frac{2}{n^2}\sum_{i<j}\qty(E_{L,i} - \bar{E}_L)\qty(E_{L,j}-\bar{E}_L).
+    \end{split}\label{eq:SE-est-covar-expanded}
+\end{align}
+We observe that if the energies are uncorrelated in time, we would just get back
+\eqref{eq:SE-est-def}.
+
+To simplify the notation on the way to the end result, we define following two 
+functions:
+\begin{gather}
+    f_d = \frac{1}{n-d}\sum_{k=1}^{n-d} \qty(E_{L,k} -
+    \bar{E}_L)\qty(E_{L,k+d}-\bar{E}_L)\\
+    \kappa_d = \frac{f_d}{\hat{\sigma}^2_{E_L}}.
+\end{gather}
+The function $f_d$ describes the correlation of samples spaced by $d$. We have
+$f_0=\hat{\sigma}_{E_L}^2$, and for an uncorrelated system we have $f_d=0\
+\forall\ d>0$.
+
+Now \eqref{eq:SE-est-covar-expanded} can be written as
+\begin{align}
+    \begin{split}
+    \hat{\sigma}^2_{\bar{E_L}} &= \frac{\hat{\sigma}^2_{E_L}}{n} +
+    \frac{2\hat{\sigma}^2_{E_L}}{n}\sum_{d=1}^{n-1}\kappa_d\\
+    &= \frac{\tau}{n}\ \hat{\sigma}^2_{\bar{E_L}},
+    \end{split}
+\end{align}
+where we have defined the \textit{autocorrelation time} $\tau$, 
+\begin{align}
+    \tau = 1 + 2\sum_{d=1}^{n-1}\kappa_d,\label{eq:autocorr-time-def}
+\end{align}
+which can be interpreted as the spacing between samples for which we no longer
+observe any correlation. For a completely uncorrelated sample set we have $\tau
+=1$, which again results in \eqref{eq:SE-est-def}. Also, any $\tau>1$ will lead
+to an \textit{increase} in the estimated error.
+
+This new estimate of the error will be a much more realistic estimate. However,
+computing the autocorrelation time $\tau$ has time complexity $\mathcal{O}(n^2)$, which will prove
+unfeasible when we plan on producing up to billions of samples.
+
+\subsection{Methods for Improving the Error Estimate}
+
+We look now at two methods of obtaining improved estimates for the standard
+error, besides computing the autocorrelation time $\tau$ directly.
+
+We will look at two such tools here, 
+\begin{inparaenum}[1)]
+    \item Bootstrap and
+    \item Blocking.
+\end{inparaenum}
+
+\subsubsection{Bootstrap}
+The best way to improve statistical results is usually to simply generate more
+data, as statistical estimates tend towards their true value as the number of
+samples grow. So ideally, we would simply generate many more sample sets,
+$\{E_L\}_b \qfor b=1, 2, \dots, B$, compute the mean for each and produce a
+histogram of the results. That would then, for a sufficiently large $B$, serve as
+a good estimate for the probability distribution for $\bar E_L$. We could then
+compute the standard deviation of said distribution and call that the standard
+error of the mean local energy. This would not strictly address the problem of
+correlation directly, but averaging results over more data would lessen the
+effect. Also, we would expect the individual sample sets to be uncorrelated with
+each other, as long as they had differing random seeds.
+
+In practice this is not feasible though, as producing each set of energies will be a
+sizable computational task in it self, and not something we can repeat several
+times. This is were Bootstrap comes in. The idea of Bootstrap is to simulate
+the production of new sample sets by resampling, with replacement, from the
+original data set. From the original set $\{E_L\}_1$ we draw $n$ samples with a
+uniform probability to get new sets $\{E_L\}_b\qfor b = 2,3,\dots,B$.
+
+As long as the original data set is a representative sample of the space of
+energy values (i.e. not biased towards large/small values), and we use a large
+enough value for $B$, this will produce a good approximation of the statistical
+error. 
+
+This approach has to main limitations. First, it is computationally
+expensive to do when the size of the data set is very large, and we need a large
+$B$ value.
+
+Second, Bootstrap is still meant to be used on iid. samples, and any estimates
+for the error we get from it will still be an underestimate. This comes from the
+fact that the original sample set won't be a fully representative sample of the
+space, due to the correlations within it. Using Bootstrap will improve the
+estimate, but it will still be biased.
+
+
+\subsection{Blocking}
+
+On some sense Blocking takes the complete opposite approach to that of
+Bootstrap. Blocking takes the original samples and combines them to make less
+data points.
+
+The idea is to group consecutive samples into \textit{blocks} of a size such
+that sample $i$ in block $j$ is uncorrelated with sample $i$ in block $j+1$.
+Then, treating each block as a single sample (i.e. by computing the average
+energy in each block), we have independent samples of the mean. 
+
+The only issue with this approach is determining how large the blocks need to be
+in order for the blocks to become independent. A natural choice would be the
+autocorrelation time $\tau$, but that just brings us back to the original
+problem of computational infeasibility.
+
+A simple, empirical solution to finding a suitable block size is to make a plot
+of the standard deviation of the block means as a function of block
+size. Because correlated samples meant we \textit{underestimated} the error (aka.
+standard deviation of the sample mean), increasing the block size (i.e. making the
+samples less correlated) should increase the observed error. This would keep
+going until the block size is so large that the samples have become independent,
+at which points it should plateau. Choosing the block size at the plateau point
+would then be optimal.
+
+Even better would be an automated way to determine the ideal block size. Such
+methods do exists, and will be used in this project. The derivation of how this
+works, however, will not be discussed any further in this report.
+
+
 \section{Results}
 
 \subsection{Standard Metropolis Sampling}
@@ -624,6 +822,8 @@ We can, however, expect the difference between the to approaches to be reduced w
 interaction, as this reduced the analytical approach to the same complexity as
 the numerical one.
 
+\newpage
+
 \onecolumn
 \begin{center}
 \begin{longtable}{|c|c|c|c|c|c|c|}
@@ -632,7 +832,7 @@ the numerical one.
     symmetric trap with strength $\omega_{ho}=1$ and 100 MC cycles.}
     \label{tab:simple-metro}
 
-\hline 
+\hline
     \multicolumn{1}{|c|}{Analytic} &
     \multicolumn{1}{c|}{Dimensions} &
     \multicolumn{1}{c|}{Particles} &
