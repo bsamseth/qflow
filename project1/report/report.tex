@@ -1027,7 +1027,30 @@ t=0.1$ is a sensible choice.
     \label{fig:var-alpha-plot-imp-dts}
 \end{figure*}
 
+\subsubsection{Statistical Error}
 
+Figure~\ref{fig:errorbar} shows the results of a simulation on a system of one
+boson in 3D, using $n=2^{14}$ Monte Carlo samples. On the graph, error bars are
+included to visually express the certainty with which we know the results. The
+magnitude of the error bars are given by the standard error, as determined by
+the Blocking method. We see that the error estimate goes promptly to zero as we
+approach the optimal $\alpha=\flatfrac{1}{2}$ value, and in fact we get exactly
+zero as the standard error at this point. This is not that suprising, as using
+the optimal value for $\alpha$ here means we are solving the exact system, and
+therefore there should not be any doubt about the answer either.
+
+The error estimates might be of higher importance as we traverse into the
+interacting case.
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../results/error-plot-3D-2-pow-14.png}
+    \caption{Simulation results using Algorithm~\ref{alg:metropolis-importance},
+    running on a system of one boson in 3D. Error bars have been included, whose
+    magnitude are the standard error of the mean energy, as obtained by the
+    blocking method. In this simulation, $n=2^{14}$ Monte Carlo samples were
+    generated.}
+    \label{fig:errorbar}
+\end{figure*}
 
 
 \printbibliography
