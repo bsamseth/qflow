@@ -53,7 +53,8 @@ dimensions, with the latter given by
 \textbf{The Hamiltonian} of the system will be
 \begin{equation}
     H = \sum_i^N \left(\frac{-\hbar^2}{2m}{\bigtriangledown }_{i}^2 +V_{ext}({\mathbf{r}}_i)\right)  +
-     \sum_{i<j}^{N} V_{int}({\mathbf{r}}_i,{\mathbf{r}}_j),
+     \sum_{i<j}^{N}
+     V_{int}({\mathbf{r}}_i,{\mathbf{r}}_j),\label{eq:Hamiltonian}
 \end{equation}
 Here $\omega_{ho}^2$ defines the trap potential strength.  In the case of the
 elliptical trap, $V_{ext}(x,y,z)$, $\omega_{ho}=\omega_{\perp}$ is the trap
@@ -111,6 +112,53 @@ function. The correlation wave function is
             (1-\frac{a}{|\mathbf{r}_i-\mathbf{r}_j|}) & {|\mathbf{r}_i-\mathbf{r}_j|} > {a}.
         \end{array}
 \end{equation}
+
+\subsubsection{Scaling the System}
+
+We will use distances in units of $a_{ho}$ in this report, $\vec r'=\vec r /a_{ho}$.
+Performing this substitution in the Hamiltonian \eqref{eq:Hamiltonian}, using
+$\laplacian' = a_{ho}^2\laplacian$, we get:
+\begin{align*}
+    H &= \sum_i^N\qty(-\frac{\hbar^2}{2m}\laplacian_i + V_{ext}(\vec r_i)) +
+    \sum_{i<j}^NV_{int}(\vec r_i, \vec r_j)\\
+    &= \sum_{i}^N\left(-\frac{\hbar^2}{2m}
+    \frac{1}{a_{ho}^2}\laplacian_i'\right.\\
+    &\,
+    \qqtext{  }\qqtext{  }+\left.\frac{m}{2}\qty[\omega_{ho}^2a_{ho}^2\qty(x_i^2' + y_i^2') +
+    \omega_z^2a_{ho}^2z_i^2']\right)\\
+    &\,
+    \qqtext{  }+ \sum_{i<j}^NV_{int}(\vec r_i, \vec r_j)\\
+    \begin{split}
+    &= \frac{\hbar\omega_{ho}}{2}\sum_{i}^N\qty(-\laplacian_i' + x_i^2' + y_i^2'
+    + \lambda^2z_i^2')\\
+    &\,\qqtext{  }+ \sum_{i<j}^NV_{int}(\vec r_i, \vec r_j)
+    \end{split}\numberthis\label{eq:Hamiltonian-scaled}
+\end{align*}
+where once again $\lambda = \flatfrac{\omega_z}{\omega_{ho}}$ describes the
+asymmetry in the trap. The interaction potential remains the same, as all
+lengths are scaled, and only the relative distances are used. 
+
+There will also be a scaling factor for the single-particle wave functions, 
+\begin{align}
+    \g(\alpha, \beta, \vec r_i) = \exp[-\alpha a_{ho}^2(x_i^2' + y_i^2' + \beta
+    z_i^2')].
+\end{align}
+The correlation wave functions remains unaffected.
+
+All energies will due to this be given in units of $\hbar\omega_{ho}$, and
+lengths in units of $\alpha_{ho}$. We fix the value of $\omega_{ho}=1$ so that,
+along with the use of the natural units of $\hbar=m=1$, we have 
+\begin{align}
+    a_{ho} = \sqrt{\frac{\hbar}{m\omega_{ho}}} = 1.
+\end{align}
+
+This means the scaling has no effect on the numbers we would get, but now we
+have a well defined scale to relate the numbers to.
+
+For notational sanity, the use of ticks to denote the scaled variables will be
+omitted, and can be assumed in the remainder of this report. 
+
+
 
 \subsection{The Objective}
 Our objective is to evaluate the expectation value of the Hamiltonian. We cannot do this
@@ -385,7 +433,6 @@ With interaction this is $\mathcal{O}(N)$, and without ($a=0$) it simplifies to 
 For brevity, we may later use the notation $\vec F(\vec R) = [\vec F_1, \vec
 F_2,\dots,\vec F_N]$, denoting the matrix of all the individual forces on each
 particle.
-
 
 
 \section{Algorithms}
