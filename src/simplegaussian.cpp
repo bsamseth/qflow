@@ -1,23 +1,31 @@
 #include <cmath>
 
 #include "definitions.hpp"
+#include "boson.hpp"
 #include "system.hpp"
 #include "simplegaussian.hpp"
 
-Real SimpleGaussian::operator() (const System &system) {
-    Real g = 0;
-    if (system.get_dimensions() == 3) {
-        for (const Boson &boson : system.get_bosons()) {
-            g += square(boson[0]) + square(boson[1]) + _beta * square(boson[2]);
+namespace {
+    Real exponent(const System &system, Real beta) {
+        Real g = 0;
+        if (system.get_dimensions() == 3) {
+            for (const Boson &boson : system.get_bosons()) {
+                g += square(boson[0]) + square(boson[1]) + beta * square(boson[2]);
+            }
+        } else {
+            for (const Boson &boson : system.get_bosons()) {
+                g += square(boson);
+            }
         }
-    } else {
-        for (int i = 0; i < system.get_n_bosons(); ++i) {
-            g += system[i] * system[i];
-        }
+        return g;
     }
-    return std::exp( - _alpha * g);
 }
 
-Real SimpleGaussian::derivative_alpha(const System &system) {
-    return -123;
+Real SimpleGaussian::operator() (const System &system) const {
+    return std::exp( - _alpha * exponent(system, _beta) );
+}
+
+Real SimpleGaussian::derivative_alpha(const System &system) const {
+    Real expo = exponent(system, _beta);
+    return - std::exp( - _alpha * expo ) * expo;
 }

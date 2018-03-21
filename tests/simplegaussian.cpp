@@ -1,14 +1,16 @@
 #include <gtest/gtest.h>
 
+#include "definitions.hpp"
 #include "system.hpp"
 #include "simplegaussian.hpp"
+
 
 TEST(SimpleGaussian, zero_system) {
     System s (10, 3);
     SimpleGaussian psi (0.5, 1, 0);
 
     // System all at origin.
-    EXPECT_EQ(1 , psi(s));
+    EXPECT_DOUBLE_EQ(1 , psi(s));
 }
 
 TEST(SimpleGaussian, call_with_beta) {
@@ -21,7 +23,8 @@ TEST(SimpleGaussian, call_with_beta) {
     SimpleGaussian psi (0.5, 2.8);
 
     // Calculated by hand/calculator:
-    EXPECT_NEAR(0.096971040514681181, psi(s), 1e-15);
+    EXPECT_DOUBLE_EQ(0.096971040514681181, psi(s));
+    EXPECT_DOUBLE_EQ(-0.45253337709242497, psi.derivative_alpha(s));
 }
 
 TEST(SimpleGaussian, call_2D) {
@@ -35,6 +38,9 @@ TEST(SimpleGaussian, call_2D) {
     SimpleGaussian psi (0.5);
 
     // Calculated by hand/calculator:
-    EXPECT_NEAR(1.7362052831002947e-20, psi_with_beta(s), 1e-15);
-    EXPECT_NEAR(1.7362052831002947e-20, psi(s), 1e-15);
+    EXPECT_DOUBLE_EQ(1.7362052831002947e-20, psi_with_beta(s));
+    EXPECT_DOUBLE_EQ(1.7362052831002947e-20, psi(s));
+    EXPECT_DOUBLE_EQ(-1.5799468076212681e-18, psi_with_beta.derivative_alpha(s));
+    EXPECT_DOUBLE_EQ(-1.5799468076212681e-18, psi.derivative_alpha(s));
 }
+
