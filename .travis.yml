@@ -1,0 +1,75 @@
+sudo: required
+dist: precise
+language: cpp
+notifications:
+  email: false
+
+
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+      env: COMPILER=g++-4.9
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: COMPILER=g++-5
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
+          packages:
+            - clang-3.6
+      env: COMPILER=clang++-3.6
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.7
+          packages:
+            - clang-3.7
+      env: COMPILER=clang++-3.7
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y libopencv-dev
+
+install:
+  - gem install coveralls-lcov	
+  # install newer LCOV (1.9 was failing)
+  - wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
+  - tar xf lcov_1.11.orig.tar.gz
+  - sudo make -C lcov-1.11/ install
+  - sudo apt-get install liblapack-dev libblas-dev libboost-dev libarmadillo-dev
+
+before_script:
+  - lcov --version
+  - gcov --version
+  - g++ --version
+  - PARENTDIR=$(pwd)
+  - mkdir $PARENTDIR/build && cd $PARENTDIR/build
+  - lcov --directory $PARENTDIR/build --zerocounters
+
+script:
+  - cd $PARENTDIR/build
+  - cmake -Dcoverage=ON -DCMAKE_CXX_COMPILER=$COMPILER $PARENTDIR
+  - make
+  - make gtest
+
+after_success:
+  - lcov --directory $PARENTDIR/build --capture --output-file coverage.info # capture coverage info
+  - lcov --remove coverage.info 'tests/*' 'app/*' 'external/*' 'cmake/*' '/usr/*' --output-file coverage.info # filter out system and test code
+  - lcov --list coverage.info # debug before upload
+  - coveralls-lcov coverage.info #--repo-token _____ coverage.info # uploads to coveralls
