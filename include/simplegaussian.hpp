@@ -10,6 +10,6 @@ class SimpleGaussian : public Wavefunction {
         // Inherit contructor.
         using Wavefunction::Wavefunction;
 
-        virtual Real operator() (const System&);
-        virtual Real derivative_alpha(const System&);
+        virtual Real operator() (const System&) const;
+        virtual Real derivative_alpha(const System&) const;
 };
