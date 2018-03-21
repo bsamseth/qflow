@@ -2,6 +2,7 @@
 
 using Real = double;
 
-inline Real square(Real x) {
+template<typename T>
+inline auto square(T x) {
     return x * x;
 }
