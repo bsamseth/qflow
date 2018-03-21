@@ -1,4 +1,3 @@
-
 #include "definitions.hpp"
 #include "wavefunction.hpp"
 
