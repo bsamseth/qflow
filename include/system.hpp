@@ -44,9 +44,9 @@ inline int System::get_n_bosons() const {
 }
 inline std::ostream& operator<<(std::ostream &strm, const System &s) {
     strm << "System(";
-    for (int i = 0; i < s.get_bosons().size() - 1; i++)
+    for (int i = 0; i < s.get_n_bosons() - 1; i++)
         strm << s[i] << ", ";
-    strm << s[s.get_bosons().size() - 1] << ")";
+    strm << s[s.get_n_bosons() - 1] << ")";
     return strm;
 }
 
