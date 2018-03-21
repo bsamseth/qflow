@@ -13,8 +13,8 @@ class Wavefunction {
     public:
 
         Wavefunction(Real alpha = 0.5, Real beta = 1, Real a = 0);
-        virtual Real operator() (const System&) = 0;
-        virtual Real derivative_alpha(const System&) = 0;
+        virtual Real operator() (const System&) const = 0;
+        virtual Real derivative_alpha(const System&) const = 0;
         Real get_alpha() const;
         Real get_beta() const;
         Real get_a() const;
