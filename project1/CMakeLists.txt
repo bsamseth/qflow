@@ -20,10 +20,6 @@ set(PROJECT_VERSION_MINOR 0)
 # --------------------------------------------------------------------------------
 #                          Compile flags (change as needed).
 # --------------------------------------------------------------------------------
-# These options can be turned on/off from the 'make' command.
-option(debug "Use debugging flag" ON)
-option(coverage "Use coverage flag" OFF)
-
 # Set the C++ standard you wish to use (will apply to all files).
 # If you do not use any features that limits the standard required,
 # you could omitt this line.
@@ -32,16 +28,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 # Things to always include as flags. Change as needed.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")  
 
-# Set debug/coverage flags, or optimize, depending on options.
-if (debug)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
-    # Coverage can only be set if -g is used.
-    if (coverage)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-    endif()
-else ()
-    # Optimize flag for production code. Change as needed.
-    set(CMAKE_CXX_FLAGS "-O2")
+SET(CMAKE_CXX_FLAGS_RELEASE "-O3 -NDEBUG")
+SET(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+SET(CMAKE_CXX_FLAGS_COVERAGE "-g -O0 -fprofile-arcs -ftest-coverage")
+
+if (NOT CMAKE_BUILD_TYPE)
+    message(STATUS "No build type selected, default to Debug")
+    set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
 message(STATUS "Building with the following flags: ${CMAKE_CXX_FLAGS}")
@@ -104,7 +97,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 include(CodeCoverage)
 
 SETUP_TARGET_FOR_COVERAGE(
-				coverage_target     # Name for custom target.
+				coverage            # Name for custom target.
                 ${TEST_MAIN}        # Name of the test driver executable that runs the tests.
 									# NOTE! This should always have a ZERO as exit code
 									# otherwise the coverage generation will not complete.
