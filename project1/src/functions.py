@@ -10,7 +10,7 @@ import time
 def run_MC(dims=1, n=1, n_mc=100, alpha=0.5, beta=1,
            omega_ho=1, omega_z=1, a=0, h=0.001,
            dt=0.1, step_length=1, importance=True,
-           analytic=True, elliptic=False):
+           analytic=True):
     """
     Main interface method to the C++ backend.
 
@@ -18,9 +18,8 @@ def run_MC(dims=1, n=1, n_mc=100, alpha=0.5, beta=1,
     and a list of numbers printed by the backend program, such as acceptance
     rate, execution time etc.
     """
-    options = ('{} '*14).format(int(analytic),
+    options = ('{} '*13).format(int(analytic),
                                 int(importance),
-                                int(elliptic),
                                 dims,
                                 n,
                                 n_mc,
@@ -33,15 +32,16 @@ def run_MC(dims=1, n=1, n_mc=100, alpha=0.5, beta=1,
                                 a,
                                 h)
     filename = tempfile.mktemp(prefix='run-', suffix='_'.join(options.split(' ')))
-
-    with os.popen('../build-src-Desktop-Release/run_mc.x {} {}'.format(options, filename)) as cmd:
-        output = [float(i) for i in cmd.read().strip().split(',')]
+    command = '../build-src-Desktop-Release/run_mc.x {} {}'.format(options, filename)
+    with os.popen(command) as cmd:
+        output = cmd.read()
+        output = [float(i) for i in output.strip().split(',')]
 
     E = np.fromfile(filename, count=n_mc*n, dtype=np.float64)
     return E, output
 
 def E_and_var(**kwargs):
-    energies, _ = run_MC(**kwargs)
+    energies, (_, _, _, _, _, ar, t) = run_MC(**kwargs)
     E_L = np.mean(energies)
     var = np.var(energies)
     return E_L, var
@@ -60,7 +60,7 @@ def E_and_var_plot_for_alphas(alphas, dts=(0.1,), verbose=True, saveas=None, **k
 
 
     if verbose:
-        print(min_E, min_var)
+        print(min_E, min_var, np.min(E, axis=1), np.min(var, axis=1))
 
     # Plot
     fig, ax = plt.subplots(nrows=2, sharex=True, figsize=(12, 12))
@@ -89,6 +89,8 @@ def E_and_var_plot_for_alphas(alphas, dts=(0.1,), verbose=True, saveas=None, **k
         plt.savefig(saveas)
 
     plt.show()
+
+    return E, var
 
 def proper_error_plot(alphas, saveas=None, **kwargs):
     n = kwargs['n_mc'] * kwargs['n']
@@ -233,3 +235,8 @@ def time_series_plot(E, saveas=None):
         plt.savefig(saveas)
 
     plt.show()
+
+
+
+if __name__ == "__main__":
+    E_and_var_plot_for_alphas(np.linspace(0.3, 1, 25), n_mc=int(1e4), importance=True, dts=[1, 0.1, 0.001], beta=np.sqrt(1), dims=3, n=1)
