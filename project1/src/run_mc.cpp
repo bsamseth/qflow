@@ -18,7 +18,7 @@ using namespace VMC;
 int main(int argc, char *argv[])
 {
     if (argc - 1 < 14) {
-        printf("Usage: ./main.x analytic[0=OFF,1=ON] importance[0=OFF,1=ON] ho_type[0=sym,1=elip] dims n_particles n_cycles "
+        printf("Usage: ./main.x analytic[0=OFF,1=ON] importance[0=OFF,1=ON] dims n_particles n_cycles "
                "alpha beta time_step step_length omega_ho omega_z a h filename\n");
         return 0;
     }
@@ -27,19 +27,19 @@ int main(int argc, char *argv[])
     VMCConfiguration config;
     config.acceleration = intarg(1) == 0 ? AnalyticAcceleration::OFF : AnalyticAcceleration::ON;
     const bool use_importance = intarg(2);
-    config.ho_type = intarg(3) == 0 ? HOType::SYMMETRIC : HOType::ELLIPTICAL;
-    config.dims = Dimensions(intarg(4));
-    config.n_particles = intarg(5);
-    const int n_cycles = intarg(6);
-    const double alpha = floatarg(7);
-    const double beta  = floatarg(8);
-    config.time_step   = floatarg(9);
-    config.step_length = floatarg(10);
-    config.omega_ho    = floatarg(11);
-    config.omega_z     = floatarg(12);
-    config.a           = floatarg(13);
+    config.dims = Dimensions(intarg(3));
+    config.n_particles = intarg(4);
+    const int n_cycles = intarg(5);
+    const double alpha = floatarg(6);
+    const double beta  = floatarg(7);
+    config.time_step   = floatarg(8);
+    config.step_length = floatarg(9);
+    config.omega_ho    = floatarg(10);
+    config.omega_z     = floatarg(11);
+    config.ho_type     = config.omega_z == 0 ? HOType::SYMMETRIC : HOType::ELLIPTICAL;
+    config.a           = floatarg(12);
     config.interaction = config.a == 0 ? InteractionType::OFF : InteractionType::ON;
-    config.h           = floatarg(14);
+    config.h           = floatarg(13);
     config.h2          = 1 / (config.h * config.h);
 
 
@@ -49,9 +49,9 @@ int main(int argc, char *argv[])
     else
         vmc = new VMCSolver(config);
 
-    ofstream out (argv[15], ios::out | ios::binary);
+    ofstream out (argv[14], ios::out | ios::binary);
     if (!out.is_open()) {
-        cout << "Error opening file: " << argv[15] << endl;
+        cout << "Error opening file: " << argv[14] << endl;
         return 1;
     }
 
