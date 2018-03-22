@@ -42,6 +42,20 @@ TEST_F(HarmonicOscillatorHamiltonianTest, potential) {
     EXPECT_DOUBLE_EQ(0, H_1.internal_potential(*s));
 }
 
+TEST_F(HarmonicOscillatorHamiltonianTest, potential2D) {
+    System s (1, 2);
+    s[0] = {{0.75, -1.5}};
+
+    // Check potential for 2D case. Should be agnotic of
+    // omega_z value.
+
+    // Calculated by hand/calculator.
+    EXPECT_DOUBLE_EQ(1.40625, H_2.external_potential(s));
+    EXPECT_DOUBLE_EQ(1.40625, H_1.external_potential(s));
+    EXPECT_DOUBLE_EQ(0, H_2.internal_potential(s));
+    EXPECT_DOUBLE_EQ(0, H_1.internal_potential(s));
+}
+
 TEST_F(HarmonicOscillatorHamiltonianTest, localEnergyAlphaBetaOmegaZ) {
     SimpleGaussian psi_1(0.6, 1);
     SimpleGaussian psi_2(0.6, 2.8);
