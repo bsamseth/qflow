@@ -9,12 +9,16 @@
 #include "definitions.hpp"
 #include "boson.hpp"
 
-std::default_random_engine rand_gen(12345);
-std::uniform_real_distribution<Real> rand_dist(- 1e20, 1e20);
-std::uniform_int_distribution<int> rand_dim(1, 3);
+namespace {
+    std::default_random_engine rand_gen(12345);
+    std::uniform_real_distribution<Real> rand_dist(- 1e20, 1e20);
+    std::uniform_int_distribution<int> rand_dim(1, 3);
 
-auto double_gen = std::bind(rand_dist, rand_gen);
-auto dim_gen    = std::bind(rand_dim, rand_gen);
+    auto double_gen = std::bind(rand_dist, rand_gen);
+    auto dim_gen    = std::bind(rand_dim, rand_gen);
+
+    const long N_RANDOM_TRIALS = 10000;
+}
 
 TEST(Boson, basics) {
     Boson b1(1);
@@ -43,7 +47,7 @@ TEST(Boson, copy_init) {
 }
 
 TEST(Boson, dot_prod) {
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < N_RANDOM_TRIALS; i++) {
         int dims = dim_gen();
         std::vector<Real> a_vec(dims);
         std::vector<Real> b_vec(dims);
@@ -57,12 +61,12 @@ TEST(Boson, dot_prod) {
         Boson b (b_vec);
 
         Real expected = std::inner_product(a_vec.begin(), a_vec.end(), b_vec.begin(), (Real) 0.0);
-        EXPECT_NEAR(expected, a * b, 1e-15);
+        EXPECT_DOUBLE_EQ(expected, a * b);
     }
 }
 
 TEST(Boson, add_sub) {
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < N_RANDOM_TRIALS; i++) {
         int dims = dim_gen();
         std::vector<Real> a_vec(dims);
         std::vector<Real> b_vec(dims);
@@ -85,7 +89,4 @@ TEST(Boson, add_sub) {
         EXPECT_TRUE(d == a - b);
     }
 }
-
-
-
 
