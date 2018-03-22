@@ -34,7 +34,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
 # Set debug/coverage flags, or optimize, depending on options.
 if (debug)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
     # Coverage can only be set if -g is used.
     if (coverage)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
@@ -44,6 +44,7 @@ else ()
     set(CMAKE_CXX_FLAGS "-O2")
 endif()
 
+message(STATUS "Building with the following flags: ${CMAKE_CXX_FLAGS}")
 
 
 # --------------------------------------------------------------------------------
@@ -96,6 +97,19 @@ include(CTest)
 enable_testing()
 add_test(unit_tests ${PROJECT_BINARY_DIR}/${TEST_MAIN})
 
+# --------------------------------------------------------------------------------
+#                         Code Coverage (no change needed).
+# --------------------------------------------------------------------------------
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+include(CodeCoverage)
+
+SETUP_TARGET_FOR_COVERAGE(
+				coverage_target     # Name for custom target.
+                ${TEST_MAIN}        # Name of the test driver executable that runs the tests.
+									# NOTE! This should always have a ZERO as exit code
+									# otherwise the coverage generation will not complete.
+				coverage_out        # Name of output directory.
+				)
 
 # --------------------------------------------------------------------------------
 #                         Documentation (no change needed).
