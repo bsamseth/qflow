@@ -6,3 +6,5 @@ System::System(int number_of_bosons, int dimensions) {
         _bosons.push_back( { dimensions } );
     }
 }
+
+System::System(const System& from) : _bosons(from.get_bosons()) { }

@@ -12,6 +12,7 @@ class System {
     public:
 
         System(int number_of_bosons, int dimensions);
+        System(const System&);
 
         Boson& operator[] (int index);
         const Boson& operator[] (int index) const;
