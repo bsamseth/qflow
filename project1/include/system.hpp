@@ -16,6 +16,8 @@ class System {
 
         Boson& operator[] (int index);
         const Boson& operator[] (int index) const;
+        bool operator== (const System&) const;
+        bool operator!= (const System&) const;
 
         std::vector<Boson>& get_bosons();
         const std::vector<Boson>& get_bosons() const;
@@ -30,6 +32,12 @@ inline Boson& System::operator[] (int index) {
 }
 inline const Boson& System::operator[] (int index) const {
     return _bosons[index];
+}
+inline bool System::operator== (const System &other) const {
+    return _bosons == other.get_bosons();
+}
+inline bool System::operator!= (const System &other) const {
+    return _bosons != other.get_bosons();
 }
 inline std::vector<Boson>& System::get_bosons() {
     return _bosons;

@@ -24,6 +24,7 @@ class Boson {
         Boson operator- (const Boson&) const;
         Boson operator- (Real) const;
         bool operator== (const Boson&) const;
+        bool operator!= (const Boson&) const;
         Boson& operator+= (const Boson&);
         Boson& operator+= (Real);
         Boson& operator*= (Real);
@@ -40,6 +41,9 @@ inline const Real& Boson::operator[] (int dimension) const {
 }
 inline bool Boson::operator== (const Boson& other) const {
     return _pos == other._pos;
+}
+inline bool Boson::operator!= (const Boson& other) const {
+    return _pos != other._pos;
 }
 inline std::vector<Real>& Boson::get_position() {
     return _pos;
