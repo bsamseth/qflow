@@ -16,7 +16,7 @@ class Hamiltonian {
         virtual Real internal_potential(const System&) const = 0;
 
         virtual Real local_energy(const System&, const Wavefunction&) const = 0;
-        virtual Real local_energy_numeric(System&, const Wavefunction&) const;
+        virtual Real local_energy_numeric(const System&, const Wavefunction&) const;
         virtual Real kinetic_energy(System &, const Wavefunction&) const;
         virtual Real derivative_alpha(const System&, const Wavefunction&) const = 0;
 
