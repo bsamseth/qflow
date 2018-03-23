@@ -7,8 +7,11 @@
 #include "sampler.hpp"
 #include "metropolissampler.hpp"
 
-TEST(MetropolisSampler, basics) {
-    const System init_system (10, 3);
+TEST(MetropolisSampler, reproducesExactInSimpleCase) {
+    const Real E_TOL = 1e-3;
+    const Real VAR_TOL = 1e-3;
+    const int runs = 10000;
+    const System init_system (2, 3);
     const SimpleGaussian psi(0.5, 1);
     const HarmonicOscillatorHamiltonian H_0;
     MetropolisSampler sampler (init_system, psi);
@@ -21,11 +24,13 @@ TEST(MetropolisSampler, basics) {
     EXPECT_EQ(init_system.get_dimensions(), after.get_dimensions());
     EXPECT_EQ(init_system.get_n_bosons(), after.get_n_bosons());
 
+    Real E  = 0;
+    Real E2 = 0;
     // One one particle should be attempted to move each time.
     // All other particles should remain unchanged, and the moving
-    // particle shoudl be changed iff acceptance rate has increases.
-    for (int runs = 1; runs < 10000; ++runs) {
-        int moving = runs % init_system.get_n_bosons();
+    // particle shoudl be changed iff acceptance rate has not decreased.
+    for (int run = 1; run < runs; ++run) {
+        int moving = run % init_system.get_n_bosons();
 
         Real ar = sampler.get_acceptance_rate();
         System before = sampler.get_current_system();
@@ -36,10 +41,20 @@ TEST(MetropolisSampler, basics) {
             ASSERT_EQ(before[i], after[i]);
         }
 
-        if (sampler.get_acceptance_rate() > ar) {
+        if (sampler.get_acceptance_rate() >= ar) {
             ASSERT_NE( before[moving], after[moving] );
         } else {
             ASSERT_EQ( before[moving], after[moving] );
         }
+
+        Real E_L = H_0.local_energy(after, psi);
+        E += E_L;
+        E2 += square(E_L);
     }
+
+    E /= runs;
+    E2 /= runs;
+
+    EXPECT_NEAR(0.5 * init_system.get_n_bosons() * init_system.get_dimensions(), E, E_TOL);
+    EXPECT_NEAR(0.0, E2 - square(E), VAR_TOL);
 }
