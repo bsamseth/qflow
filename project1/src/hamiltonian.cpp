@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 
 #include "definitions.hpp"
 #include "system.hpp"
@@ -24,7 +25,12 @@ Real Hamiltonian::kinetic_energy(System &system, const Wavefunction &psi) const 
 }
 
 Real Hamiltonian::local_energy_numeric(System &system, const Wavefunction &psi) const {
-    return kinetic_energy(system, psi) / psi(system)
+    Real wavefunc = psi(system);
+    if (wavefunc == 0) {
+        return std::numeric_limits<Real>::max();
+    }
+
+    return kinetic_energy(system, psi) / wavefunc
          + external_potential(system)
          + internal_potential(system);
 }
