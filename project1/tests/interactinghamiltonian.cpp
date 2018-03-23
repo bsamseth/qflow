@@ -72,5 +72,7 @@ TEST_F(InteractingHamiltonianTest, localEnergy) {
     // For s1, expect decent numerical accuracy.
     EXPECT_NEAR(H_1.local_energy_numeric(*s1, psi_T), H_1.local_energy(*s1, psi_T), 5e-6);
     EXPECT_DOUBLE_EQ(H_1.local_energy_numeric(*s2, psi_T), H_1.local_energy(*s2, psi_T));
+    EXPECT_NEAR(H_2.local_energy_numeric(*s1, psi_T), H_2.local_energy(*s1, psi_T), 5e-6);
+    EXPECT_DOUBLE_EQ(H_2.local_energy_numeric(*s2, psi_T), H_2.local_energy(*s2, psi_T));
 }
 
