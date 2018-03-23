@@ -3,7 +3,6 @@
 #include "definitions.hpp"
 #include "system.hpp"
 #include "wavefunction.hpp"
-#include "hamiltonian.hpp"
 
 class Sampler {
     protected:

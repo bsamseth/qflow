@@ -3,7 +3,6 @@
 #include "definitions.hpp"
 #include "system.hpp"
 #include "wavefunction.hpp"
-#include "hamiltonian.hpp"
 #include "sampler.hpp"
 
 class MetropolisSampler : public Sampler {
