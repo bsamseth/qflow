@@ -29,3 +29,11 @@ Real SimpleGaussian::derivative_alpha(const System &system) const {
     Real expo = exponent(system, _beta);
     return - std::exp( - _alpha * expo ) * expo;
 }
+
+Boson SimpleGaussian::drift_force(const System &system, int boson) const {
+    Boson r = system[boson];
+    if (system.get_dimensions() == 3) {
+        r[2] *= _beta;
+    }
+    return r * (-4 * _alpha);
+}

@@ -5,6 +5,16 @@
 #include "simplegaussian.hpp"
 #include "interactingwavefunction.hpp"
 
+void EXPECT_BOSON_EQ(const Boson &b1, const Boson &b2, Real tol = -1) {
+    ASSERT_EQ(b1.get_dimensions(), b2.get_dimensions());
+    for (int d = 0; d < b1.get_dimensions(); ++d) {
+        if (tol > 0)
+            EXPECT_NEAR(b1[d], b2[d], tol);
+        else
+            EXPECT_DOUBLE_EQ(b1[d], b2[d]);
+    }
+}
+
 TEST(InteractingWavefunction, zero_system) {
     System s (10, 3);
     InteractingWavefunction psi (0.5, 1, 0);
@@ -31,8 +41,11 @@ TEST(InteractingWavefunction, call_with_beta) {
     // With a set to zero, this system should behave as a simple gaussian wavefunc.
     EXPECT_DOUBLE_EQ(psi(s), psi_2(s));
     EXPECT_DOUBLE_EQ(psi.derivative_alpha(s), psi_2.derivative_alpha(s));
+    EXPECT_BOSON_EQ(psi.drift_force(s, 1), psi_2.drift_force(s, 1));
 
     // Calculated by hand/calculator:
+    Boson expected_diff = {{-0.028857741512205, -0.060611083235117, 0.0464826998419499}};
     EXPECT_DOUBLE_EQ(0.94543129358834554 * psi(s), psi_1(s));
     EXPECT_DOUBLE_EQ(0.94543129358834554 * psi.derivative_alpha(s), psi_1.derivative_alpha(s));
+    EXPECT_BOSON_EQ(expected_diff, psi_1.drift_force(s, 0) - psi.drift_force(s, 0), 1e-12);
 }

@@ -12,4 +12,5 @@ class SimpleGaussian : public Wavefunction {
 
         virtual Real operator() (const System&) const;
         virtual Real derivative_alpha(const System&) const;
+        virtual Boson drift_force(const System&, int boson) const;
 };
