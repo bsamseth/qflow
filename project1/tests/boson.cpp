@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <iostream>
+#include <sstream>
 #include <random>
 #include <limits>
 #include <numeric>
@@ -18,6 +19,14 @@ namespace {
     auto dim_gen    = std::bind(rand_dim, rand_gen);
 
     const long N_RANDOM_TRIALS = 10000;
+
+    std::vector<Real> random_vec(int dimensions) {
+        std::vector<Real> v (dimensions);
+        for (int i = 0; i < dimensions; ++i) {
+            v[i] = double_gen();
+        }
+        return v;
+    }
 }
 
 TEST(Boson, basics) {
@@ -41,7 +50,6 @@ TEST(Boson, copy_init) {
     a[2] = -1;
     Boson b = a;
     Boson c = {{0, 123, -1}};
-
     EXPECT_EQ(a, b);
     EXPECT_EQ(a, c);
 }
@@ -49,14 +57,8 @@ TEST(Boson, copy_init) {
 TEST(Boson, dot_prod) {
     for (int i = 0; i < N_RANDOM_TRIALS; i++) {
         int dims = dim_gen();
-        std::vector<Real> a_vec(dims);
-        std::vector<Real> b_vec(dims);
-
-        for (int i = 0; i < dims; i++) {
-            a_vec[i] = rand_dist(rand_gen);
-            b_vec[i] = rand_dist(rand_gen);
-        }
-
+        std::vector<Real> a_vec = random_vec(dims);
+        std::vector<Real> b_vec = random_vec(dims);
         Boson a (a_vec);
         Boson b (b_vec);
 
@@ -65,17 +67,15 @@ TEST(Boson, dot_prod) {
     }
 }
 
-TEST(Boson, add_sub) {
+TEST(Boson, addSub) {
     for (int i = 0; i < N_RANDOM_TRIALS; i++) {
         int dims = dim_gen();
-        std::vector<Real> a_vec(dims);
-        std::vector<Real> b_vec(dims);
+        std::vector<Real> a_vec = random_vec(dims);
+        std::vector<Real> b_vec = random_vec(dims);
         std::vector<Real> c_vec(dims);
         std::vector<Real> d_vec(dims);
 
         for (int i = 0; i < dims; i++) {
-            a_vec[i] = rand_dist(rand_gen);
-            b_vec[i] = rand_dist(rand_gen);
             c_vec[i] = a_vec[i] + b_vec[i];
             d_vec[i] = a_vec[i] - b_vec[i];
         }
@@ -85,8 +85,50 @@ TEST(Boson, add_sub) {
         Boson c (c_vec);
         Boson d (d_vec);
 
-        EXPECT_TRUE(c == a + b);
-        EXPECT_TRUE(d == a - b);
+        ASSERT_TRUE(c == a + b);
+        ASSERT_TRUE(d == a - b);
+        ASSERT_TRUE(c == (a += b));
+        ASSERT_TRUE(c == a);
+
+        a = { a_vec };
+
+        ASSERT_TRUE(d == (a -= b));
+        ASSERT_TRUE(d == a);
     }
 }
 
+TEST(Boson, scalarOperations) {
+    for (int i = 0; i < N_RANDOM_TRIALS; i++) {
+        int dims = dim_gen();
+        Real scalar = double_gen();
+        Boson a = { random_vec(dims) };
+        Boson b = a * scalar;
+        Boson c = a + scalar;
+        Boson d = a - scalar;
+
+        for (int i = 0; i < dims; ++i) {
+            ASSERT_DOUBLE_EQ(a[i] * scalar, b[i]);
+            ASSERT_DOUBLE_EQ(a[i] + scalar, c[i]);
+            ASSERT_DOUBLE_EQ(a[i] - scalar, d[i]);
+        }
+
+        b *= scalar;
+        c += scalar;
+        d -= scalar;
+
+        for (int i = 0; i < dims; ++i) {
+            ASSERT_DOUBLE_EQ(a[i] * square(scalar), b[i]);
+            ASSERT_DOUBLE_EQ(a[i] + 2 * scalar, c[i]);
+            ASSERT_DOUBLE_EQ(a[i] - 2 * scalar, d[i]);
+        }
+    }
+}
+
+TEST(Boson, display) {
+    Boson b = {{ 1, 2, 3 }};
+    std::stringstream actual;
+    actual << b;
+    std::stringstream expected;
+    expected << "Boson(1, 2, 3)";
+    EXPECT_EQ(expected.str(), actual.str());
+}
