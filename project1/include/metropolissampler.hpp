@@ -11,7 +11,7 @@ class MetropolisSampler : public Sampler {
         MetropolisSampler(const System&, const Wavefunction&, Real step = 1.0);
         virtual void initialize_system();
         virtual void perturb_system();
-        virtual Real acceptance_probability();
+        virtual Real acceptance_probability() const;
         friend std::ostream& operator<<(std::ostream&, const MetropolisSampler&);
 };
 

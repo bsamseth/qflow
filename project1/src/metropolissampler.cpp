@@ -31,6 +31,6 @@ void MetropolisSampler::perturb_system() {
     _psi_new = (*_wavefunction)(_system_new);
 }
 
-Real MetropolisSampler::acceptance_probability() {
+Real MetropolisSampler::acceptance_probability() const {
     return square(_psi_new) / square(_psi_old);
 }

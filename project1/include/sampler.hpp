@@ -24,7 +24,7 @@ class Sampler {
         Sampler(const System&, const Wavefunction&, Real step);
         virtual void initialize_system() = 0;
         virtual void perturb_system() = 0;
-        virtual Real acceptance_probability() = 0;
+        virtual Real acceptance_probability() const = 0;
         virtual const System& next_configuration();
 
         Real get_acceptance_rate() const;
