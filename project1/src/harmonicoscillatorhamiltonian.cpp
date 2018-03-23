@@ -36,3 +36,31 @@ Real HarmonicOscillatorHamiltonian::external_potential(const System &system) con
     return 0.5 * pot;
 }
 
+Real HarmonicOscillatorHamiltonian::derivative_alpha(const System &system, const Wavefunction &psi) const {
+    const Real alpha = psi.get_alpha();
+    const Real beta = psi.get_beta();
+    const int dim = system.get_dimensions();
+    const int N = system.get_n_bosons();
+    const Real one_body_beta_term = (dim == 3 ? 2 + beta : dim);
+
+    Real sum_squared_dist = 0;
+    /* if (dim == 3) { */
+    /*     for (Boson boson : system.get_bosons()) { */
+    /*         boson[2] *= beta; */
+    /*         sum_squared_dist += square(boson); */
+    /*     } */
+    /* } else { */
+        for (const Boson &boson : system.get_bosons()) {
+            sum_squared_dist += square(boson);
+        }
+    /* } */
+
+    // Add contribution by beta if any.
+    if (dim == 3 and beta != 1) {
+        for (const Boson &boson : system.get_bosons()) {
+            sum_squared_dist += square(boson[2]) * (square(beta) - 1);
+        }
+    }
+
+    return N * one_body_beta_term - 4 * alpha * sum_squared_dist;
+}

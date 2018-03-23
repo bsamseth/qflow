@@ -14,4 +14,6 @@ class InteractingHamiltonian: public HarmonicOscillatorHamiltonian {
         virtual Real internal_potential(const System&) const;
 
         virtual Real local_energy(const System&, const Wavefunction&) const;
+
+        virtual Real derivative_alpha(const System&, const Wavefunction&) const;
 };
