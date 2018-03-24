@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 #include "definitions.hpp"
 #include "system.hpp"
@@ -29,7 +30,7 @@ class Sampler {
 
         Real get_acceptance_rate() const;
         const System& get_current_system() const;
-
+        friend std::ostream& operator<<(std::ostream &strm, const Sampler& s);
 };
 
 inline Real Sampler::get_acceptance_rate() const {
@@ -41,4 +42,7 @@ inline const System& Sampler::get_current_system() const {
 inline void Sampler::prepare_for_next_run() {
     _total_steps++;
     _particle_to_move = (_particle_to_move + 1) % _system_old.get_n_bosons();
+}
+inline std::ostream& operator<<(std::ostream &strm, const Sampler& s) {
+    return strm << "Sampler(step=" << s._step << ")";
 }
