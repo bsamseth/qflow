@@ -1,6 +1,5 @@
 #include <random>
 #include <cassert>
-#include <omp.h>
 
 #include "vmcimportancesolver.hpp"
 
