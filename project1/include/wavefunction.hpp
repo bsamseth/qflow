@@ -19,6 +19,7 @@ class Wavefunction {
         Real get_alpha() const;
         Real get_beta() const;
         Real get_a() const;
+        void set_params(Real alpha, Real beta = 1, Real a = 0);
 
         friend std::ostream& operator<<(std::ostream &strm, const Wavefunction &psi);
 };
@@ -31,6 +32,9 @@ inline Real Wavefunction::get_beta() const {
 }
 inline Real Wavefunction::get_a() const {
     return _a;
+}
+inline void Wavefunction::set_params(Real alpha, Real beta, Real a) {
+    _alpha = alpha; _beta = beta; _a = a;
 }
 inline std::ostream& operator<<(std::ostream &strm, const Wavefunction &psi) {
     return strm << "Wavefunciton(alpha=" << psi._alpha  << ", beta=" << psi._beta << ", a=" << psi._a << ")";
