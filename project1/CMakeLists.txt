@@ -66,9 +66,13 @@ add_library( engine ${SOURCES} )
 
 # Add an executable for the file main.cpp, here called main.x.
 # If you add more executables, copy these three lines accordingly.
-add_executable(main.x app/main.cpp)   # Name of exec. and location of file.
-add_dependencies(main.x engine)       # main.cpp uses the 'engine', add dep.
-target_link_libraries(main.x engine)  # Link the executable to the 'engine'.
+add_executable(main.x app/main.cpp)  
+add_dependencies(main.x engine)     
+target_link_libraries(main.x engine)
+
+add_executable(optimize.x app/optimize.cpp)
+add_dependencies(optimize.x engine)       
+target_link_libraries(optimize.x engine) 
 
 
 
