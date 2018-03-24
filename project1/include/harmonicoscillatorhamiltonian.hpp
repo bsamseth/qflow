@@ -19,6 +19,6 @@ class HarmonicOscillatorHamiltonian: public Hamiltonian {
         virtual Real derivative_alpha(const System&, const Wavefunction&) const;
 };
 
-inline Real HarmonicOscillatorHamiltonian::internal_potential(const System &system) const {
+inline Real HarmonicOscillatorHamiltonian::internal_potential(__attribute__((unused)) const System &system) const {
     return 0;
 }
