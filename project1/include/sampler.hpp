@@ -28,6 +28,8 @@ class Sampler {
         virtual Real acceptance_probability() const = 0;
         virtual const System& next_configuration();
 
+        long get_accepted_steps() const;
+        long get_total_steps() const;
         Real get_acceptance_rate() const;
         const System& get_current_system() const;
         friend std::ostream& operator<<(std::ostream &strm, const Sampler& s);
@@ -35,6 +37,12 @@ class Sampler {
 
 inline Real Sampler::get_acceptance_rate() const {
     return _accepted_steps / (Real) _total_steps;
+}
+inline long Sampler::get_accepted_steps() const {
+    return _accepted_steps;
+}
+inline long Sampler::get_total_steps() const {
+    return _total_steps;
 }
 inline const System& Sampler::get_current_system() const {
     return _system_old;

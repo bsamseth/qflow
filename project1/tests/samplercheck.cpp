@@ -6,15 +6,23 @@
 #include "harmonicoscillatorhamiltonian.hpp"
 #include "sampler.hpp"
 #include "metropolissampler.hpp"
+#include "importancesampler.hpp"
 
-TEST(MetropolisSampler, reproducesExactInSimpleCase) {
-    const Real E_TOL = 1e-3;
-    const Real VAR_TOL = 1e-3;
+#define METRO_SAMPLER 1
+#define IMPO_SAMPLER 2
+
+void sampler_sanity(int sampler_type) {
     const int runs = 10000;
-    const System init_system (2, 3);
+    const System init_system (10, 3);
     const SimpleGaussian psi(0.5, 1);
     const HarmonicOscillatorHamiltonian H_0;
-    MetropolisSampler sampler (init_system, psi);
+
+    Sampler *sp;
+    if (sampler_type == METRO_SAMPLER)
+        sp = new MetropolisSampler(init_system, psi);
+    else
+        sp = new ImportanceSampler(init_system, psi);
+    Sampler &sampler = *sp;
 
     System before = sampler.get_current_system();
     System after  = sampler.next_configuration();
@@ -24,37 +32,46 @@ TEST(MetropolisSampler, reproducesExactInSimpleCase) {
     EXPECT_EQ(init_system.get_dimensions(), after.get_dimensions());
     EXPECT_EQ(init_system.get_n_bosons(), after.get_n_bosons());
 
-    Real E  = 0;
-    Real E2 = 0;
     // One one particle should be attempted to move each time.
     // All other particles should remain unchanged, and the moving
     // particle shoudl be changed iff acceptance rate has not decreased.
-    for (int run = 1; run < runs; ++run) {
+    for (int run = 1; run <= runs; ++run) {
         int moving = run % init_system.get_n_bosons();
 
-        Real ar = sampler.get_acceptance_rate();
+        long accepted = sampler.get_accepted_steps();
+        long total = sampler.get_total_steps();
         System before = sampler.get_current_system();
         System after  = sampler.next_configuration();
+
+        ASSERT_TRUE(total == sampler.get_total_steps() - 1);
 
         for (int i = 0; i < init_system.get_n_bosons(); ++i) {
             if (i == moving) continue;
             ASSERT_EQ(before[i], after[i]);
         }
 
-        if (sampler.get_acceptance_rate() >= ar) {
+        if (sampler.get_accepted_steps() > accepted) {
             ASSERT_NE( before[moving], after[moving] );
         } else {
             ASSERT_EQ( before[moving], after[moving] );
         }
 
         Real E_L = H_0.local_energy(after, psi);
-        E += E_L;
-        E2 += square(E_L);
+
+        // Energy should still be totaly stable for the exact case.
+        // Minor, minor rounding error might be here, so every so often a
+        // ASSERT_DOUBLE_EQ will fail due to being 5 ULP different, where 4 ULP (unit in the last place)
+        // is Google tests limit. This is still good enough. ASSERT_FLOAT_EQ works.
+        ASSERT_NEAR(init_system.get_dimensions() * init_system.get_n_bosons() * 0.5, E_L, 1e-13);
     }
-
-    E /= runs;
-    E2 /= runs;
-
-    EXPECT_NEAR(0.5 * init_system.get_n_bosons() * init_system.get_dimensions(), E, E_TOL);
-    EXPECT_NEAR(0.0, E2 - square(E), VAR_TOL);
 }
+
+TEST(MetropolisSampler, sanityCheck) {
+    sampler_sanity(METRO_SAMPLER);
+}
+TEST(ImportanceSampler, sanityCheck) {
+    sampler_sanity(IMPO_SAMPLER);
+}
+
+#undef METRO_SAMPLER
+#undef IMPO_SAMPLER
