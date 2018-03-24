@@ -1,6 +1,5 @@
 #include <random>
 #include <cassert>
-#include <omp.h>
 
 #include "vmcsolver.hpp"
 
@@ -44,10 +43,10 @@ Real VMCSolver::V_ext(const arma::Mat<Real> &R) const {
     Real pot = 0;
     for (int i = 0; i < _config.n_particles; ++i) {
         if (_config.ho_type == HOType::ELLIPTICAL and _config.dims == Dimensions::DIM_3) {
-            pot += _config.omega_ho * (R(0, i)*R(0, i) + R(1, i)*R(1, i))
-                 + _config.omega_z  *  R(2, i)*R(2, i);
+            pot += _config.omega_ho*_config.omega_ho * (R(0, i)*R(0, i) + R(1, i)*R(1, i))
+                 + _config.omega_z*_config.omega_ho  *  R(2, i)*R(2, i);
         } else {
-            pot += _config.omega_ho * arma::dot(R.col(i), R.col(i));
+            pot += _config.omega_ho*_config.omega_ho * arma::dot(R.col(i), R.col(i));
         }
     }
     return 0.5 * pot;
@@ -81,7 +80,11 @@ Real VMCSolver::Psi_f() const {
 Real VMCSolver::Psi_g(const arma::Mat<Real> &R) const {
     Real g = 0;
     for (int i = 0; i < _config.n_particles; ++i) {
-        g += arma::dot(R.col(i), R.col(i));
+        if (_config.ho_type == HOType::ELLIPTICAL and _config.dims == Dimensions::DIM_3) {
+            g += (R(0, i)*R(0, i) + R(1, i)*R(1, i)) + _beta *  R(2, i)*R(2, i);
+        } else {
+            g += arma::dot(R.col(i), R.col(i));
+        }
     }
     return std::exp(-_alpha * g);
 }
@@ -128,7 +131,7 @@ Real VMCSolver::E_local(arma::Mat<Real> &R) {
 
     Real E_L = 0;
     const bool no_interaction = _config.interaction == InteractionType::OFF;
-    const int one_body_beta_term = - (_config.dims == Dimensions::DIM_3 ?
+    const Real one_body_beta_term = - (_config.dims == Dimensions::DIM_3 ?
                                           2 + _beta : (int) _config.dims);
 
     for (int k = 0; k < _config.n_particles; ++k) {
