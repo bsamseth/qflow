@@ -15,21 +15,27 @@ int main(int argc, char *argv[]) {
     Wavefunction *psi = nullptr;
     Hamiltonian *H = nullptr;
     Sampler *sampler = nullptr;
-    Calculator *calc = nullptr;
-    int cycles = 0;
 
-    parse_arguments(argc, argv, &psi, &H, &sampler, &calc, &cycles);
+    Real initial_guess;
+    Real learning_rate;
+    int sample_points_per_iteration;
+    int max_iterations = 10000;
+    Real minimum_gradient;
+
+    parse_arguments_optimize(argc, argv, &psi, &H, &sampler, &initial_guess,
+                             &learning_rate, &sample_points_per_iteration,
+                             &minimum_gradient);
 
     cout << *psi << endl;
     cout << *H << endl;
     cout << *sampler << endl;
     cout << sampler->get_current_system() << endl;
+    cout << "Alpha guess: " << initial_guess << ", "
+         << "Learning rate: " << learning_rate << ", "
+         << "Cycles per iteration: " << sample_points_per_iteration << ", "
+         << "Max iterations: " << max_iterations << ", "
+         << "Minimum gradient: " << minimum_gradient << endl;
 
-    Real initial_guess = 0.45;
-    Real learning_rate = 0.1;
-    int sample_points_per_iteration = 1000000;
-    int max_iterations = 1000;
-    Real minimum_gradient = 0.0000001;
 
     Real alpha_optimal = Optimizer::gradient_decent_optimizer(*psi,
                                                               *H,
