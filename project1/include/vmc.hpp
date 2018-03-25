@@ -16,3 +16,4 @@
 #include "wavefunction.hpp"
 #include "calculator.hpp"
 #include "energycalculator.hpp"
+#include "argumentparser.hpp"
