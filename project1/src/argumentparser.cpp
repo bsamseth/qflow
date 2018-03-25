@@ -49,5 +49,40 @@ void parse_arguments(int argc, char **argv, Wavefunction **psi, Hamiltonian **H,
     *calc = new CombinedCalculator<EnergyCalculator, OneBodyDensityCalculator>(*ecalc, *dcalc);
 }
 
+void parse_arguments_optimize(int argc, char **argv, Wavefunction **psi, Hamiltonian **H, Sampler **sampler, Real *alpha_guess, Real *learning_rate, int *n_cycles, Real *minimum_gradient) {
+    if (argc - 1 < 11) {
+        printf("Usage: ./optimize.x sampler[Metro=0,Imp=1] dim n_bosons alpha_guess beta gamma a step learning_rate n_cycles min_gradient\n");
+        std::exit(0);
+    }
+
+    int sampler_type = intarg(1);
+    int dimensions = intarg(2);
+    int bosons = intarg(3);
+    *alpha_guess = floatarg(4);
+    Real beta = floatarg(5);
+    Real gamma = floatarg(6);
+    Real a = floatarg(7);
+    Real step = floatarg(8);
+    *learning_rate = floatarg(9);
+    *n_cycles = intarg(10);
+    *minimum_gradient = floatarg(11);
+
+    System *system = new System(bosons, dimensions);
+
+    if (a != 0) {
+        *psi = new InteractingWavefunction(*alpha_guess, beta, a);
+        *H = new InteractingHamiltonian(gamma, a);
+    } else {
+        *psi = new SimpleGaussian(*alpha_guess, beta);
+        *H = new HarmonicOscillatorHamiltonian(gamma);
+    }
+
+    if (sampler_type == 0) {
+        *sampler = new MetropolisSampler(*system, **psi, step);
+    } else {
+        *sampler = new ImportanceSampler(*system, **psi, step);
+    }
+}
+
 #undef intarg
 #undef floatarg
