@@ -32,18 +32,18 @@ void ImportanceSampler::perturb_system() {
     _psi_new = (*_wavefunction)(_system_new);
 }
 
-/* Try straight forward greens function? */
-
 Real ImportanceSampler::acceptance_probability() const {
     const Boson &r_old = _system_old[_particle_to_move];
     const Boson &r_new = _system_new[_particle_to_move];
 
-    Real exponent = 0;
-    for (int d = 0; d < _system_new.get_dimensions(); ++d) {
-        const Real F_old = _wavefunction->drift_force(r_old, d);
-        const Real F_new = _wavefunction->drift_force(r_new, d);
-        exponent += (F_old + F_new) * (0.5 * _step * (F_old - F_new) + 2 * ( r_old[d] - r_new[d] ) );
+    Real green1 = 0, green2 = 0;
+    for (int d = 0; d < r_old.get_dimensions(); ++d) {
+        green1 += square(r_old[d] - r_new[d] - 0.5 * _step * _wavefunction->drift_force(r_new, d));
+        green2 += square(r_new[d] - r_old[d] - 0.5 * _step * _wavefunction->drift_force(r_old, d));
     }
 
-    return std::exp(exponent) * square(_psi_new) / square(_psi_old);
+    // Ratio = exp(-green1/(4*D*step)) / exp(-green2/(4*D*step))
+    Real ratio = std::exp( (green2 - green1) / (2 * _step) );
+
+    return ratio * square(_psi_new) / square(_psi_old);
 }
