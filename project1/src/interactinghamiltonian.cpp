@@ -7,6 +7,11 @@
 #include "interactinghamiltonian.hpp"
 
 Real InteractingHamiltonian::local_energy(const System &system, const Wavefunction &psi) const {
+    // If internal potential is active ( > 0 means inf), no need to check more.
+    if (internal_potential(system) > 0)
+        return std::numeric_limits<Real>::max();
+
+
     const Real alpha = psi.get_alpha();
     const Real beta = psi.get_beta();
     assert(_a == psi.get_a());
@@ -53,10 +58,6 @@ Real InteractingHamiltonian::local_energy(const System &system, const Wavefuncti
         E_L += term1_final + term2 + term3;
 
     }
-
-    if (internal_potential(system) > 0)
-        return std::numeric_limits<Real>::max();
-
     return - 0.5 * E_L + external_potential(system);
 }
 
