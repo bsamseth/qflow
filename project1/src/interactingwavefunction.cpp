@@ -27,7 +27,3 @@ Real InteractingWavefunction::operator() (const System &system) const {
     return correlation(system) * SimpleGaussian::operator()(system);
 }
 
-Real InteractingWavefunction::derivative_alpha(const System &system) const {
-    return correlation(system) * SimpleGaussian::derivative_alpha(system);
-}
-

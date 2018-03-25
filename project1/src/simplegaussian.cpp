@@ -26,7 +26,6 @@ Real SimpleGaussian::operator() (const System &system) const {
 }
 
 Real SimpleGaussian::derivative_alpha(const System &system) const {
-    Real expo = exponent(system, _beta);
-    return - std::exp( - _alpha * expo ) * expo;
+    return - exponent(system, _beta);
 }
 

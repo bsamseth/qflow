@@ -25,7 +25,7 @@ TEST(SimpleGaussian, call_with_beta) {
     // Calculated by hand/calculator:
     Boson F_0 = {{-1.01667658, -0.15464426, -3.880500176}};
     EXPECT_DOUBLE_EQ(0.096971040514681181, psi(s));
-    EXPECT_DOUBLE_EQ(-0.45253337709242497, psi.derivative_alpha(s));
+    EXPECT_DOUBLE_EQ(-4.666685792898267, psi.derivative_alpha(s));
     for (int d = 0; d < s.get_dimensions(); ++d) {
         EXPECT_EQ(F_0[d], psi.drift_force(s[0], d));
     }
@@ -44,8 +44,8 @@ TEST(SimpleGaussian, call_2D) {
     // Calculated by hand/calculator:
     EXPECT_DOUBLE_EQ(1.7362052831002947e-20, psi_with_beta(s));
     EXPECT_DOUBLE_EQ(1.7362052831002947e-20, psi(s));
-    EXPECT_DOUBLE_EQ(-1.5799468076212681e-18, psi_with_beta.derivative_alpha(s));
-    EXPECT_DOUBLE_EQ(-1.5799468076212681e-18, psi.derivative_alpha(s));
+    EXPECT_DOUBLE_EQ(-91, psi_with_beta.derivative_alpha(s));
+    EXPECT_DOUBLE_EQ(-91, psi.derivative_alpha(s));
 
     Boson F_2 = { {-10, -12} };
     for (int d = 0; d < s.get_dimensions(); ++d) {

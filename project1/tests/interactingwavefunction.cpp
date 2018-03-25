@@ -46,6 +46,6 @@ TEST(InteractingWavefunction, call_with_beta) {
 
     // Calculated by hand/calculator:
     EXPECT_DOUBLE_EQ(0.94543129358834554 * psi(s), psi_1(s));
-    EXPECT_DOUBLE_EQ(0.94543129358834554 * psi.derivative_alpha(s), psi_1.derivative_alpha(s));
+    EXPECT_DOUBLE_EQ(psi.derivative_alpha(s), psi_1.derivative_alpha(s));
     EXPECT_THROW(psi_1.drift_force(s[0], 0), std::logic_error);
 }
