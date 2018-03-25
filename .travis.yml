@@ -1,6 +1,8 @@
 language: cpp
 compiler: gcc
 dist: trusty
+notifications:
+  email: false
 
 before_install:
   # C++17
@@ -11,6 +13,8 @@ install:
   # C++17
   - sudo apt-get install -qq g++-6
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
+  - sudo apt-get install lcov
+  - gem install coveralls-lcov
 
 before_script:
   - lcov --version
@@ -18,7 +22,6 @@ before_script:
   - g++ --version
   - PARENTDIR=$(pwd)/project1
   - mkdir $PARENTDIR/build && cd $PARENTDIR/build
-  - lcov --directory $PARENTDIR/build --zerocounters
 
 script:
   - cd $PARENTDIR/build
@@ -28,5 +31,5 @@ script:
   - make coverage
 
 after_success:
-  - lcov --list coverage.info.cleaned # debug before upload
+  - lcov --list coverage.info.cleaned  # Show test report in travis log.
   - coveralls-lcov coverage.info.cleaned #--repo-token _____ coverage.info # uploads to coveralls
