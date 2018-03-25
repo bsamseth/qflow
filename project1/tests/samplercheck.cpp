@@ -66,11 +66,55 @@ void sampler_sanity(int sampler_type) {
     }
 }
 
+void sampler_integration_test(int sampler_type, Real expected_acceptance, Real analytic_tol, Real numeric_tol) {
+    const Real gamma = 2.82843;
+    const Real alpha = 0.5;
+    const int runs = 10000;
+    const System init_system (10, 3);
+    const SimpleGaussian psi(alpha, gamma);
+    const HarmonicOscillatorHamiltonian H(gamma);
+
+    Sampler *sp;
+    if (sampler_type == METRO_SAMPLER)
+        sp = new MetropolisSampler(init_system, psi);
+    else
+        sp = new ImportanceSampler(init_system, psi);
+    Sampler &sampler = *sp;
+
+    Real E_analytic = 0;
+    Real E_numeric = 0;
+    for (int run = 0; run < runs; ++run) {
+        const System &state = sampler.next_configuration();
+
+        E_analytic += H.local_energy(state, psi);
+        E_numeric += H.local_energy_numeric(state, psi);
+    }
+
+    E_analytic /= runs;
+    E_numeric /= runs;
+
+    Real ar = sampler.get_acceptance_rate();
+
+    // Check that acceptance rate has not dropped below what has been seen before.
+    // Standard sampling should drop a bunch, 64% seems to be a reasonable result.
+    // Just test it, in case we muck something up that decreases it later on.
+    EXPECT_GE(ar, expected_acceptance);
+
+    EXPECT_NEAR(H.gross_pitaevskii_energy(init_system, psi), E_analytic, analytic_tol) << "ar = " << ar;
+    EXPECT_NEAR(H.gross_pitaevskii_energy(init_system, psi), E_numeric, numeric_tol) << "ar = " << ar;
+}
+
 TEST(MetropolisSampler, sanityCheck) {
     sampler_sanity(METRO_SAMPLER);
 }
 TEST(ImportanceSampler, sanityCheck) {
     sampler_sanity(IMPO_SAMPLER);
+}
+TEST(MetropolisSampler, integrationTest) {
+    sampler_integration_test(METRO_SAMPLER, 0.64, 1e-12, 5e-6);
+}
+TEST(ImportanceSampler, integrationTest) {
+    sampler_integration_test(IMPO_SAMPLER, 0.95, 1e-12, 5e-6);
 }
 
 #undef METRO_SAMPLER
