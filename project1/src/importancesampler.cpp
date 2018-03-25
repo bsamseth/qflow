@@ -23,16 +23,16 @@ void ImportanceSampler::initialize_system() {
 
 void ImportanceSampler::perturb_system() {
     Boson &boson = _system_new[_particle_to_move];
-    _q_force_old = (*_wavefunction).drift_force(_system_old, _particle_to_move);
 
     for (int d = 0; d < boson.get_dimensions(); ++d) {
         boson[d] += rnorm(rand_gen) * std::sqrt(_step)
-                   + 0.5 * _step * _q_force_old[d];
+                   + 0.5 * _step * _wavefunction->drift_force(boson, d);
     }
 
     _psi_new = (*_wavefunction)(_system_new);
-    _q_force_new = (*_wavefunction).drift_force(_system_new, _particle_to_move);
 }
+
+/* Try straight forward greens function? */
 
 Real ImportanceSampler::acceptance_probability() const {
     const Boson &r_old = _system_old[_particle_to_move];
@@ -40,8 +40,9 @@ Real ImportanceSampler::acceptance_probability() const {
 
     Real exponent = 0;
     for (int d = 0; d < _system_new.get_dimensions(); ++d) {
-        exponent += (_q_force_old[d] + _q_force_new[d]) *
-            (0.5 * _step * (_q_force_old[d] - _q_force_new[d]) + 2 * ( r_old[d] - r_new[d] ) );
+        const Real F_old = _wavefunction->drift_force(r_old, d);
+        const Real F_new = _wavefunction->drift_force(r_new, d);
+        exponent += (F_old + F_new) * (0.5 * _step * (F_old - F_new) + 2 * ( r_old[d] - r_new[d] ) );
     }
 
     return std::exp(exponent) * square(_psi_new) / square(_psi_old);
