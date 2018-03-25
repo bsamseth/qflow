@@ -72,30 +72,3 @@ Real InteractingHamiltonian::internal_potential(const System &system) const {
 
     return 0.0;
 }
-
-Real InteractingHamiltonian::derivative_alpha(const System &system, const Wavefunction &psi) const {
-
-    Real mean_interaction_contribution = 0;
-
-    for (int k = 0; k < system.get_n_bosons(); ++k) {
-        const Boson &r_k = system[k];
-        Boson r_k_hat = system[k];
-        if (system.get_dimensions() == 3) {
-            r_k_hat[2] *= psi.get_beta();
-        }
-
-        Boson term1 (system.get_dimensions());
-        for (int j = 0; j < system.get_n_bosons(); ++j) {
-            if (j == k) continue;
-            const Boson r_kj = r_k - system[j];
-            const Real r_kj_norm = std::sqrt( square( r_kj ) );
-
-            term1 += r_kj * (_a / (square(r_kj_norm) * (r_kj_norm - _a)));
-        }
-
-        mean_interaction_contribution += -2 * psi.get_alpha() * (r_k_hat * term1);
-    }
-
-    return HarmonicOscillatorHamiltonian::derivative_alpha(system, psi) + mean_interaction_contribution;
-}
-

@@ -97,24 +97,3 @@ TEST_F(HarmonicOscillatorHamiltonianTest, local_energy_simple) {
     }
 }
 
-
-TEST_F(HarmonicOscillatorHamiltonianTest, DISABLED_derivativeAlpha) {
-    const int runs = 100000;
-    const System init_system (10, 3);
-    const SimpleGaussian psi(0.5, 1);
-    const HarmonicOscillatorHamiltonian H_0;
-    MetropolisSampler sampler (init_system, psi, 1);
-
-    // Thermalize.
-    for (int run = 0; run < runs; ++run)
-        sampler.next_configuration();
-
-    Real derivative = 0;
-    for (int run = 0; run < runs; ++run) {
-        const System& s = sampler.next_configuration();
-        derivative += H_0.derivative_alpha(s, psi);
-    }
-    derivative /= runs;
-
-    EXPECT_DOUBLE_EQ(0, derivative);
-}
