@@ -13,8 +13,12 @@ namespace {
     std::uniform_real_distribution<Real> rand_dist(-1, 1);
     std::uniform_int_distribution<int> rand_dim(1, 3);
 
-    auto double_gen = std::bind(rand_dist, rand_gen);
-    auto dim_gen    = std::bind(rand_dim, rand_gen);
+    double double_gen() {
+        return rand_dist(rand_gen);
+    }
+    int dim_gen() {
+        return rand_dim(rand_gen);
+    }
 }
 
 class HarmonicOscillatorHamiltonianTest : public ::testing::Test {

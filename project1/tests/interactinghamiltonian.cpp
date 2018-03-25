@@ -7,14 +7,6 @@
 #include "interactingwavefunction.hpp"
 #include "interactinghamiltonian.hpp"
 
-namespace {
-    std::default_random_engine rand_gen(12345);
-    std::uniform_real_distribution<Real> rand_dist(-1, 1);
-    std::uniform_int_distribution<int> rand_dim(1, 3);
-
-    auto double_gen = std::bind(rand_dist, rand_gen);
-    auto dim_gen    = std::bind(rand_dim, rand_gen);
-}
 
 class InteractingHamiltonianTest : public ::testing::Test {
     protected:
