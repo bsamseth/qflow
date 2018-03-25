@@ -7,7 +7,6 @@
 #include "sampler.hpp"
 #include "optimizer.hpp"
 
-#define SET_ALPHA(alpha) (wavefunction.set_params((alpha), wavefunction.get_beta(), wavefunction.get_alpha()))
 
 namespace Optimizer {
 
@@ -18,16 +17,17 @@ Real gradient_decent_optimizer(Wavefunction &wavefunction,
                                Real learning_rate,
                                int sample_points,
                                int max_iterations,
-                               Real dE_eps)
+                               Real dE_eps,
+                               bool verbose)
 {
     Real alpha = initial_guess;
 
     int iteration = 0;
 
-    Real E_L_der;
+    Real E_L_der, E_L_der_prev = 1;
 
     do {
-        SET_ALPHA(alpha);
+        wavefunction.set_params(alpha, wavefunction.get_beta(), wavefunction.get_a());
 
         Real E_tot = 0;
         Real E_tot_sq = 0;
@@ -53,13 +53,22 @@ Real gradient_decent_optimizer(Wavefunction &wavefunction,
         Real variance = E_tot_sq - square(E_tot);
         E_L_der = 2 * (psi_der_E_tot - psi_der_tot * E_tot);
 
+        // If derivative changes sign, this indicates that we jumped over the minimum.
+        // In this case, let's make smaller steps.
+        if (E_L_der * E_L_der_prev < 0) {
+            learning_rate /= 2;
+        }
+
+        E_L_der_prev = E_L_der;
+
         alpha = alpha - learning_rate * E_L_der;
 
         iteration++;
 
-        printf("Iteration %d: alpha=%.10f, E=%.10f, var=%.10f, dE=%.10f\n", iteration, alpha, E_tot, variance, E_L_der);
+        if (verbose)
+            printf("Iteration %d: alpha=%.10f, E=%.10f, var=%.10f, dE=%.10f, lr=%g\n", iteration, alpha, E_tot, variance, E_L_der, learning_rate);
 
-    } while (iteration < max_iterations and std::abs(E_L_der) > dE_eps);// and std::abs(E - E_last) > E_eps and std::abs(dE - dE_last) > dE_eps);
+    } while (iteration < max_iterations and std::abs(E_L_der) > dE_eps);
 
     return wavefunction.get_alpha();
 }

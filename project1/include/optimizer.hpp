@@ -15,5 +15,6 @@ Real gradient_decent_optimizer(Wavefunction&,
                                Real learning_rate = 0.1,
                                int sample_points = 10000,
                                int max_iterations = 100,
-                               Real dE_eps = 1e-8);
+                               Real dE_eps = 1e-8,
+                               bool verbose = true);
 }
