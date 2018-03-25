@@ -31,34 +31,3 @@ Real InteractingWavefunction::derivative_alpha(const System &system) const {
     return correlation(system) * SimpleGaussian::derivative_alpha(system);
 }
 
-Boson InteractingWavefunction::drift_force(const System &system, int k) const {
-    // Reimplement first part so as to save a copy operation.
-    const Boson &r_k = system[k];
-    Boson F = system[k];
-    if (system.get_dimensions() == 3) {
-        F[2] *= _beta;
-    }
-
-    F *= -2 * _alpha;
-
-    // Interaction contribution.
-    for (int j = 0; j < system.get_n_bosons(); ++j) {
-        if (j == k) continue;
-
-        Boson r_kj = r_k - system[j];
-        Real r_kj_norm = std::sqrt( square( r_kj ) );
-
-        // Should not be in a state where two particles are on top of each other.
-        // Should only maybe happen with unlucky initialization. Assert to be safe,
-        // if it happens at least we will know (when debugging).
-        assert(r_kj_norm > 0);
-
-        // Inplace operations saves copies.
-        r_kj *= _a / (square(r_kj_norm) * (r_kj_norm - _a));
-        F += r_kj;
-    }
-
-    F *= 2;
-
-    return F;
-}
