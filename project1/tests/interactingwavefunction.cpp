@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <stdexcept>
+
 #include "definitions.hpp"
 #include "system.hpp"
 #include "simplegaussian.hpp"
@@ -41,11 +43,9 @@ TEST(InteractingWavefunction, call_with_beta) {
     // With a set to zero, this system should behave as a simple gaussian wavefunc.
     EXPECT_DOUBLE_EQ(psi(s), psi_2(s));
     EXPECT_DOUBLE_EQ(psi.derivative_alpha(s), psi_2.derivative_alpha(s));
-    EXPECT_BOSON_EQ(psi.drift_force(s, 1), psi_2.drift_force(s, 1));
 
     // Calculated by hand/calculator:
-    Boson expected_diff = {{-0.028857741512205, -0.060611083235117, 0.0464826998419499}};
     EXPECT_DOUBLE_EQ(0.94543129358834554 * psi(s), psi_1(s));
     EXPECT_DOUBLE_EQ(0.94543129358834554 * psi.derivative_alpha(s), psi_1.derivative_alpha(s));
-    EXPECT_BOSON_EQ(expected_diff, psi_1.drift_force(s, 0) - psi.drift_force(s, 0), 1e-12);
+    EXPECT_THROW(psi_1.drift_force(s[0], 0), std::logic_error);
 }

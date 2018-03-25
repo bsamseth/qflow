@@ -18,7 +18,7 @@ class InteractingWavefunction : public SimpleGaussian {
         virtual Real drift_force(const Boson&, int) const;
 };
 
-Real InteractingWavefunction::drift_force(const Boson &, int) const {
+inline Real InteractingWavefunction::drift_force(const Boson &, int) const {
     throw std::logic_error("Importance sampling not implemented for interacting system.");
 }
 
