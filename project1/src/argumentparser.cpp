@@ -8,8 +8,8 @@
 #define floatarg(i) (atof(argv[i]))
 
 void parse_arguments(int argc, char **argv, Wavefunction **psi, Hamiltonian **H, Sampler **sampler, Calculator **calc, int *cycles) {
-    if (argc - 1 < 11) {
-        printf("Usage: ./main.x analytic[OFF=0,ON=1] sampler[Metro=0,Imp=1] dim n_bosons n_cycles alpha beta gamma a step filename \n");
+    if (argc - 1 < 13) {
+        printf("Usage: ./main.x analytic[OFF=0,ON=1] sampler[Metro=0,Imp=1] dim n_bosons n_cycles alpha beta gamma a step n_bins max_radius filename \n");
         std::exit(0);
     }
 
@@ -23,7 +23,9 @@ void parse_arguments(int argc, char **argv, Wavefunction **psi, Hamiltonian **H,
     Real gamma = floatarg(8);
     Real a = floatarg(9);
     Real step = floatarg(10);
-    std::string filename = argv[11];
+    int n_bins = intarg(11);
+    Real max_radius = floatarg(12);
+    std::string filename = argv[13];
 
     System *system = new System(bosons, dimensions);
 
@@ -41,7 +43,10 @@ void parse_arguments(int argc, char **argv, Wavefunction **psi, Hamiltonian **H,
         *sampler = new ImportanceSampler(*system, **psi, step);
     }
 
-    *calc = new EnergyCalculator(**psi, **H, **sampler, filename, analytic);
+    EnergyCalculator *ecalc = new EnergyCalculator(**psi, **H, **sampler, filename, analytic);
+    OneBodyDensityCalculator *dcalc = new OneBodyDensityCalculator(**psi, **H, **sampler, filename, n_bins, max_radius);
+
+    *calc = new CombinedCalculator<EnergyCalculator, OneBodyDensityCalculator>(*ecalc, *dcalc);
 }
 
 #undef intarg

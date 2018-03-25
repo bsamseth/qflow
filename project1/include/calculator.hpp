@@ -9,19 +9,18 @@
 
 class Calculator {
 
-    protected:
+    public:
 
         const Wavefunction &_wavefunction;
         const Hamiltonian &_hamiltonian;
         Sampler &_sampler;
         const std::string _logfile_name;
 
-        virtual void process_state(const System&) = 0;
-        virtual void finalize_calculation() = 0;
-
-    public:
 
         Calculator(const Wavefunction&, const Hamiltonian&, Sampler&, std::string logfile);
 
         virtual void calculate(long iterations);
+        virtual void process_state(const System&) = 0;
+        virtual void finalize_calculation() = 0;
+
 };

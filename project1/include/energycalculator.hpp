@@ -14,10 +14,10 @@ class EnergyCalculator : public Calculator {
         std::ofstream _energy_file;
         bool _analytic;
 
-        virtual void process_state(const System&);
-        virtual void finalize_calculation();
-
     public:
 
         EnergyCalculator(const Wavefunction&, const Hamiltonian&, Sampler&, std::string, bool);
+        virtual void process_state(const System&);
+        virtual void finalize_calculation();
+
 };

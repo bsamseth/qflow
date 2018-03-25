@@ -16,4 +16,6 @@
 #include "wavefunction.hpp"
 #include "calculator.hpp"
 #include "energycalculator.hpp"
+#include "onebodydensitycalculator.hpp"
+#include "combinedcalculator.hpp"
 #include "argumentparser.hpp"
