@@ -39,6 +39,11 @@ script:
   - make coverage
 
 after_success:
+  - pwd
+  - ls -la
   - cd $PARENTDIR/build
-  - lcov --list coverage.info.cleaned  # Show test report in travis log.
-  - coveralls-lcov coverage.info.cleaned  # uploads to coveralls
+  - pwd
+  - ls -la
+  - lcov --list coverage_out.info.cleaned  # Show test report in travis log.
+  - coveralls-lcov coverage_out.info.cleaned  # uploads to coveralls
+
