@@ -13,6 +13,7 @@ title_fontsize = 20
 
 def run_MC(dims=1, n=1, n_mc=100, alpha=0.5, beta=1,
            omega_z=1, a=0, step=0.1, importance=True,
+           n_bins=500, max_radius=5,
            analytic=True, filename=None):
     """
     Main interface method to the C++ backend.
@@ -21,7 +22,7 @@ def run_MC(dims=1, n=1, n_mc=100, alpha=0.5, beta=1,
     and a list of numbers printed by the backend program, such as acceptance
     rate, execution time etc.
     """
-    options = ('{} '*10).format(int(analytic),
+    options = ('{} '*12).format(int(analytic),
                                 int(importance),
                                 dims,
                                 n,
@@ -30,24 +31,31 @@ def run_MC(dims=1, n=1, n_mc=100, alpha=0.5, beta=1,
                                 beta,
                                 omega_z,
                                 a,
-                                step)
+                                step,
+                                n_bins,
+                                max_radius)
     if filename:
         filename = filename + '_'.join(options.split(' '))
     else:
         filename = tempfile.mktemp(prefix='run-', suffix='_'.join(options.split(' ')))
+
     command = '../build-release/main.x {} {}'.format(options, filename)
+
     with os.popen(command) as cmd:
         output = cmd.read()
-        output = [float(i) for i in output.strip().split(',')]
+        ar, t = [float(i) for i in output.strip().split(',')]
+
 
     E = np.fromfile(filename + '_energy.bin', count=n_mc, dtype=np.float64)
-    return E, output
+    density = np.fromfile(filename + '_density.bin', count=n_bins, dtype=np.int64)
 
-def E_and_var(**kwargs):
-    energies, _ = run_MC(**kwargs)
-    E_L = np.mean(energies)
-    var = np.var(energies)
-    return E_L, var, _
+    meta = {'energy_mean' : np.mean(E),
+            'variance' : np.var(E),
+            'acceptance-rate' : ar,
+            'time' : t}
+
+    return E, density, meta
+
 
 def E_and_var_plot_for_alphas(alphas, steps=(0.1,), verbose=True, saveas=None, **kwargs):
     E   = np.empty((len(steps), len(alphas)))
@@ -57,7 +65,8 @@ def E_and_var_plot_for_alphas(alphas, steps=(0.1,), verbose=True, saveas=None, *
         kwargs['step'] = step
         for j, alpha in enumerate(alphas):
             kwargs['alpha'] = alpha
-            E[i, j], var[i, j], (ar, t) = E_and_var(**kwargs)
+            _, _, res = run_MC(**kwargs)
+            E[i, j], var[i, j] = res['energy-mean'], res['variance']
 
     min_E, min_var = np.argmin(E, axis=1), np.argmin(var, axis=1)
 
@@ -94,12 +103,11 @@ def E_and_var_plot_for_alphas(alphas, steps=(0.1,), verbose=True, saveas=None, *
     return E, var
 
 def proper_error_plot(alphas, saveas=None, **kwargs):
-    n = kwargs['n_mc'] * kwargs['n']
-    E = np.empty((len(alphas), n))
+    E = np.empty((len(alphas), kwargs['n_mc']))
     for i, alpha in enumerate(alphas):
         kwargs['alpha'] = alpha
-        E[i], (ar, t) = run_MC(**kwargs)
-        print(kwargs, 'ar=', ar)
+        E[i], _, meta = run_MC(**kwargs)
+        print(kwargs, 'meta=', meta)
 
     errors = [blocking(e) for e in E]
 
@@ -113,6 +121,19 @@ def proper_error_plot(alphas, saveas=None, **kwargs):
         plt.savefig(saveas)
 
     return E, errors
+
+def density_plot(density, max_radius = 5, saveas=None):
+
+    # Normalize
+    r = np.linspace(0, max_radius, len(density))
+    rho = density / np.trapz(density, x=r)
+
+    fig, ax = plt.subplots(figsize=figsize)
+    ax.plot(r, rho)
+    ax.set_xlabel(r'$r$ $[a_{ho}]$', fontsize=axis_fontsize)
+    ax.set_ylabel(r'$\rho$ $[a_{ho}]$', fontsize=axis_fontsize)
+    ax.set_title(r'One-body density', fontsize=title_fontsize)
+
 
 def make_configuration_table(filename, verbose=True, dims=(1,2,3), ns=(1, 10, 100, 500),
                              analytics=(1, 0), steps=(0.1,), importance=False, **kwargs):
@@ -135,10 +156,8 @@ def make_configuration_table(filename, verbose=True, dims=(1,2,3), ns=(1, 10, 10
                 for step in steps:
                     kwargs['step'] = step
 
-                    E, (ar, t) = run_MC(**kwargs)
-
-                    energy = np.mean(E)
-                    var = np.var(E)
+                    _, _, meta = run_MC(**kwargs)
+                    energy, var, ar, t = meta['energy-mean'], meta['variance'], meta['acceptance-rate'], meta['time']
 
                     line = fmt.format(d, n, analytic, step, energy, var, ar, t)
 
@@ -150,19 +169,6 @@ def make_configuration_table(filename, verbose=True, dims=(1,2,3), ns=(1, 10, 10
     with open(filename, 'w') as f:
         f.write(output)
 
-def E_var_df(alphas, **kwargs):
-    E   = np.empty(len(alphas))
-    var = np.empty(len(alphas))
-    ar = np.empty(len(alphas))
-    t = np.empty(len(alphas))
-
-    for j, alpha in enumerate(alphas):
-        kwargs['alpha'] = alpha
-        E[j], var[j], (ar[j], t[j]) = E_and_var(**kwargs)
-
-    return pd.DataFrame({'alpha': np.asarray(alphas),
-                         'E': E, 'var': var,
-                         'acceptance' : ar, 'time' : t})
 
 def bootstrap(data, statistic, B):
     """
@@ -239,9 +245,4 @@ def time_series_plot(E, saveas=None):
         plt.savefig(saveas)
 
     plt.show()
-
-
-
-if __name__ == "__main__":
-    E, (ar, t) = run_MC(dims=3, n=10, n_mc=10000, importance=False)
 
