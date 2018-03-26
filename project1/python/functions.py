@@ -47,7 +47,7 @@ def run_MC(dims=1, n=1, n_mc=100, alpha=0.5, beta=1,
 
 
     E = np.fromfile(filename + '_energy.bin', count=n_mc, dtype=np.float64)
-    density = np.fromfile(filename + '_density.bin', count=n_bins, dtype=np.int64)
+    density = np.fromfile(filename + '_density.bin', count=n_bins, dtype=np.float64)
 
     meta = {'energy_mean' : np.mean(E),
             'variance' : np.var(E),
@@ -122,17 +122,25 @@ def proper_error_plot(alphas, saveas=None, **kwargs):
 
     return E, errors
 
-def density_plot(density, max_radius = 5, saveas=None):
+def density_plot(density, max_radius = 5, alpha=0.5, draw_exact=False, saveas=None):
 
     # Normalize
     r = np.linspace(0, max_radius, len(density))
     rho = density / np.trapz(density, x=r)
 
+    # Expected non-interacting
+    exact = np.exp(-2 * alpha * r**2)
+    exact = exact / np.trapz(exact, x=r)
+
     fig, ax = plt.subplots(figsize=figsize)
-    ax.plot(r, rho)
+    ax.plot(r, rho, label=r'VMC')
+    if draw_exact:
+        ax.plot(r, exact, label=r'Exact (non-inter)')
     ax.set_xlabel(r'$r$ $[a_{ho}]$', fontsize=axis_fontsize)
     ax.set_ylabel(r'$\rho$ $[a_{ho}]$', fontsize=axis_fontsize)
     ax.set_title(r'One-body density', fontsize=title_fontsize)
+    if draw_exact:
+        plt.legend()
 
 
 def make_configuration_table(filename, verbose=True, dims=(1,2,3), ns=(1, 10, 100, 500),
