@@ -3,6 +3,8 @@
 
 using Real = double;
 
+constexpr Real PI = 3.14159265358979323846;
+
 template<typename T>
 inline auto square(T x) {
     return x * x;
