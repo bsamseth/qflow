@@ -8,6 +8,7 @@
 \usepackage{csvsimple}
 \usepackage{longtable}
 \usepackage{booktabs}
+\usepackage{tikz}
 
 \sisetup{range-phrase=-}
 
@@ -433,6 +434,78 @@ For brevity, we may later use the notation $\vec F(\vec R) = [\vec F_1, \vec
 F_2,\dots,\vec F_N]$, denoting the matrix of all the individual forces on each
 particle.
 
+\subsection{One-Body Density}
+
+A quantity which is often of great interest is the one-body density. It is defined for particle $1$ as
+\begin{align}
+    \rho(\vec r_1) = \int \dd{\vec r_2}\dd{\vec r_3}\dots\dd{\vec r_N} \abs{\Psi(\vec R)}^2\label{eq:one-body-def},
+\end{align}
+and similarly for particle $i = 2,3\dots, N$. All particles are indistinguishable, so which $i$ we consider is arbitrary.
+
+The one-body density gives a measure of the distribution of particles in the
+system. It can be read as: if we marginalize out the positions of all other
+particles, what is the likelihood of finding particle $i$ in a given position?
+The answer to this question is given by $\rho_(r_i)$.
+
+For the non-interacting case we can evaluate this expression exactly, as the
+wavefunction separates nicely.
+\begin{align}
+    \begin{split}
+        \rho(\vec r_k)&=g(\vec r_k)\prod_{i\neq k}\iiint_{-\infty}^\infty
+        \dd{x_i}\dd{y_i}\dd{z_i}g(\vec r_i)\\
+        &= \qty(\frac{\pi^{3/2}}{2\sqrt{2}\alpha^{3/2}\sqrt{\beta}})^{N-1}
+        g(\vec r_k)\\
+    \end{split}
+\end{align}
+The constant is of little importance to us, but what we want is the functional
+form of $\rho(\vec r_k$, which we see follows the Gaussian shape of the
+single-particle wavefunction.
+
+In the non-interacting case this integral is far less friendly to us, and we have no
+exact formula or shape. We shall therefore compute the integral numerically. However, 
+instead of going about this with straight forward Monte Carlo integration, we
+shall take a more intuitive approach.
+
+We split the position space into $M$ spheres\footnote{Or circles in 2D, and line
+segments in 1D.} of increasing radii, $r_i=i * r_\text{step}$ for $i=1,\dots,M$,
+all centered at the origin. The volume of the sphere with radius $r_{i+1}$, minus
+the volume of the sphere with radius $r_i$, we call region $i+1$. The
+illustration below shows this graphically, where region $i+1$ is the lightly
+shaded region.
+
+\begin{center}
+\begin{tikzpicture}
+  \shade[ball color = grey!40, opacity = 0.4] (0,0) circle (3cm);
+  \draw (0,0) circle (3cm);
+  \draw (-3,0) arc (180:360:3 and 1.2);
+  \draw[dashed] (3,0) arc (0:180:3 and 1.2);
+  \fill[fill=black] (0,0) circle (1pt);
+
+  \shade[ball color = grey!50, opacity = 0.9] (0,0) circle (2cm);
+  \draw (0,0) circle (2cm);
+  \draw (-2,0) arc (180:360:2 and 0.6);
+  \draw[dashed] (2,0) arc (0:180:2 and 0.6);
+  \fill[fill=black] (0,0) circle (1pt);
+  \draw[dashed, ->] (0,0 ) -- node[above]{\Large $\vec r_i$} (2,0);
+  \draw[dashed, ->] (0,0 ) -- node[sloped, anchor=center, above]{\Large $\vec r_{i+1}$} (2.1213,2.1213);
+\end{tikzpicture}
+\end{center}
+
+For each sampled position $\vec R$, we can note down which region particle $1$
+(arbitrary choice) is within, and keep a running tally for each region. After
+sampling many positions, we normalize each region count by both the number of
+samples and the volume\footnote{Or area in 2D, and length in 1D} of the
+region. Given a small enough $r_\text{step}$, and enough samples, we would then
+plot the normalized region counts against their radii, and this would be expected
+to approximate the one-body density well.
+
+As a technical note, because the choice of which particle we observe is
+arbitrary, we could have done this for any other particle. We could therefore do
+it for all particles in parallel, by noting which region \textit{every} particle
+lands in. Since they should all produce a similar result, we could average the
+recorded counts across all particles. This should be roughly the same as if we
+had $N$ times as many samples and only counted for one particle.
+
 
 \section{Algorithms}
 In \eqref{eq:the-objective} we reformulated our objective of estimating the ground state energy of the
@@ -443,16 +516,16 @@ R$ that where drawn from the PDF $P(\vec R, \vec\alpha)$. As $P$ is far from any
 standard PDF with a known inverse CDF, we cannot trivially generate such
 samples. In addition, the normalisation term in its denominator is
 computationally expensive to compute. These limitations make the
-\textit{Metropolis-Hastings algorithm} the obvious choice to solve this problem. This
+\textit{Metropolis algorithm} the obvious choice to solve this problem. This
 algorithm provides a way to generate random samples from a PDF where we only
 know the probabilities up to a proportionality constant.
 
-\subsection{Simple Metropolis-Hastings}
+\subsection{Metropolis Algorithm}
 The algorithm in its
 simplest form is described in Algorithm~\ref{alg:metropolis-simple}.
 
 \begin{algorithm}[H]
-    \caption{The Metropolis-Hastings algorithm in its simplest form, as it
+    \caption{The Metropolis algorithm in its simplest form, as it
     pertains to our specific application.}
     \label{alg:metropolis-simple}
     \begin{algorithmic}[1]
@@ -480,10 +553,11 @@ In this algorithm we move around in position space randomly, accepting new
 positions biased towards areas of space where $P(\vec R,\vec\alpha)$ is higher.
 We choose to move one particle at a time based on computational efficiency, as
 recalculating the local energy can be done more easily when we know only one
-particle has moved.
+particle has moved\footnote{Not actually implemented yet.}.
 
 With the generated list of positions we may produce and average for the local
-energy, and therefore an estimate for an upper bound on the ground state energy. 
+energy, and therefore an estimate for an upper bound on the ground state energy,
+as well as the one-body density, or any other quantity of interest.
 
 \subsubsection{Limitations}
 This algorithm has two major drawbacks. Firstly, the samples generated are not
@@ -505,7 +579,7 @@ true for smaller sample sizes, were these defects will account for a larger
 proportion of the samples.
 
 
-\subsection{Metropolis-Hastings with Importance Sampling}
+\subsection{Metropolis-Hastings Algorithm - Including Importance Sampling}
 The first limitation of the simple algorithm (not i.i.d.) is inherent to this
 kind of sampling, and is hard to avoid. We may, however, attempt to remedy the
 second limitation by guiding the random walker towards more promising regions of
@@ -527,7 +601,8 @@ the Langevin equation,
 \begin{align}
     \pdv{\vec r_k}{t} = D\vec F_k(\vec r_k) + \vec\eta,\label{eq:Langevin}
 \end{align}
-which describes how the position of a particle changes with time. Here, $D$ is
+which describes how the position of a particle changes with time under the
+influence of a drift force and random impulses. Here, $D$ is
 a constant scalar referred to as the drift coefficient. We set
 $D=\flatfrac{1}{2}$, originating from the same factor in the kinetic energy. The
 term $\vec\eta$ is a vector of
@@ -584,18 +659,13 @@ the following Green's function (for one particle):
     \exp[- \frac{\norm{\vec r_k^* - \vec r_k - D\Delta t \vec F_k(\vec r_k)}^2}{4D\Delta t} ].
 \end{align}
 This is interpreted as the probability of transitioning to position $\vec r_k^*$
-from position $\vec r$ in a time interval $\Delta t$. Equation~\eqref{eq:q-full}
-needs only the ratio of these probabilities, so we may simplify this as
+from position $\vec r_k$ in a time interval $\Delta t$. Replacing the transition
+probabilities in Equation~\eqref{eq:q-full} we get the new acceptance
+probability:
 \begin{align}
-    \frac{G(\vec r_k, \vec r_k^*, \Delta t)}{G(\vec r_k^*, \vec r_k, \Delta t)} = 
-    \exp\left.\begin{cases}
-        \qty[\vec F_k(\vec r_k) + \vec F_k(\vec r_k^*)]\\
-        \qqtext{}\qqtext{}\bullet\\
-        \left[D\Delta t \qty(\vec F_k(\vec r_k)-\vec F_k(\vec r_k^*)) \right.\\
-        \left. + 2\vec r_k - 2\vec r_k^*\right]
-    \end{cases}\right\}\label{eq:Greens-ratio}
+    q(\vec R^*, \vec R) &= \frac{G(\vec r_k, \vec r_k^*, \Delta t)}{G(\vec r_k^*, \vec r_k, \Delta t)}\frac{\abs{\Psi_T(\vec R^*)}^2}{\abs{\Psi_T(\vec
+    R)}^2},\label{eq:q-full}
 \end{align}
-We may then finally insert this ratio into~\eqref{eq:q-full}.
 
 
 
@@ -604,7 +674,7 @@ We are now ready to present the proper Metropolis-Hastings algorithm, with
 importance sampling used to increase the number of accepted transitions.
 
 \begin{algorithm}[H]
-    \caption{The Metropolis-Hastings algorithm, with importance sampling, as it
+    \caption{The Metropolis-Hastings algorithm, as it
     pertains to our specific application.}
     \label{alg:metropolis-importance}
     \begin{algorithmic}[1]
@@ -633,6 +703,7 @@ importance sampling used to increase the number of accepted transitions.
 
 
 \section{Evaluating the Validity of Results}
+\label{sec:statistical-analisys}
 
 Once one of the above algorithms has been used to obtain numerical results,
 these are of little use to us as scientist if we know nothing about the
@@ -729,7 +800,7 @@ functions:
     \kappa_d = \frac{f_d}{\hat{\sigma}^2_{E_L}}.
 \end{gather}
 The function $f_d$ describes the correlation of samples spaced by $d$. We have
-$f_0=\hat{\sigma}_{E_L}^2$, and for an uncorrelated system we have $f_d=0\
+$f_0=\sigma_{E_L}^2$, and for an uncorrelated system we have $f_d=0\
 \forall\ d>0$.
 
 Now \eqref{eq:SE-est-covar-expanded} can be written as
@@ -751,7 +822,7 @@ to an \textit{increase} in the estimated error.
 
 This new estimate of the error will be a much more realistic estimate. However,
 computing the autocorrelation time $\tau$ has time complexity $\mathcal{O}(n^2)$, which will prove
-unfeasible when we plan on producing up to billions of samples.
+unfeasible when we plan on producing millions of samples.
 
 \subsection{Methods for Improving the Error Estimate}
 
@@ -802,7 +873,7 @@ estimate, but it will still be biased.
 
 \subsection{Blocking}
 
-On some sense Blocking takes the complete opposite approach to that of
+In some sense Blocking takes the complete opposite approach to that of
 Bootstrap. Blocking takes the original samples and combines them to make less
 data points.
 
@@ -826,7 +897,8 @@ at which points it should plateau. Choosing the block size at the plateau point
 would then be optimal.
 
 Even better would be an automated way to determine the ideal block size. Such
-methods do exists, and will be used in this project. The derivation of how this
+methods do exists, and will for simplicity be used in this project, although the
+manual way would work. The derivation of how this
 works, however, will not be discussed any further in this report.
 
 
