@@ -49,7 +49,7 @@ def run_MC(dims=1, n=1, n_mc=100, alpha=0.5, beta=1,
     E = np.fromfile(filename + '_energy.bin', count=n_mc, dtype=np.float64)
     density = np.fromfile(filename + '_density.bin', count=n_bins, dtype=np.float64)
 
-    meta = {'energy_mean' : np.mean(E),
+    meta = {'energy-mean' : np.mean(E),
             'variance' : np.var(E),
             'acceptance-rate' : ar,
             'time' : t}
@@ -67,6 +67,8 @@ def E_and_var_plot_for_alphas(alphas, steps=(0.1,), verbose=True, saveas=None, *
             kwargs['alpha'] = alpha
             _, _, res = run_MC(**kwargs)
             E[i, j], var[i, j] = res['energy-mean'], res['variance']
+            if verbose:
+                print(res)
 
     min_E, min_var = np.argmin(E, axis=1), np.argmin(var, axis=1)
 
@@ -93,7 +95,7 @@ def E_and_var_plot_for_alphas(alphas, steps=(0.1,), verbose=True, saveas=None, *
     plt.tight_layout()
 
     if len(steps) > 1:
-        ax[0].legend(loc='upper right', bbox_to_anchor=(0, 0, 0.95, 0.95), fontsize=title_fontsize)
+        ax[0].legend(loc='upper left', bbox_to_anchor=(0, 0, 0.95, 0.95), fontsize=title_fontsize)
 
     if saveas:
         plt.savefig(saveas)
@@ -102,12 +104,13 @@ def E_and_var_plot_for_alphas(alphas, steps=(0.1,), verbose=True, saveas=None, *
 
     return E, var
 
-def proper_error_plot(alphas, saveas=None, **kwargs):
+def proper_error_plot(alphas, saveas=None, verbose=True, **kwargs):
     E = np.empty((len(alphas), kwargs['n_mc']))
     for i, alpha in enumerate(alphas):
         kwargs['alpha'] = alpha
         E[i], _, meta = run_MC(**kwargs)
-        print(kwargs, 'meta=', meta)
+        if verbose:
+            print(kwargs, 'meta=', meta)
 
     errors = [blocking(e) for e in E]
 
@@ -140,7 +143,10 @@ def density_plot(density, max_radius = 5, alpha=0.5, draw_exact=False, saveas=No
     ax.set_ylabel(r'$\rho$ $[a_{ho}]$', fontsize=axis_fontsize)
     ax.set_title(r'One-body density', fontsize=title_fontsize)
     if draw_exact:
-        plt.legend()
+        plt.legend(fontsize=title_fontsize)
+
+    if saveas:
+        plt.savefig(saveas)
 
 
 def make_configuration_table(filename, verbose=True, dims=(1,2,3), ns=(1, 10, 100, 500),
@@ -153,13 +159,13 @@ def make_configuration_table(filename, verbose=True, dims=(1,2,3), ns=(1, 10, 10
     if verbose:
         print(output, end='')
 
-    fmt = '{0:d}, {1:3d}, {2:d}, {3:4.6e}, {4:4.6e}, {5:4.2f}, {6:7.2e}, {7:}'
+    fmt = '{0:d}, {1:3d}, {2:4s}, {3:4.3f}, {4:4.6f}, {5:4.6f}, {6:4.3f}, {7:4.3e}'
 
     for d in dims:
         kwargs['dims'] = d
         for n in [1, 10, 100, 500]:
             kwargs['n'] = n
-            for analytic in [0, 1]:
+            for analytic in [False, True]:
                 kwargs['analytic'] = analytic
                 for step in steps:
                     kwargs['step'] = step
@@ -167,7 +173,7 @@ def make_configuration_table(filename, verbose=True, dims=(1,2,3), ns=(1, 10, 10
                     _, _, meta = run_MC(**kwargs)
                     energy, var, ar, t = meta['energy-mean'], meta['variance'], meta['acceptance-rate'], meta['time']
 
-                    line = fmt.format(d, n, analytic, step, energy, var, ar, t)
+                    line = fmt.format(d, n, "ON" if analytic else "OFF", step, energy, var, ar, t)
 
                     if verbose:
                         print(line)
@@ -241,10 +247,10 @@ def blocking(x):
     se = math.sqrt(s[k] / 2**(d - k))
     return se
 
-def time_series_plot(E, saveas=None):
+def time_series_plot(E, saveas=None, show_last=150):
     fig, ax = plt.subplots(figsize=figsize)
-    ax.plot(E, label=r'$E_L(t)$')
-    ax.plot([0, len(E)-1], [np.mean(E)]*2, '--', label=r'$\overline E_L(t)$')
+    ax.plot(E[-show_last:], label=r'$E_L(t)$')
+    ax.plot([0, show_last-1], [np.mean(E)]*2, '--', label=r'$\overline E_L(t)$')
     ax.set_xlabel('Time', fontsize=axis_fontsize)
     ax.set_ylabel(r'$E_L$', fontsize=axis_fontsize)
     plt.legend(loc='best', fontsize=title_fontsize)
