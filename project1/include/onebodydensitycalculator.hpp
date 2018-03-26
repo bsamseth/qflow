@@ -15,8 +15,9 @@ class OneBodyDensityCalculator : public Calculator {
         Real _r_step;
         Real _max_radius;
         int _n_bins;
+        long _total_count = 0;
 
-        long *_bins;
+        Real *_bins;
 
         std::ofstream _density_file;
 
