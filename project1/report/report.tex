@@ -9,6 +9,7 @@
 \usepackage{longtable}
 \usepackage{booktabs}
 \usepackage{tikz}
+\usepackage{afterpage}
 
 \sisetup{range-phrase=-}
 
@@ -118,20 +119,22 @@ function. The correlation wave function is
 
 We will use distances in units of $a_{ho}$ in this report, $\vec r'=\vec r /a_{ho}$.
 Performing this substitution in the Hamiltonian \eqref{eq:Hamiltonian}, using
-$\laplacian' = a_{ho}^2\laplacian$, we get:
+$\nabla^{\prime 2} = a_{ho}^2\laplacian$, we get:
 \begin{align*}
     H &= \sum_i^N\qty(-\frac{\hbar^2}{2m}\laplacian_i + V_{ext}(\vec r_i)) +
     \sum_{i<j}^NV_{int}(\vec r_i, \vec r_j)\\
     &= \sum_{i}^N\left(-\frac{\hbar^2}{2m}
-    \frac{1}{a_{ho}^2}\laplacian_i'\right.\\
+    \frac{1}{a_{ho}^2}\nabla_i^{\prime 2}\right.\\
     &\,
-    \qqtext{  }\qqtext{  }+\left.\frac{m}{2}\qty[\omega_{ho}^2a_{ho}^2\qty(x_i^2' + y_i^2') +
-    \omega_z^2a_{ho}^2z_i^2']\right)\\
+    \qqtext{  }\qqtext{
+    }+\left.\frac{m}{2}\qty[\omega_{ho}^2a_{ho}^2\qty(x_i^{\prime 2} +
+    y_i^{\prime 2}) +
+    \omega_z^2a_{ho}^2z_i^{\prime 2}]\right)\\
     &\,
     \qqtext{  }+ \sum_{i<j}^NV_{int}(\vec r_i, \vec r_j)\\
     \begin{split}
-    &= \frac{\hbar\omega_{ho}}{2}\sum_{i}^N\qty(-\laplacian_i' + x_i^2' + y_i^2'
-    + \lambda^2z_i^2')\\
+        &= \frac{\hbar\omega_{ho}}{2}\sum_{i}^N\qty(-\nabla_i^{\prime 2} +
+        x_i^{\prime 2} + y_i^{\prime 2} + \lambda^2z_i^{\prime 2})\\
     &\,\qqtext{  }+ \sum_{i<j}^NV_{int}(\vec r_i, \vec r_j)
     \end{split}\numberthis\label{eq:Hamiltonian-scaled}
 \end{align*}
@@ -141,8 +144,8 @@ lengths are scaled, and only the relative distances are used.
 
 There will also be a scaling factor for the single-particle wave functions, 
 \begin{align}
-    \g(\alpha, \beta, \vec r_i) = \exp[-\alpha a_{ho}^2(x_i^2' + y_i^2' + \beta
-    z_i^2')].
+    g(\alpha, \beta, \vec r_i) = \exp[-\alpha a_{ho}^2(x_i^{\prime 2} +
+    y_i^{\prime 2} + \beta z_i^{\prime 2})].
 \end{align}
 The correlation wave functions remains unaffected.
 
@@ -455,7 +458,7 @@ wavefunction separates nicely.
         \dd{x_i}\dd{y_i}\dd{z_i}g(\vec r_i)\\
         &= \qty(\frac{\pi^{3/2}}{2\sqrt{2}\alpha^{3/2}\sqrt{\beta}})^{N-1}
         g(\vec r_k)\\
-    \end{split}
+    \end{split}\label{eq:one-body-exact}
 \end{align}
 The constant is of little importance to us, but what we want is the functional
 form of $\rho(\vec r_k$, which we see follows the Gaussian shape of the
@@ -475,13 +478,13 @@ shaded region.
 
 \begin{center}
 \begin{tikzpicture}
-  \shade[ball color = grey!40, opacity = 0.4] (0,0) circle (3cm);
+  \shade[ball color = gray!40, opacity = 0.4] (0,0) circle (3cm);
   \draw (0,0) circle (3cm);
   \draw (-3,0) arc (180:360:3 and 1.2);
   \draw[dashed] (3,0) arc (0:180:3 and 1.2);
   \fill[fill=black] (0,0) circle (1pt);
 
-  \shade[ball color = grey!50, opacity = 0.9] (0,0) circle (2cm);
+  \shade[ball color = gray!50, opacity = 0.9] (0,0) circle (2cm);
   \draw (0,0) circle (2cm);
   \draw (-2,0) arc (180:360:2 and 0.6);
   \draw[dashed] (2,0) arc (0:180:2 and 0.6);
@@ -664,7 +667,7 @@ probabilities in Equation~\eqref{eq:q-full} we get the new acceptance
 probability:
 \begin{align}
     q(\vec R^*, \vec R) &= \frac{G(\vec r_k, \vec r_k^*, \Delta t)}{G(\vec r_k^*, \vec r_k, \Delta t)}\frac{\abs{\Psi_T(\vec R^*)}^2}{\abs{\Psi_T(\vec
-    R)}^2},\label{eq:q-full}
+    R)}^2},\label{eq:q-full-final}
 \end{align}
 
 
@@ -760,9 +763,9 @@ time before it can get large again, and vice versa.
     \centering
     \includegraphics[width=0.8\linewidth]{../results/time-series-example.png}
     \caption{Example time series of local energy values obtained from a
-    simulation using Algorithm~\ref{alg:metropolis-importance}. Energies shown
+    simulation using Algorithm~\ref{alg:metropolis-simple}. Energies shown
     are a small snippet of energies obtained for a system of one boson in one
-    dimension.}
+    dimension, using $\alpha=0.55$ and a step size of $1$. The mean from the entire set of samples is shown for reference}
     \label{fig:time-series-example}
 \end{figure*}
 
@@ -902,7 +905,7 @@ manual way would work. The derivation of how this
 works, however, will not be discussed any further in this report.
 
 
-\section{Results}
+\section{Results for Non-Interacting System}
 
 \subsection{Standard Metropolis Sampling}
 
@@ -921,77 +924,37 @@ or extremely close to zero, as we expect to observe when we use the correct form
 for the exact wavefunction. This is strong evidence that the codes developed are
 correct, at least for the non-interacting case.
 
-We can see the already motioned downside of using the simple Metropolis
-algorithm in the reported acceptance rate. We can see that about
-$\SIrange{15}{25}{\percent}$ of the suggested moves are dropped, which means a
-significant amount of work has been wasted.
+We see a rather strong dependence on the step size used in the acceptance rates.
+It appears we need smaller step sizes when $N$ increases. We would like to tune 
+the step size such that we have a significant portion accepted, but still not
+run up into the$\sim \SI{100}{\percent}$ region. This is because at this point
+we are just stuck in one place, with no real movement. This is not an issue in
+the ideal case, because the energy here is actually not dependent on the
+positions. But as soon as we move out of this ideal case, this will matter a
+great deal. We conclude that a step of $1$ works well in most cases, but must be
+lowered a bit for systems with $N \geq 100$.
 
 Perhaps most interesting is to look at the time spent on each configuration. If
-we compare the durations for $N=100$ and $N=500$ with analytical expressions
-turned on, we see the time increasing by a factor of~$\sim 25$, which is the
+we compare the running times for $N=100$ and $N=500$ with analytical expressions
+turned off, we see the time increasing by a factor of~$\sim 25$, which is the
 square of the factor we increased $N$ by. Looking at the expressions involved in
 Algorithm~\ref{alg:metropolis-simple}, we see that this is exactly what we would
 expect, namely that the algorithm has time complexity $\mathcal{O}(N^2)$.
 
-Similarly, comparing the run times for numerical differentiation, we observe
-that time scales as $\mathcal{O}(N^3)$, resulting in quite substantial running
+Similarly, comparing the run times when analytical expression is turned on, we observe
+that time scales as $\mathcal{O}(N)$, resulting in a significantly reduced run
 times. It is quite clear that the use of analytic expressions is far superior.
-We can, however, expect the difference between the to approaches to be reduced when we include
-interaction, as this reduced the analytical approach to the same complexity as
-the numerical one.
+We can, however, expect the difference between the to approaches to be reduced
+when we include interaction, as this reduced the analytical approach to the same
+complexity as the numerical one.
 
-\newpage
-
-\onecolumn
-\begin{center}
-\begin{longtable}{|c|c|c|c|c|c|c|}
-    \caption{Selected results using the standard Metropolis sampling algorithm.
-    All runs have been made with $\alpha=\flatfrac{1}{2}$, $\beta=1$, with a
-    symmetric trap with strength $\omega_{ho}=1$ and 100 MC cycles.}
-    \label{tab:simple-metro}
-
-\hline
-    \multicolumn{1}{|c|}{Analytic} &
-    \multicolumn{1}{c|}{Dimensions} &
-    \multicolumn{1}{c|}{Particles} &
-    \multicolumn{1}{c|}{$\expval{H}$} &
-    \multicolumn{1}{c|}{$\text{Var}(E_L)$} &
-    \multicolumn{1}{c|}{Acceptance Rate} &
-    \multicolumn{1}{c|}{Time (s)}  \\ \hline
-\endfirsthead
-
-\multicolumn{7}{c}%
-{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
-\hline 
-    \multicolumn{1}{|c|}{Analytic} &
-    \multicolumn{1}{c|}{Dimensions} &
-    \multicolumn{1}{c|}{Particles} &
-    \multicolumn{1}{c|}{$\expval{H}$} &
-    \multicolumn{1}{c|}{$\text{Var}(E_L)$} &
-    \multicolumn{1}{c|}{Acceptance Rate} &
-    \multicolumn{1}{c|}{Time (s)} \\ \hline
-\endhead
-
-\hline \multicolumn{7}{|r|}{{Continued on next page}} \\ \hline
-\endfoot
-
-\hline
-\endlastfoot
-
-\csvreader[head to column names]{../results/vmc_configurations.csv}{}
-    {\csvcoliii & \csvcoli & \csvcolii & \csvcoliv & \csvcolv & \csvcolvi &
-    \csvcolvii\\} 
-
-\end{longtable}
-\end{center}
-\twocolumn
 
 
 
 \subsubsection{Varying the Variational Parameters}
 
 Figure~\ref{fig:var-alpha-plot-noimp} shows a plot of the expected energy, and
-corresponding variance, for a $1D$ system of one particle, using $10^4$ Monte
+corresponding variance, for a $1D$ system of one particle, using $5\cdot 10^4$ Monte
 Carlo cycles, as a function of the variational parameter $\alpha$.
 
 We can see a minimum in both graphs, both centered around the ideal value
@@ -999,27 +962,218 @@ $\alpha=\flatfrac{1}{2}$. The energy graph is, however, a bit jagged, and the
 actual minimum has been found to be a little left of what we would expect. The
 curve gets smoother as we increase the number of samples, and extending to
 $10^5$ samples yield a {\lq perfect\rq} graph, and this is easily within our
-computational reach. The low value of $10^4$ was used to give a visual
+computational reach. The relatively low value of $5\cdot 10^4$ was used to give a visual
 difference to the result in the next section, when we include importance
 sampling.
 
 \begin{figure*}[ht]
     \centering
-    \includegraphics[width=0.9\linewidth]{../results/var-alpha-plot-noimp-10000.png}
+    \includegraphics[width=0.9\linewidth]{../results/var-alpha-plot-noimp-50000.png}
     \caption{Plot of average local energy and accompanying population variance,
     as functions of the variational parameter $\alpha$. The minimum of both
     graphs are marked, and is expected to be placed at
     $\alpha=\flatfrac{1}{2}$. Results shown are for $1D$, one particle and
-    $10^{4}$ Monte Carlo cycles.}
+    $5\cdot 10^{4}$ Monte Carlo cycles, using
+    Algorithm~\ref{alg:metropolis-simple}.}
     \label{fig:var-alpha-plot-noimp}
 \end{figure*}
+
+
+
+
+\subsection{Metropolis-Hastings Sampling}
+\subsubsection{Comparison of Configurations of Parameters}
+
+We now apply the improved Metropolis-Hastings sampling algorithm described in 
+Algorithm\ref{alg:metropolis-importance} to a variety of different settings.
+Table~\ref{tab:importance-metro} shows selected results obtained using
+$\alpha=\flatfrac{1}{2}$, which corresponds to running with the exact
+wavefunction. 
+
+We see once again that all the results have $\expval{E_L}$
+equal (within numerical precision) to the exact result, and very low variance,
+indicating that the implementation works as it should.
+
+Looking at the acceptance rates now we see ~$\sim\SI{100}{\percent}$ acceptance
+of new moves, indicating that the proposed moves are quite probable and
+therefore more likely to be accepted by the sampling algorithm. When $\Delta t$
+is to large, however, the result become unstable, as before. At this point the
+randomness in \eqref{eq:Langevin-solution} dominates, with steps larger than
+what allows for convergence. We may tune this parameter as we wish, so choosing
+a value that is small enough for the acceptance rate to be close to one, but
+also not so small that we would need an excessive amount of MC cycles in order
+to have any exploration in space. We will once again have to tune this parameter
+depending on what system we look at, as we need a smaller step for larger
+systems.
+
+The run times reported have not changed in any significant way, as would be
+expected, as adding importance sampling did not change the complexity of the algorithm.
+
+
+\subsubsection{Varying the Variational Parameters}
+Figure~\ref{fig:var-alpha-plot-imp} shows a plot of the expected energy, and
+corresponding variance, for the same system and number of MC cycles as that
+shown in Figure~\ref{fig:var-alpha-plot-noimp}. In this version we have enabled
+importance sampling.
+
+We can see a very similar result as before, with the notable exception that the
+line is less jagged. This implies that the sampling results are more stable.
+This is due to the improved exploration of the integration space which
+importance sampling gives us. We conclude therefore that the improved algorithm
+allows us better, more stable results, compared with the simple sampler. This
+allows us to compute less MC samples in order to obtain good enough results,
+something which is highly desired for an application where we are constantly
+fighting against the large time complexity of this kind of system.
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{../results/var-alpha-plot-imp-50000.png}
+    \caption{Plot of average local energy and accompanying population variance,
+    as functions of the variational parameter $\alpha$. The minimum of both
+    graphs are marked, and is expected to be placed at
+    $\alpha=\flatfrac{1}{2}$. Results shown are for $1D$, one particle and
+    $5\cdot 10^{4}$ Monte Carlo cycles, using
+    Algorithm~\ref{alg:metropolis-importance}}
+    \label{fig:var-alpha-plot-imp}
+\end{figure*}
+
+
+To get a better view of the effect of $\Delta t$ on the Metropolis-Hastings
+sampling algorithm, Figure~\ref{fig:var-alpha-plot-imp-dts} shows the same graph
+as before, but for a set of different values for $\Delta t$. From this plot it
+becomes very clear that choosing the correct value for this parameter will be
+very important when we try to find the optimal variational parameters. We see
+that the apparent minima appear on both the left and the right of the ideal
+value. 
+
+All values are to some extent usable given enough MC samples, but an unrealistic
+number might be needed for $\Delta t$ values far away from the optimum.
+Figure~\ref{fig:var-alpha-plot-imp-dts} provides further evidence that $\Delta
+t$ must be chosen with care.
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{../results/var-alpha-plot-imp-dts-50000.png}
+    \caption{The same plot as shown in Figure~\ref{fig:var-alpha-plot-imp},
+    shown for multiple different values for $\Delta t$. We see that both too
+    large, and to small values yield less than ideal results.}
+    \label{fig:var-alpha-plot-imp-dts}
+\end{figure*}
+
+\subsection{Statistical Error}
+
+Figure~\ref{fig:errorbar} shows the results of a simulation on a system of one
+boson in 3D, using $n=2^{14}$ Monte Carlo samples. On the graph, error bars are
+included to visually express the certainty with which we know the results. The
+magnitude of the error bars are given by the standard error, as determined by
+the Blocking method. We see that the error estimate goes promptly to zero as we
+approach the optimal $\alpha=\flatfrac{1}{2}$ value, and in fact we get exactly
+zero as the standard error at this point. This is not that surprising, as using
+the optimal value for $\alpha$ here means we are solving the exact system, and
+therefore there should not be any doubt about the answer either.
+
+The error estimates might be of higher importance as we traverse into the
+interacting case.
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../results/error-plot-3D-2-pow-14.png}
+    \caption{Simulation results using Algorithm~\ref{alg:metropolis-importance},
+    running on a system of one boson in 3D, with $\Delta t=0.1$. Error bars have
+    been included, whose
+    magnitude are the standard error of the mean energy, as obtained by the
+    blocking method. In this simulation, $n=2^{14}$ Monte Carlo samples were
+    generated.}
+    \label{fig:errorbar}
+\end{figure*}
+
+\subsection{One-Body Density}
+
+It is also interesting to see how the calculated one-body density comes out for
+the ideal non-interacting case. Figure~\ref{fig:density-ideal} shows the plot
+for a system of 10 bosons in the 3D symmetric harmonic oscillator trap. Also
+drawn is the expected shape from \eqref{eq:one-body-exact}. Both lines have been
+normalized so that they integrate to one, as the constants are irrelevant to us
+here. To our delight the approximation agrees very well with the expectation.
+The discrepancies around $r=0$ are due the volumes of the smallest regions being
+very small, and hence their occupation counts become somewhat unstable. We can
+still make out the trend though, which again is in great agreement with the
+analytical result.
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../results/one-body-3D-N10-noniter.png}
+    \caption{One-Body density for a particle in a non-interacting system of 10
+    bosons in the 3D symmetric harmonic oscillator trap. The results are with
+    $\alpha=\flatfrac{1}{2}$, using Algorithm~\ref{alg:metropolis-simple} with a
+    step length of $1$ and $10^6$ samples. For reference is the exact Gaussian
+    form expected. Both graphs have been normalized so that they integrate to 1.
+    The jagged shape around $r=0$ is an artifact of the approximation used,
+    where the volume of the regions become very small, and their counts become
+    less stable as a result. The $r$-axis is given in units of $a_{ho}$, and $\rho$ is
+    similarly dimensionless.}
+    \label{fig:density-ideal}
+\end{figure*}
+
+
+\section{Results for Interacting System}
+
+We now turn our attention to the elliptical trap with the repulsive interaction
+activated. We shall in this report fix $\flatfrac{a}{a_{ho}}=0.0043$, and
+$\beta=\gamma=2.82843\simeq\sqrt{8}$, as done in \cite{DuBois-phys-rev,
+Nilsen-phys-rev}.
+
+\printbibliography
+
 
 \onecolumn
 \begin{center}
 \begin{longtable}{|c|c|c|c|c|c|c|c|}
+    \caption{Selected results using the standard Metropolis sampling algorithm.
+    All runs have been made with $\alpha=\flatfrac{1}{2}$, $\beta=1$, with a
+    symmetric trap with strength $\omega_{ho}=1$ and 1000 MC cycles.}
+    \label{tab:simple-metro}\\
+
+\hline 
+    \multicolumn{1}{|c|}{Analytic} &
+    \multicolumn{1}{c|}{Dimensions} &
+    \multicolumn{1}{c|}{Particles} &
+    \multicolumn{1}{c|}{Step length} &
+    \multicolumn{1}{c|}{$\expval{H}$} &
+    \multicolumn{1}{c|}{$\text{Var}(E_L)$} &
+    \multicolumn{1}{c|}{Acceptance Rate} &
+    \multicolumn{1}{c|}{Time (s)}  \\ \hline
+\endfirsthead
+
+\multicolumn{8}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\hline 
+    \multicolumn{1}{|c|}{Analytic} &
+    \multicolumn{1}{c|}{Dimensions} &
+    \multicolumn{1}{c|}{Particles} &
+    \multicolumn{1}{c|}{Step length} &
+    \multicolumn{1}{c|}{$\expval{H}$} &
+    \multicolumn{1}{c|}{$\text{Var}(E_L)$} &
+    \multicolumn{1}{c|}{Acceptance Rate} &
+    \multicolumn{1}{c|}{Time (s)} \\ \hline
+\endhead
+
+\hline \multicolumn{8}{|r|}{{Continued on next page}} \\ \hline
+\endfoot
+
+\hline
+\endlastfoot
+
+\csvreader[head to column names]{../results/vmc_configurations.csv}{}
+    {\csvcoliii & \csvcoli & \csvcolii & \csvcoliv & \csvcolv & \csvcolvi &
+    \csvcolvii & \csvcolviii\\}
+
+\end{longtable}
+\end{center}
+\begin{center}
+\begin{longtable}{|c|c|c|c|c|c|c|c|}
     \caption{Selected results using improved Metropolis-Hastings sampling algorithm.
     All runs have been made with $\alpha=\flatfrac{1}{2}$, $\beta=1$, with a
-    symmetric trap with strength $\omega_{ho}=1$ and 100 MC cycles.}
+    symmetric trap with strength $\omega_{ho}=1$ and 1000 MC cycles.}
     \label{tab:importance-metro} \\
 
 \hline 
@@ -1061,116 +1215,5 @@ sampling.
 \twocolumn
 
 
-
-
-\subsection{Metropolis-Hastings Sampling}
-\subsubsection{Comparison of Configurations of Parameters}
-
-We now apply the improved Metropolis-Hastings sampling algorithm described in 
-Algorithm\ref{alg:metropolis-importance} to a variety of different settings.
-Table~\ref{tab:importance-metro} shows selected results obtained using
-$\alpha=\flatfrac{1}{2}$, which corresponds to running with the exact
-wavefunction. 
-
-We see once again that all the results have $\expval{E_L}$
-equal (within numerical precision) to the exact result, and very low variance,
-indicating that the implementation works as it should.
-
-The acceptance rates are now quite interesting. We see that for $\Delta t \leq
-0.1$, we have~$\sim\SI{100}{\percent}$ acceptance of new moves, indicating that
-the proposed moves are quite probable and therefore more likely to be accepted
-by the sampling algorithm. When $\Delta t$ is to large, however, the result
-become unstable. At this point the randomness in \eqref{eq:Langevin-solution}
-dominates, with steps larger than what allows for convergence. We may tune this
-parameter as we wish, so choosing a value that is small enough for the
-acceptance rate to be close to one, but also not so small that we would need an
-excessive amount of MC cycles in order to have any exploration in space. Setting
-$\Delta t=0.1$ seems to work well in this case, and will be used unless
-otherwise stated.
-
-The run times reported have not changed in any significant way, as would be
-expected, as adding importance sampling did not change the complexity of the algorithm.
-
-
-\subsubsection{Varying the Variational Parameters}
-Figure~\ref{fig:var-alpha-plot-imp} shows a plot of the expected energy, and
-corresponding variance, for the same system and number of MC cycles as that
-shown in Figure~\ref{fig:var-alpha-plot-noimp}. In this version we have enabled
-importance sampling.
-
-We can see a very similar result as before, with the notable exception that the
-line is less jagged. This implies that the sampling results are more stable.
-This is due to the improved exploration of the integration space which
-importance sampling gives us. We conclude therefore that the improved algorithm
-allows us better, more stable results, compared with the simple sampler. This
-allows us to compute less MC samples in order to obtain good enough results,
-something which is highly desired for an application where we are constantly
-fighting against the large time complexity of this kind of system.
-
-\begin{figure*}[ht]
-    \centering
-    \includegraphics[width=0.9\linewidth]{../results/var-alpha-plot-imp-10000.png}
-    \caption{Plot of average local energy and accompanying population variance,
-    as functions of the variational parameter $\alpha$. The minimum of both
-    graphs are marked, and is expected to be placed at
-    $\alpha=\flatfrac{1}{2}$. Results shown are for $1D$, one particle and
-    $10^{4}$ Monte Carlo cycles, using the Metropolis-Hastings sampling
-    algorithm.}
-    \label{fig:var-alpha-plot-imp}
-\end{figure*}
-
-
-To get a better view of the effect of $\Delta t$ on the Metropolis-Hastings
-sampling algorithm, Figure~\ref{fig:var-alpha-plot-imp-dts} shows the same graph
-as before, but for a set of different values for $\Delta t$. From this plot it
-becomes very clear that choosing the correct value for this parameter will be
-very important when we try to find the optimal variational parameters. We see
-that the apparent minima appear on both the left and the right of the ideal
-value. Small values tend to not increase the energy when we increase alpha, and
-too large numbers makes the energy plot approach a straight line with minimum at
-the lowest alpha tried. Neither of these behaviours are desired, so some care
-has to be taken in ensuring that we apply a value that gives results we expect.
-
-All values are to some extent usable given enough MC samples, but an unrealistic
-number might be needed for $\Delta t$ values far away from the optimum.
-Figure~\ref{fig:var-alpha-plot-imp-dts} provides further evidence that $\Delta
-t=0.1$ is a sensible choice.
-
-\begin{figure*}[ht]
-    \centering
-    \includegraphics[width=0.9\linewidth]{../results/var-alpha-plot-imp-dts-10000.png}
-    \caption{The same plot as shown in Figure~\ref{fig:var-alpha-plot-imp},
-    shown for multiple different values for $\Delta t$. We see that both too
-    large, and to small values yield less than ideal results.}
-    \label{fig:var-alpha-plot-imp-dts}
-\end{figure*}
-
-\subsubsection{Statistical Error}
-
-Figure~\ref{fig:errorbar} shows the results of a simulation on a system of one
-boson in 3D, using $n=2^{14}$ Monte Carlo samples. On the graph, error bars are
-included to visually express the certainty with which we know the results. The
-magnitude of the error bars are given by the standard error, as determined by
-the Blocking method. We see that the error estimate goes promptly to zero as we
-approach the optimal $\alpha=\flatfrac{1}{2}$ value, and in fact we get exactly
-zero as the standard error at this point. This is not that suprising, as using
-the optimal value for $\alpha$ here means we are solving the exact system, and
-therefore there should not be any doubt about the answer either.
-
-The error estimates might be of higher importance as we traverse into the
-interacting case.
-\begin{figure*}[ht]
-    \centering
-    \includegraphics[width=0.8\linewidth]{../results/error-plot-3D-2-pow-14.png}
-    \caption{Simulation results using Algorithm~\ref{alg:metropolis-importance},
-    running on a system of one boson in 3D. Error bars have been included, whose
-    magnitude are the standard error of the mean energy, as obtained by the
-    blocking method. In this simulation, $n=2^{14}$ Monte Carlo samples were
-    generated.}
-    \label{fig:errorbar}
-\end{figure*}
-
-
-\printbibliography
 
 \end{document}
