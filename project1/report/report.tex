@@ -189,7 +189,7 @@ Combining these two definitions we can now rewrite $\expval{H}$ as follows:
     \begin{split}
         \expval{H} &= \int \dd{\vec R} P(\vec R,\vec\alpha) E_L(\vec R,\vec\alpha)\\
         &\approx
-        \frac{1}{N}\sum_{i=1}^N E_L(\vec R_i,\vec\alpha),
+        \frac{1}{n}\sum_{i=1}^n E_L(\vec R_i,\vec\alpha),
     \end{split}\label{eq:the-objective}
 \end{align}
 where $R_i$ are randomly drawn positions from the PDF $P(\vec R, \vec\alpha)$.
@@ -225,6 +225,33 @@ We also have an exact value for the variance of the energy in this case:
 \end{align}
 This follows when we have the exact wavefunction, which satisfies the time
 independent Schrödinger equation, $H\ket{\Psi}=E\ket{\Psi}$.
+
+
+\subsubsection{Gross-Pitaevskii Equation}
+
+The interactive system under investigation here can be approximated by the
+Gross-Pitaevskii equation, which is valid when the Bose-gas in question is
+sufficiently dilute. The energy under this model is given
+as\cite{Nilsen-phys-rev}:
+\begin{align}
+    \begin{split}
+    &E_{\text{GP}}[\Psi]=
+        \int
+        d\vec{R}\bigg[\frac{1}{2}\norm{\nabla\Psi}^2+V_{ext}\abs{\Psi}^2+2\pi a\abs{\Psi}^4\bigg].
+\label{eq:GP_integral}
+    \end{split}
+\end{align}
+If we insert the elliptical potential, and drop the Jastrow factor from the
+wavefunction (i.e. solve for the non-interacting case, setting $a=0$), we solve
+this analytically and obtain an exact formula for the energy in the elliptical
+case as  well. This will prove very useful as a benchmark for our
+implementation. Evaluating the integral we end up with (assuming
+$\omega_z=\beta$, which will also be used later)
+\begin{align}
+    E_\text{GP} = N\cdot
+    \qty(\frac{1}{4\alpha}+\alpha)\cdot\qty(1+\frac{\beta}{2}),\label{eq:GP-final}
+\end{align}
+which we can see corresponds to \eqref{eq:exact-ground-state} when $\beta=1$.
 
 \subsection{Calculating the Local Energy $E_L$}
 As the local energy is the quantity we are interested in computing for a
@@ -704,6 +731,83 @@ importance sampling used to increase the number of accepted transitions.
     \end{algorithmic}
 \end{algorithm}
 
+\subsection{Optimizing the Variational Parameters}
+
+The point of VMC is to vary the parameters of the wavefunction, here $\alpha$
+and $\beta$, in such a way that the energy is minimized. This is in other words
+a classic optimization problem, to which we can apply one of the many available
+techniques. One of the simpler and more intuitive approaches is Gradient Decent,
+which is the one we will apply. We could have\footnote{Perhaps even should have,
+in hindsight.} opted for a better method, such as Conjugate Gradient, but
+standard Gradient Decent was chosen for simplicity.
+
+\subsubsection{Gradient Decent}
+
+The intuition for Gradient Decent (along with most other techniques) is based on
+the fact that extrema, $\vec x^*$, of a function $f(\vec x^*)$ have the property of zero gradient,
+$\grad f(\vec x^*) = 0$. Using this, and starting at any initial guess $\vec
+x_0$, we can update this guess to a point with \textit{smaller} gradient by
+following the direction of $-\grad f(\vec x_0)$. In less words, the improved
+guess $\vec x_1$ is given by
+\begin{align}
+    \vec x_1 = \vec x_0 - \gamma \grad f(\vec x_0),
+\end{align}
+where $\gamma$ is a hyper-parameter referred to as the \textit{learning rate},
+and typically $\gamma < 1$.
+Following the same recipe, we can generate arbitrarily small gradients by
+iterating
+\begin{align}
+    \vec x_{i+1} = \vec x_i - \gamma \grad f(\vec x_i).
+\end{align}
+We are guaranteed, given a sufficiently small $\gamma$ and enough iterations, to
+arrive at \textit{a} minimum with this technique. As with all numerical
+optimization schemes, we are always having to consider the possibility of the
+minimum only being local, and not the global one. 
+
+\paragraph{Defining the Gradient:}$\,$\\
+
+In our case, the function we want to minimize is $E_0=\expval{H}$. The only
+parameter we will treat as varying in this report is $\alpha$, as we shall fix
+$\beta$ later on. Therefore, the gradient is
+
+\begin{align}
+    \grad_\alpha \expval{H} = \pdv{\expval{H}}{\alpha}
+\end{align}
+With some algebraic massage we can rewrite this as
+follows~\cite{mhj-compphys-II}:
+\begin{align}
+    \grad_\alpha \expval{H} =
+    2\qty[\expval{\frac{E_L}{\Psi_T}\pdv{\Psi_T}{\alpha}} -
+    \expval{E_L}\expval{\frac{1}{\Psi_T}\pdv{\Psi_T}{\alpha}}]\label{eq:gradient-nice}
+\end{align}
+
+The derivative of the wavefunction with respect to $\alpha$ is found easily,
+\begin{align}
+    \frac{1}{\Psi_T}\pdv{\Psi_T}{\alpha} = -\sum_{i}^N\qty(x_i^2 + y_i^2+\beta
+    z_i^2)
+\end{align}
+as dividing by $\Psi_T$ cancels the interaction factor. For 1D and 2D we simply
+drop the other coordinate terms.
+
+We can now compute the two expectation values in~\eqref{eq:gradient-nice} from
+the sampled positions $\vec R_j$, and get an approximation for the gradient.
+
+\paragraph{Limitations:}$\,$\\
+Gradient Decent is wonderfully simple, but has its limitations. Firstly, the
+results are highly dependent on on the hyper-parameters, which are the initial
+guess $\vec x_0$ and the learning rate.
+
+A bad guess can mean we spend a long time finding our way to the minimum. A bad
+guess also increases the likelihood of getting stuck in local optima on the way.
+
+The learning rate must also be just right. To low and we take forever to get
+anywhere, and we very easily get stuck in small bumps in the function output
+space. Make $\gamma$ to large and we have trouble actually converging to
+anything. We may also end up with exploding gradients if we are so unlucky.
+
+All in all there are tons of pitfalls, but we hope our energy function is
+relatively well behaved, and that we can provide good values for the
+hyper-parameters.
 
 \section{Evaluating the Validity of Results}
 \label{sec:statistical-analisys}
@@ -1090,23 +1194,30 @@ interacting case.
 
 It is also interesting to see how the calculated one-body density comes out for
 the ideal non-interacting case. Figure~\ref{fig:density-ideal} shows the plot
-for a system of 10 bosons in the 3D symmetric harmonic oscillator trap. Also
-drawn is the expected shape from \eqref{eq:one-body-exact}. Both lines have been
-normalized so that they integrate to one, as the constants are irrelevant to us
-here. To our delight the approximation agrees very well with the expectation.
-The discrepancies around $r=0$ are due the volumes of the smallest regions being
-very small, and hence their occupation counts become somewhat unstable. We can
-still make out the trend though, which again is in great agreement with the
-analytical result.
+for a system of 10 bosons in the 3D symmetric and elliptical harmonic oscillator
+traps. Also drawn is the expected shape from \eqref{eq:one-body-exact}, for the
+symmetric curve. All lines have been normalized so that they integrate to one,
+as the constants are irrelevant to us here. To our delight the approximation
+agrees very well with the expectation. The discrepancies around $r=0$ are due
+the volumes of the smallest regions being very small, and hence their occupation
+counts become somewhat unstable. We can still make out the trend though, which
+again is in great agreement with the analytical result.
+
+The elliptical curve deviates from that of the symmetrical (not surprising), and
+we see that the effect is that particles tend to be closer to the origin. This
+is understandable, as the parameters used here increase the $z$-component of the
+potential by a factor $\sqrt{8}$. With a stronger confining potential, we would
+expect exactly this behaviour
 
 \begin{figure*}[ht]
     \centering
     \includegraphics[width=0.8\linewidth]{../results/one-body-3D-N10-noniter.png}
     \caption{One-Body density for a particle in a non-interacting system of 10
-    bosons in the 3D symmetric harmonic oscillator trap. The results are with
+    bosons in the 3D symmetric and elliptical harmonic oscillator traps. The results are with
     $\alpha=\flatfrac{1}{2}$, using Algorithm~\ref{alg:metropolis-simple} with a
-    step length of $1$ and $10^6$ samples. For reference is the exact Gaussian
-    form expected. Both graphs have been normalized so that they integrate to 1.
+    step length of $1$ and $10^6$ samples. For the elliptical trap,
+    $\beta=\omega_z=2.82843$ was used. For reference is the exact Gaussian
+    form expected (for the symmetric curve). All graphs have been normalized so that they integrate to 1.
     The jagged shape around $r=0$ is an artifact of the approximation used,
     where the volume of the regions become very small, and their counts become
     less stable as a result. The $r$-axis is given in units of $a_{ho}$, and $\rho$ is
@@ -1114,13 +1225,176 @@ analytical result.
     \label{fig:density-ideal}
 \end{figure*}
 
+\subsection{Optimization via Gradient Decent}
+
+Even though we know the optimal value for $\alpha$ in the non-interacting case,
+it will serve as a nice implementation test to verify that the algorithm is
+capable of finding the minimum. Looking at \autoref{fig:var-alpha-plot-noimp}
+and \ref{fig:var-alpha-plot-imp} we see that the energy function has a very
+simple shape, with a single well defined minimum. Therefore we should expect to
+be able to find the optimal $\alpha$, even with not so good guesses.
+
+We will only state the observed results here. Many of them are reproduced in the
+unit tests of the Gradient Decent method, if a source is desired.
+
+We find that Gradient Decent is in fact able to find the minimum, and that to
+arbitrary precision, given enough iterations. In the tests we used $10^4$ Monte
+Carlo samples per iteration, which proved quite sufficient. This indicates that the
+implementation works. 
+
+However, we observe it to be quite unstable with respect to the initial guess.
+It works fine with guesses around $\alpha_0\in (0.3, 1)$, but if we start any
+further away than this the results are unstable. This is likely due to the
+gradient and variance increasing rapidly when we stray far from the optimum (as
+seen in e.g. \autoref{fig:var-alpha-plot-noimp}). 
 
 \section{Results for Interacting System}
 
 We now turn our attention to the elliptical trap with the repulsive interaction
 activated. We shall in this report fix $\flatfrac{a}{a_{ho}}=0.0043$, and
 $\beta=\gamma=2.82843\simeq\sqrt{8}$, as done in \cite{DuBois-phys-rev,
-Nilsen-phys-rev}.
+Nilsen-phys-rev}. We will consider systems with $N=10, 50$ and $100$ bosons.
+
+
+\subsection{Varying the Variational Parameter}
+
+\autoref{tab:inter-manual} shows results for all systems, using $\alpha$ values
+in $[0.4, 0.6]$. \autoref{fig:interacting-energy-per-particle} Shows the
+corresponding data in graphical form. We observe, as expected that the energy
+per particle increases with increasing $N$. This makes sense, as there are more
+bosons interacting, and hence the energy should also be higher. 
+
+Comparing our results to the exact solution for the non-interacting case, we can
+see that this is consistently 
+
+The resolution of the data is too low to make any certain claims on where the
+optimal value for $\alpha$ might be (it might even be outside the range tried
+here). However with the data available we are suggested to believe that some
+minimum exists in the range $\alpha\in [0.5, 0.6]$.
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../results/interacting-energy-per-particle.png}
+    \caption{Energy per particle, as a function of $\alpha$. We observe, as
+    expected, a higher energy per particle when we have more bosons in the
+    system. The plot has to low resolution to make any certain predictions about
+    where the optimal value might be. This would have been improved given
+    sufficient time.}
+    \label{fig:interacting-energy-per-particle}
+\end{figure*}
+
+\subsection{Employing Gradient Decent}
+
+After the initial scan made in the previous section Gradient Decent was applied
+to the $N=10$ system. The full result is available on Github. The search was
+started at $\alpha=0.55$, based on suspicions from the previous section. The
+algorithm was given $10^4$ samples per iteration, and a learning rate of
+$0.001$. 
+
+Interestingly the algorithm did not agree with the {\lq findings\rq} of the last
+section. Quite quickly the algorithm reduced $\alpha$, and landed finally on
+
+\begin{align}
+    \alpha_{N=10} \simeq 0.4978
+\end{align}
+The corresponding energy, calculated with $2^{20}$ samples was then found to be:
+\begin{align}
+    E_{N=10} \simeq 24.3984 \pm 0.00080.
+\end{align}
+
+Ideally we would repeat the process for $N=50$ and $N=100$. However, due to the
+bad complexity in $N$, the time needed to do this is more than was available at
+the time. To achieve results in reasonable time, we would need to lower the
+amount of samples per iteration significantly. Trying to do this however has
+proved to yield unstable results for the gradients, and hence the algorithm is
+not able to converge. 
+
+
+\subsection{One-Body Density}
+
+\autoref{fig:one-body-interaction} shows the one-body densities for each of the
+systems, with the ideal symmetrical curve for reference as before. We see a
+trend very similar to that of \autoref{fig:density-ideal}, in that the
+elliptical curve lines indicates that the stronger potential squeezes the
+particle closer to the origin, compared with the interacting case. 
+
+We would maybe expect the presence of interactions to spread the one-body
+density out more, as the particles may not be allowed to be to close. There is
+however not any clear visible difference to make out from these plots. The
+jaggedness around the origin makes it a bit difficult to make out any potential
+differences. We could have improved the resolution of these plots once again by
+using more samples. However, there are limits to what we have CPU capacity to
+do, and so the present data must suffice.
+
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../results/interacting-density.png}
+    \caption{One-body densities for the interacting case, drawn for all systems.
+    The $alpha$ used here is $\alpha=0.55$, same as in the apparent minimum seen
+    in \autoref{fig:interacting-energy-per-particle}.
+    We see a trend very similar to that of \autoref{fig:density-ideal}, where
+    the elliptical potential forces the particles closer than in the symmetric
+    case. There is no visual effect of adding the interaction in the
+    distributions shown. Again, the discrepancies around $r=0$ are artifacts of
+    the approximation, and should not be considered in depth.}
+    \label{fig:one-body-interaction}
+\end{figure*}
+
+\section{Conclusion}
+
+We have seen how a Variational Monte Carlo approach was able to accurately
+reproduce the expected results for the simple, non-interacting system of bosons
+in a harmonic oscillator potential. We could see this in both the calculated
+energies, and in the one-body density.
+
+We have looked at the differences in sampling technique, namely the difference
+between the standard Metropolis algorithm, and the physically motivated version
+of Metropolis-Hastings algorithm. We observed how using importance sampling was
+able to produce significantly better results in terms of stability and accuracy,
+for instance seen in the difference between \autoref{fig:var-alpha-plot-noimp}
+and \ref{fig:var-alpha-plot-imp}. We also saw evidence that choosing an
+appropriate step size was of great importance, and could greatly influence how
+the algorithms perform. 
+
+Finally for the non-interacting system we implemented Gradient Decent, which was
+able to easily reproduce the ideal $\alpha$, although this was largely dependent
+(again) on appropriate hyper-parameters.
+
+In the interacting regime we first and foremost observed the $\mathcal{O}(N^3)$
+time complexity of our numerical approach. This made calculations
+computationally very expensive to do, and heavily influenced the resolution of
+the results we were able to produce. 
+
+The calculated energies per particle increased as $N$ increased, in accordance
+with expectations. By comparing the energies we found to \eqref{eq:GP-final}, we
+were able to see by how much the energies increased relative to the ideal case.
+The effect was small for $N\leq 10$ particles, but became quite apparent for
+larger $N$. 
+
+Results for the one-body density did not show any noticeable effects of the
+interaction. However, whether this is actually the case or not is hard to
+conclude from the precision we have obtained.
+
+Gradient Decent was applied to $N=10$, with satisfactory results, obtaining an
+energy which has not been subsided by any other parameter value. Due to time
+constraints, and heavy CPU demand, Gradient decent was not successfully
+implemented for the $N=50,100$ systems.
+
+
+\section{Further Work}
+
+It would be interesting to spend some more time optimizing the code, including
+expanding to make use of MPI for parallelization. It would be very interesting
+to see if the implementation was able to find good numbers for the larger
+systems. 
+
+Due to a regrettable mistake in time estimation, rooted in unforeseen coding
+complications, the resolution of the results for the interacting case are not as
+good as desired. Regardless of the conclusions made here, I therefore intend to
+revisit this project, at least by letting some week-long jobs run once the code
+has gotten a little optimization facelift. 
+
 
 \printbibliography
 
@@ -1212,8 +1486,45 @@ Nilsen-phys-rev}.
 
 \end{longtable}
 \end{center}
-\twocolumn
 
+\clearpage
+\begin{table*}
+    \center
+    \caption{Results for the interacting system. The energies have been
+    calculated for selected $\alpha$'s, and the standard error is as given by
+    the Blocking method. For reference is the exact result for the
+    non-interacting system.}
+    \label{tab:inter-manual}
+\begin{tabular}{|c|c|c|}\hline
+$\,$ & $N=10$ & $\,$ \\ \hline
+$\alpha$ & VMC & GP\\ \hline
+$0.40$ & $24.552 \pm 0.002865$ & $24.746$\\ \hline
+$0.45$ & $24.994 \pm 0.006891$ & $24.276$\\ \hline
+$0.50$ & $24.504 \pm 0.002704$ & $24.142$\\ \hline
+$0.55$ & $24.400 \pm 0.000232$ & $24.252$\\ \hline
+$0.60$ & $24.770 \pm 0.005075$ & $24.545$\\ \hline
+\end{tabular}
+\vspace{0.5cm}
+\begin{tabular}{|c|c|c|}\hline
+$\,$ & $N=50$ & $\,$ \\ \hline
+$\alpha$ & VMC & GP\\ \hline
+$0.40$ & $127.744 \pm 0.002530$ & $123.729$\\ \hline
+$0.45$ & $130.019 \pm 0.006282$ & $121.381$\\ \hline
+$0.50$ & $128.046 \pm 0.003077$ & $120.711$\\ \hline
+$0.55$ & $127.234 \pm 0.000727$ & $121.259$\\ \hline
+$0.60$ & $130.091 \pm 0.005271$ & $122.723$\\ \hline
+\end{tabular}
+\vspace{0.5cm}
+\begin{tabular}{|c|c|c|}\hline
+$\,$ & $N=100$ & $\,$ \\ \hline
+$\alpha$ & VMC & GP\\ \hline
+$0.40$ & $268.091 \pm 0.003828$ & $247.457$\\ \hline
+$0.45$ & $271.952 \pm 0.008271$ & $242.763$\\ \hline
+$0.50$ & $269.340 \pm 0.003764$ & $241.422$\\ \hline
+$0.55$ & $267.476 \pm 0.001183$ & $242.519$\\ \hline
+$0.60$ & $273.630 \pm 0.004904$ & $245.445$\\ \hline
+\end{tabular}
+\end{table*}
 
 
 \end{document}
