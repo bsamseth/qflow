@@ -1,6 +1,7 @@
-\documentclass[twocolumn]{article}
+\documentclass[a4paper, 11pt]{article}
 \usepackage{preamble}
 % \usepackage{fullpage}
+\usepackage[paper=a4paper,margin=1.5in, includefoot, footskip=30pt]{geometry}
 \usepackage{dsfont}
 \usepackage{algorithm}
 \usepackage{algorithmic}
@@ -10,6 +11,7 @@
 \usepackage{booktabs}
 \usepackage{tikz}
 \usepackage{afterpage}
+\usepackage{multicol}
 
 \sisetup{range-phrase=-}
 
@@ -21,13 +23,40 @@
 University of Oslo\\
 FYS4411\\
 Computational physics II: Quantum mechanical systems\\
-\huge Project 1 }
+\huge Project 1: Variational Monte Carlo on Bosonic Systems}
 \author{\textsc{Bendik Samseth}}
 \date{\today}
 \begin{document}
 \maketitle
 
+\begin{abstract}
+    In this project we have applied Variational Monte Carlo (VMC) to systems of
+    trapped hard-sphere interacting bosons. We present the theoretical
+    background, including exact theoretical results for the idealized
+    non-interacting system. These results are used as benchmarks for the
+    implementation, and we find that the developed codes are able to reproduce
+    them all. Further we discuss two different methods of sampling positions
+    from the probability distribution given by the trial wavefunction, using
+    both standard approaches with the Metropolis algorithm, as well as a more
+    informed revision in an implementation of the Metropolis-Hastings algorithm.
+    We also discus approaches to optimizing the variational parameters, in
+    particular using the method of Gradient Decent. Finally we apply all tools
+    to the interacting systems, for a number of particles $N=10, 50$ and $100$,
+    and present results for both the ground state energies and the one-body
+    density plots. The validity and resolution of our results are limited
+    heavily by the large computational complexity of the calculating properties
+    of large interacting system, although we are able to extract some insights.
+    All material referenced in this report is available at
+    \url{https://github.com/bsamseth/FYS4411}.
+\end{abstract}
 
+
+\pagebreak
+\newgeometry{margin=0.9in}
+\tableofcontents
+
+\begin{multicols}{2}    
+\nocite{DuBois-phys-rev, Nilsen-phys-rev, mhj-compphys-II}
 \section{Introduction}
 The aim of this project is to use the Variational Monte Carlo
 (VMC) method and evaluate the ground state energy of a trapped, hard
@@ -126,8 +155,7 @@ $\nabla^{\prime 2} = a_{ho}^2\laplacian$, we get:
     &= \sum_{i}^N\left(-\frac{\hbar^2}{2m}
     \frac{1}{a_{ho}^2}\nabla_i^{\prime 2}\right.\\
     &\,
-    \qqtext{  }\qqtext{
-    }+\left.\frac{m}{2}\qty[\omega_{ho}^2a_{ho}^2\qty(x_i^{\prime 2} +
+    \qqtext{  }+\left.\frac{m}{2}\qty[\omega_{ho}^2a_{ho}^2\qty(x_i^{\prime 2} +
     y_i^{\prime 2}) +
     \omega_z^2a_{ho}^2z_i^{\prime 2}]\right)\\
     &\,
@@ -345,7 +373,7 @@ The second term may be evaluated as follows:
 Now we can find the Laplacian by taking the divergence of
 \eqref{eq:grad-trail-wf}:
 \begin{align*}
-\frac{1}{\Psi_L}\laplacian_k{\Psi_L} &= \frac{1}{\Psi_L}\grad_k\vdot
+\frac{\laplacian_k{\Psi_L}}{\Psi_L} &= \frac{1}{\Psi_L}\grad_k\vdot
     \Psi_T\qty[\frac{\grad_k \phi(\vec r_k)}{\phi(\vec r_k)} + \sum_{j\neq k}
     \grad u(r_{kj})] \\
     &= \frac{\laplacian_k \phi(\vec r_k)}{\phi(\vec r_{k})}+\sum_{j\neq
@@ -863,7 +891,8 @@ obtained using Algorithm~\ref{alg:metropolis-importance}. Although the values
 vary quite a bit, we still see that if the values are very low it takes some
 time before it can get large again, and vice versa.
 
-\begin{figure*}[ht]
+\end{multicols}
+\begin{figure}[!h]
     \centering
     \includegraphics[width=0.8\linewidth]{../results/time-series-example.png}
     \caption{Example time series of local energy values obtained from a
@@ -871,7 +900,8 @@ time before it can get large again, and vice versa.
     are a small snippet of energies obtained for a system of one boson in one
     dimension, using $\alpha=0.55$ and a step size of $1$. The mean from the entire set of samples is shown for reference}
     \label{fig:time-series-example}
-\end{figure*}
+\end{figure}
+\begin{multicols}{2}
 
 The effect of this is that using \eqref{eq:SE-est-def} directly as the measure for
 the statistical error will tend to \textit{underestimate} its true value.
@@ -978,7 +1008,7 @@ space, due to the correlations within it. Using Bootstrap will improve the
 estimate, but it will still be biased.
 
 
-\subsection{Blocking}
+\subsubsection{Blocking}
 
 In some sense Blocking takes the complete opposite approach to that of
 Bootstrap. Blocking takes the original samples and combines them to make less
@@ -1070,7 +1100,8 @@ computational reach. The relatively low value of $5\cdot 10^4$ was used to give 
 difference to the result in the next section, when we include importance
 sampling.
 
-\begin{figure*}[ht]
+\end{multicols}
+\begin{figure}[!h]
     \centering
     \includegraphics[width=0.9\linewidth]{../results/var-alpha-plot-noimp-50000.png}
     \caption{Plot of average local energy and accompanying population variance,
@@ -1080,7 +1111,8 @@ sampling.
     $5\cdot 10^{4}$ Monte Carlo cycles, using
     Algorithm~\ref{alg:metropolis-simple}.}
     \label{fig:var-alpha-plot-noimp}
-\end{figure*}
+\end{figure}
+\begin{multicols}{2}
 
 
 
@@ -1129,7 +1161,8 @@ allows us to compute less MC samples in order to obtain good enough results,
 something which is highly desired for an application where we are constantly
 fighting against the large time complexity of this kind of system.
 
-\begin{figure*}[ht]
+\end{multicols}
+\begin{figure}[!h]
     \centering
     \includegraphics[width=0.9\linewidth]{../results/var-alpha-plot-imp-50000.png}
     \caption{Plot of average local energy and accompanying population variance,
@@ -1139,7 +1172,8 @@ fighting against the large time complexity of this kind of system.
     $5\cdot 10^{4}$ Monte Carlo cycles, using
     Algorithm~\ref{alg:metropolis-importance}}
     \label{fig:var-alpha-plot-imp}
-\end{figure*}
+\end{figure}
+\begin{multicols}{2}
 
 
 To get a better view of the effect of $\Delta t$ on the Metropolis-Hastings
@@ -1154,15 +1188,16 @@ All values are to some extent usable given enough MC samples, but an unrealistic
 number might be needed for $\Delta t$ values far away from the optimum.
 Figure~\ref{fig:var-alpha-plot-imp-dts} provides further evidence that $\Delta
 t$ must be chosen with care.
-
-\begin{figure*}[ht]
+\end{multicols}
+\begin{figure}[!h]
     \centering
     \includegraphics[width=0.9\linewidth]{../results/var-alpha-plot-imp-dts-50000.png}
     \caption{The same plot as shown in Figure~\ref{fig:var-alpha-plot-imp},
     shown for multiple different values for $\Delta t$. We see that both too
     large, and to small values yield less than ideal results.}
     \label{fig:var-alpha-plot-imp-dts}
-\end{figure*}
+\end{figure}
+\begin{multicols}{2}
 
 \subsection{Statistical Error}
 
@@ -1178,7 +1213,8 @@ therefore there should not be any doubt about the answer either.
 
 The error estimates might be of higher importance as we traverse into the
 interacting case.
-\begin{figure*}[ht]
+\end{multicols}
+\begin{figure}[!h]
     \centering
     \includegraphics[width=0.8\linewidth]{../results/error-plot-3D-2-pow-14.png}
     \caption{Simulation results using Algorithm~\ref{alg:metropolis-importance},
@@ -1188,7 +1224,8 @@ interacting case.
     blocking method. In this simulation, $n=2^{14}$ Monte Carlo samples were
     generated.}
     \label{fig:errorbar}
-\end{figure*}
+\end{figure}
+\begin{multicols}{2}
 
 \subsection{One-Body Density}
 
@@ -1209,7 +1246,8 @@ is understandable, as the parameters used here increase the $z$-component of the
 potential by a factor $\sqrt{8}$. With a stronger confining potential, we would
 expect exactly this behaviour
 
-\begin{figure*}[ht]
+\end{multicols}
+\begin{figure}[!h]
     \centering
     \includegraphics[width=0.8\linewidth]{../results/one-body-3D-N10-noniter.png}
     \caption{One-Body density for a particle in a non-interacting system of 10
@@ -1223,7 +1261,8 @@ expect exactly this behaviour
     less stable as a result. The $r$-axis is given in units of $a_{ho}$, and $\rho$ is
     similarly dimensionless.}
     \label{fig:density-ideal}
-\end{figure*}
+\end{figure}
+\begin{multicols}{2}
 
 \subsection{Optimization via Gradient Decent}
 
@@ -1264,15 +1303,19 @@ corresponding data in graphical form. We observe, as expected that the energy
 per particle increases with increasing $N$. This makes sense, as there are more
 bosons interacting, and hence the energy should also be higher. 
 
-Comparing our results to the exact solution for the non-interacting case, we can
-see that this is consistently 
+Comparing our results to the exact solution for the non-interacting case
+provided by \eqref{eq:GP-final}, we can
+see that this is consistently \textit{underestimating} the energy, compared to
+the VMC results. This is also as we expect. Adding particles, and considering
+their interactions should only increase the energy compared to the ideal case.
 
 The resolution of the data is too low to make any certain claims on where the
 optimal value for $\alpha$ might be (it might even be outside the range tried
 here). However with the data available we are suggested to believe that some
 minimum exists in the range $\alpha\in [0.5, 0.6]$.
 
-\begin{figure*}[ht]
+\end{multicols}
+\begin{figure}[!h]
     \centering
     \includegraphics[width=0.8\linewidth]{../results/interacting-energy-per-particle.png}
     \caption{Energy per particle, as a function of $\alpha$. We observe, as
@@ -1281,7 +1324,8 @@ minimum exists in the range $\alpha\in [0.5, 0.6]$.
     where the optimal value might be. This would have been improved given
     sufficient time.}
     \label{fig:interacting-energy-per-particle}
-\end{figure*}
+\end{figure}
+\begin{multicols}{2}
 
 \subsection{Employing Gradient Decent}
 
@@ -1315,11 +1359,11 @@ not able to converge.
 \autoref{fig:one-body-interaction} shows the one-body densities for each of the
 systems, with the ideal symmetrical curve for reference as before. We see a
 trend very similar to that of \autoref{fig:density-ideal}, in that the
-elliptical curve lines indicates that the stronger potential squeezes the
-particle closer to the origin, compared with the interacting case. 
+elliptical potential curve lines indicates that the stronger potential squeezes the
+particle closer to the origin, compared with the ideal symmetrical case. 
 
 We would maybe expect the presence of interactions to spread the one-body
-density out more, as the particles may not be allowed to be to close. There is
+density out more, as the particles may not be allowed to be too close. There is
 however not any clear visible difference to make out from these plots. The
 jaggedness around the origin makes it a bit difficult to make out any potential
 differences. We could have improved the resolution of these plots once again by
@@ -1327,7 +1371,8 @@ using more samples. However, there are limits to what we have CPU capacity to
 do, and so the present data must suffice.
 
 
-\begin{figure*}[ht]
+\end{multicols}
+\begin{figure}[!h]
     \centering
     \includegraphics[width=0.8\linewidth]{../results/interacting-density.png}
     \caption{One-body densities for the interacting case, drawn for all systems.
@@ -1339,7 +1384,8 @@ do, and so the present data must suffice.
     distributions shown. Again, the discrepancies around $r=0$ are artifacts of
     the approximation, and should not be considered in depth.}
     \label{fig:one-body-interaction}
-\end{figure*}
+\end{figure}
+\begin{multicols}{2}
 
 \section{Conclusion}
 
@@ -1398,8 +1444,8 @@ has gotten a little optimization facelift.
 
 \printbibliography
 
-
-\onecolumn
+\section{Table of Results}
+\end{multicols}
 \begin{center}
 \begin{longtable}{|c|c|c|c|c|c|c|c|}
     \caption{Selected results using the standard Metropolis sampling algorithm.
