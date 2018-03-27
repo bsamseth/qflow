@@ -4,6 +4,9 @@
 #include "boson.hpp"
 #include "system.hpp"
 
+/**
+ * Abstract base class for representing a Wavefunction.
+ */
 class Wavefunction {
 
     protected:
@@ -12,10 +15,32 @@ class Wavefunction {
 
     public:
 
+        /**
+         * Initialize wavefunction with the given parameters.
+         * @param alpha
+         * @param beta
+         * @param a Boson hard-sphere radius.
+         */
         Wavefunction(Real alpha = 0.5, Real beta = 1, Real a = 0);
-        virtual Real operator() (const System&) const = 0;
-        virtual Real derivative_alpha(const System&) const = 0;
-        virtual Real drift_force(const Boson&, int) const = 0;
+        /**
+         * Evaluate the wavefunction.
+         * @param system System to evaluate the Wavefunction for.
+         * @return Value of the wavefunction for the given system.
+         */
+        virtual Real operator() (const System &system) const = 0;
+        /**
+         * Evaluate d(psi)/d(alpha).
+         * @param system System to evaluate for.
+         * @return Gradient of wavefunction wrt. alpha.
+         */
+        virtual Real derivative_alpha(const System &system) const = 0;
+        /**
+         * Evaluate component of the drift force on a given boson.
+         * @param boson Boson to evaluate for.
+         * @param dimension Component to evaluate.
+         * @return Given component of the drift force on the Boson.
+         */
+        virtual Real drift_force(const Boson &boson, int dimension) const = 0;
         Real get_alpha() const;
         Real get_beta() const;
         Real get_a() const;

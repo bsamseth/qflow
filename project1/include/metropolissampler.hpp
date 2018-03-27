@@ -5,9 +5,15 @@
 #include "wavefunction.hpp"
 #include "sampler.hpp"
 
+/**
+ * Class implementing the Metropolis algorithm.
+ */
 class MetropolisSampler : public Sampler {
     public:
 
+        /**
+         * @copydoc Sampler::Sampler
+         */
         MetropolisSampler(const System&, const Wavefunction&, Real step = 1.0);
         virtual void initialize_system();
         virtual void perturb_system();

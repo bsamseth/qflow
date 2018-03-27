@@ -5,6 +5,9 @@
 #include "wavefunction.hpp"
 #include "hamiltonian.hpp"
 
+/**
+ * Class representing the simple harmonic oscillator Hamiltonian.
+ */
 class HarmonicOscillatorHamiltonian: public Hamiltonian {
     public:
 
@@ -12,6 +15,9 @@ class HarmonicOscillatorHamiltonian: public Hamiltonian {
 
         virtual Real external_potential(const System&) const;
 
+        /**
+         * @return Zero, as no interaction is active.
+         */
         virtual Real internal_potential(const System&) const;
 
         virtual Real local_energy(const System&, const Wavefunction&) const;

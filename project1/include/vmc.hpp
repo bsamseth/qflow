@@ -1,5 +1,7 @@
 #pragma once
 
+/* Convenience include for all headers. */
+
 #include "boson.hpp"
 #include "config.hpp.in"
 #include "definitions.hpp"

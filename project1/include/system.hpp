@@ -5,25 +5,67 @@
 #include "boson.hpp"
 
 
+/**
+ * Class representing a system of Bosons.
+ */
 class System {
 
     std::vector<Boson> _bosons;
 
     public:
 
+        /**
+         * Initialize a system of N D-dimensional bosons, placed at origin.
+         * @param number_of_bosons N
+         * @param dimensions D
+         */
         System(int number_of_bosons, int dimensions);
-        System(const System&);
+        /**
+         * Initialize a system as a copy of another.
+         * @param system Original.
+         */
+        System(const System &system);
 
+        /**
+         * @param index Index of Boson.
+         * @return Boson at given index.
+         */
         Boson& operator[] (int index);
+        /**
+         * @param index Index of Boson.
+         * @return Boson at given index.
+         */
         const Boson& operator[] (int index) const;
-        bool operator== (const System&) const;
-        bool operator!= (const System&) const;
+        /**
+         * Equivalency operation.
+         * @param other System to compare with.
+         * @return Result of `==` on the internal representation of both systems.
+         */
+        bool operator== (const System &other) const;
+        /**
+         * Negative equivalency operation.
+         * @param other System to compare with.
+         * @return Result of `!=` on the internal representation of both systems.
+         */
+        bool operator!= (const System &other) const;
 
+        /**
+         * @return Internal representation of all Bosons.
+         */
         std::vector<Boson>& get_bosons();
+        /**
+         * @return Internal representation of all Bosons.
+         */
         const std::vector<Boson>& get_bosons() const;
 
+        /**
+         * @return Number of dimensions of the System.
+         */
         int get_dimensions() const;
 
+        /**
+         * @return Number of Bosons in the System.
+         */
         int get_n_bosons() const;
 };
 

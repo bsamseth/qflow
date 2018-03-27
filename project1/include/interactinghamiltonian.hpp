@@ -6,6 +6,9 @@
 #include "hamiltonian.hpp"
 #include "harmonicoscillatorhamiltonian.hpp"
 
+/**
+ * Class modelling an harmonic oscillator Hamiltonian with interactions.
+ */
 class InteractingHamiltonian: public HarmonicOscillatorHamiltonian {
     public:
 

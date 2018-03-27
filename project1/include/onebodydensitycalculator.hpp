@@ -8,6 +8,9 @@
 #include "hamiltonian.hpp"
 #include "sampler.hpp"
 
+/**
+ * Calculator for computing one-body densities.
+ */
 class OneBodyDensityCalculator : public Calculator {
 
     protected:
@@ -23,6 +26,11 @@ class OneBodyDensityCalculator : public Calculator {
 
     public:
 
+        /**
+         * @copydoc Calculator::Calculator
+         * @param n_bins Number of regions to split space into.
+         * @param max_radius Maximum radius for regions.
+         */
         OneBodyDensityCalculator(const Wavefunction&, const Hamiltonian&, Sampler&, std::string, int n_bins, Real max_radius);
         virtual void process_state(const System&);
         virtual void finalize_calculation();

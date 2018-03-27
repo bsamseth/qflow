@@ -5,6 +5,9 @@
 #include "system.hpp"
 #include "wavefunction.hpp"
 
+/**
+ * Abstract sampler class defining the iterface for a generic Monte Carlo sampler.
+ */
 class Sampler {
     protected:
         const Real _step;
@@ -22,16 +25,48 @@ class Sampler {
 
     public:
 
-        Sampler(const System&, const Wavefunction&, Real step);
+        /**
+         * Initialize a sampler.
+         * @param init Shape of System instances to generate.
+         * @param wavefunction Wavefunction to sample from.
+         * @param step Step size to use in sampling.
+         */
+        Sampler(const System &init, const Wavefunction &wavefunction, Real step);
+
+        /**
+         * Initialize system in some random configuration.
+         */
         virtual void initialize_system() = 0;
+        /**
+         * Perturb the system, producing a new suggested state.
+         */
         virtual void perturb_system() = 0;
+        /**
+         * Compute the acceptance probability for the newly generated state.
+         */
         virtual Real acceptance_probability() const = 0;
+        /**
+         * @return A new System instance.
+         */
         virtual const System& next_configuration();
 
+        /**
+         * @return Number of accepted steps.
+         */
         long get_accepted_steps() const;
+        /**
+         * @return Total number of calls to next_configuration.
+         */
         long get_total_steps() const;
+        /**
+         * @return Acceptance rate.
+         */
         Real get_acceptance_rate() const;
+        /**
+         * @return The current system of the sampler.
+         */
         const System& get_current_system() const;
+
         friend std::ostream& operator<<(std::ostream &strm, const Sampler& s);
 };
 

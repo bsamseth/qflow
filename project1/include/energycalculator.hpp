@@ -7,6 +7,9 @@
 #include "hamiltonian.hpp"
 #include "sampler.hpp"
 
+/**
+ * Calculator used to calculate local energies.
+ */
 class EnergyCalculator : public Calculator {
 
     protected:
@@ -16,7 +19,12 @@ class EnergyCalculator : public Calculator {
 
     public:
 
-        EnergyCalculator(const Wavefunction&, const Hamiltonian&, Sampler&, std::string, bool);
+        /**
+         * @copydoc Calculator::Calculator
+         * @param analytic False will use numerical approximation of local energies.
+         */
+        EnergyCalculator(const Wavefunction&, const Hamiltonian&, Sampler&, std::string, bool analytic);
+
         virtual void process_state(const System&);
         virtual void finalize_calculation();
 

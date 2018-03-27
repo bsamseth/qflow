@@ -5,6 +5,9 @@
 #include "system.hpp"
 #include "wavefunction.hpp"
 
+/**
+ * Class modelling a simple N-boson wavefunction w/o interaction.
+ */
 class SimpleGaussian : public Wavefunction {
     public:
         // Inherit contructor.
