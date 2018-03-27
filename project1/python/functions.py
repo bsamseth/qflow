@@ -6,6 +6,7 @@ import seaborn
 import os
 import tempfile
 import time
+import glob
 
 figsize = (8, 8)
 axis_fontsize = 26
@@ -39,7 +40,7 @@ def run_MC(dims=1, n=1, n_mc=100, alpha=0.5, beta=1,
     else:
         filename = tempfile.mktemp(prefix='run-', suffix='_'.join(options.split(' ')))
 
-    command = '../build-release/main.x {} {}'.format(options, filename)
+    command = '../build-release-mac/main.x {} {}'.format(options, filename)
 
     with os.popen(command) as cmd:
         output = cmd.read()
@@ -126,7 +127,6 @@ def proper_error_plot(alphas, saveas=None, verbose=True, **kwargs):
     return E, errors
 
 def density_plot(density, max_radius = 5, alpha=0.5, draw_exact=False, saveas=None):
-
     # Normalize
     r = np.linspace(0, max_radius, len(density))
     rho = density / np.trapz(density, x=r)
@@ -148,6 +148,28 @@ def density_plot(density, max_radius = 5, alpha=0.5, draw_exact=False, saveas=No
     if saveas:
         plt.savefig(saveas)
 
+def density_plot_multiple(densities, max_radius = 5, alpha=0.5, labels=['VMC'], draw_exact=False, saveas=None):
+
+    # Normalize
+    r = np.linspace(0, max_radius, densities.shape[1])
+    rho = densities / np.trapz(densities, x=r, axis=1).reshape(densities.shape[0], -1)
+
+    # Expected non-interacting
+    exact = np.exp(-2 * alpha * r**2)
+    exact = exact / np.trapz(exact, x=r)
+
+    fig, ax = plt.subplots(figsize=figsize)
+    for rho_i, label in zip(rho, labels):
+        ax.plot(r, rho_i, label=label)
+    if draw_exact:
+        ax.plot(r, exact, label=r'Exact (non-inter)')
+    ax.set_xlabel(r'$r$ $[a_{ho}]$', fontsize=axis_fontsize)
+    ax.set_ylabel(r'$\rho$ $[a_{ho}]$', fontsize=axis_fontsize)
+    ax.set_title(r'One-body density', fontsize=title_fontsize)
+    plt.legend(fontsize=title_fontsize)
+
+    if saveas:
+        plt.savefig(saveas)
 
 def make_configuration_table(filename, verbose=True, dims=(1,2,3), ns=(1, 10, 100, 500),
                              analytics=(1, 0), steps=(0.1,), importance=False, **kwargs):
@@ -260,3 +282,32 @@ def time_series_plot(E, saveas=None, show_last=150):
 
     plt.show()
 
+def GP(alpha, beta, N):
+    return N * (1/(4*alpha) + alpha) * (1 + beta/2)
+
+def load_E_rho(filename):
+    E = np.fromfile(filename + '__energy.bin', count=-1, dtype=np.float64)
+    rho = np.fromfile(filename + '__density.bin', count=-1, dtype=np.float64)
+    return E, rho
+
+def load_set(pattern):
+    files = sorted(glob.glob(pattern+'*__energy.bin'))
+    files = [s.replace('__energy.bin', '') for s in files]
+    return list(zip(*[load_E_rho(f) for f in files]))
+
+def proper_error_plot_precomputed_per_particle(alphas, Es, num_particles, saveas=None):
+
+    Es = Es / num_particles
+
+    errors = [blocking(e) for e in Es]
+
+    fig, ax = plt.subplots(figsize=figsize)
+    ax.errorbar(alphas, np.mean(Es, axis=1), yerr=errors)
+    ax.set_ylabel(r'$\langle H\rangle$', fontsize=axis_fontsize)
+    ax.set_xlabel(r'$\alpha$', fontsize=axis_fontsize)
+    ax.set_title(r'Ground state energy as function of variational parameter $\alpha$', fontsize=title_fontsize)
+
+    if saveas:
+        plt.savefig(saveas)
+
+    return Es, errors
