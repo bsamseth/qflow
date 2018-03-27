@@ -96,7 +96,6 @@ void sampler_integration_test(int sampler_type, Real expected_acceptance, Real a
     Real ar = sampler.get_acceptance_rate();
 
     // Check that acceptance rate has not dropped below what has been seen before.
-    // Standard sampling should drop a bunch, 64% seems to be a reasonable result.
     // Just test it, in case we muck something up that decreases it later on.
     EXPECT_GE(ar, expected_acceptance);
 

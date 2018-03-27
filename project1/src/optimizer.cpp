@@ -20,12 +20,6 @@ Real gradient_decent_optimizer(Wavefunction &wavefunction,
                                Real dE_eps,
                                bool verbose)
 {
-    // Thermalize the sampler.
-    for (int run = 0; run < sample_points; ++run) {
-        sampler.next_configuration();
-    }
-
-
     Real alpha = initial_guess;
 
     int iteration = 0;
@@ -34,6 +28,11 @@ Real gradient_decent_optimizer(Wavefunction &wavefunction,
 
     do {
         wavefunction.set_params(alpha, wavefunction.get_beta(), wavefunction.get_a());
+
+        // Thermalize the sampler to the alpha guess.
+        for (int run = 0; run < sample_points; ++run) {
+            sampler.next_configuration();
+        }
 
         Real E_tot = 0;
         Real E_tot_sq = 0;
