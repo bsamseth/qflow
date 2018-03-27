@@ -140,7 +140,7 @@ def density_plot(density, max_radius = 5, alpha=0.5, draw_exact=False, saveas=No
     if draw_exact:
         ax.plot(r, exact, label=r'Exact (non-inter)')
     ax.set_xlabel(r'$r$ $[a_{ho}]$', fontsize=axis_fontsize)
-    ax.set_ylabel(r'$\rho$ $[a_{ho}]$', fontsize=axis_fontsize)
+    ax.set_ylabel(r'$\rho(r)$', fontsize=axis_fontsize)
     ax.set_title(r'One-body density', fontsize=title_fontsize)
     if draw_exact:
         plt.legend(fontsize=title_fontsize)
@@ -164,7 +164,7 @@ def density_plot_multiple(densities, max_radius = 5, alpha=0.5, labels=['VMC'], 
     if draw_exact:
         ax.plot(r, exact, label=r'Exact (non-inter)')
     ax.set_xlabel(r'$r$ $[a_{ho}]$', fontsize=axis_fontsize)
-    ax.set_ylabel(r'$\rho$ $[a_{ho}]$', fontsize=axis_fontsize)
+    ax.set_ylabel(r'$\rho(r)$', fontsize=axis_fontsize)
     ax.set_title(r'One-body density', fontsize=title_fontsize)
     plt.legend(fontsize=title_fontsize)
 
