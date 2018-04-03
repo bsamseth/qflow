@@ -91,6 +91,9 @@ The data processing is done in Python, and the files for this are in
 [python/](python/). The notebook [python/analysis.ipynb](python/analysis.ipynb)
 shows the production of all the figures and tables used in the report.
 
+__Note__: The Python scripts expect the executable to be in a folder named `build-release` in this folder.
+In order to run the Python functions, you will need to name the build directory as such.
+
 ### Results
 
 All figures and tables produced are located in this folder.
