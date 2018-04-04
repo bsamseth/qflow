@@ -24,13 +24,12 @@ Boson Boson::operator+ (const Boson &other) const {
     }
     return res;
 }
-
-Boson Boson::operator- (const Boson &other) const {
-    Boson res = *this;
-    for (int i = 0; i < get_dimensions(); i++) {
-        res[i] -= other[i];
+Boson operator-(Boson lhs, const Boson &rhs) {
+    assert(lhs.get_dimensions() == rhs.get_dimensions());
+    for (int i = 0; i < lhs.get_dimensions(); ++i) {
+        lhs[i] -= rhs[i];
     }
-    return res;
+    return lhs;
 }
 
 Boson Boson::operator* (Real scalar) const {

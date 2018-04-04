@@ -66,12 +66,6 @@ class Boson {
          */
         Boson operator+ (Real scalar) const;
         /**
-         * Vector subtraction of two bosons.
-         * @param other Rhs. of the subtraction.
-         * @return Vector difference of this and other.
-         */
-        Boson operator- (const Boson &other) const;
-        /**
          * Elemtwise subtraction by scalar.
          * @param scalar Scalar to subtract from boson.
          * @return A boson with coordinate values subtracted by scalar.
@@ -125,6 +119,8 @@ class Boson {
          */
         friend std::ostream& operator<<(std::ostream&, const Boson&);
 };
+
+Boson operator-(Boson lhs, const Boson &rhs);
 
 inline Real& Boson::operator[] (int dimension) {
     return _pos[dimension];
