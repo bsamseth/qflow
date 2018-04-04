@@ -40,7 +40,7 @@ def run_MC(dims=1, n=1, n_mc=100, alpha=0.5, beta=1,
     else:
         filename = tempfile.mktemp(prefix='run-', suffix='_'.join(options.split(' ')))
 
-    command = '../build-release-mac/main.x {} {}'.format(options, filename)
+    command = '../build-release/main.x {} {}'.format(options, filename)
 
     with os.popen(command) as cmd:
         output = cmd.read()
