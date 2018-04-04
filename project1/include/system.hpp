@@ -21,12 +21,6 @@ class System {
          */
         System(int number_of_bosons, int dimensions);
         /**
-         * Initialize a system as a copy of another.
-         * @param system Original.
-         */
-        System(const System &system);
-
-        /**
          * @param index Index of Boson.
          * @return Boson at given index.
          */

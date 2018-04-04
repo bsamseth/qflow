@@ -7,4 +7,3 @@ System::System(int number_of_bosons, int dimensions) {
     }
 }
 
-System::System(const System& from) : _bosons(from.get_bosons()) { }

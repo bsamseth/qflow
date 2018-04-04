@@ -6,8 +6,6 @@
 
 Boson::Boson(int dimensions) : _pos(dimensions, 0.0) { }
 
-Boson::Boson(const Boson& from) : _pos(from._pos) { }
-
 Boson::Boson(const std::vector<Real> &pos) : _pos(pos) { }
 
 Real Boson::operator* (const Boson &other) const {

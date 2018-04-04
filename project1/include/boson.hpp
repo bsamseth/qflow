@@ -19,11 +19,6 @@ class Boson {
          */
         Boson(int dimensions);
         /**
-         * Initialize a Boson as a copy of another.
-         * @param other Boson to copy.
-         */
-        Boson(const Boson &other);
-        /**
          * Initialize a Boson from a std::vector.
          * @param vec Vector of initialization values.
          */
