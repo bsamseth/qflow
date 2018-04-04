@@ -59,6 +59,6 @@ void OneBodyDensityCalculator::finalize_calculation() {
         _density_file.write(reinterpret_cast<const char*>(&_bins[i]), sizeof(_bins[i]));
     }
     _density_file.close();
-    delete _bins;
+    delete[] _bins;
 }
 
