@@ -102,24 +102,27 @@ TEST(Boson, scalarOperations) {
         int dims = dim_gen();
         Real scalar = double_gen();
         Boson a = { random_vec(dims) };
-        Boson b = a * scalar;
-        Boson c = a + scalar;
-        Boson d = a - scalar;
-
+        Boson b = a * scalar * scalar;
+        Boson c = scalar + a + scalar;
+        Boson d = (- scalar) - a - scalar;
+        Boson e = a / scalar;
         for (int i = 0; i < dims; ++i) {
-            ASSERT_DOUBLE_EQ(a[i] * scalar, b[i]);
-            ASSERT_DOUBLE_EQ(a[i] + scalar, c[i]);
-            ASSERT_DOUBLE_EQ(a[i] - scalar, d[i]);
+            ASSERT_DOUBLE_EQ(a[i] * square(scalar), b[i]);
+            ASSERT_DOUBLE_EQ(scalar + a[i] + scalar, c[i]);
+            ASSERT_DOUBLE_EQ(-scalar - a[i] - scalar, d[i]);
+            ASSERT_DOUBLE_EQ(a[i] / scalar, e[i]);
         }
 
         b *= scalar;
         c += scalar;
         d -= scalar;
+        e /= scalar;
 
         for (int i = 0; i < dims; ++i) {
-            ASSERT_DOUBLE_EQ(a[i] * square(scalar), b[i]);
-            ASSERT_DOUBLE_EQ(a[i] + 2 * scalar, c[i]);
-            ASSERT_DOUBLE_EQ(a[i] - 2 * scalar, d[i]);
+            ASSERT_DOUBLE_EQ(a[i] * square(scalar) * scalar, b[i]);
+            ASSERT_DOUBLE_EQ(scalar + a[i] + scalar + scalar, c[i]);
+            ASSERT_DOUBLE_EQ(-scalar - a[i] - scalar - scalar, d[i]);
+            ASSERT_DOUBLE_EQ(a[i] / scalar / scalar, e[i]);
         }
     }
 }
