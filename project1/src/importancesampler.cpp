@@ -7,7 +7,7 @@
 ImportanceSampler::ImportanceSampler(const System &system,
                                      const Wavefunction &wavefunction,
                                      Real step)
-    : Sampler(system, wavefunction, step), _q_force_old(0), _q_force_new(0)
+    : Sampler(system, wavefunction, step)
 {
     initialize_system();
 }

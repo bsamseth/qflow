@@ -9,10 +9,6 @@
  * Class implementing the Metropolis-Hastings algorithm.
  */
 class ImportanceSampler : public Sampler {
-    protected:
-        Boson _q_force_old;
-        Boson _q_force_new;
-
     public:
 
         /**
