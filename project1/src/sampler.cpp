@@ -17,7 +17,7 @@ Sampler::Sampler(const System &system,
     _psi_new = _psi_old = (*_wavefunction)(_system_old);
 }
 
-const System& Sampler::next_configuration() {
+System &Sampler::next_configuration() {
 
     perturb_system();
 

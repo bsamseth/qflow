@@ -16,7 +16,7 @@ EnergyCalculator::EnergyCalculator(const Wavefunction &wavefunction,
 {
 }
 
-void EnergyCalculator::process_state(const System &system) {
+void EnergyCalculator::process_state(System &system) {
     Real E_L;
     if (_analytic) {
         E_L = _hamiltonian.local_energy(system, _wavefunction);

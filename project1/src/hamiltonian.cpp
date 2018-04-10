@@ -24,8 +24,7 @@ Real Hamiltonian::kinetic_energy(System &system, const Wavefunction &psi) const 
     return -0.5 * E_k / (_h * _h);
 }
 
-Real Hamiltonian::local_energy_numeric(const System &const_system, const Wavefunction &psi) const {
-    System &system = const_cast<System&>(const_system);
+Real Hamiltonian::local_energy_numeric(System &system, const Wavefunction &psi) const {
     Real wavefunc = psi(system);
     if (wavefunc == 0) {
         return std::numeric_limits<Real>::max();

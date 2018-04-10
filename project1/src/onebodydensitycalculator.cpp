@@ -36,7 +36,7 @@ OneBodyDensityCalculator::OneBodyDensityCalculator(const Wavefunction &wavefunct
     _bins = new Real[_n_bins]();
 }
 
-void OneBodyDensityCalculator::process_state(const System &system) {
+void OneBodyDensityCalculator::process_state(System &system) {
     for (const Boson &boson : system.get_bosons()) {
         Real r_k = std::sqrt(square(boson));
         if (r_k < _max_radius) {

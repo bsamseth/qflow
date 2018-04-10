@@ -45,7 +45,7 @@ class CombinedCalculator : public Calculator {
          * Process the state using both internal calculators.
          * @param state System sample to process.
          */
-        virtual void process_state(const System &state) {
+        virtual void process_state(System &state) {
             _first.process_state(state);
             _second.process_state(state);
         }

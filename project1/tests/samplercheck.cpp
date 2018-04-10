@@ -84,7 +84,7 @@ void sampler_integration_test(int sampler_type, Real expected_acceptance, Real a
     Real E_analytic = 0;
     Real E_numeric = 0;
     for (int run = 0; run < runs; ++run) {
-        const System &state = sampler.next_configuration();
+        System &state = sampler.next_configuration();
 
         E_analytic += H.local_energy(state, psi);
         E_numeric += H.local_energy_numeric(state, psi);

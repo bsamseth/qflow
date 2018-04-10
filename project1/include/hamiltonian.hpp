@@ -48,7 +48,7 @@ class Hamiltonian {
          * @param wavefunction Wavefunction to calculate for.
          * @return Local energy evaluation.
          */
-        virtual Real local_energy_numeric(const System &system, const Wavefunction &wavefunction) const;
+        virtual Real local_energy_numeric(System &system, const Wavefunction &wavefunction) const;
         /**
          * Compute the kinetic energy for a given system and wavefunction.
          * @param system System to calculate for.
