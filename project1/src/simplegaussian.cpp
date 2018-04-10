@@ -21,7 +21,7 @@ namespace {
     }
 }
 
-Real SimpleGaussian::operator() (const System &system) const {
+Real SimpleGaussian::operator() (System &system) const {
     return std::exp( - _alpha * exponent(system, _beta) );
 }
 

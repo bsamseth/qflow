@@ -25,7 +25,7 @@ class EnergyCalculator : public Calculator {
          */
         EnergyCalculator(const Wavefunction&, const Hamiltonian&, Sampler&, std::string, bool analytic);
 
-        virtual void process_state(const System&);
+        virtual void process_state(System &);
         virtual void finalize_calculation();
 
 };

@@ -32,6 +32,6 @@ class OneBodyDensityCalculator : public Calculator {
          * @param max_radius Maximum radius for regions.
          */
         OneBodyDensityCalculator(const Wavefunction&, const Hamiltonian&, Sampler&, std::string, int n_bins, Real max_radius);
-        virtual void process_state(const System&);
+        virtual void process_state(System&);
         virtual void finalize_calculation();
 };

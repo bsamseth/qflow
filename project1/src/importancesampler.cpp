@@ -15,14 +15,14 @@ ImportanceSampler::ImportanceSampler(const System &system,
 void ImportanceSampler::initialize_system() {
     for (int i = 0; i < _system_old.get_n_bosons(); ++i) {
         for (int d = 0; d < _system_old.get_dimensions(); ++d) {
-            _system_old[i][d] = rnorm(rand_gen) * std::sqrt(_step);
+            _system_old(i)[d] = rnorm(rand_gen) * std::sqrt(_step);
         }
     }
     _system_new = _system_old;
 }
 
 void ImportanceSampler::perturb_system() {
-    Boson &boson = _system_new[_particle_to_move];
+    Boson &boson = _system_new(_particle_to_move);
 
     for (int d = 0; d < boson.get_dimensions(); ++d) {
         boson[d] += rnorm(rand_gen) * std::sqrt(_step)

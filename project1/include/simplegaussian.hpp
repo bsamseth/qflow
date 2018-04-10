@@ -13,7 +13,7 @@ class SimpleGaussian : public Wavefunction {
         // Inherit contructor.
         using Wavefunction::Wavefunction;
 
-        virtual Real operator() (const System&) const;
+        virtual Real operator() (System&) const;
         virtual Real derivative_alpha(const System&) const;
         virtual Real drift_force(const Boson&, int dim_index) const;
 };

@@ -40,7 +40,7 @@ class Boson {
          * @param dimensions The coordinate to get.
          * @return Reference to value for the given coordinate.
          */
-        const Real& operator[] (int dimension) const;
+        Real operator[] (int dimension) const;
 
         /**
          * Stream text representation of the Boson to a stream.
@@ -51,7 +51,7 @@ class Boson {
 inline Real& Boson::operator[] (int dimension) {
     return _pos[dimension];
 }
-inline const Real& Boson::operator[] (int dimension) const {
+inline Real Boson::operator[] (int dimension) const {
     return _pos[dimension];
 }
 inline const std::vector<Real>& Boson::get_position() const {

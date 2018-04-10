@@ -27,13 +27,13 @@ class Hamiltonian {
          * @param system System instance to calculate for.
          * @return Value of sum_i (V_ext(r_i)).
          */
-        virtual Real external_potential(const System &system) const = 0;
+        virtual Real external_potential(System &system) const = 0;
         /**
          * Compute the interaction potential for a given system.
          * @param system System instance to calculate for.
          * @return Value of sum_{i < j} (V_int(r_i - r_j)).
          */
-        virtual Real internal_potential(const System &system) const = 0;
+        virtual Real internal_potential(System &system) const = 0;
 
         /**
          * Compute the local energy for a given system and wavefunction.
@@ -41,14 +41,14 @@ class Hamiltonian {
          * @param wavefunction Wavefunction to calculate for.
          * @return Local energy evaluation.
          */
-        virtual Real local_energy(const System &system, const Wavefunction &wavefunction) const = 0;
+        virtual Real local_energy(System &system, const Wavefunction &wavefunction) const = 0;
         /**
          * Compute the local energy for a given system and wavefunction, using numerical differentiation.
          * @param system System to calculate for.
          * @param wavefunction Wavefunction to calculate for.
          * @return Local energy evaluation.
          */
-        virtual Real local_energy_numeric(const System &system, const Wavefunction &wavefunction) const;
+        virtual Real local_energy_numeric(System &system, const Wavefunction &wavefunction) const;
         /**
          * Compute the kinetic energy for a given system and wavefunction.
          * @param system System to calculate for.

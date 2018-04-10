@@ -48,7 +48,7 @@ class Sampler {
         /**
          * @return A new System instance.
          */
-        virtual const System& next_configuration();
+        virtual System& next_configuration();
 
         /**
          * @return Number of accepted steps.

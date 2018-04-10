@@ -52,7 +52,7 @@ class Calculator {
          * Perform calculations on the System sample.
          * @param system Sample to process.
          */
-        virtual void process_state(const System &system) = 0;
+        virtual void process_state(System &system) = 0;
         /**
          * Perform any closing logic needed (e.g. close output files).
          */

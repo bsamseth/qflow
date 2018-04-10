@@ -15,8 +15,8 @@ class InteractingWavefunction : public SimpleGaussian {
         // Inherit contructor.
         using SimpleGaussian::SimpleGaussian;
 
-        virtual Real operator() (const System&) const;
-        virtual Real correlation(const System&) const;
+        virtual Real operator() (System&) const;
+        virtual Real correlation(System&) const;
         virtual Real drift_force(const Boson&, int) const;
 };
 

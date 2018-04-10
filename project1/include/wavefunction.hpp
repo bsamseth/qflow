@@ -27,7 +27,7 @@ class Wavefunction {
          * @param system System to evaluate the Wavefunction for.
          * @return Value of the wavefunction for the given system.
          */
-        virtual Real operator() (const System &system) const = 0;
+        virtual Real operator() (System &system) const = 0;
         /**
          * Evaluate d(psi)/d(alpha).
          * @param system System to evaluate for.

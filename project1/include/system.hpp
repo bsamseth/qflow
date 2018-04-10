@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <cassert>
 #include <iostream>
 #include "boson.hpp"
 
@@ -11,6 +12,8 @@
 class System {
 
     std::vector<Boson> _bosons;
+    std::vector<std::vector<Real>> _distances;
+    std::vector<std::vector<bool>> _dirty;
 
     public:
 
@@ -24,12 +27,12 @@ class System {
          * @param index Index of Boson.
          * @return Boson at given index.
          */
-        Boson& operator[] (int index);
-        /**
-         * @param index Index of Boson.
-         * @return Boson at given index.
-         */
         const Boson& operator[] (int index) const;
+
+        Boson& operator() (int index);
+
+        Real distance(int i, int j);
+
         /**
          * Equivalency operation.
          * @param other System to compare with.
@@ -46,11 +49,9 @@ class System {
         /**
          * @return Internal representation of all Bosons.
          */
-        std::vector<Boson>& get_bosons();
-        /**
-         * @return Internal representation of all Bosons.
-         */
         const std::vector<Boson>& get_bosons() const;
+
+        const std::vector<std::vector<bool> > get_dirty() const;
 
         /**
          * @return Number of dimensions of the System.
@@ -63,25 +64,23 @@ class System {
         int get_n_bosons() const;
 };
 
-inline Boson& System::operator[] (int index) {
-    return _bosons[index];
-}
 inline const Boson& System::operator[] (int index) const {
+    assert(0 <= index and index < get_n_bosons());
     return _bosons[index];
-}
-inline bool System::operator== (const System &other) const {
+}inline bool System::operator== (const System &other) const {
     return _bosons == other.get_bosons();
 }
 inline bool System::operator!= (const System &other) const {
     return _bosons != other.get_bosons();
 }
-inline std::vector<Boson>& System::get_bosons() {
-    return _bosons;
-}
 inline const std::vector<Boson>& System::get_bosons() const {
     return _bosons;
 }
+inline const std::vector<std::vector<bool>> System::get_dirty() const {
+    return _dirty;
+}
 inline int System::get_dimensions() const {
+    assert(get_n_bosons() > 0);
     return _bosons[0].get_dimensions();
 }
 inline int System::get_n_bosons() const {
