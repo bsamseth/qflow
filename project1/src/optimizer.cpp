@@ -40,7 +40,7 @@ Real gradient_decent_optimizer(Wavefunction &wavefunction,
         Real psi_der_E_tot = 0;
 
         for (int sample = 0; sample < sample_points; ++sample) {
-            const System &system = sampler.next_configuration();
+            System &system = sampler.next_configuration();
             Real E = hamiltonian.local_energy(system, wavefunction);
             Real psi_der = wavefunction.derivative_alpha(system);
 
