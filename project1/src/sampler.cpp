@@ -23,10 +23,10 @@ const System& Sampler::next_configuration() {
 
     if (unif(rand_gen) <= acceptance_probability()) {
         _accepted_steps++;
-        _system_old[_particle_to_move] = _system_new[_particle_to_move];
+        _system_old(_particle_to_move) = _system_new[_particle_to_move];
         _psi_old = _psi_new;
     } else {
-        _system_new[_particle_to_move] = _system_old[_particle_to_move];
+        _system_new(_particle_to_move) = _system_old[_particle_to_move];
     }
 
     assert(_system_old == _system_new);

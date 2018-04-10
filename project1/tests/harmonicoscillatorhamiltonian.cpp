@@ -30,10 +30,10 @@ class HarmonicOscillatorHamiltonianTest : public ::testing::Test {
         virtual void SetUp() {
             s = new System(4, 3);
             // Random values.
-            (*s)[0] = {{0.50833829,  0.07732213,  0.69294646}};
-            (*s)[1] = {{0.63837196,  0.48833327,  0.17570063}};
-            (*s)[2] = {{0.72436579,  0.36970369,  0.49771584}};
-            (*s)[3] = {{0.42984966,  0.72519657,  0.30454728}};
+            (*s)(0) = {{0.50833829,  0.07732213,  0.69294646}};
+            (*s)(1) = {{0.63837196,  0.48833327,  0.17570063}};
+            (*s)(2) = {{0.72436579,  0.36970369,  0.49771584}};
+            (*s)(3) = {{0.42984966,  0.72519657,  0.30454728}};
         }
         virtual void TearDown() {
             delete s;
@@ -50,7 +50,7 @@ TEST_F(HarmonicOscillatorHamiltonianTest, potential) {
 
 TEST_F(HarmonicOscillatorHamiltonianTest, potential2D) {
     System s (1, 2);
-    s[0] = {{0.75, -1.5}};
+    s(0) = {{0.75, -1.5}};
 
     // Check potential for 2D case. Should be agnotic of
     // omega_z value.
@@ -88,7 +88,7 @@ TEST_F(HarmonicOscillatorHamiltonianTest, local_energy_simple) {
     for (int runs = 0; runs < 1000; ++runs) {
         System s (dim_gen() * dim_gen() * dim_gen() * dim_gen(), dim_gen());
         for (int i = 0; i < s.get_n_bosons(); ++i) {
-            s[i] = {{ double_gen(), double_gen(), double_gen() }};
+            s(i) = {{ double_gen(), double_gen(), double_gen() }};
         }
 
         Real expected = alpha * s.get_dimensions() * s.get_n_bosons();
