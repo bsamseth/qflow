@@ -15,7 +15,7 @@ ImportanceSampler::ImportanceSampler(const System &system,
 void ImportanceSampler::initialize_system() {
     for (int i = 0; i < _system_old.get_n_bosons(); ++i) {
         for (int d = 0; d < _system_old.get_dimensions(); ++d) {
-            _system_old(i, d) = rnorm(rand_gen) * std::sqrt(_step);
+            _system_old(i)[d] = rnorm(rand_gen) * std::sqrt(_step);
         }
     }
     _system_new = _system_old;

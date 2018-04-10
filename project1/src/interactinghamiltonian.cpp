@@ -11,7 +11,6 @@ Real InteractingHamiltonian::local_energy(System &system, const Wavefunction &ps
     if (internal_potential(system) > 0)
         return std::numeric_limits<Real>::max();
 
-
     const Real alpha = psi.get_alpha();
     const Real beta = psi.get_beta();
     assert(_a == psi.get_a());

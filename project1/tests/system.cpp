@@ -6,8 +6,8 @@
 TEST(System, basics) {
     System s (10, 3);
 
-    s(0, 0) = -123;
-    s(0, 2) = 123;
+    s(0)[0] = -123;
+    s(0)[2] = 123;
 
     EXPECT_EQ(-123, s[0][0]);
     EXPECT_EQ( 123, s[0][2]);
@@ -41,8 +41,8 @@ TEST(System, distances) {
         for (int i = 0; i < (int) expected.size(); i++) {
             for (int j = 0; j < (int) expected.size(); j++) {
                 ASSERT_DOUBLE_EQ(expected[i][j], s.distance(i, j));
+                ASSERT_FALSE(s.get_dirty()[i][j]);
             }
-            ASSERT_FALSE(s.get_dirty()[i]);
         }
 
         // Simply accessing the system should use the const version,
@@ -56,13 +56,21 @@ TEST(System, distances) {
         }
 
         for (int i = 0; i < (int) expected.size(); ++i) {
-            ASSERT_FALSE(s.get_dirty()[i]);
+            for (int j = 0; j < (int) expected.size(); ++j) {
+                ASSERT_FALSE(s.get_dirty()[i][j]);
+            }
         }
 
         // Changing a boson should trigger a recalculation, even if changed
         // to the existing value;
-        s(k % s.get_n_bosons()) = s(k % s.get_n_bosons());
-        ASSERT_TRUE(s.get_dirty()[k % s.get_n_bosons()]);
+        int a = k % s.get_n_bosons();
+        s(a) = s[a];
 
+        for (int i = 0; i < (int) expected.size(); ++i) {
+            for (int j = 0; j < (int) expected.size(); ++j) {
+                ASSERT_EQ(i == a or j == a, s.get_dirty()[i][j]);
+                ASSERT_EQ(i == a or j == a, s.get_dirty()[j][i]);
+            }
+        }
     }
 }

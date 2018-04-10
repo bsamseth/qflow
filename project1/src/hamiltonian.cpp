@@ -13,11 +13,11 @@ Real Hamiltonian::kinetic_energy(System &system, const Wavefunction &psi) const 
     for (int i = 0; i < system.get_n_bosons(); ++i) {
         for (int d = 0; d < system.get_dimensions(); ++d) {
             const auto temp = system[i][d];
-            system(i, d) = temp + _h;
+            system(i)[d] = temp + _h;
             E_k += psi(system);
-            system(i, d) = temp - _h;
+            system(i)[d] = temp - _h;
             E_k += psi(system);
-            system(i, d) = temp;
+            system(i)[d] = temp;
         }
     }
 
