@@ -67,7 +67,8 @@ class System {
 inline const Boson& System::operator[] (int index) const {
     assert(0 <= index and index < get_n_bosons());
     return _bosons[index];
-}inline bool System::operator== (const System &other) const {
+}
+inline bool System::operator== (const System &other) const {
     return _bosons == other.get_bosons();
 }
 inline bool System::operator!= (const System &other) const {
