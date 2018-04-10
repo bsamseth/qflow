@@ -13,7 +13,7 @@ class System {
 
     std::vector<Boson> _bosons;
     std::vector<std::vector<Real>> _distances;
-    std::vector<bool> _dirty;
+    std::vector<std::vector<bool>> _dirty;
 
     public:
 
@@ -30,8 +30,6 @@ class System {
         const Boson& operator[] (int index) const;
 
         Boson& operator() (int index);
-
-        Real& operator() (int i, int j);
 
         Real distance(int i, int j);
 
@@ -53,7 +51,7 @@ class System {
          */
         const std::vector<Boson>& get_bosons() const;
 
-        const std::vector<bool> get_dirty() const;
+        const std::vector<std::vector<bool> > get_dirty() const;
 
         /**
          * @return Number of dimensions of the System.
@@ -69,19 +67,7 @@ class System {
 inline const Boson& System::operator[] (int index) const {
     assert(0 <= index and index < get_n_bosons());
     return _bosons[index];
-}
-inline Boson& System::operator() (int index) {
-    assert(0 <= index and index < get_n_bosons());
-    _dirty[index] = true;
-    return _bosons[index];
-}
-inline Real& System::operator() (int i, int j) {
-    assert(0 <= i and i < get_n_bosons());
-    assert(0 <= j and j < get_dimensions());
-    _dirty[i] = true;
-    return _bosons[i][j];
-}
-inline bool System::operator== (const System &other) const {
+}inline bool System::operator== (const System &other) const {
     return _bosons == other.get_bosons();
 }
 inline bool System::operator!= (const System &other) const {
@@ -90,7 +76,7 @@ inline bool System::operator!= (const System &other) const {
 inline const std::vector<Boson>& System::get_bosons() const {
     return _bosons;
 }
-inline const std::vector<bool> System::get_dirty() const {
+inline const std::vector<std::vector<bool>> System::get_dirty() const {
     return _dirty;
 }
 inline int System::get_dimensions() const {
