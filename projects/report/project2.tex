@@ -1,0 +1,177 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{preamble}
+% \usepackage{fullpage}
+\usepackage[paper=a4paper,margin=1.5in, includefoot, footskip=30pt]{geometry}
+\usepackage{dsfont}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{paralist}
+\usepackage{csvsimple}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{afterpage}
+\usepackage{multicol}
+\usepackage{cleveref}
+
+\sisetup{range-phrase=-}
+\DeclareSIUnit{\au}{a.u.}
+
+\crefformat{footnote}{#2\footnotemark[#1]#3}
+
+\newcommand{\drawfrom}{\overset{\mathrm{d}}{=}}
+\newcommand{\setfrom}{\overset{\mathrm{d}}{\leftarrow}}
+
+\title{ \small
+University of Oslo\\
+FYS4411\\
+Computational physics II: Quantum mechanical systems\\
+\huge Project 2: The Restricted Boltzmannn Machine Applied to the Quantum Many Body Problem}
+\author{\textsc{Bendik Samseth}}
+\date{\today}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+    Abstract here, please.
+    All material referenced in this report is available at
+    \url{https://github.com/bsamseth/FYS4411}.
+\end{abstract}
+
+
+\pagebreak
+\newgeometry{margin=0.9in}
+\tableofcontents
+
+\begin{multicols}{2}    
+
+    \section{Introduction} 
+
+    A physicist faced with a quantum many body system is quickly forced to
+    abandon any hope of solving the Schrödinger equation (or one of its even worse
+    relativistic siblings) exactly. Instead he must resort to one of two general
+    workarounds: 1) make simplifying assumptions until the equation is solvable,
+    or 2) make an educated guess for the solution. In either case, the desired
+    quantity which solving the Schrödinger equation would yield is the quantum
+    mechanical wavefunction. If we want to stay away from potentially faulty, or
+    limiting assumptions, we must therefore somehow produce a guess for this
+    wavefunction, without actually solving the equation.
+
+    The last project utilized the Variational Monte Carlo (VMC) approach, in which a
+    specific, parametrized form is assumed for the wavefunction, with the
+    subsequent optimization of the parameters.
+
+    The main limitation of VMC is that a specific form for the wavefunction is
+    assumed. If this form contains the true optimum that works fine, but if not
+    we are inherently limited in how accurate the final results can be.
+
+    Aiming to be overcome this issue, we may observe that the task at hand falls
+    into the general field of function approximation. We wish to approximate the
+    function that takes as input the configuration of the system, and outputs a
+    probability amplitude for the given state. Function approximation is a task
+    which lends itself to techniques from machine learning (ML). 
+
+    In this project we will attempt to represent the wavefunction with a
+    specific type of ML-model, the Restricted Boltzmann Machine (RBM). The use
+    of RBMs for such applications was presented recently by
+    \textcite{Carleo602}, with encouraging results. We shall therefore attempt
+    to apply the same techniques to a different type of system, namely that of
+    two interacting quantum particles confined in a harmonic oscillator trap.
+
+    
+    \section{Theory}
+
+    We consider a system of electrons confined in a pure two-dimensional
+    isotropic harmonic oscillator potential, with an idealized total Hamiltonian
+    given by:
+
+    \begin{align}
+        \begin{split}
+            \hat H &= \sum_{i=1}^N\qty(-\frac{1}{2}\laplacian_i + V_{ext}(\vec r_i)) +
+        \sum_{i < j} V_{int}(\vec r_i, \vec r_j)\\
+            &= \sum_{i=1}^N\qty(-\frac{1}{2}\laplacian_i + \frac{1}{2}\omega^2
+            r_i^2) + \sum_{i < j} \frac{1}{r_{ij}},
+        \end{split}\label{eq:H-def}
+    \end{align}
+    where natural units ($\hbar=c=m_e=1$) are used with energies in
+    atomic units (a.u.), $N$ denotes the number of particles in the system, and
+    $\omega$ is the oscillator frequency of the trap. Further, $\vec r_i$
+    denotes the position vector of particle $i$, with $r_i \equiv \norm{\vec r}$ and
+    $r_{ij}\equiv \norm{\vec r_i - \vec r_j}$ defined for notational brevity.
+
+    In this project we limit ourselves to the case of $N=2$ interacting
+    electrons in a trap with a frequency such that $\hbar \omega = 1$. We do
+    this because for this case we have exact, analytical solutions for the
+    ground state energy. With the interaction term included, the ground state
+    energy is $E_0 = \SI{3}{\au}$~\cite{Taut1993}. This limitation is purely one
+    of convenience, as having exact benchmarks makes for better verification of
+    results. The methods discussed in the project should extend to other
+    systems.
+
+    \subsection{Simple Non-Interacting Case}
+    If we omit the interacting terms in \autoref{eq:H-def} we have
+    the standard harmonic oscillator Hamiltonian:
+    \begin{align}
+        \hat H_0 &= \sum_{i=1}^N\qty(-\frac{1}{2}\laplacian_i +
+        \frac{1}{2}\omega^2 r_i^2).
+    \end{align}
+    This Hamiltonian lends it self to analytical solutions, and the stationary
+    states are:
+    \begin{align}
+        \phi_{n_x, n_y}(x, y) &= A H_{n_x}(\sqrt\omega x)H_{n_y}(\sqrt\omega y)
+        e^{-\frac{\omega}{2}\qty(x^2 + y^2)},
+    \end{align} 
+    for quantum numbers $n_x, n_y = 0, 1,\dots$, and the Hermite polynomials
+    $H_n$. The ground state, $n_x=n_y=0$ is simply
+    \begin{align}
+        \phi_{00}(x,y) =
+        \sqrt{\frac{\omega}{\pi}}e^{-\frac{\omega}{2}\qty(x^2+y^2)}.
+    \end{align}
+    Using this wavefunction we can calculate the ground state
+    energy\footnote{\label{fnt:sympy}See \texttt{projects/python/Sympy.ipynb} in the Github
+    reposirepository for an explicit calculation of the ground state energy},
+    \begin{align}
+        \epsilon_{00} = \frac{\expval{\hat H_0}{\phi_{00}}}{\braket{\phi_{00}}}
+        = \omega = \SI{1}{\au}
+    \end{align}
+
+    The ground state wavefunction for the (unperturbed) two-electron case is simply the
+    product of the one-electron wavefunctions,
+    \begin{align}
+        \begin{split}
+        \Phi(\vec r_1, \vec r_2) &= \phi_{00}(\vec r_1)\phi_{00}(\vec r_2)\\
+        &= \frac{\omega}{\pi} e^{-\frac{\omega}{2}\qty(r_1^2+r_2^2)}.
+        \end{split}\label{eq:Phi-non-inter}
+    \end{align}
+
+    The ground state energy can once again be evaluated
+    analytically\cref{fnt:sympy} and yields
+    \begin{align}
+        E_0 = \frac{\expval{\hat H_0}{\Phi}}{\braket{\Phi}}
+        = 2\omega =\SI{2}{\au}
+    \end{align}
+    This result is not surprising, as adding one more particle, without any
+    interactions, should simply double the energy. Another way to look at it is
+    that the simple harmonic oscillator solution gives $\flatfrac{\omega}{2}$
+    per degree of freedom, so adding another two yields and extra $\omega$.
+
+
+    When the two particles are electrons, we may say something about their total
+    spin. As electrons are fermions, their total wavefunction must be
+    anti-symmetric upon interchanging the labels $1$ and $2$.
+    \autoref{eq:Phi-non-inter} is obviously symmetric, and so the
+    spin-wavefunction must necessarily be anti-symmetric. For the combination of
+    two spin-1/2 particles, there is only one candidate, namely the spin-0
+    singlet:
+
+    \begin{align}
+        \chi_0 = \frac{1}{\sqrt 2}\qty(\ket{\uparrow\downarrow} -
+        \ket{\downarrow\uparrow}).
+    \end{align}
+
+    \printbibliography
+
+\end{multicols}
+
+
+\end{document}
