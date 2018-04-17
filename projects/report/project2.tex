@@ -1,7 +1,7 @@
 \documentclass[a4paper, 11pt]{article}
 \usepackage{preamble}
 % \usepackage{fullpage}
-\usepackage[paper=a4paper,margin=1.5in, includefoot, footskip=30pt]{geometry}
+\usepackage[paper=a4paper,margin=1.5in, includeheadfoot, footskip=30pt]{geometry}
 \usepackage{dsfont}
 \usepackage{algorithm}
 \usepackage{algorithmic}
@@ -13,6 +13,13 @@
 \usepackage{afterpage}
 \usepackage{multicol}
 \usepackage{cleveref}
+\usepackage[toc]{appendix}
+
+\hypersetup{
+    colorlinks = false,
+    linkbordercolor = 1 1 0,
+}
+
 
 \sisetup{range-phrase=-}
 \DeclareSIUnit{\au}{a.u.}
@@ -21,6 +28,7 @@
 
 \newcommand{\drawfrom}{\overset{\mathrm{d}}{=}}
 \newcommand{\setfrom}{\overset{\mathrm{d}}{\leftarrow}}
+
 
 \title{ \small
 University of Oslo\\
@@ -78,8 +86,10 @@ Computational physics II: Quantum mechanical systems\\
     to apply the same techniques to a different type of system, namely that of
     two interacting quantum particles confined in a harmonic oscillator trap.
 
-    
+
     \section{Theory}
+
+    \subsection{The System}
 
     We consider a system of electrons confined in a pure two-dimensional
     isotropic harmonic oscillator potential, with an idealized total Hamiltonian
@@ -87,14 +97,14 @@ Computational physics II: Quantum mechanical systems\\
 
     \begin{align}
         \begin{split}
-            \hat H &= \sum_{i=1}^N\qty(-\frac{1}{2}\laplacian_i + V_{ext}(\vec r_i)) +
-        \sum_{i < j} V_{int}(\vec r_i, \vec r_j)\\
-            &= \sum_{i=1}^N\qty(-\frac{1}{2}\laplacian_i + \frac{1}{2}\omega^2
+            \hat H &= \sum_{i=1}^P\qty(-\frac{1}{2}\laplacian_i + V_{ext}(\vec r_i)) +
+            \sum_{i < j} V_{int}(\vec r_i, \vec r_j)\\
+            &= \sum_{i=1}^P\qty(-\frac{1}{2}\laplacian_i + \frac{1}{2}\omega^2
             r_i^2) + \sum_{i < j} \frac{1}{r_{ij}},
         \end{split}\label{eq:H-def}
     \end{align}
     where natural units ($\hbar=c=m_e=1$) are used with energies in
-    atomic units (a.u.), $N$ denotes the number of particles in the system, and
+    atomic units (a.u.), $P$ denotes the number of particles in the system, and
     $\omega$ is the oscillator frequency of the trap. Further, $\vec r_i$
     denotes the position vector of particle $i$, with $r_i \equiv \norm{\vec r}$ and
     $r_{ij}\equiv \norm{\vec r_i - \vec r_j}$ defined for notational brevity.
@@ -112,7 +122,7 @@ Computational physics II: Quantum mechanical systems\\
     If we omit the interacting terms in \autoref{eq:H-def} we have
     the standard harmonic oscillator Hamiltonian:
     \begin{align}
-        \hat H_0 &= \sum_{i=1}^N\qty(-\frac{1}{2}\laplacian_i +
+        \hat H_0 &= \sum_{i=1}^P\qty(-\frac{1}{2}\laplacian_i +
         \frac{1}{2}\omega^2 r_i^2).
     \end{align}
     This Hamiltonian lends it self to analytical solutions, and the stationary
@@ -139,8 +149,8 @@ Computational physics II: Quantum mechanical systems\\
     product of the one-electron wavefunctions,
     \begin{align}
         \begin{split}
-        \Phi(\vec r_1, \vec r_2) &= \phi_{00}(\vec r_1)\phi_{00}(\vec r_2)\\
-        &= \frac{\omega}{\pi} e^{-\frac{\omega}{2}\qty(r_1^2+r_2^2)}.
+            \Phi(\vec r_1, \vec r_2) &= \phi_{00}(\vec r_1)\phi_{00}(\vec r_2)\\
+            &= \frac{\omega}{\pi} e^{-\frac{\omega}{2}\qty(r_1^2+r_2^2)}.
         \end{split}\label{eq:Phi-non-inter}
     \end{align}
 
