@@ -248,9 +248,152 @@ Computational physics II: Quantum mechanical systems\\
     \end{align*}
     where $u_i$ and $v_j$ are defined for convenience.
 
+    \section{The Cost Function - Energy}
+
+
+    The cost function we use to train the network shall be the expectation value
+    of the Hamiltonian, under the wavefunction modeled by the network.
+    Minimizing the energy will yield the best possible wavefunction obtainable
+    within the model. The energy is expressed as
+    \begin{align}
+        E[H] = \expval{H} = \frac{\int \dd{\vec X} \Psi^* \hat H \Psi}{\int
+        \Psi^*\Psi}.
+    \end{align}
+    where $\vec X$ is the vector containing all the positions of the particles in
+    the system, $\vec X = [x_1, y_1,\dots, x_n, y_n]$.
+    In order to numerically evaluate this integral we first manipulate it a bit.
+    The probability density at position $\vec X$, under the trial wave function, is
+    \begin{align}
+        P(\vec X) &= \frac{\abs{\Psi}^2}{\int \dd{\vec X}\abs{\Psi}^2}.
+    \end{align}
+    We finally define a new quantity, called \textbf{the local energy}:
+    \begin{align}
+        E_L(\vec X) &= \frac{1}{\Psi}\hat H\Psi\label{eq:E_L}
+    \end{align}
+    Combining these two definitions we can now rewrite $\expval{H}$ as follows:
+    \begin{align}
+        \begin{split}
+            \expval{H} &= \int \dd{\vec X} P(\vec X) E_L(\vec X)\\
+            &\approx
+            \frac{1}{n}\sum_{i=1}^n E_L(\vec X_i),
+        \end{split}\label{eq:the-objective}
+    \end{align}
+    where $\vec X_i$ are $n$ randomly drawn positions from the PDF $P(\vec X)$.
+    We have therefore that estimating the average value of $E_L$ yields an
+    approximated value for $\expval{H}$. 
+
+
+
+    \subsection{Analytic Expression for the Local Energy}
+
+    As we shall need to compute the local energy often, it will be useful to do
+    the differentiation analytically, so as to speed up the computation compared
+    to doing the second derivative in $\hat H$ numerically. The details are laid
+    out in \autoref{app:E-L-derivation}.
+
+    The final expression we shall use for the local energy is:
+    \begin{align}
+        E_L &= \sum_{i=1}^P \frac{1}{2}r_i^2 + \sum_{i,j=1}^{P} \frac{1}{r_{ij}}
+        - \frac{1}{2} \sum_{k=1}^M
+        \frac{1}{\Psi}\pdv[2]{}{x_k}\Psi,\label{eq:E-L-final-main-section}
+    \end{align}
+    where,
+    \begin{align}
+        \begin{split}
+        \frac{1}{\Psi}\pdv[2]{}{X_k}\Psi 
+        &= -\frac{1}{\sigma^2} + \sum_j^N
+        \frac{w_{kj}^2}{\sigma^4}
+        \frac{e^{-v_j}}{\qty(1+e^{-v_j})} \\
+        &\quad{   }\quad{      }  +
+        \frac{1}{\sigma^4}\qty(-X_k+\sum_j^N \frac{w_{kj}}{1+e^{-v_j}})^2
+        \end{split}
+        \label{eq:E-L-second-deriv-main-section}
+    \end{align}
+    The complexity of $E_L$ is $\mathcal{O}(P + P^2 + M^2 N) = \mathcal{O}(M^2
+    N)$. It scales quadratically with additional particles (and dimensions), and
+    linearly with the number of hidden nodes used.
+
     \printbibliography
 
 \end{multicols}
+
+
+
+
+\pagebreak
+\begin{multicols}{2}
+    \appendix
+    \addcontentsline{toc}{section}{Appendices}
+    \section*{Appendices}
+
+    \section{Analytic Expression for the Local Energy}
+    \label{app:E-L-derivation}
+
+   \begin{align}
+        \pdv{}{X_k} (1+e^{v_j}) &=e^{v_j}\pdv{}{X_k}v_j =
+        e^{v_j} \frac{w_{kj}}{\sigma^2}\\
+        \begin{split}
+        \pdv{}{X_k}e^{-\sum_i^M u_i} &= e^{-\sum_i^M
+        u_i}\pdv{}{X_k}\qty(-\sum_i^M u_i) \\
+        &= e^{-\sum_i^M u_i}\pdv{}{X_k} (-u_k) \\
+        &= -e^{-\sum_i^M u_i} \frac{X_k}{\sigma^2}
+        \end{split}
+    \end{align}
+
+    We are now ready to compute the first derivate:
+    \begin{align*}
+        \pdv{}{X_k}\Psi &= \frac{1}{Z} \left[\prod_j^N
+        \qty(1+e^{v_j})\pdv{}{X_k}e^{-\sum_i^M u_i}\right.\\
+        &\quad{  }\quad{    }\left. + e^{-\sum_i^M
+        u_i}\pdv{}{X_k} \prod_j^N \qty(1+e^{v_j})\right]\\
+        &= -\frac{X_k}{\sigma^2}\Psi + \Psi \sum_j^N
+        \qty(\frac{1}{1+e^{v_j}}\pdv{}{X_k}\qty(1+e^{v_j}))\\
+        &= -\frac{X_k}{\sigma^2}\Psi + \Psi\sum_j^N
+        \frac{1}{1+e^{v_j}}\qty(\frac{w_{kj}}{\sigma^2} e^{v_j})\\
+        &= \frac{1}{\sigma^2}\qty(-X_k + \sum_j^N
+        \frac{w_{kj}}{1+e^{-v_j}})\Psi.
+    \end{align*}
+
+    Before jumping into the second derivative, one more helpful derivative:
+    \begin{align}
+        \begin{split}
+        \pdv{}{X_k}\qty(\frac{w_{kj}}{1+e^{-v_j}}) &=
+        w_{kj}\frac{e^{-v_j}}{\qty(1+e^{-v_j})^2}\pdv{v_j}{X_k}\\
+        &= \frac{w_{kj}^2}{\sigma^2} \frac{e^{-v_j}}{\qty(1+e^{-v_j})}
+        \end{split}
+    \end{align}
+
+    Now, finally the second derivative:
+    \begin{align*}
+        \frac{1}{\Psi}\pdv[2]{}{X_k}\Psi &= \frac{1}{\Psi}\pdv{}{X_k}\qty[\frac{1}{\sigma^2}\qty(-X_k + \sum_j^N
+        \frac{w_{kj}}{1+e^{-v_j}})\Psi]\\
+        &= \frac{1}{\sigma^2} \left[ \pdv{}{X_k}\qty(-X_k + \sum_j^N
+        \frac{w_{kj}}{1+e^{-v_j}} )   \right.\\
+        &\quad{   }\quad{   } \left. 
+        + \qty(-X_k + \sum_j^N
+        \frac{w_{kj}}{1+e^{-v_j}})\frac{1}{\Psi}\pdv{}{X_k}\Psi 
+        \right]\\
+        \begin{split}
+        &= -\frac{1}{\sigma^2} + \sum_j^N
+        \frac{w_{kj}^2}{\sigma^4}
+        \frac{e^{-v_j}}{\qty(1+e^{-v_j})} \\
+        &\quad{   }\quad{      }  +
+        \frac{1}{\sigma^4}\qty(-X_k+\sum_j^N \frac{w_{kj}}{1+e^{-v_j}})^2
+        \end{split}\numberthis\label{eq:E-L-second-deriv}
+    \end{align*}
+
+
+    The final expression we shall use then for the local energy is:
+
+    \begin{align}
+        E_L &= \sum_{i=1}^P \frac{1}{2}r_i^2 + \sum_{i,j=1}^{P} \frac{1}{r_{ij}}
+        - \frac{1}{2} \sum_{k=1}^M
+        \frac{1}{\Psi}\pdv[2]{}{x_k}\Psi,\label{eq:E-L-final}
+    \end{align}
+    substituting in \autoref{eq:E-L-second-deriv}.
+
+\end{multicols}
+
 
 
 \end{document}
