@@ -179,6 +179,75 @@ Computational physics II: Quantum mechanical systems\\
         \ket{\downarrow\uparrow}).
     \end{align}
 
+    \section{Representing the Wavefunction with an RBM}
+
+    Our machine learning model of choice is the Restricted Boltzmann Machine. It
+    consists of of two densely interconnected layers, the \emph{visible} layer
+    and the \emph{hidden} layer. It is called restricted because we only
+    connections between nodes in different layers - no visible-to-visible or
+    hidden-to-hidden connections are included.
+
+    The RBM is a generative model, meaning it learns a probability distribution
+    for its inputs. This means that a trained RBM can produce outputs which
+    when viewed as a distribution, would be similar to the distribution of the
+    inputs. For our case, this means learning the probability distribution for
+    the space configurations of the electrons in our system. We may interpret
+    this distribution as the wavefunction, as the wavefunction serves this same
+    purpose.
+
+    In this case we do not have a training set of positions for any of the
+    systems under consideration. This means that the most desired training
+    regime, \emph{supervised training}, is not relevant for our problem. Instead
+    we shall use \emph{reinforcement training}, were updates of the model are
+    based on the variational principle: The true ground state wavefunction is
+    the wavefunction for which the lowest ground state energy is obtained. We
+    can treat the energy a certain wavefunction (model configuration) produces
+    as the penalty, and let the model adapt as to minimize the penalty it
+    receives.
+    
+    \subsection{The Math}
+    
+    In the following, $\vec x$ denotes the values of the visible layer (our
+    position coordinates), and $\vec h$ denotes the values of the hidden layer.
+
+    The joint probability distribution over $\vec x$ and $\vec h$ is:
+    \begin{align}
+        F_{RBM}(\vec x, \vec h) = \frac{1}{Z} e^{-\frac{1}{T_0}E(\vec x, \vec
+        h)}\label{eq:F-RBM-def},
+    \end{align}
+    where $Z$ is the partition function ensuring that $F_{RBM}$ is normalized.
+    In accordance with common norm, we set $T_0=1$. The function $E(\vec x, \vec
+    h)$ is known as the energy of a configuration of the nodes, not to be
+    confused with the energy of the quantum system. It encodes the probability
+    of a given configuration - high energy configurations are less likely.
+
+    \subsubsection{Gaussian-Binary RBM}
+
+    The type of energy function we will use is called Gaussian-Binary, meaning
+    our inputs (the position coordinates) are Gaussian (continuous), while the
+    hidden nodes take binary values $h_j\in \{0, 1\}$. It looks as follows:
+    \begin{align}
+        E(\vec x, \vec h) = \frac{\norm{\vec x-\vec a}}{2\sigma^2} - \vec
+        b^T\vec h - \frac{\vec x^T\vec w \vec h}{\sigma^2},
+    \end{align}
+    where $\vec a\in \mathbf{R}^M, \vec b\in \mathbf{R}^N$ are bias vectors for the visible and hidden layers
+    respectively, and $\vec w\in \mathbf{R}^{M\times N}$ is a matrix encoding
+    the weights for every connection between the two layers.
+    In our case, $M=PD$ for $P$ particles in $D$ dimensions, while $N$ will be
+    chosen freely by us.
+
+    \subsubsection{The Wavefunction}
+
+    The wavefunction is:
+    \begin{align*}
+        \Psi(\vec X) &= F_{RBM}(\vec x) = \sum_{\vec{h}} F_{RBM}(\vec x, \vec h)\\
+        &=\frac{1}{Z} e^{-\sum_i^M \frac{\qty(X_i-a_i)^2}{2\sigma^2}}
+        \prod_j^N \qty(1 + e^{b_j+\sum_i^M \frac{X_iw_{ij}}{\sigma^2}})\\
+        &\equiv \frac{1}{Z}e^{-\sum_i^M
+        u_i}\prod_j^N(1+e^{v_j})\numberthis\label{eq:Psi-def}
+    \end{align*}
+    where $u_i$ and $v_j$ are defined for convenience.
+
     \printbibliography
 
 \end{multicols}
