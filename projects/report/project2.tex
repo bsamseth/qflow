@@ -248,8 +248,12 @@ Computational physics II: Quantum mechanical systems\\
     \end{align*}
     where $u_i$ and $v_j$ are defined for convenience.
 
-    \section{The Cost Function - Energy}
 
+
+
+
+    \section{The Cost Function - Energy}
+    \subsection{Definition}
 
     The cost function we use to train the network shall be the expectation value
     of the Hamiltonian, under the wavefunction modeled by the network.
@@ -283,13 +287,35 @@ Computational physics II: Quantum mechanical systems\\
     approximated value for $\expval{H}$. 
 
 
+    \subsection{Optimization}
 
-    \subsection{Analytic Expression for the Local Energy}
+    In order to train the model to minimize $\expval{\hat H}$ we need to know
+    how to adjust the parameters $\vec\alpha = (a_1,\dots,a_M,
+    b_1,\dots,b_N,w_{11},\dots,w_{MN})$. We do this using some optimization
+    algorithm, which will in turn be based on the partial derivatives of the
+    expectation of the local energy~\cite{mhj-compphys-II}:
+    \begin{align}
+            G_i &= \pdv{\expval{E_L}}{\alpha_i} 
+            = 2\qty(\expval{E_L
+        \frac{1}{\Psi}\pdv{\Psi}{\alpha_i}} -
+        \expval{E_L}\expval{\frac{1}{\Psi}\pdv{\Psi}{\alpha_i}})
+    \end{align}
+    These partial derivatives are trivial to compute analytically, and come out as
+    follows:
+    \begin{align}
+        \frac{1}{\Psi}\pdv{\Psi}{a_k} &=
+        \frac{x_k-a_k}{\sigma^2}\label{eq:pdv-a}\\
+        \frac{1}{\Psi}\pdv{\Psi}{b_k} &= \frac{1}{1 +
+        e^{-v_k}}\label{eq:pdv-b}\\
+        \frac{1}{\Psi}\pdv{\Psi}{w_{kl}} &= \frac{1}{1 +
+        e^{-v_l}}\frac{x_k}{\sigma^2}
+    \end{align}
 
-    As we shall need to compute the local energy often, it will be useful to do
-    the differentiation analytically, so as to speed up the computation compared
-    to doing the second derivative in $\hat H$ numerically. The details are laid
-    out in \autoref{app:E-L-derivation}.
+    The expression for the local energy it self is a bit less trivial to work
+    out, but still doable. And as we shall need to compute the local energy often,
+    it will be useful to do the differentiation analytically, so as to speed up
+    the computation compared to doing the second derivative in $\hat H$
+    numerically. The details are laid out in \autoref{app:E-L-derivation}.
 
     The final expression we shall use for the local energy is:
     \begin{align}
@@ -312,6 +338,8 @@ Computational physics II: Quantum mechanical systems\\
     The complexity of $E_L$ is $\mathcal{O}(P + P^2 + M^2 N) = \mathcal{O}(M^2
     N)$. It scales quadratically with additional particles (and dimensions), and
     linearly with the number of hidden nodes used.
+
+
 
     \printbibliography
 
