@@ -1,1 +1,2 @@
 *.ipynb linguist-generated=true
+*/external/* linguist-vendored
