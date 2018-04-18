@@ -25,3 +25,13 @@ extern std::mt19937_64 rand_gen;  /**< Random number generator used. */
 extern std::uniform_real_distribution<Real> unif;  /**< Uniform random distribution (0, 1). */
 extern std::uniform_real_distribution<Real> centered;  /**< Uniform random distribution (-.5, .5). */
 extern std::normal_distribution<Real> rnorm;  /**< N(0, 1) random number distribution. */
+
+inline auto unif_func() {
+    return unif(rand_gen);
+}
+inline auto centered_func() {
+    return centered(rand_gen);
+}
+inline auto rnorm_func() {
+    return rnorm(rand_gen);
+}
