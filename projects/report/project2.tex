@@ -319,7 +319,7 @@ Computational physics II: Quantum mechanical systems\\
 
     The final expression we shall use for the local energy is:
     \begin{align}
-        E_L &= \sum_{i=1}^P \frac{1}{2}r_i^2 + \sum_{i,j=1}^{P} \frac{1}{r_{ij}}
+        E_L &= \sum_{i=1}^M \frac{1}{2}x_i^2 + \sum_{i<j}^{P} \frac{1}{r_{ij}}
         - \frac{1}{2} \sum_{k=1}^M
         \frac{1}{\Psi}\pdv[2]{}{x_k}\Psi,\label{eq:E-L-final-main-section}
     \end{align}
@@ -335,10 +335,20 @@ Computational physics II: Quantum mechanical systems\\
         \end{split}
         \label{eq:E-L-second-deriv-main-section}
     \end{align}
-    The complexity of $E_L$ is $\mathcal{O}(P + P^2 + M^2 N) = \mathcal{O}(M^2
-    N)$. It scales quadratically with additional particles (and dimensions), and
-    linearly with the number of hidden nodes used.
+    The complexity of $E_L$ is $\mathcal{O}(M + P^2 + MNM) = \mathcal{O}(P^2 +
+    M^2 N)$. This can be optimized slightly by computing all the $v_j$ terms at
+    once (as opposed to on demand within the sums), which brings this down to
+    $\mathcal{O}(P^2 + MN)$. It still scales quadratically with additional
+    particles (and dimensions), and linearly with the number of hidden nodes.
 
+    Comparing this with the results from project 1, where the complexity of a
+    local energy evaluation was $\mathcal{O}(P^3)$ when a similar interaction
+    was considered, we see a significant
+    difference. \emph{Assuming} we can obtain good results using an RBM where $N$ is
+    comparable to $P$ in size, this new approach has much better time-complexity
+    and therefore looks much more promising for use with large systems. We will
+    not pursue this large $P$ regime much further in this project, but this is
+    something to note, if the RBM prove to be fruitful.
 
 
     \printbibliography
