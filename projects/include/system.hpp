@@ -31,6 +31,8 @@ class System {
 
         Boson& operator() (int index);
 
+        Real degree(int k) const;
+
         Real distance(int i, int j);
 
         /**
@@ -67,6 +69,9 @@ class System {
 inline const Boson& System::operator[] (int index) const {
     assert(0 <= index and index < get_n_bosons());
     return _bosons[index];
+}
+inline Real System::degree(int k) const {
+    return _bosons[k / get_dimensions()][k % get_dimensions()];
 }
 inline bool System::operator== (const System &other) const {
     return _bosons == other.get_bosons();
