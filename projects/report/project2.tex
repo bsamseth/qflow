@@ -366,7 +366,8 @@ Computational physics II: Quantum mechanical systems\\
 
     \section{Analytic Expression for the Local Energy}
     \label{app:E-L-derivation}
-
+    
+    To get started we will be needing a couple of partial derivatives:
    \begin{align}
         \pdv{}{X_k} (1+e^{v_j}) &=e^{v_j}\pdv{}{X_k}v_j =
         e^{v_j} \frac{w_{kj}}{\sigma^2}\\
@@ -374,7 +375,7 @@ Computational physics II: Quantum mechanical systems\\
         \pdv{}{X_k}e^{-\sum_i^M u_i} &= e^{-\sum_i^M
         u_i}\pdv{}{X_k}\qty(-\sum_i^M u_i) \\
         &= e^{-\sum_i^M u_i}\pdv{}{X_k} (-u_k) \\
-        &= -e^{-\sum_i^M u_i} \frac{X_k}{\sigma^2}
+        &= -e^{-\sum_i^M u_i} \frac{x_k-a_k}{\sigma^2}
         \end{split}
     \end{align}
 
@@ -384,11 +385,11 @@ Computational physics II: Quantum mechanical systems\\
         \qty(1+e^{v_j})\pdv{}{X_k}e^{-\sum_i^M u_i}\right.\\
         &\quad{  }\quad{    }\left. + e^{-\sum_i^M
         u_i}\pdv{}{X_k} \prod_j^N \qty(1+e^{v_j})\right]\\
-        &= -\frac{X_k}{\sigma^2}\Psi + \Psi \sum_j^N
+        &= -\frac{x_k-a_k}{\sigma^2}\Psi + \Psi \sum_j^N
         \qty(\frac{1}{1+e^{v_j}}\pdv{}{X_k}\qty(1+e^{v_j}))\\
-        &= -\frac{X_k}{\sigma^2}\Psi + \Psi\sum_j^N
+        &= -\frac{x_k-a_k}{\sigma^2}\Psi + \Psi\sum_j^N
         \frac{1}{1+e^{v_j}}\qty(\frac{w_{kj}}{\sigma^2} e^{v_j})\\
-        &= \frac{1}{\sigma^2}\qty(-X_k + \sum_j^N
+        &= \frac{1}{\sigma^2}\qty(a_k-x_k + \sum_j^N
         \frac{w_{kj}}{1+e^{-v_j}})\Psi.
     \end{align*}
 
@@ -403,12 +404,12 @@ Computational physics II: Quantum mechanical systems\\
 
     Now, finally the second derivative:
     \begin{align*}
-        \frac{1}{\Psi}\pdv[2]{}{X_k}\Psi &= \frac{1}{\Psi}\pdv{}{X_k}\qty[\frac{1}{\sigma^2}\qty(-X_k + \sum_j^N
+        \frac{1}{\Psi}\pdv[2]{}{X_k}\Psi &= \frac{1}{\Psi}\pdv{}{X_k}\qty[\frac{1}{\sigma^2}\qty(a_k-x_k + \sum_j^N
         \frac{w_{kj}}{1+e^{-v_j}})\Psi]\\
-        &= \frac{1}{\sigma^2} \left[ \pdv{}{X_k}\qty(-X_k + \sum_j^N
+        &= \frac{1}{\sigma^2} \left[ \pdv{}{X_k}\qty(a_k-x_k + \sum_j^N
         \frac{w_{kj}}{1+e^{-v_j}} )   \right.\\
         &\quad{   }\quad{   } \left. 
-        + \qty(-X_k + \sum_j^N
+        + \qty(a_k-x_k + \sum_j^N
         \frac{w_{kj}}{1+e^{-v_j}})\frac{1}{\Psi}\pdv{}{X_k}\Psi 
         \right]\\
         \begin{split}
@@ -416,7 +417,7 @@ Computational physics II: Quantum mechanical systems\\
         \frac{w_{kj}^2}{\sigma^4}
         \frac{e^{-v_j}}{\qty(1+e^{-v_j})} \\
         &\quad{   }\quad{      }  +
-        \frac{1}{\sigma^4}\qty(-X_k+\sum_j^N \frac{w_{kj}}{1+e^{-v_j}})^2
+        \frac{1}{\sigma^4}\qty(a_k-x_k+\sum_j^N \frac{w_{kj}}{1+e^{-v_j}})^2
         \end{split}\numberthis\label{eq:E-L-second-deriv}
     \end{align*}
 
@@ -424,7 +425,7 @@ Computational physics II: Quantum mechanical systems\\
     The final expression we shall use then for the local energy is:
 
     \begin{align}
-        E_L &= \sum_{i=1}^P \frac{1}{2}r_i^2 + \sum_{i,j=1}^{P} \frac{1}{r_{ij}}
+        E_L &= \sum_{i=1}^P \frac{1}{2}r_i^2 + \sum_{i<j}^{P} \frac{1}{r_{ij}}
         - \frac{1}{2} \sum_{k=1}^M
         \frac{1}{\Psi}\pdv[2]{}{x_k}\Psi,\label{eq:E-L-final}
     \end{align}
