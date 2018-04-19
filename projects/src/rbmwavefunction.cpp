@@ -80,7 +80,7 @@ Real RBMWavefunction::laplacian(System &system) const {
         }
         u /= square(_sigma2);
 
-        v = square(-system.degree(k) + v) / square(_sigma2);
+        v = square(_a[k] -system.degree(k) + v) / square(_sigma2);
 
         res += -1 / _sigma2 + u + v;
     }
