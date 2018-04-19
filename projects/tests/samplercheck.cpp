@@ -83,6 +83,11 @@ void sampler_integration_test(int sampler_type, Real expected_acceptance, Real a
 
     Real E_analytic = 0;
     Real E_numeric = 0;
+
+    // Thermalize (adjusts for any random bad starting positions.)
+    for (int run = 0; run < runs; run++)
+        sampler.next_configuration();
+
     for (int run = 0; run < runs; ++run) {
         System &state = sampler.next_configuration();
 
@@ -93,7 +98,9 @@ void sampler_integration_test(int sampler_type, Real expected_acceptance, Real a
     E_analytic /= runs;
     E_numeric /= runs;
 
-    Real ar = sampler.get_acceptance_rate();
+    // Acceptance rate, reflecting only after thermalization.
+    auto steps = sampler.get_total_steps();
+    Real ar = sampler.get_acceptance_rate() * steps / (steps - runs);
 
     // Check that acceptance rate has not dropped below what has been seen before.
     // Just test it, in case we muck something up that decreases it later on.
