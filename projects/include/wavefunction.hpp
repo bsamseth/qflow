@@ -46,6 +46,7 @@ class Wavefunction {
         Real get_a() const;
         void set_params(Real alpha, Real beta = 1, Real a = 0);
         virtual ~Wavefunction() = default;
+        virtual Real laplacian(System&) const;
 
         friend std::ostream& operator<<(std::ostream &strm, const Wavefunction &psi);
 };
@@ -64,4 +65,7 @@ inline void Wavefunction::set_params(Real alpha, Real beta, Real a) {
 }
 inline std::ostream& operator<<(std::ostream &strm, const Wavefunction &psi) {
     return strm << "Wavefunciton(alpha=" << psi._alpha  << ", beta=" << psi._beta << ", a=" << psi._a << ")";
+}
+inline Real Wavefunction::laplacian(System&) const {
+    throw std::logic_error("Function not implemented for VMC code.");
 }
