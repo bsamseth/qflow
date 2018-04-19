@@ -129,6 +129,27 @@ void RBMWavefunction::update_params(std::vector<Real> &grad_vec) {
 
 }
 
+void RBMWavefunction::set_params(const std::vector<Real> &param_vec) {
+    assert(param_vec.size() == _M + _N + _M * _N);
+
+    int k = 0;
+
+    for (int i = 0; i < _M; ++i) {
+        _a[i] = param_vec[k++];
+    }
+    for (int j = 0; j < _N; ++j) {
+        _b[j] = param_vec[k++];
+    }
+    for (int i = 0; i < _M; ++i) {
+        for (int j = 0; j < _N; ++j) {
+            _w[i][j] = param_vec[k++];
+        }
+    }
+
+    assert(k == (int) param_vec.size());
+}
+
+
 
 void RBMWavefunction::train(const Hamiltonian &hamiltonian,
                             Sampler &sampler,
