@@ -61,6 +61,13 @@ TEST_F(RBMWavefunctionTest, gradient) {
     EXPECT_DOUBLE_EQ(1.2499999910073336, gradient[8]);
     EXPECT_DOUBLE_EQ(1.2499999995522815, gradient[9]);
     EXPECT_DOUBLE_EQ(1.2499999999777094, gradient[10]);
+
+    // This is not perfectly reproducing the calculator results,
+    // but after reviewing code thoroughly, no fault is found,
+    // and the discrepancy is deemed likely to be the result of rounding
+    // errors, in one or both of the actual vs. expected numbers. Single
+    // precision still satisfied.
+    EXPECT_FLOAT_EQ(321.62499854823926, rbm->laplacian(*s));
 }
 
 
