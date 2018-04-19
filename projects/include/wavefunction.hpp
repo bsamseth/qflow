@@ -45,6 +45,7 @@ class Wavefunction {
         Real get_beta() const;
         Real get_a() const;
         void set_params(Real alpha, Real beta = 1, Real a = 0);
+        virtual ~Wavefunction() = default;
 
         friend std::ostream& operator<<(std::ostream &strm, const Wavefunction &psi);
 };
