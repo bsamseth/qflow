@@ -45,6 +45,11 @@ TEST_F(RBMWavefunctionTest, init) {
     }
 }
 
+TEST_F(RBMWavefunctionTest, evaluation) {
+    // Values calculated by hand/calculator.
+    EXPECT_DOUBLE_EQ(1.920561139962089e28, rbm->operator()(*s));
+}
+
 TEST_F(RBMWavefunctionTest, gradient) {
     std::vector<Real> gradient(M + N + M * N);
     rbm->gradient(*s, gradient);
@@ -69,7 +74,6 @@ TEST_F(RBMWavefunctionTest, gradient) {
     // precision still satisfied.
     EXPECT_FLOAT_EQ(321.62499854823926, rbm->laplacian(*s));
 }
-
 
 
 
