@@ -89,7 +89,7 @@ Real RBMWavefunction::laplacian(System &system) const {
 }
 
 void RBMWavefunction::gradient(System &system, std::vector<Real> &grad_vec) const {
-    assert(grad_vec.size() == _M + _N + _M * _N);
+    assert((int)grad_vec.size() == _M + _N + _M * _N);
 
     int k = 0;
 
@@ -109,7 +109,7 @@ void RBMWavefunction::gradient(System &system, std::vector<Real> &grad_vec) cons
 
 }
 void RBMWavefunction::update_params(std::vector<Real> &grad_vec) {
-    assert(grad_vec.size() == _M + _N + _M * _N);
+    assert((int)grad_vec.size() == _M + _N + _M * _N);
 
     int k = 0;
 
@@ -130,7 +130,7 @@ void RBMWavefunction::update_params(std::vector<Real> &grad_vec) {
 }
 
 void RBMWavefunction::set_params(const std::vector<Real> &param_vec) {
-    assert(param_vec.size() == _M + _N + _M * _N);
+    assert((int)param_vec.size() == _M + _N + _M * _N);
 
     int k = 0;
 
