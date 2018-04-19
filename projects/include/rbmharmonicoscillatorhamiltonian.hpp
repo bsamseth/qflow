@@ -3,7 +3,7 @@
 #include "definitions.hpp"
 #include "system.hpp"
 #include "hamiltonian.hpp"
-#include "rbmwavefunction.hpp"
+#include "wavefunction.hpp"
 
 /**
  * Class representing the simple harmonic oscillator Hamiltonian.
