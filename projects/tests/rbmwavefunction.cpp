@@ -2,7 +2,6 @@
 #include <chrono>
 
 #include "rbmharmonicoscillatorhamiltonian.hpp"
-#include "metropolissampler.hpp"
 #include "rbmwavefunction.hpp"
 
 class RBMWavefunctionTest : public ::testing::Test {
@@ -75,6 +74,12 @@ TEST_F(RBMWavefunctionTest, gradient) {
     EXPECT_FLOAT_EQ(321.62499854823926, rbm->laplacian(*s));
 }
 
+TEST_F(RBMWavefunctionTest, RBMHarmonicOscillatorHamiltonian) {
+    RBMHarmonicOscillatorHamiltonian H;
+    EXPECT_DOUBLE_EQ(4.25, H.external_potential(*s));
+    EXPECT_DOUBLE_EQ(0.0,  H.internal_potential(*s));
+    EXPECT_DOUBLE_EQ(H.external_potential(*s) - 0.5 * rbm->laplacian(*s), H.local_energy(*s, *rbm));
+}
 
 
 
