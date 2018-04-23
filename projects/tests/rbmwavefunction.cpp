@@ -1,8 +1,23 @@
 #include <gtest/gtest.h>
-#include <chrono>
+#include <string>
 
+#include "prettyprint.hpp"
+#include "metropolissampler.hpp"
 #include "rbmharmonicoscillatorhamiltonian.hpp"
 #include "rbmwavefunction.hpp"
+
+namespace {
+    std::default_random_engine rand_gen(12345);
+    std::uniform_real_distribution<Real> rand_dist(-1, 1);
+    std::uniform_int_distribution<int> rand_dim(1, 3);
+
+    double double_gen() {
+        return rand_dist(rand_gen);
+    }
+    int dim_gen() {
+        return rand_dim(rand_gen);
+    }
+}
 
 class RBMWavefunctionTest : public ::testing::Test {
     protected:
@@ -79,6 +94,39 @@ TEST_F(RBMWavefunctionTest, RBMHarmonicOscillatorHamiltonian) {
     EXPECT_DOUBLE_EQ(4.25, H.external_potential(*s));
     EXPECT_DOUBLE_EQ(0.0,  H.internal_potential(*s));
     EXPECT_DOUBLE_EQ(H.external_potential(*s) - 0.5 * rbm->laplacian(*s), H.local_energy(*s, *rbm));
+}
+
+
+/*
+ * With all parameters set to zero, and sigma^2 = 1, the RBM should
+ * produce the exact results for the ideal case (no-interaction).
+ * This should be regardless of dimensions, number of particles and
+ * the positions of the particles.
+ */
+TEST(RBMWavefunction, correctForIdealCase) {
+    const Real sigma2 = 1;
+    RBMHarmonicOscillatorHamiltonian H;
+
+    // 1000, why not?
+    for (int runs = 0; runs < 1000; ++runs) {
+        int P = square(dim_gen()), D = dim_gen();
+        int M = P * D, N = 1;
+        System s (P, D);
+        RBMWavefunction rbm(M, N, sigma2);
+        rbm.set_params(std::vector<Real>(M + N + M * N, 0));
+
+        // Random system config.
+        for (int i = 0; i < P; ++i) {
+            s(i) = {D};
+            for (int j = 0; j < D; j++)
+                s(i)[j] = double_gen();
+        }
+
+        Real expected = 0.5 * P * D;
+        ASSERT_NEAR(expected, H.local_energy_numeric(s, rbm), expected * 1e-6);
+        ASSERT_NEAR(expected, H.local_energy(s, rbm), expected * 1e-15);
+    }
+
 }
 
 
