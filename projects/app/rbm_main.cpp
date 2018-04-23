@@ -17,6 +17,6 @@ int main() {
     MetropolisSampler sampler (init_system, rbm, 0.5);
     RBMHarmonicOscillatorHamiltonian H;
 
-    rbm.train(H, sampler, 10000, 1000000, 0.00001);
+    rbm.train(H, sampler, 10000, 1000000, 0.01);
 
 }

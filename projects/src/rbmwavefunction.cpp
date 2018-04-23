@@ -1,6 +1,7 @@
 #include <vector>
 #include <cassert>
 
+#include "prettyprint.hpp"
 #include "rbmwavefunction.hpp"
 
 
@@ -126,7 +127,6 @@ void RBMWavefunction::update_params(std::vector<Real> &grad_vec) {
     }
 
     assert(k == (int) grad_vec.size());
-
 }
 
 void RBMWavefunction::set_params(const std::vector<Real> &param_vec) {
@@ -172,7 +172,7 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
 
         for (int sample = 0; sample < sample_points; ++sample) {
             System &system = sampler.next_configuration();
-            Real E = hamiltonian.local_energy(system, *this);
+            Real E = hamiltonian.local_energy_numeric(system, *this);
             E_mean += E;
 
 
@@ -203,7 +203,7 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
             grad[i] /= sample_points;
             grad_E[i] /= sample_points;
 
-            updates[i] = learning_rate * 2 * (grad_E[i] - E_mean * grad[i]);
+            updates[i] = - learning_rate * 2 * (grad_E[i] - E_mean * grad[i]);
         }
 
 
@@ -211,6 +211,11 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
 
 
         printf("Iteration %d: <E> = %g\n", iteration, E_mean);
+        std::cout << "updates: " << updates << '\n';
+        std::cout << "a = " << _a << "\n";
+        std::cout << "b = " << _b << "\n";
+        std::cout << "w = " << _w << "\n";
+
 
     }
 }
