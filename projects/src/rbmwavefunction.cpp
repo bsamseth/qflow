@@ -83,7 +83,7 @@ Real RBMWavefunction::laplacian(System &system) const {
 
         v = square(_a[k] -system.degree(k) + v) / square(_sigma2);
 
-        res += -1 / _sigma2 + u + v;
+        res += -1 / _sigma2 - u + v;
     }
 
     return res;
@@ -172,7 +172,7 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
 
         for (int sample = 0; sample < sample_points; ++sample) {
             System &system = sampler.next_configuration();
-            Real E = hamiltonian.local_energy_numeric(system, *this);
+            Real E = hamiltonian.local_energy(system, *this);
             E_mean += E;
 
 
