@@ -10,7 +10,7 @@
 TEST(GradientDecent, findsOptmalForNonInteracting) {
 
     System init_system(10, 3);
-    SimpleGaussian psi(-1, 1);
+    SimpleGaussian psi({-1, 1});
     HarmonicOscillatorHamiltonian H(1);
     MetropolisSampler sampler(init_system, psi, 1);
 

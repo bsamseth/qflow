@@ -30,11 +30,11 @@ void parse_arguments(int argc, char **argv, Wavefunction **psi, Hamiltonian **H,
     System *system = new System(bosons, dimensions);
 
     if (a != 0) {
-        *psi = new InteractingWavefunction(alpha, beta, a);
-        *H = new InteractingHamiltonian(gamma, a);
+        *psi = new InteractingWavefunction({alpha, beta, a});
+        *H = new InteractingHamiltonian({gamma, a});
     } else {
-        *psi = new SimpleGaussian(alpha, beta);
-        *H = new HarmonicOscillatorHamiltonian(gamma);
+        *psi = new SimpleGaussian({alpha, beta});
+        *H = new HarmonicOscillatorHamiltonian({gamma});
     }
 
     if (sampler_type == 0) {
@@ -70,11 +70,11 @@ void parse_arguments_optimize(int argc, char **argv, Wavefunction **psi, Hamilto
     System *system = new System(bosons, dimensions);
 
     if (a != 0) {
-        *psi = new InteractingWavefunction(*alpha_guess, beta, a);
+        *psi = new InteractingWavefunction({*alpha_guess, beta, a});
         *H = new InteractingHamiltonian(gamma, a);
     } else {
-        *psi = new SimpleGaussian(*alpha_guess, beta);
-        *H = new HarmonicOscillatorHamiltonian(gamma);
+        *psi = new SimpleGaussian({*alpha_guess, beta});
+        *H = new HarmonicOscillatorHamiltonian({gamma});
     }
 
     if (sampler_type == 0) {

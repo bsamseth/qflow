@@ -11,9 +11,11 @@
  * Class modeling the N-boson wavefunction with the Jastrow factor.
  */
 class InteractingWavefunction : public SimpleGaussian {
+    protected:
+        Real _a = 0;
+
     public:
-        // Inherit contructor.
-        using SimpleGaussian::SimpleGaussian;
+        InteractingWavefunction(std::initializer_list<Real> parameters = {});
 
         virtual Real operator() (System&) const;
         virtual Real correlation(System&) const;

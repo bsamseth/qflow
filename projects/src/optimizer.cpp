@@ -27,7 +27,7 @@ Real gradient_decent_optimizer(Wavefunction &wavefunction,
     Real E_L_der, E_L_der_prev = 1;
 
     do {
-        wavefunction.set_params(alpha, wavefunction.get_beta(), wavefunction.get_a());
+        wavefunction.get_parameters()[0] = alpha;
 
         // Thermalize the sampler to the alpha guess.
         for (int run = 0; run < sample_points; ++run) {
@@ -42,7 +42,7 @@ Real gradient_decent_optimizer(Wavefunction &wavefunction,
         for (int sample = 0; sample < sample_points; ++sample) {
             System &system = sampler.next_configuration();
             Real E = hamiltonian.local_energy(system, wavefunction);
-            Real psi_der = wavefunction.derivative_alpha(system);
+            Real psi_der = wavefunction.gradient(system)[0];
 
             E_tot += E;
             E_tot_sq += square(E);
@@ -75,7 +75,7 @@ Real gradient_decent_optimizer(Wavefunction &wavefunction,
 
     } while (iteration < max_iterations and std::abs(E_L_der) > dE_eps);
 
-    return wavefunction.get_alpha();
+    return wavefunction.get_parameters()[0];
 }
 
 } // namespace Optimizer

@@ -31,6 +31,8 @@ class Vector {
          * @return Number of dimensions of the boson.
          */
         int get_dimensions() const;
+        int size() const;
+
         /**
          * @param dimensions The coordinate to get.
          * @return Reference to value for the given coordinate.
@@ -59,6 +61,9 @@ inline const std::vector<Real>& Vector::get_position() const {
 }
 inline int Vector::get_dimensions() const {
     return _pos.size();
+}
+inline int Vector::size() const {
+    return get_dimensions();
 }
 
 /*

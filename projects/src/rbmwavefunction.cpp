@@ -89,8 +89,8 @@ Real RBMWavefunction::laplacian(System &system) const {
     return res;
 }
 
-void RBMWavefunction::gradient(System &system, std::vector<Real> &grad_vec) const {
-    assert((int)grad_vec.size() == _M + _N + _M * _N);
+Vector RBMWavefunction::gradient(System &system) const {
+    Vector grad_vec(_M + _N + _M * _N);
 
     int k = 0;
 
@@ -106,49 +106,10 @@ void RBMWavefunction::gradient(System &system, std::vector<Real> &grad_vec) cons
         }
     }
 
-    assert(k == (int) grad_vec.size());
+    assert(k == grad_vec.size());
 
+    return grad_vec;
 }
-void RBMWavefunction::update_params(std::vector<Real> &grad_vec) {
-    assert((int)grad_vec.size() == _M + _N + _M * _N);
-
-    int k = 0;
-
-    for (int i = 0; i < _M; ++i) {
-        _a[i] += grad_vec[k++];
-    }
-    for (int j = 0; j < _N; ++j) {
-        _b[j] += grad_vec[k++];
-    }
-    for (int i = 0; i < _M; ++i) {
-        for (int j = 0; j < _N; ++j) {
-            _w[i][j] += grad_vec[k++];
-        }
-    }
-
-    assert(k == (int) grad_vec.size());
-}
-
-void RBMWavefunction::set_params(const std::vector<Real> &param_vec) {
-    assert((int)param_vec.size() == _M + _N + _M * _N);
-
-    int k = 0;
-
-    for (int i = 0; i < _M; ++i) {
-        _a[i] = param_vec[k++];
-    }
-    for (int j = 0; j < _N; ++j) {
-        _b[j] = param_vec[k++];
-    }
-    for (int i = 0; i < _M; ++i) {
-        for (int j = 0; j < _N; ++j) {
-            _w[i][j] = param_vec[k++];
-        }
-    }
-
-    assert(k == (int) param_vec.size());
-}
-
 
 
 void RBMWavefunction::train(const Hamiltonian &hamiltonian,
@@ -159,9 +120,9 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
 
 
     for (int iteration = 0; iteration < iterations; ++iteration) {
-        std::vector<Real> grad (_M + _N + _M * _N, 0);
-        std::vector<Real> grad_E = grad;
-        std::vector<Real> updates = grad;
+        Vector grad (_M + _N + _M * _N);
+        Vector grad_E = grad;
+        Vector updates = grad;
 
         // Thermalize the sampler to the new parameters.
         for (int run = 0; run < sample_points; ++run) {
@@ -176,7 +137,7 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
             E_mean += E;
 
 
-            std::size_t k = 0;
+            int k = 0;
             for (int i = 0; i < _M; ++i, ++k) {
                 auto d = deriv_a(i, system);
                 grad[k] += d;
@@ -199,16 +160,9 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
         }
 
         E_mean /= sample_points;
-        for (std::size_t i = 0; i < grad.size(); ++i) {
-            grad[i] /= sample_points;
-            grad_E[i] /= sample_points;
-
-            updates[i] = - learning_rate * 2 * (grad_E[i] - E_mean * grad[i]);
-        }
-
-
-        update_params(updates);
-
+        grad *= 1/sample_points;
+        grad_E *= 1/sample_points;
+        _parameters -= learning_rate * 2 * (grad_E - E_mean * grad);
 
         printf("Iteration %d: <E> = %g\n", iteration, E_mean);
         std::cout << "updates: " << updates << '\n';

@@ -1,6 +1,9 @@
 #pragma once
 #include <random>
 
+// Macro for silencing  unused parameters on demand.
+#define SUPPRESS_WARNING(a) (void)a
+
 /**
  * Defining an alias for double. Used so that if we ever want to change
  * this to float (for improved speed, reduced accuracy), this is done

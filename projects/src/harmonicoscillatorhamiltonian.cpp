@@ -3,8 +3,8 @@
 #include "harmonicoscillatorhamiltonian.hpp"
 
 Real HarmonicOscillatorHamiltonian::local_energy(System &system, const Wavefunction &psi) const {
-    const Real alpha = psi.get_alpha();
-    const Real beta = psi.get_beta();
+    const Real alpha = psi.get_parameters()[0];
+    const Real beta = psi.get_parameters()[1];
     const Real one_body_beta_term = - (system.get_dimensions() == 3 ? 2 + beta : system.get_dimensions());
 
     Real E_L = 0;

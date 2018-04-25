@@ -30,11 +30,7 @@ class RBMWavefunction : public Wavefunction {
 
         RBMWavefunction(int M, int P, Real sigma = 1);
 
-        void gradient(System &system, std::vector<Real> &grad_vec) const;
-
-        void update_params(std::vector<Real> &grad_vec);
-
-        void set_params(const std::vector<Real> &param_vec);
+        virtual Vector gradient(System &system) const;
 
         virtual Real operator() (System &system) const;
 

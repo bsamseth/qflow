@@ -6,6 +6,14 @@
 #include "system.hpp"
 #include "interactingwavefunction.hpp"
 
+InteractingWavefunction::InteractingWavefunction(std::initializer_list<Real> parameters)
+    : SimpleGaussian(parameters)
+{
+    if (_parameters.size() > 2)
+       _a = _parameters[2];
+    _parameters[2] = _a;
+}
+
 Real InteractingWavefunction::correlation(System &system) const {
     Real f = 1;
     for (int i = 0; i < system.get_n_particles() - 1; ++i) {

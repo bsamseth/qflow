@@ -35,3 +35,6 @@ Real Hamiltonian::local_energy_numeric(System &system, const Wavefunction &psi) 
          + internal_potential(system);
 }
 
+Real Hamiltonian::local_energy(System &system, const Wavefunction &psi) const {
+    return external_potential(system) + internal_potential(system) - 0.5 * psi.laplacian(system);
+}

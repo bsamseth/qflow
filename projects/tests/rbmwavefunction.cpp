@@ -32,7 +32,7 @@ class RBMWavefunctionTest : public ::testing::Test {
 
         virtual void SetUp() {
             rbm = new RBMWavefunction(M, N, 2);
-            rbm->set_params(params);
+            rbm->set_parameters(params);
             s = new System(P, D);
             (*s)(0)[0] = 1.5;
             (*s)(1)[0] = 2.5;
@@ -65,8 +65,7 @@ TEST_F(RBMWavefunctionTest, evaluation) {
 }
 
 TEST_F(RBMWavefunctionTest, gradient) {
-    std::vector<Real> gradient(M + N + M * N);
-    rbm->gradient(*s, gradient);
+    Vector gradient = rbm->gradient(*s);
     EXPECT_DOUBLE_EQ(0.25, gradient[0]);
     EXPECT_DOUBLE_EQ(0.25, gradient[1]);
 
@@ -113,7 +112,7 @@ TEST(RBMWavefunction, correctForIdealCase) {
         int M = P * D, N = 1;
         System s (P, D);
         RBMWavefunction rbm(M, N, sigma2);
-        rbm.set_params(std::vector<Real>(M + N + M * N, 0));
+        rbm.set_parameters(Vector(M + N + M * N));
 
         // Random system config.
         for (int i = 0; i < P; ++i) {

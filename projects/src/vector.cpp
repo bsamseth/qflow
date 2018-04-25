@@ -4,12 +4,7 @@
 #include "definitions.hpp"
 #include "vector.hpp"
 
-Vector::Vector(int dimensions) : _pos(dimensions, 0.0) {
-    // Dimension expected to be in [1, 3]. Nothing about the
-    // implementation should break for Dim >= 4, but if this is
-    // used, it is more likely a programmer typo/bug.
-    assert(dimensions > 0 and dimensions < 4);
-}
+Vector::Vector(int dimensions) : _pos(dimensions, 0.0) { }
 
 /*
  * Allowed for simplicity in creating test instances.
