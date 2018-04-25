@@ -35,7 +35,7 @@ Real RBMWavefunction::v_j(int j, System &system) const {
 
 Real RBMWavefunction::operator() (System &system) const {
 
-    assert(system.get_dimensions() * system.get_n_bosons() == _M);
+    assert(system.get_dimensions() * system.get_n_particles() == _M);
 
     Real u = 0;
     for (int i = 0; i < _M; ++i) {

@@ -8,9 +8,9 @@
 Hamiltonian::Hamiltonian(Real omega_z, Real a, Real h) : _omega_z(omega_z), _a(a), _h(h) {}
 
 Real Hamiltonian::kinetic_energy(System &system, const Wavefunction &psi) const {
-    Real E_k = -2 * (system.get_n_bosons() * system.get_dimensions()) * psi(system);
+    Real E_k = -2 * (system.get_n_particles() * system.get_dimensions()) * psi(system);
 
-    for (int i = 0; i < system.get_n_bosons(); ++i) {
+    for (int i = 0; i < system.get_n_particles(); ++i) {
         for (int d = 0; d < system.get_dimensions(); ++d) {
             const auto temp = system[i][d];
             system(i)[d] = temp + _h;

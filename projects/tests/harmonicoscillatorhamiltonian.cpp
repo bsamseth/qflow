@@ -87,11 +87,11 @@ TEST_F(HarmonicOscillatorHamiltonianTest, local_energy_simple) {
     // 1000, why not?
     for (int runs = 0; runs < 1000; ++runs) {
         System s (dim_gen() * dim_gen() * dim_gen() * dim_gen(), dim_gen());
-        for (int i = 0; i < s.get_n_bosons(); ++i) {
+        for (int i = 0; i < s.get_n_particles(); ++i) {
             s(i) = {{ double_gen(), double_gen(), double_gen() }};
         }
 
-        Real expected = alpha * s.get_dimensions() * s.get_n_bosons();
+        Real expected = alpha * s.get_dimensions() * s.get_n_particles();
         ASSERT_NEAR(expected, H_1.local_energy(s, psi), expected * 1e-15);
         ASSERT_NEAR(expected, H_1.local_energy_numeric(s, psi), expected * 1e-6);
     }

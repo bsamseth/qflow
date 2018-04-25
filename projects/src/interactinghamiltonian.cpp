@@ -18,7 +18,7 @@ Real InteractingHamiltonian::local_energy(System &system, const Wavefunction &ps
 
     Real E_L = 0;
 
-    for (int k = 0; k < system.get_n_bosons(); ++k) {
+    for (int k = 0; k < system.get_n_particles(); ++k) {
 
         const Vector &r_k = system[k];
         Vector r_k_hat = system[k];
@@ -33,7 +33,7 @@ Real InteractingHamiltonian::local_energy(System &system, const Wavefunction &ps
         Vector term1 (system.get_dimensions());
         Real term2 = 0;
         Real term3 = 0;
-        for (int j = 0; j < system.get_n_bosons(); ++j) {
+        for (int j = 0; j < system.get_n_particles(); ++j) {
             if (j == k) continue;
             const Vector r_kj = r_k - system[j];
             const Real r_kj_norm = system.distance(k, j);
@@ -43,7 +43,7 @@ Real InteractingHamiltonian::local_energy(System &system, const Wavefunction &ps
             term3 += _a * (_a - 2*r_kj_norm) / (square(r_kj_norm) * square(r_kj_norm - _a))
                 + 2 * _a / (square(r_kj_norm) * (r_kj_norm - _a));
 
-            for (int i = 0; i < system.get_n_bosons(); ++i) {
+            for (int i = 0; i < system.get_n_particles(); ++i) {
                 if (i == k) continue;
                 const Vector r_ki = r_k - system[i];
                 const Real r_ki_norm = system.distance(k, i);
@@ -62,8 +62,8 @@ Real InteractingHamiltonian::local_energy(System &system, const Wavefunction &ps
 
 Real InteractingHamiltonian::internal_potential(System &system) const {
 
-    for (int i = 0; i < system.get_n_bosons() - 1; ++i) {
-        for (int j = i + 1; j < system.get_n_bosons(); ++j) {
+    for (int i = 0; i < system.get_n_particles() - 1; ++i) {
+        for (int j = i + 1; j < system.get_n_particles(); ++j) {
             if (system.distance(i, j) <= _a)
                 return std::numeric_limits<Real>::max();
         }

@@ -11,14 +11,14 @@ TEST(System, basics) {
 
     EXPECT_EQ(-123, s[0][0]);
     EXPECT_EQ( 123, s[0][2]);
-    EXPECT_EQ( 10, s.get_n_bosons() );
+    EXPECT_EQ( 10, s.get_n_particles() );
     EXPECT_EQ( 3 , s.get_dimensions() );
 
     System ss = s;
 
     EXPECT_EQ(-123, ss[0][0]);
     EXPECT_EQ( 123, ss[0][2]);
-    EXPECT_EQ( 10, ss.get_n_bosons() );
+    EXPECT_EQ( 10, ss.get_n_particles() );
     EXPECT_EQ( 3 , ss.get_dimensions() );
 }
 
@@ -63,7 +63,7 @@ TEST(System, distances) {
 
         // Changing a boson should trigger a recalculation, even if changed
         // to the existing value;
-        int a = k % s.get_n_bosons();
+        int a = k % s.get_n_particles();
         s(a) = s[a];
 
         for (int i = 0; i < (int) expected.size(); ++i) {
