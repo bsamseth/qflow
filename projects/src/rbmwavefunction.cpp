@@ -14,10 +14,10 @@ RBMWavefunction::RBMWavefunction(int M, int N, Real sigma2)
       _b(N),
       _w(M, std::vector<Real>(N))
 {
-    std::generate(_a.begin(), _a.end(), rnorm_func);
-    std::generate(_b.begin(), _b.end(), rnorm_func);
+    std::generate(_a.begin(), _a.end(), rnorm_small_func);
+    std::generate(_b.begin(), _b.end(), rnorm_small_func);
     for (auto &row : _w) {
-        std::generate(row.begin(), row.end(), rnorm_func);
+        std::generate(row.begin(), row.end(), rnorm_small_func);
     }
 }
 
