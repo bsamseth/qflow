@@ -53,7 +53,7 @@ class RBMWavefunction : public Wavefunction {
                            Real learning_rate);
 
         virtual Real derivative_alpha(const System&) const;
-        virtual Real drift_force(const Boson &, int) const;
+        virtual Real drift_force(const Vector &, int) const;
 
         const std::vector<Real>& get_visible_bias() const;
         const std::vector<Real>& get_hidden_bias() const;
@@ -62,7 +62,7 @@ class RBMWavefunction : public Wavefunction {
 inline Real RBMWavefunction::derivative_alpha(const System&) const {
     throw std::logic_error("Function not defined for RBM, only here for bad design reasons.");
 }
-inline Real RBMWavefunction::drift_force(const Boson &, int) const {
+inline Real RBMWavefunction::drift_force(const Vector &, int) const {
     throw std::logic_error("Function not implemented.");
 }
 inline const std::vector<Real>& RBMWavefunction::get_visible_bias() const {

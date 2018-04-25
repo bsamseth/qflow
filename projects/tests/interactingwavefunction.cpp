@@ -7,7 +7,7 @@
 #include "simplegaussian.hpp"
 #include "interactingwavefunction.hpp"
 
-void EXPECT_BOSON_EQ(const Boson &b1, const Boson &b2, Real tol = -1) {
+void EXPECT_BOSON_EQ(const Vector &b1, const Vector &b2, Real tol = -1) {
     ASSERT_EQ(b1.get_dimensions(), b2.get_dimensions());
     for (int d = 0; d < b1.get_dimensions(); ++d) {
         if (tol > 0)

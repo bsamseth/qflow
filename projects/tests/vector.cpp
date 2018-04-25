@@ -8,7 +8,7 @@
 #include <algorithm>
 
 #include "definitions.hpp"
-#include "boson.hpp"
+#include "vector.hpp"
 
 namespace {
     std::default_random_engine rand_gen(12345);
@@ -29,9 +29,9 @@ namespace {
     }
 }
 
-TEST(Boson, basics) {
-    Boson b1(1);
-    Boson b3(3);
+TEST(Vector, basics) {
+    Vector b1(1);
+    Vector b3(3);
     b1[0] = 123.45;
     b3[0] = -1;
     b3[2] = 3;
@@ -44,30 +44,30 @@ TEST(Boson, basics) {
     EXPECT_EQ( 3, b3.get_dimensions() );
 }
 
-TEST(Boson, copy_init) {
-    Boson a(3);
+TEST(Vector, copy_init) {
+    Vector a(3);
     a[1] = 123;
     a[2] = -1;
-    Boson b = a;
-    Boson c = {{0, 123, -1}};
+    Vector b = a;
+    Vector c = {{0, 123, -1}};
     EXPECT_EQ(a, b);
     EXPECT_EQ(a, c);
 }
 
-TEST(Boson, dot_prod) {
+TEST(Vector, dot_prod) {
     for (int i = 0; i < N_RANDOM_TRIALS; i++) {
         int dims = dim_gen();
         std::vector<Real> a_vec = random_vec(dims);
         std::vector<Real> b_vec = random_vec(dims);
-        Boson a (a_vec);
-        Boson b (b_vec);
+        Vector a (a_vec);
+        Vector b (b_vec);
 
         Real expected = std::inner_product(a_vec.begin(), a_vec.end(), b_vec.begin(), (Real) 0.0);
         EXPECT_DOUBLE_EQ(expected, a * b);
     }
 }
 
-TEST(Boson, addSub) {
+TEST(Vector, addSub) {
     for (int i = 0; i < N_RANDOM_TRIALS; i++) {
         int dims = dim_gen();
         std::vector<Real> a_vec = random_vec(dims);
@@ -80,10 +80,10 @@ TEST(Boson, addSub) {
             d_vec[i] = a_vec[i] - b_vec[i];
         }
 
-        Boson a (a_vec);
-        Boson b (b_vec);
-        Boson c (c_vec);
-        Boson d (d_vec);
+        Vector a (a_vec);
+        Vector b (b_vec);
+        Vector c (c_vec);
+        Vector d (d_vec);
 
         ASSERT_TRUE(c == a + b);
         ASSERT_TRUE(d == a - b);
@@ -97,15 +97,15 @@ TEST(Boson, addSub) {
     }
 }
 
-TEST(Boson, scalarOperations) {
+TEST(Vector, scalarOperations) {
     for (int i = 0; i < N_RANDOM_TRIALS; i++) {
         int dims = dim_gen();
         Real scalar = double_gen();
-        Boson a = { random_vec(dims) };
-        Boson b = a * scalar * scalar;
-        Boson c = scalar + a + scalar;
-        Boson d = (- scalar) - a - scalar;
-        Boson e = a / scalar;
+        Vector a = { random_vec(dims) };
+        Vector b = a * scalar * scalar;
+        Vector c = scalar + a + scalar;
+        Vector d = (- scalar) - a - scalar;
+        Vector e = a / scalar;
         for (int i = 0; i < dims; ++i) {
             ASSERT_DOUBLE_EQ(a[i] * square(scalar), b[i]);
             ASSERT_DOUBLE_EQ(scalar + a[i] + scalar, c[i]);
@@ -127,8 +127,8 @@ TEST(Boson, scalarOperations) {
     }
 }
 
-TEST(Boson, display) {
-    Boson b = {{ 1, 2, 3 }};
+TEST(Vector, display) {
+    Vector b = {{ 1, 2, 3 }};
     std::stringstream actual;
     actual << b;
     std::stringstream expected;

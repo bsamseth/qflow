@@ -3,7 +3,7 @@
 #include <vector>
 #include <cassert>
 #include <iostream>
-#include "boson.hpp"
+#include "vector.hpp"
 
 
 /**
@@ -11,7 +11,7 @@
  */
 class System {
 
-    std::vector<Boson> _bosons;
+    std::vector<Vector> _bosons;
     std::vector<std::vector<Real>> _distances;
     std::vector<std::vector<bool>> _dirty;
 
@@ -27,9 +27,9 @@ class System {
          * @param index Index of Boson.
          * @return Boson at given index.
          */
-        const Boson& operator[] (int index) const;
+        const Vector& operator[] (int index) const;
 
-        Boson& operator() (int index);
+        Vector& operator() (int index);
 
         Real degree(int k) const;
 
@@ -51,7 +51,7 @@ class System {
         /**
          * @return Internal representation of all Bosons.
          */
-        const std::vector<Boson>& get_bosons() const;
+        const std::vector<Vector>& get_bosons() const;
 
         const std::vector<std::vector<bool> > get_dirty() const;
 
@@ -66,7 +66,7 @@ class System {
         int get_n_bosons() const;
 };
 
-inline const Boson& System::operator[] (int index) const {
+inline const Vector& System::operator[] (int index) const {
     assert(0 <= index and index < get_n_bosons());
     return _bosons[index];
 }
@@ -79,7 +79,7 @@ inline bool System::operator== (const System &other) const {
 inline bool System::operator!= (const System &other) const {
     return _bosons != other.get_bosons();
 }
-inline const std::vector<Boson>& System::get_bosons() const {
+inline const std::vector<Vector>& System::get_bosons() const {
     return _bosons;
 }
 inline const std::vector<std::vector<bool>> System::get_dirty() const {

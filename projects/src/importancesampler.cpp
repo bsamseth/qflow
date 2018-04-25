@@ -22,7 +22,7 @@ void ImportanceSampler::initialize_system() {
 }
 
 void ImportanceSampler::perturb_system() {
-    Boson &boson = _system_new(_particle_to_move);
+    Vector &boson = _system_new(_particle_to_move);
 
     for (int d = 0; d < boson.get_dimensions(); ++d) {
         boson[d] += rnorm(rand_gen) * std::sqrt(_step)
@@ -33,8 +33,8 @@ void ImportanceSampler::perturb_system() {
 }
 
 Real ImportanceSampler::acceptance_probability() const {
-    const Boson &r_old = _system_old[_particle_to_move];
-    const Boson &r_new = _system_new[_particle_to_move];
+    const Vector &r_old = _system_old[_particle_to_move];
+    const Vector &r_new = _system_new[_particle_to_move];
 
     Real green1 = 0, green2 = 0;
     for (int d = 0; d < r_old.get_dimensions(); ++d) {

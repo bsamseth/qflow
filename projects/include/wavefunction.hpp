@@ -1,7 +1,7 @@
 #pragma once
 
 #include "definitions.hpp"
-#include "boson.hpp"
+#include "vector.hpp"
 #include "system.hpp"
 
 /**
@@ -40,7 +40,7 @@ class Wavefunction {
          * @param dimension Component to evaluate.
          * @return Given component of the drift force on the Boson.
          */
-        virtual Real drift_force(const Boson &boson, int dimension) const = 0;
+        virtual Real drift_force(const Vector &boson, int dimension) const = 0;
         Real get_alpha() const;
         Real get_beta() const;
         Real get_a() const;

@@ -23,7 +23,7 @@ TEST(SimpleGaussian, call_with_beta) {
     SimpleGaussian psi (0.5, 2.8);
 
     // Calculated by hand/calculator:
-    Boson F_0 = {{-1.01667658, -0.15464426, -3.880500176}};
+    Vector F_0 = {{-1.01667658, -0.15464426, -3.880500176}};
     EXPECT_DOUBLE_EQ(0.096971040514681181, psi(s));
     EXPECT_DOUBLE_EQ(-4.666685792898267, psi.derivative_alpha(s));
     for (int d = 0; d < s.get_dimensions(); ++d) {
@@ -47,7 +47,7 @@ TEST(SimpleGaussian, call_2D) {
     EXPECT_DOUBLE_EQ(-91, psi_with_beta.derivative_alpha(s));
     EXPECT_DOUBLE_EQ(-91, psi.derivative_alpha(s));
 
-    Boson F_2 = { {-10, -12} };
+    Vector F_2 = { {-10, -12} };
     for (int d = 0; d < s.get_dimensions(); ++d) {
         EXPECT_EQ(F_2[d], psi.drift_force(s[2], d));
     }

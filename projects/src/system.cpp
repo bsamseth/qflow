@@ -1,10 +1,10 @@
 #include <vector>
 #include <cassert>
-#include "boson.hpp"
+#include "vector.hpp"
 #include "system.hpp"
 
 System::System(int number_of_bosons, int dimensions) :
-    _bosons(number_of_bosons, Boson{dimensions}),
+    _bosons(number_of_bosons, Vector{dimensions}),
     _distances(number_of_bosons, std::vector<Real>(number_of_bosons, 0)),
     _dirty(number_of_bosons, std::vector<bool>(number_of_bosons, true))
 { }
@@ -19,7 +19,7 @@ Real System::distance(int i, int j) {
     return _distances[i][j];
 }
 
-Boson& System::operator() (int index) {
+Vector& System::operator() (int index) {
     assert(0 <= index and index < get_n_bosons());
     auto n = get_n_bosons();
     for (int i = 0; i < n; ++i)

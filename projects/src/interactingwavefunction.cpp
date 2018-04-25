@@ -2,7 +2,7 @@
 #include <cassert>
 
 #include "definitions.hpp"
-#include "boson.hpp"
+#include "vector.hpp"
 #include "system.hpp"
 #include "interactingwavefunction.hpp"
 

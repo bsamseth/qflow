@@ -11,7 +11,7 @@ Real HarmonicOscillatorHamiltonian::local_energy(System &system, const Wavefunct
 
     for (int k = 0; k < system.get_n_bosons(); ++k) {
 
-        Boson r_k = system[k];
+        Vector r_k = system[k];
         if (system.get_dimensions() == 3) {
             r_k[2] *= beta;
         }
