@@ -13,7 +13,7 @@ MetropolisSampler::MetropolisSampler(const System &system,
 }
 
 void MetropolisSampler::initialize_system() {
-    for (int i = 0; i < _system_old.get_n_bosons(); ++i) {
+    for (int i = 0; i < _system_old.get_n_particles(); ++i) {
         for (int d = 0; d < _system_old.get_dimensions(); ++d) {
             _system_old(i)[d] = _step * centered(rand_gen);
         }

@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 #include "definitions.hpp"
-#include "boson.hpp"
+#include "vector.hpp"
 #include "system.hpp"
 #include "simplegaussian.hpp"
 
@@ -17,10 +17,10 @@ class InteractingWavefunction : public SimpleGaussian {
 
         virtual Real operator() (System&) const;
         virtual Real correlation(System&) const;
-        virtual Real drift_force(const Boson&, int) const;
+        virtual Real drift_force(const Vector&, int) const;
 };
 
-inline Real InteractingWavefunction::drift_force(const Boson &, int) const {
+inline Real InteractingWavefunction::drift_force(const Vector &, int) const {
     throw std::logic_error("Importance sampling not implemented for interacting system.");
 }
 

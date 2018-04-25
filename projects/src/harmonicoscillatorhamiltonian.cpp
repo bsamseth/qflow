@@ -9,9 +9,9 @@ Real HarmonicOscillatorHamiltonian::local_energy(System &system, const Wavefunct
 
     Real E_L = 0;
 
-    for (int k = 0; k < system.get_n_bosons(); ++k) {
+    for (int k = 0; k < system.get_n_particles(); ++k) {
 
-        Boson r_k = system[k];
+        Vector r_k = system[k];
         if (system.get_dimensions() == 3) {
             r_k[2] *= beta;
         }
@@ -25,7 +25,7 @@ Real HarmonicOscillatorHamiltonian::local_energy(System &system, const Wavefunct
 Real HarmonicOscillatorHamiltonian::external_potential(System &system) const {
     Real pot = 0;
 
-    for (int i = 0; i < system.get_n_bosons(); ++i) {
+    for (int i = 0; i < system.get_n_particles(); ++i) {
         if (system.get_dimensions() == 3) {
             pot += square(system[i][0]) + square(system[i][1]) + square(_omega_z * system[i][2]);
         } else {

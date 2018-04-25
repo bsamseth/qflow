@@ -2,14 +2,14 @@
 #include <cassert>
 
 #include "definitions.hpp"
-#include "boson.hpp"
+#include "vector.hpp"
 #include "system.hpp"
 #include "interactingwavefunction.hpp"
 
 Real InteractingWavefunction::correlation(System &system) const {
     Real f = 1;
-    for (int i = 0; i < system.get_n_bosons() - 1; ++i) {
-        for (int j = i + 1; j < system.get_n_bosons(); ++j) {
+    for (int i = 0; i < system.get_n_particles() - 1; ++i) {
+        for (int j = i + 1; j < system.get_n_particles(); ++j) {
 
             Real r_ij = system.distance(i, j);
 

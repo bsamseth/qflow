@@ -7,7 +7,7 @@
 /**
  * N-dimensional vector representation of a boson.
  */
-class Boson {
+class Vector {
     private:
         std::vector<Real> _pos;
 
@@ -17,12 +17,12 @@ class Boson {
          * Initialize a Boson with a given number of dimensions, initialized to origo.
          * @param dimensions Number of dimensions to use.
          */
-        Boson(int dimensions);
+        Vector(int dimensions);
         /**
          * Initialize a Boson from a std::vector.
          * @param vec Vector of initialization values.
          */
-        Boson(const std::vector<Real> &vec);
+        Vector(const std::vector<Real> &vec);
         /**
          * @return Internal position vector.
          */
@@ -45,19 +45,19 @@ class Boson {
         /**
          * Stream text representation of the Boson to a stream.
          */
-        friend std::ostream& operator<<(std::ostream&, const Boson&);
+        friend std::ostream& operator<<(std::ostream&, const Vector&);
 };
 
-inline Real& Boson::operator[] (int dimension) {
+inline Real& Vector::operator[] (int dimension) {
     return _pos[dimension];
 }
-inline Real Boson::operator[] (int dimension) const {
+inline Real Vector::operator[] (int dimension) const {
     return _pos[dimension];
 }
-inline const std::vector<Real>& Boson::get_position() const {
+inline const std::vector<Real>& Vector::get_position() const {
     return _pos;
 }
-inline int Boson::get_dimensions() const {
+inline int Vector::get_dimensions() const {
     return _pos.size();
 }
 
@@ -66,13 +66,13 @@ inline int Boson::get_dimensions() const {
  * @param rhs Rhs. of the equality check.
  * @return Result of `==` on the underlying container.
  */
-inline bool operator== (const Boson &lhs, const Boson &rhs) {
+inline bool operator== (const Vector &lhs, const Vector &rhs) {
     return lhs.get_position() == rhs.get_position();
 }
 /*
  * @return Result of `!(lhs == rhs)`.
  */
-inline bool operator!= (const Boson &lhs, const Boson &rhs) {
+inline bool operator!= (const Vector &lhs, const Vector &rhs) {
     return !(lhs == rhs);
 }
 
@@ -89,23 +89,23 @@ inline bool operator!= (const Boson &lhs, const Boson &rhs) {
  * provided for each operator declaration.
  */
 
-Real operator* (const Boson &lhs, const Boson& rhs);
-Boson operator* (Boson lhs, Real rhs);
-Boson operator+ (Boson lhs, const Boson &rhs);
-Boson operator+ (Boson lhs, Real rhs);
-Boson operator+ (Real lhs, Boson rhs);
-Boson operator- (Boson lhs, const Boson &rhs);
-Boson operator- (Boson lhs, Real rhs);
-Boson operator- (Real lhs, Boson rhs);
-Boson operator/ (Boson lhs, Real rhs);
-Boson operator/ (Real lhs, Boson rhs);
+Real operator* (const Vector &lhs, const Vector& rhs);
+Vector operator* (Vector lhs, Real rhs);
+Vector operator+ (Vector lhs, const Vector &rhs);
+Vector operator+ (Vector lhs, Real rhs);
+Vector operator+ (Real lhs, Vector rhs);
+Vector operator- (Vector lhs, const Vector &rhs);
+Vector operator- (Vector lhs, Real rhs);
+Vector operator- (Real lhs, Vector rhs);
+Vector operator/ (Vector lhs, Real rhs);
+Vector operator/ (Real lhs, Vector rhs);
 
-Boson& operator+= (Boson &lhs, const Boson &rhs);
-Boson& operator+= (Boson &lhs, Real rhs);
-Boson& operator*= (Boson &lhs, Real rhs);
-Boson& operator-= (Boson &lhs, const Boson &rhs);
-Boson& operator-= (Boson &lhs, Real rhs);
-Boson& operator/= (Boson &lhs, Real rhs);
+Vector& operator+= (Vector &lhs, const Vector &rhs);
+Vector& operator+= (Vector &lhs, Real rhs);
+Vector& operator*= (Vector &lhs, Real rhs);
+Vector& operator-= (Vector &lhs, const Vector &rhs);
+Vector& operator-= (Vector &lhs, Real rhs);
+Vector& operator/= (Vector &lhs, Real rhs);
 
 
 

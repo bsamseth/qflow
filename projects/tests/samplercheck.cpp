@@ -28,15 +28,15 @@ void sampler_sanity(int sampler_type) {
     System after  = sampler.next_configuration();
 
     EXPECT_EQ(init_system.get_dimensions(), before.get_dimensions());
-    EXPECT_EQ(init_system.get_n_bosons(), before.get_n_bosons());
+    EXPECT_EQ(init_system.get_n_particles(), before.get_n_particles());
     EXPECT_EQ(init_system.get_dimensions(), after.get_dimensions());
-    EXPECT_EQ(init_system.get_n_bosons(), after.get_n_bosons());
+    EXPECT_EQ(init_system.get_n_particles(), after.get_n_particles());
 
     // One one particle should be attempted to move each time.
     // All other particles should remain unchanged, and the moving
     // particle shoudl be changed iff acceptance rate has not decreased.
     for (int run = 1; run <= runs; ++run) {
-        int moving = run % init_system.get_n_bosons();
+        int moving = run % init_system.get_n_particles();
 
         long accepted = sampler.get_accepted_steps();
         long total = sampler.get_total_steps();
@@ -45,7 +45,7 @@ void sampler_sanity(int sampler_type) {
 
         ASSERT_TRUE(total == sampler.get_total_steps() - 1);
 
-        for (int i = 0; i < init_system.get_n_bosons(); ++i) {
+        for (int i = 0; i < init_system.get_n_particles(); ++i) {
             if (i == moving) continue;
             ASSERT_EQ(before[i], after[i]);
         }
@@ -62,7 +62,7 @@ void sampler_sanity(int sampler_type) {
         // Minor, minor rounding error might be here, so every so often a
         // ASSERT_DOUBLE_EQ will fail due to being 5 ULP different, where 4 ULP (unit in the last place)
         // is Google tests limit. This is still good enough. ASSERT_FLOAT_EQ works.
-        ASSERT_NEAR(init_system.get_dimensions() * init_system.get_n_bosons() * 0.5, E_L, 1e-13);
+        ASSERT_NEAR(init_system.get_dimensions() * init_system.get_n_particles() * 0.5, E_L, 1e-13);
     }
 }
 

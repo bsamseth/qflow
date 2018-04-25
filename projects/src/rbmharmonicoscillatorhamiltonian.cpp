@@ -5,7 +5,7 @@
 
 Real RBMHarmonicOscillatorHamiltonian::external_potential(System &system) const {
     Real res = 0;
-    for (auto &&particle : system.get_bosons()) {
+    for (auto &&particle : system.get_particles()) {
         res += square(particle);
     }
     return 0.5 * res;

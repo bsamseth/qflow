@@ -1,7 +1,7 @@
 #include <cmath>
 
 #include "definitions.hpp"
-#include "boson.hpp"
+#include "vector.hpp"
 #include "system.hpp"
 #include "simplegaussian.hpp"
 
@@ -9,11 +9,11 @@ namespace {
     Real exponent(const System &system, Real beta) {
         Real g = 0;
         if (system.get_dimensions() == 3) {
-            for (const Boson &boson : system.get_bosons()) {
+            for (const Vector &boson : system.get_particles()) {
                 g += square(boson[0]) + square(boson[1]) + beta * square(boson[2]);
             }
         } else {
-            for (const Boson &boson : system.get_bosons()) {
+            for (const Vector &boson : system.get_particles()) {
                 g += square(boson);
             }
         }

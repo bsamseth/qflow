@@ -2,9 +2,9 @@
 #include <cassert>
 #include <iostream>
 #include "definitions.hpp"
-#include "boson.hpp"
+#include "vector.hpp"
 
-Boson::Boson(int dimensions) : _pos(dimensions, 0.0) {
+Vector::Vector(int dimensions) : _pos(dimensions, 0.0) {
     // Dimension expected to be in [1, 3]. Nothing about the
     // implementation should break for Dim >= 4, but if this is
     // used, it is more likely a programmer typo/bug.
@@ -14,9 +14,9 @@ Boson::Boson(int dimensions) : _pos(dimensions, 0.0) {
 /*
  * Allowed for simplicity in creating test instances.
  */
-Boson::Boson(const std::vector<Real> &pos) : _pos(pos) { }
+Vector::Vector(const std::vector<Real> &pos) : _pos(pos) { }
 
-Real operator* (const Boson &lhs, const Boson &rhs) {
+Real operator* (const Vector &lhs, const Vector &rhs) {
     assert(lhs.get_dimensions() == rhs.get_dimensions());
     Real prod = 0;
     for (int i = 0; i < lhs.get_dimensions(); i++) {
@@ -24,27 +24,27 @@ Real operator* (const Boson &lhs, const Boson &rhs) {
     }
     return prod;
 }
-Boson& operator+= (Boson &lhs, const Boson &rhs) {
+Vector& operator+= (Vector &lhs, const Vector &rhs) {
     assert(lhs.get_dimensions() == rhs.get_dimensions());
     for (int i = 0; i < lhs.get_dimensions(); i++) {
         lhs[i] += rhs[i];
     }
     return lhs;
 }
-Boson& operator-= (Boson &lhs, const Boson &rhs) {
+Vector& operator-= (Vector &lhs, const Vector &rhs) {
     assert(lhs.get_dimensions() == rhs.get_dimensions());
     for (int i = 0; i < lhs.get_dimensions(); i++) {
         lhs[i] -= rhs[i];
     }
     return lhs;
 }
-Boson& operator+= (Boson &lhs, Real rhs) {
+Vector& operator+= (Vector &lhs, Real rhs) {
     for (int i = 0; i < lhs.get_dimensions(); i++) {
         lhs[i] += rhs;
     }
     return lhs;
 }
-Boson& operator*= (Boson &lhs, Real rhs) {
+Vector& operator*= (Vector &lhs, Real rhs) {
     for (int i = 0; i < lhs.get_dimensions(); i++) {
         lhs[i] *= rhs;
     }
@@ -57,41 +57,41 @@ Boson& operator*= (Boson &lhs, Real rhs) {
  * efficiency hit, but the compiler should be able to minimize this well.
  */
 
-Boson& operator-= (Boson &lhs, Real rhs) {
+Vector& operator-= (Vector &lhs, Real rhs) {
     return lhs += -rhs;
 }
-Boson& operator/= (Boson &lhs, Real rhs) {
+Vector& operator/= (Vector &lhs, Real rhs) {
     return lhs *= 1/rhs;
 }
 
-Boson operator+ (Boson lhs, const Boson &rhs) {
+Vector operator+ (Vector lhs, const Vector &rhs) {
     return lhs += rhs;
 }
-Boson operator+ (Boson lhs, Real rhs) {
+Vector operator+ (Vector lhs, Real rhs) {
     return lhs += rhs;
 }
-Boson operator+ (Real lhs, Boson rhs) {
+Vector operator+ (Real lhs, Vector rhs) {
     return rhs += lhs;
 }
-Boson operator-(Boson lhs, const Boson &rhs) {
+Vector operator-(Vector lhs, const Vector &rhs) {
     return lhs -= rhs;
 }
-Boson operator- (Boson lhs, Real rhs) {
+Vector operator- (Vector lhs, Real rhs) {
     return lhs -= rhs;
 }
-Boson operator- (Real lhs, Boson rhs) {
+Vector operator- (Real lhs, Vector rhs) {
     return (rhs -= lhs) *= -1;
 }
-Boson operator/ (Boson lhs, Real rhs) {
+Vector operator/ (Vector lhs, Real rhs) {
     return lhs /= rhs;
 }
-Boson operator* (Boson lhs, Real rhs) {
+Vector operator* (Vector lhs, Real rhs) {
     return lhs *= rhs;
 }
-Boson operator* (Real lhs, Boson rhs) {
+Vector operator* (Real lhs, Vector rhs) {
     return rhs *= lhs;
 }
-std::ostream& operator<<(std::ostream &strm, const Boson &b) {
+std::ostream& operator<<(std::ostream &strm, const Vector &b) {
     strm << "Boson(";
     for (int i = 0; i < b.get_dimensions() - 1; i++)
         strm << b[i] << ", ";

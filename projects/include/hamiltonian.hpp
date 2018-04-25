@@ -68,7 +68,7 @@ class Hamiltonian {
 };
 
 inline Real Hamiltonian::gross_pitaevskii_energy(const System &system, const Wavefunction &psi) const {
-    const int N = system.get_n_bosons();
+    const int N = system.get_n_particles();
     const int D = system.get_dimensions();
     const Real alpha = psi.get_alpha();
     const Real beta = psi.get_beta();
