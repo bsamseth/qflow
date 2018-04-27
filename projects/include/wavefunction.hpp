@@ -72,5 +72,5 @@ inline Real Wavefunction::drift_force(const Vector &particle, int dim_index) con
     throw std::logic_error("Drift force by default not defined.");
 }
 inline std::ostream& operator<<(std::ostream &strm, const Wavefunction &psi) {
-    return strm << "Wavefunciton(" << psi._parameters << ")";
+    return strm << "Wavefunction(" << psi._parameters << ")";
 }
