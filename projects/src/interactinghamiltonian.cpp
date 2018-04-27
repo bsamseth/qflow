@@ -13,7 +13,6 @@ Real InteractingHamiltonian::local_energy(System &system, const Wavefunction &ps
 
     const Real alpha = psi.get_parameters()[0];
     const Real beta = psi.get_parameters()[1];
-    assert(psi.get_parameters().size() >= 3 and _a == psi.get_parameters()[2]);
     const Real one_body_beta_term = - (system.get_dimensions() == 3 ? 2 + beta : system.get_dimensions());
 
     Real E_L = 0;
