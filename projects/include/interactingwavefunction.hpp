@@ -17,6 +17,7 @@ class InteractingWavefunction : public SimpleGaussian {
         virtual Real operator() (System&) const;
         virtual Real correlation(System&) const;
         virtual Real drift_force(const Vector&, int) const;
+        virtual Real laplacian(System &system) const;
 };
 
 inline Real InteractingWavefunction::drift_force(const Vector &, int) const {
