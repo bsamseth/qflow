@@ -1,11 +1,12 @@
 #pragma once
 
 #include <vector>
+#include <algorithm>
 #include <iostream>
 #include "definitions.hpp"
 
 /**
- * N-dimensional vector representation of a boson.
+ * N-dimensional mathematical vector.
  */
 class Vector {
     private:
@@ -23,6 +24,14 @@ class Vector {
          * @param vec Vector of initialization values.
          */
         Vector(const std::vector<Real> &vec);
+        /**
+          * Initialize with a given number of dimensions, and fill values using the
+          * provided generating function.
+          * @param dimensions Number of dimensions to use.
+          * @param g Generator function for values. Must be callable as g().
+          */
+        template<typename Generator>
+        Vector(int dimensions, Generator g);
         /**
          * @return Internal position vector.
          */
@@ -49,6 +58,11 @@ class Vector {
          */
         friend std::ostream& operator<<(std::ostream&, const Vector&);
 };
+
+template<typename Generator>
+Vector::Vector(int dimensions, Generator g) : _pos(dimensions) {
+    std::generate(_pos.begin(), _pos.end(), g);
+}
 
 inline Real& Vector::operator[] (int dimension) {
     return _pos[dimension];
