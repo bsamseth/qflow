@@ -19,8 +19,6 @@ class HarmonicOscillatorHamiltonian: public Hamiltonian {
          * @return Zero, as no interaction is active.
          */
         virtual Real internal_potential(System&) const;
-
-        virtual Real local_energy(System&, const Wavefunction&) const;
 };
 
 inline Real HarmonicOscillatorHamiltonian::internal_potential(__attribute__((unused)) System &system) const {
