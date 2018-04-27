@@ -132,6 +132,6 @@ TEST(Vector, display) {
     std::stringstream actual;
     actual << b;
     std::stringstream expected;
-    expected << "Boson(1, 2, 3)";
+    expected << "Vector(1, 2, 3)";
     EXPECT_EQ(expected.str(), actual.str());
 }
