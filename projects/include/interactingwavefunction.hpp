@@ -11,9 +11,6 @@
  * Class modeling the N-boson wavefunction with the Jastrow factor.
  */
 class InteractingWavefunction : public SimpleGaussian {
-    protected:
-        Real _a = 0;
-
     public:
         InteractingWavefunction(std::initializer_list<Real> parameters = {});
 

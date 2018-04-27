@@ -9,9 +9,6 @@
  * Class modelling a simple N-boson wavefunction w/o interaction.
  */
 class SimpleGaussian : public Wavefunction {
-     protected:
-        Real _alpha = 0.5, _beta = 1;
-
     public:
 
         SimpleGaussian(std::initializer_list<Real> parameters = {});
@@ -29,5 +26,7 @@ class SimpleGaussian : public Wavefunction {
 };
 
 inline Real SimpleGaussian::drift_force(const Vector &boson, int dim_index) const {
-    return -4 * _alpha * (dim_index == 2 ? _beta : 1) * boson[dim_index];
+    const auto alpha = _parameters[0];
+    const auto beta  = _parameters[1];
+    return -4 * alpha * (dim_index == 2 ? beta : 1) * boson[dim_index];
 }
