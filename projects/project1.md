@@ -1,5 +1,5 @@
 # Project 1 - VMC on Bosonic Systems
-
+(To view the code at the point of delivery of project 1, see [`project1-delivery`](https://github.com/bsamseth/FYS4411/releases/tag/project1-delivery))
 ## Build & Run
 
 The project is based on CMake, which means it should be able to build the
