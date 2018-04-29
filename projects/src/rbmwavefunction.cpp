@@ -1,46 +1,39 @@
 #include <vector>
+#include <algorithm>
 #include <cassert>
 
 #include "prettyprint.hpp"
 #include "rbmwavefunction.hpp"
 
 
-
 RBMWavefunction::RBMWavefunction(int M, int N, Real sigma2)
     : _sigma2(sigma2),
       _M(M),
-      _N(N),
-      _a(M),
-      _b(N),
-      _w(M, std::vector<Real>(N))
+      _N(N)
 {
-    std::generate(_a.begin(), _a.end(), rnorm_small_func);
-    std::generate(_b.begin(), _b.end(), rnorm_small_func);
-    for (auto &row : _w) {
-        std::generate(row.begin(), row.end(), rnorm_small_func);
-    }
+    _parameters = Vector(M + N + M*N, rnorm_small_func);
 }
 
 Real RBMWavefunction::u_i(int i, System &system) const{
-    return square(system.degree(i) - _a[i]) / (2 * _sigma2);
+    return square(system.degree(i) - _parameters[a(i)]) / (2 * _sigma2);
 }
 
 Real RBMWavefunction::v_j(int j, System &system) const {
     Real v = 0;
     for (int i = 0; i < _M; ++i) {
-        v += system.degree(i) * _w[i][j];
+        v += system.degree(i) * _parameters[w(i, j)];
     }
-    return _b[j] + v / _sigma2;
+    return _parameters[b(j)] + v / _sigma2;
 }
 
 Real RBMWavefunction::operator() (System &system) const {
 
+    // Ensure that system is compatible with rbm, i.e. P*D = M.
     assert(system.get_dimensions() * system.get_n_particles() == _M);
 
     Real u = 0;
     for (int i = 0; i < _M; ++i) {
-        auto x_i = system.degree(i);
-        u += square( x_i - _a[i] );
+        u += square( system.degree(i) - _parameters[a(i)] );
     }
     Real visible = std::exp(- 0.5 * u / _sigma2);
 
@@ -53,7 +46,7 @@ Real RBMWavefunction::operator() (System &system) const {
 }
 
 Real RBMWavefunction::deriv_a(int k, System &system) const {
-    return (system.degree(k) - _a[k]) / _sigma2;
+    return (system.degree(k) - _parameters[a(k)]) / _sigma2;
 }
 
 Real RBMWavefunction::deriv_b(int k, System &system) const {
@@ -76,12 +69,12 @@ Real RBMWavefunction::laplacian(System &system) const {
 
         Real u = 0, v = 0;
         for (int j = 0; j < _N; ++j) {
-            u += square(_w[k][j]) * exp_v[j] / (1 + exp_v[j]);
-            v += _w[k][j] / (1 + exp_v[j]);
+            u += square(_parameters[w(k, j)]) * exp_v[j] / (1 + exp_v[j]);
+            v += _parameters[w(k, j)] / (1 + exp_v[j]);
         }
         u /= square(_sigma2);
 
-        v = square(_a[k] -system.degree(k) + v) / square(_sigma2);
+        v = square(_parameters[a(k)] - system.degree(k) + v) / square(_sigma2);
 
         res += -1 / _sigma2 - u + v;
     }
@@ -136,41 +129,20 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
             Real E = hamiltonian.local_energy(system, *this);
             E_mean += E;
 
-
-            int k = 0;
-            for (int i = 0; i < _M; ++i, ++k) {
-                auto d = deriv_a(i, system);
-                grad[k] += d;
-                grad_E[k] += E * d;
-            }
-            for (int j = 0; j < _N; ++j, ++k) {
-                auto d = deriv_b(j, system);
-                grad[k] += d;
-                grad_E[k] += E * d;
-            }
-            for (int i = 0; i < _M; ++i) {
-                for (int j = 0; j < _N; ++j, ++k) {
-                    auto d = deriv_w(i, j, system);
-                    grad[k] += d;
-                    grad_E[k] += E * d;
-                }
-            }
-
-            assert(k == grad.size());
+            Vector g = gradient(system);
+            grad += g;
+            grad_E += g * E;
         }
 
         E_mean /= sample_points;
-        grad *= 1/sample_points;
-        grad_E *= 1/sample_points;
-        _parameters -= learning_rate * 2 * (grad_E - E_mean * grad);
+        grad /= sample_points;
+        grad_E /= sample_points;
+        updates = -learning_rate * 2 * (grad_E - E_mean * grad);
+        _parameters += updates;
 
         printf("Iteration %d: <E> = %g\n", iteration, E_mean);
         std::cout << "updates: " << updates << '\n';
-        std::cout << "a = " << _a << "\n";
-        std::cout << "b = " << _b << "\n";
-        std::cout << "w = " << _w << "\n";
-
-
+        std::cout << "params = " << _parameters << '\n';
     }
 }
 
