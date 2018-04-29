@@ -148,7 +148,7 @@ TEST(RBMWavefunction, correctForIdealCase) {
 
         // Random system config.
         for (int i = 0; i < P; ++i) {
-            s(i) = {D};
+            s(i) = Vector{D};
             for (int j = 0; j < D; j++)
                 s(i)[j] = double_gen();
         }

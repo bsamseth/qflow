@@ -58,7 +58,6 @@ Vector& operator-= (Vector &lhs, Real rhs) {
 Vector& operator/= (Vector &lhs, Real rhs) {
     return lhs *= 1/rhs;
 }
-
 Vector operator+ (Vector lhs, const Vector &rhs) {
     return lhs += rhs;
 }

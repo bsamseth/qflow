@@ -18,7 +18,7 @@ class Vector {
          * Initialize a Boson with a given number of dimensions, initialized to origo.
          * @param dimensions Number of dimensions to use.
          */
-        Vector(int dimensions);
+        explicit Vector(int dimensions);
         /**
          * Initialize a Boson from a std::vector.
          * @param vec Vector of initialization values.
@@ -110,6 +110,7 @@ inline bool operator!= (const Vector &lhs, const Vector &rhs) {
 
 Real operator* (const Vector &lhs, const Vector& rhs);
 Vector operator* (Vector lhs, Real rhs);
+Vector operator* (Real lhs, Vector rhs);
 Vector operator+ (Vector lhs, const Vector &rhs);
 Vector operator+ (Vector lhs, Real rhs);
 Vector operator+ (Real lhs, Vector rhs);

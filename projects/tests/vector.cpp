@@ -102,12 +102,12 @@ TEST(Vector, scalarOperations) {
         int dims = dim_gen();
         Real scalar = double_gen();
         Vector a = { random_vec(dims) };
-        Vector b = a * scalar * scalar;
+        Vector b = scalar * a * scalar;
         Vector c = scalar + a + scalar;
         Vector d = (- scalar) - a - scalar;
         Vector e = a / scalar;
         for (int i = 0; i < dims; ++i) {
-            ASSERT_DOUBLE_EQ(a[i] * square(scalar), b[i]);
+            ASSERT_DOUBLE_EQ(scalar * a[i] * scalar, b[i]);
             ASSERT_DOUBLE_EQ(scalar + a[i] + scalar, c[i]);
             ASSERT_DOUBLE_EQ(-scalar - a[i] - scalar, d[i]);
             ASSERT_DOUBLE_EQ(a[i] / scalar, e[i]);
@@ -119,7 +119,7 @@ TEST(Vector, scalarOperations) {
         e /= scalar;
 
         for (int i = 0; i < dims; ++i) {
-            ASSERT_DOUBLE_EQ(a[i] * square(scalar) * scalar, b[i]);
+            ASSERT_DOUBLE_EQ(scalar * a[i] * scalar * scalar, b[i]);
             ASSERT_DOUBLE_EQ(scalar + a[i] + scalar + scalar, c[i]);
             ASSERT_DOUBLE_EQ(-scalar - a[i] - scalar - scalar, d[i]);
             ASSERT_DOUBLE_EQ(a[i] / scalar / scalar, e[i]);
