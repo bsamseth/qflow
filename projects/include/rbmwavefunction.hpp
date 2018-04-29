@@ -24,7 +24,7 @@ class RBMWavefunction : public Wavefunction {
 
     public:
 
-        RBMWavefunction(int M, int P, Real sigma = 1);
+        RBMWavefunction(int M, int N, Real sigma2 = 1);
 
         virtual Vector gradient(System &system) const;
 
