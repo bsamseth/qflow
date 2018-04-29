@@ -41,7 +41,7 @@ class Hamiltonian {
          * @param wavefunction Wavefunction to calculate for.
          * @return Local energy evaluation.
          */
-        virtual Real local_energy(System &system, const Wavefunction &wavefunction) const = 0;
+        virtual Real local_energy(System &system, const Wavefunction &wavefunction) const;
         /**
          * Compute the local energy for a given system and wavefunction, using numerical differentiation.
          * @param system System to calculate for.
@@ -70,8 +70,8 @@ class Hamiltonian {
 inline Real Hamiltonian::gross_pitaevskii_energy(const System &system, const Wavefunction &psi) const {
     const int N = system.get_n_particles();
     const int D = system.get_dimensions();
-    const Real alpha = psi.get_alpha();
-    const Real beta = psi.get_beta();
+    const Real alpha = psi.get_parameters()[0];
+    const Real beta = psi.get_parameters()[1];
     assert(beta == _omega_z);   // GP equation used is for when gamma = beta = omega_z.
     return N * (1 / (4 * alpha) + alpha) * (D == 3 ? 2 + beta : D) * 0.5;
 }

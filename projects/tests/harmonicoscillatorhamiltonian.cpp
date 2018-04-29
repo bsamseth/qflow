@@ -63,8 +63,8 @@ TEST_F(HarmonicOscillatorHamiltonianTest, potential2D) {
 }
 
 TEST_F(HarmonicOscillatorHamiltonianTest, localEnergyAlphaBetaOmegaZ) {
-    SimpleGaussian psi_1(0.6, 1);
-    SimpleGaussian psi_2(0.6, 2.8);
+    SimpleGaussian psi_1({0.6, 1});
+    SimpleGaussian psi_2({0.6, 2.8});
 
     // Calculated by hand/calculator.
     EXPECT_DOUBLE_EQ(6.5105293074990698, H_1.local_energy(*s, psi_1));
@@ -82,7 +82,7 @@ TEST_F(HarmonicOscillatorHamiltonianTest, localEnergyAlphaBetaOmegaZ) {
  */
 TEST_F(HarmonicOscillatorHamiltonianTest, local_energy_simple) {
     const Real alpha = 0.5;
-    SimpleGaussian psi(alpha);
+    SimpleGaussian psi({alpha});
 
     // 1000, why not?
     for (int runs = 0; runs < 1000; ++runs) {

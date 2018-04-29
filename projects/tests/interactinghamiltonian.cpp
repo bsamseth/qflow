@@ -52,8 +52,8 @@ TEST_F(InteractingHamiltonianTest, potential) {
 
 TEST_F(InteractingHamiltonianTest, localEnergy) {
     const Real gamma = 2.8;
-    SimpleGaussian psi_0(0.5, gamma, 0);
-    InteractingWavefunction psi_T(0.5, gamma, a);
+    SimpleGaussian psi_0({0.5, gamma, 0});
+    InteractingWavefunction psi_T({0.5, gamma, a});
     HarmonicOscillatorHamiltonian H_0(gamma);
 
     // With a = 0, no difference to the simple case shoudl be observed.

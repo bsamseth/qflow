@@ -19,10 +19,6 @@ class RBMWavefunction : public Wavefunction {
         const int _M;
         const int _N;
 
-        std::vector<Real> _a;
-        std::vector<Real> _b;
-        std::vector<std::vector<Real>> _w;
-
         Real u_i(int i, System &system) const;
         Real v_j(int j, System &system) const;
 
@@ -30,11 +26,7 @@ class RBMWavefunction : public Wavefunction {
 
         RBMWavefunction(int M, int P, Real sigma = 1);
 
-        void gradient(System &system, std::vector<Real> &grad_vec) const;
-
-        void update_params(std::vector<Real> &grad_vec);
-
-        void set_params(const std::vector<Real> &param_vec);
+        virtual Vector gradient(System &system) const;
 
         virtual Real operator() (System &system) const;
 
@@ -50,27 +42,30 @@ class RBMWavefunction : public Wavefunction {
                            Sampler &sampler,
                            int iterations,
                            int sample_points,
-                           Real learning_rate);
+                           Real learning_rate,
+                           bool verbose = true);
 
-        virtual Real derivative_alpha(const System&) const;
         virtual Real drift_force(const Vector &, int) const;
 
-        const std::vector<Real>& get_visible_bias() const;
-        const std::vector<Real>& get_hidden_bias() const;
-        const std::vector<std::vector<Real>>& get_weights() const;
+        // Helpers. Public so that they are visible to the tests.
+        int a(int i) const;
+        int b(int j) const;
+        int w(int i, int j) const;
+
 };
-inline Real RBMWavefunction::derivative_alpha(const System&) const {
-    throw std::logic_error("Function not defined for RBM, only here for bad design reasons.");
-}
 inline Real RBMWavefunction::drift_force(const Vector &, int) const {
     throw std::logic_error("Function not implemented.");
 }
-inline const std::vector<Real>& RBMWavefunction::get_visible_bias() const {
-    return _a;
+inline int RBMWavefunction::a(int i) const {
+    assert(i >= 0 and i < _M);
+    return i;
 }
-inline const std::vector<Real>& RBMWavefunction::get_hidden_bias() const {
-    return _b;
+inline int RBMWavefunction::b(int j) const {
+    assert(j >= 0 and j < _N);
+    return _M + j;
 }
-inline const std::vector<std::vector<Real>>& RBMWavefunction::get_weights() const {
-    return _w;
+inline int RBMWavefunction::w(int i, int j) const {
+    assert(i >= 0 and i < _M);
+    assert(j >= 0 and j < _N);
+    return _M + _N + i * _N + j;
 }

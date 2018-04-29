@@ -4,12 +4,7 @@
 #include "definitions.hpp"
 #include "vector.hpp"
 
-Vector::Vector(int dimensions) : _pos(dimensions, 0.0) {
-    // Dimension expected to be in [1, 3]. Nothing about the
-    // implementation should break for Dim >= 4, but if this is
-    // used, it is more likely a programmer typo/bug.
-    assert(dimensions > 0 and dimensions < 4);
-}
+Vector::Vector(int dimensions) : _pos(dimensions, 0.0) { }
 
 /*
  * Allowed for simplicity in creating test instances.
@@ -63,7 +58,6 @@ Vector& operator-= (Vector &lhs, Real rhs) {
 Vector& operator/= (Vector &lhs, Real rhs) {
     return lhs *= 1/rhs;
 }
-
 Vector operator+ (Vector lhs, const Vector &rhs) {
     return lhs += rhs;
 }
@@ -92,7 +86,7 @@ Vector operator* (Real lhs, Vector rhs) {
     return rhs *= lhs;
 }
 std::ostream& operator<<(std::ostream &strm, const Vector &b) {
-    strm << "Boson(";
+    strm << "Vector(";
     for (int i = 0; i < b.get_dimensions() - 1; i++)
         strm << b[i] << ", ";
     strm << b[b.get_dimensions() - 1] << ")";

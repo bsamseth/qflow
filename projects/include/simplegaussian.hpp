@@ -10,14 +10,23 @@
  */
 class SimpleGaussian : public Wavefunction {
     public:
-        // Inherit contructor.
-        using Wavefunction::Wavefunction;
+
+        SimpleGaussian(std::initializer_list<Real> parameters = {});
 
         virtual Real operator() (System&) const;
-        virtual Real derivative_alpha(const System&) const;
-        virtual Real drift_force(const Vector&, int dim_index) const;
+
+        virtual Vector gradient(System &system) const;
+
+        virtual Real laplacian(System &system) const;
+
+        Real drift_force(const Vector &boson, int dim_index) const;
+
+        Real derivative_alpha(const System &system) const;
+
 };
 
 inline Real SimpleGaussian::drift_force(const Vector &boson, int dim_index) const {
-    return -4 * _alpha * (dim_index == 2 ? _beta : 1) * boson[dim_index];
+    const auto alpha = _parameters[0];
+    const auto beta  = _parameters[1];
+    return -4 * alpha * (dim_index == 2 ? beta : 1) * boson[dim_index];
 }
