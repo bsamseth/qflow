@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include "prettyprint.hpp"
 #include "definitions.hpp"
 
 /**
@@ -52,11 +53,6 @@ class Vector {
          * @return Value for the given coordinate.
          */
         Real operator[] (int dimension) const;
-
-        /**
-         * Stream text representation of the Boson to a stream.
-         */
-        friend std::ostream& operator<<(std::ostream&, const Vector&);
 };
 
 template<typename Generator>
@@ -127,4 +123,7 @@ Vector& operator-= (Vector &lhs, Real rhs);
 Vector& operator/= (Vector &lhs, Real rhs);
 
 
+inline std::ostream& operator<< (std::ostream& strm, const Vector &vec) {
+    return strm << "Vector" << vec.get_position();
+}
 

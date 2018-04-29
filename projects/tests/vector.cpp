@@ -126,12 +126,3 @@ TEST(Vector, scalarOperations) {
         }
     }
 }
-
-TEST(Vector, display) {
-    Vector b = {{ 1, 2, 3 }};
-    std::stringstream actual;
-    actual << b;
-    std::stringstream expected;
-    expected << "Vector(1, 2, 3)";
-    EXPECT_EQ(expected.str(), actual.str());
-}

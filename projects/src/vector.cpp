@@ -85,10 +85,3 @@ Vector operator* (Vector lhs, Real rhs) {
 Vector operator* (Real lhs, Vector rhs) {
     return rhs *= lhs;
 }
-std::ostream& operator<<(std::ostream &strm, const Vector &b) {
-    strm << "Vector(";
-    for (int i = 0; i < b.get_dimensions() - 1; i++)
-        strm << b[i] << ", ";
-    strm << b[b.get_dimensions() - 1] << ")";
-    return strm;
-}
