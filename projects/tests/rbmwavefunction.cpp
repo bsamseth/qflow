@@ -157,7 +157,22 @@ TEST(RBMWavefunction, correctForIdealCase) {
         ASSERT_NEAR(expected, H.local_energy_numeric(s, rbm), expected * 1e-6);
         ASSERT_NEAR(expected, H.local_energy(s, rbm), expected * 1e-15);
     }
+}
 
+TEST(RBMWavefunction, trainSimpleCase) {
+    System init_system (1, 1);
+    RBMWavefunction rbm (1, 2);
+    MetropolisSampler sampler (init_system, rbm, 0.5);
+    RBMHarmonicOscillatorHamiltonian H;
+
+    rbm.train(H, sampler, 10000, 100, 0.9, false);
+
+    Real E_L = 0;
+    for (int i = 0; i < 1000; ++i)
+        E_L += H.local_energy(sampler.next_configuration(), rbm);
+    E_L /= 1000;
+
+    ASSERT_NEAR(0.5, E_L, 1e-3);
 }
 
 
