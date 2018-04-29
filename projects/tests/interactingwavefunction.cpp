@@ -7,16 +7,6 @@
 #include "simplegaussian.hpp"
 #include "interactingwavefunction.hpp"
 
-void EXPECT_BOSON_EQ(const Vector &b1, const Vector &b2, Real tol = -1) {
-    ASSERT_EQ(b1.get_dimensions(), b2.get_dimensions());
-    for (int d = 0; d < b1.get_dimensions(); ++d) {
-        if (tol > 0)
-            EXPECT_NEAR(b1[d], b2[d], tol);
-        else
-            EXPECT_DOUBLE_EQ(b1[d], b2[d]);
-    }
-}
-
 TEST(InteractingWavefunction, zero_system) {
     System s (10, 3);
     InteractingWavefunction psi ({0.5, 1, 0});
