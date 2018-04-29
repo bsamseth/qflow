@@ -15,12 +15,12 @@ class Vector {
     public:
 
         /**
-         * Initialize a Boson with a given number of dimensions, initialized to origo.
+         * Initialize a vector with a given number of dimensions, initialized to origo.
          * @param dimensions Number of dimensions to use.
          */
         explicit Vector(int dimensions);
         /**
-         * Initialize a Boson from a std::vector.
+         * Initialize a vector from a std::vector.
          * @param vec Vector of initialization values.
          */
         Vector(const std::vector<Real> &vec);
@@ -37,7 +37,7 @@ class Vector {
          */
         const std::vector<Real>& get_position() const;
         /**
-         * @return Number of dimensions of the boson.
+         * @return Number of dimensions of the vector.
          */
         int get_dimensions() const;
         int size() const;
@@ -49,7 +49,7 @@ class Vector {
         Real& operator[] (int dimension);
         /**
          * @param dimensions The coordinate to get.
-         * @return Reference to value for the given coordinate.
+         * @return Value for the given coordinate.
          */
         Real operator[] (int dimension) const;
 
@@ -63,7 +63,6 @@ template<typename Generator>
 Vector::Vector(int dimensions, Generator g) : _pos(dimensions) {
     std::generate(_pos.begin(), _pos.end(), g);
 }
-
 inline Real& Vector::operator[] (int dimension) {
     return _pos[dimension];
 }
@@ -98,11 +97,11 @@ inline bool operator!= (const Vector &lhs, const Vector &rhs) {
 
 /*
  * All the following operator functions are defined as one would
- * expect when interpreting Bosons as mathematical vectors.
+ * expect when interpreting vectors as mathematical vectors.
  *
- *   Boson (+-) Boson  => Elementwise sum/difference.
- *   Boson * Boson     => Inner product
- *   Boson (+*-/) Real => Elementwise add/mult/sub/div by scalar.
+ *   vector (+-) vector  => Elementwise sum/difference.
+ *   vector * vector     => Inner product
+ *   vector (+*-/) Real => Elementwise add/mult/sub/div by scalar.
  *
  * For the sake of breviety, no further documentation is therefore
  * provided for each operator declaration.
