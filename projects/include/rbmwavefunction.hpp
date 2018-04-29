@@ -42,7 +42,8 @@ class RBMWavefunction : public Wavefunction {
                            Sampler &sampler,
                            int iterations,
                            int sample_points,
-                           Real learning_rate);
+                           Real learning_rate,
+                           bool verbose = true);
 
         virtual Real drift_force(const Vector &, int) const;
 

@@ -109,7 +109,8 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
                             Sampler &sampler,
                             int iterations,
                             int sample_points,
-                            Real learning_rate) {
+                            Real learning_rate,
+                            bool verbose) {
 
 
     for (int iteration = 0; iteration < iterations; ++iteration) {
@@ -137,12 +138,14 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
         E_mean /= sample_points;
         grad /= sample_points;
         grad_E /= sample_points;
-        updates = -learning_rate * 2 * (grad_E - E_mean * grad);
-        _parameters += updates;
 
-        printf("Iteration %d: <E> = %g\n", iteration, E_mean);
-        std::cout << "updates: " << updates << '\n';
-        std::cout << "params = " << _parameters << '\n';
+        updates = (-learning_rate * 2) * (grad_E - (E_mean * grad));
+        _parameters += -learning_rate * 2 * (grad_E - E_mean * grad);
+
+        if (verbose) {
+            printf("Iteration %d: <E> = %g\n", iteration, E_mean);
+            std::cout << "params = " << _parameters << '\n';
+        }
     }
 }
 
