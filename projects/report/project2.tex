@@ -368,6 +368,45 @@ Computational physics II: Quantum mechanical systems\\
         2\gamma\alpha_i,\label{eq:G-i-ridge}
     \end{align}
 
+
+
+    \section{Results}
+
+    \subsection{One Particle in One Dimension} 
+
+    As a first test of the RBM, we apply it to the very simple simple case of a
+    single particle in one dimension. We will use the standard metropolis
+    sampling algorithm to begin with. \autoref{fig:rbm-1d-1p} shows the learned
+    wavefunction after $\num{2e4}$ iterations, using a learning rate of $0.9$,
+    and no regularization. The energy produced by this wavefunction comes out as
+    $0.50033\pm \num{5.6e-6}\si{\au}$, compared to the exact value of
+    $\SI{0.5}{\au}$. The error given here is the standard error of the mean
+    local energy, as calculated with the Blocking method discussed in project 1,
+    using $2^{15}$ samples. If we allow for more training, the energy is lower
+    somewhat more, although the gains diminish as $E_L$ approaches its ideal
+    value.
+
+    Applying regularization in this case, for almost any reasonable choice for
+    $\gamma$ (e.g. $0.1$), the RBM converges \emph{very} quickly to the exact
+    wavefunction, by setting all parameters as small as possible. The effect of
+    regularization is artificially magnified in this situation, as it so happens
+    that the minimizing choice of parameters coincide with the minimizing choice
+    for the regularization term, i.e the trivial $\vec\alpha=\vec 0$ solution.
+    We cannot expect this to work as well for less trivial tests, but it serves
+    as a nice sanity check for the developed codes.
+
+
+\end{multicols}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../results/rbm-1d-1p.png}
+    \caption{Ideal and learned wavefunction for one particle in one dimension.}
+    \label{fig:rbm-1d-1p}
+\end{figure}
+
+\begin{multicols}{2}
+
     \printbibliography
 
 \end{multicols}
