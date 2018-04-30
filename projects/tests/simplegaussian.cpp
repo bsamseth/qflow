@@ -27,7 +27,7 @@ TEST(SimpleGaussian, call_with_beta) {
     EXPECT_DOUBLE_EQ(0.096971040514681181, psi(s));
     EXPECT_DOUBLE_EQ(-4.666685792898267, psi.derivative_alpha(s));
     for (int d = 0; d < s.get_dimensions(); ++d) {
-        EXPECT_EQ(F_0[d], psi.drift_force(s[0], d));
+        EXPECT_EQ(F_0[d], psi.drift_force(s, 0, d));
     }
 }
 
@@ -49,7 +49,7 @@ TEST(SimpleGaussian, call_2D) {
 
     Vector F_2 = { {-10, -12} };
     for (int d = 0; d < s.get_dimensions(); ++d) {
-        EXPECT_EQ(F_2[d], psi.drift_force(s[2], d));
+        EXPECT_EQ(F_2[d], psi.drift_force(s, 2, d));
     }
 }
 

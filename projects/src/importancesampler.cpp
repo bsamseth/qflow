@@ -26,7 +26,7 @@ void ImportanceSampler::perturb_system() {
 
     for (int d = 0; d < boson.get_dimensions(); ++d) {
         boson[d] += rnorm(rand_gen) * std::sqrt(_step)
-                   + 0.5 * _step * _wavefunction->drift_force(boson, d);
+                   + 0.5 * _step * _wavefunction->drift_force(_system_new, _particle_to_move, d);
     }
 
     _psi_new = (*_wavefunction)(_system_new);
@@ -38,8 +38,8 @@ Real ImportanceSampler::acceptance_probability() const {
 
     Real green1 = 0, green2 = 0;
     for (int d = 0; d < r_old.get_dimensions(); ++d) {
-        green1 += square(r_old[d] - r_new[d] - 0.5 * _step * _wavefunction->drift_force(r_new, d));
-        green2 += square(r_new[d] - r_old[d] - 0.5 * _step * _wavefunction->drift_force(r_old, d));
+        green1 += square(r_old[d] - r_new[d] - 0.5 * _step * _wavefunction->drift_force(_system_new, _particle_to_move, d));
+        green2 += square(r_new[d] - r_old[d] - 0.5 * _step * _wavefunction->drift_force(_system_old, _particle_to_move, d));
     }
 
     // Ratio = exp(-green1/(4*D*step)) / exp(-green2/(4*D*step))

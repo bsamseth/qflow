@@ -38,7 +38,7 @@ class Wavefunction {
         virtual Vector gradient(System &system) const = 0;
 
 
-        virtual Real drift_force(const Vector &particle, int dim_index) const;
+        virtual Real drift_force(const System &system, int k, int dim_index) const;
 
         /**
          * Return sum_{particles} laplacian(Psi)/Psi.
@@ -66,8 +66,9 @@ inline const Vector& Wavefunction::get_parameters() const {
 inline void Wavefunction::set_parameters(const Vector &parameters) {
     _parameters = parameters;
 }
-inline Real Wavefunction::drift_force(const Vector &particle, int dim_index) const {
-    SUPPRESS_WARNING(particle);
+inline Real Wavefunction::drift_force(const System &system, int k, int dim_index) const {
+    SUPPRESS_WARNING(system);
+    SUPPRESS_WARNING(k);
     SUPPRESS_WARNING(dim_index;)
     throw std::logic_error("Drift force by default not defined.");
 }

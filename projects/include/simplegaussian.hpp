@@ -19,14 +19,14 @@ class SimpleGaussian : public Wavefunction {
 
         virtual Real laplacian(System &system) const;
 
-        Real drift_force(const Vector &boson, int dim_index) const;
+        Real drift_force(const System &system, int k, int dim_index) const;
 
         Real derivative_alpha(const System &system) const;
 
 };
 
-inline Real SimpleGaussian::drift_force(const Vector &boson, int dim_index) const {
+inline Real SimpleGaussian::drift_force(const System &system, int k, int dim_index) const {
     const auto alpha = _parameters[0];
     const auto beta  = _parameters[1];
-    return -4 * alpha * (dim_index == 2 ? beta : 1) * boson[dim_index];
+    return -4 * alpha * (dim_index == 2 ? beta : 1) * system[k][dim_index];
 }

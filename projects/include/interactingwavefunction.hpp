@@ -16,11 +16,11 @@ class InteractingWavefunction : public SimpleGaussian {
 
         virtual Real operator() (System&) const;
         virtual Real correlation(System&) const;
-        virtual Real drift_force(const Vector&, int) const;
+        virtual Real drift_force(const System&, int, int) const;
         virtual Real laplacian(System &system) const;
 };
 
-inline Real InteractingWavefunction::drift_force(const Vector &, int) const {
+inline Real InteractingWavefunction::drift_force(const System &, int, int) const {
     throw std::logic_error("Importance sampling not implemented for interacting system.");
 }
 
