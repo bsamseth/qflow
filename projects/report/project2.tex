@@ -260,7 +260,7 @@ Computational physics II: Quantum mechanical systems\\
     Minimizing the energy will yield the best possible wavefunction obtainable
     within the model. The energy is expressed as
     \begin{align}
-        E[H] = \expval{H} = \frac{\int \dd{\vec X} \Psi^* \hat H \Psi}{\int
+        Q = E[H] = \expval{H} = \frac{\int \dd{\vec X} \Psi^* \hat H \Psi}{\int
         \Psi^*\Psi}.
     \end{align}
     where $\vec X$ is the vector containing all the positions of the particles in
@@ -285,8 +285,7 @@ Computational physics II: Quantum mechanical systems\\
     where $\vec X_i$ are $n$ randomly drawn positions from the PDF $P(\vec X)$.
     We have therefore that estimating the average value of $E_L$ yields an
     approximated value for $\expval{H}$. 
-
-
+    
     \subsection{Optimization}
 
     In order to train the model to minimize $\expval{\hat H}$ we need to know
@@ -350,6 +349,24 @@ Computational physics II: Quantum mechanical systems\\
     not pursue this large $P$ regime much further in this project, but this is
     something to note, if the RBM prove to be fruitful.
 
+    \subsection{Regularization}
+
+    We may wish to impose some regularization in the cost function as well.
+    Often times this can help guide the optimization out of local minima, as
+    well as shaping ill-formed cost functions. We can modify the cost function
+    as follows:
+    \begin{align}
+        Q = \expval{H} + \gamma\norm{\vec \alpha}_d^d,
+    \end{align} 
+    where $\gamma>0$ is a hyper-parameter controlling the amount of
+    regularization, and $\norm{\cdot}_d^d$ is the $L_d$ norm. Two of the most widely used
+    types of regularization are Ridge and Lasso, which use $d=2$ and $d=1$,
+    respectively. In order to keep the gradient simple, we will only implement
+    Ridge loss. We obtain then a slightly modified form for $G_i$:
+    \begin{align}
+        G_i = \pdv{\expval{E_L}}{\alpha_i} +
+        2\gamma\alpha_i,\label{eq:G-i-ridge}
+    \end{align}
 
     \printbibliography
 
