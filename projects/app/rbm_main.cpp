@@ -13,10 +13,10 @@ using std::endl;
 int main() {
 
     System init_system (1, 1);
-    RBMWavefunction rbm (1, 2);
+    RBMWavefunction rbm (1, 2, 1);
     MetropolisSampler sampler (init_system, rbm, 0.5);
     RBMHarmonicOscillatorHamiltonian H;
 
-    rbm.train(H, sampler, 100000, 1000, .9);
+    rbm.train(H, sampler, 10000, 1000, 0.5, 0.1);
 
 }
