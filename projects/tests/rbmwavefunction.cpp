@@ -165,7 +165,7 @@ TEST(RBMWavefunction, trainSimpleCase) {
     MetropolisSampler sampler (init_system, rbm, 0.5);
     RBMHarmonicOscillatorHamiltonian H;
 
-    rbm.train(H, sampler, 10000, 100, 0.9, false);
+    rbm.train(H, sampler, 10000, 100, 0.9, 0.0, false);
 
     Real E_L = 0;
     for (int i = 0; i < 1000; ++i)
