@@ -14,11 +14,7 @@ RBMWavefunction::RBMWavefunction(int M, int N, Real sigma2)
     _parameters = Vector(M + N + M*N, rnorm_small_func);
 }
 
-Real RBMWavefunction::u_i(int i, System &system) const{
-    return square(system.degree(i) - _parameters[a(i)]) / (2 * _sigma2);
-}
-
-Real RBMWavefunction::v_j(int j, System &system) const {
+Real RBMWavefunction::v_j(int j, const System &system) const {
     Real v = 0;
     for (int i = 0; i < _M; ++i) {
         v += system.degree(i) * _parameters[w(i, j)];
@@ -102,6 +98,15 @@ Vector RBMWavefunction::gradient(System &system) const {
     assert(k == grad_vec.size());
 
     return grad_vec;
+}
+
+Real RBMWavefunction::drift_force(const System &system, int particle_index, int dim_index) const {
+    const int k = system.get_dimensions() * particle_index + dim_index;
+    Real v = 0;
+    for (int j = 0; j < _N; ++j) {
+        v += _parameters[w(k, j)] / (1 + std::exp(-v_j(j, system)));
+    }
+    return 2.0 / _sigma2 * (_parameters[a(k)] - system.degree(k) + v);
 }
 
 

@@ -19,8 +19,7 @@ class RBMWavefunction : public Wavefunction {
         const int _M;
         const int _N;
 
-        Real u_i(int i, System &system) const;
-        Real v_j(int j, System &system) const;
+        Real v_j(int j, const System &system) const;
 
     public:
 
@@ -46,7 +45,7 @@ class RBMWavefunction : public Wavefunction {
                            Real gamma = 0,
                            bool verbose = true);
 
-        virtual Real drift_force(const Vector &, int) const;
+        virtual Real drift_force(const System &system, int particle_index, int) const;
 
         // Helpers. Public so that they are visible to the tests.
         int a(int i) const;
@@ -54,9 +53,7 @@ class RBMWavefunction : public Wavefunction {
         int w(int i, int j) const;
 
 };
-inline Real RBMWavefunction::drift_force(const Vector &, int) const {
-    throw std::logic_error("Function not implemented.");
-}
+
 inline int RBMWavefunction::a(int i) const {
     assert(i >= 0 and i < _M);
     return i;
