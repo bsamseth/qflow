@@ -65,7 +65,7 @@ Real RBMWavefunction::laplacian(System &system) const {
 
         Real u = 0, v = 0;
         for (int j = 0; j < _N; ++j) {
-            u += square(_parameters[w(k, j)]) * exp_v[j] / (1 + exp_v[j]);
+            u += square(_parameters[w(k, j)]) * exp_v[j] / square(1 + exp_v[j]);
             v += _parameters[w(k, j)] / (1 + exp_v[j]);
         }
         u /= square(_sigma2);
