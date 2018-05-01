@@ -328,7 +328,7 @@ Computational physics II: Quantum mechanical systems\\
         \frac{1}{\Psi}\pdv[2]{}{X_k}\Psi 
         &= -\frac{1}{\sigma^2} - \sum_j^N
         \frac{w_{kj}^2}{\sigma^4}
-        \frac{e^{-v_j}}{\qty(1+e^{-v_j})} \\
+        \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2} \\
         &\quad{   }\quad{      }  +
         \frac{1}{\sigma^4}\qty(-X_k+\sum_j^N \frac{w_{kj}}{1+e^{-v_j}})^2
         \end{split}
@@ -454,7 +454,7 @@ Computational physics II: Quantum mechanical systems\\
         \begin{split}
         \pdv{}{X_k}\qty(\frac{w_{kj}}{1+e^{-v_j}}) &=
             w_{kj}\frac{e^{-v_j}}{\qty(1+e^{-v_j})^2}\pdv{(-v_j)}{X_k}\\
-        &= -\frac{w_{kj}^2}{\sigma^2} \frac{e^{-v_j}}{\qty(1+e^{-v_j})}
+        &= -\frac{w_{kj}^2}{\sigma^2} \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2}
         \end{split}
     \end{align}
 
@@ -471,7 +471,7 @@ Computational physics II: Quantum mechanical systems\\
         \begin{split}
         &= -\frac{1}{\sigma^2} - \sum_j^N
         \frac{w_{kj}^2}{\sigma^4}
-        \frac{e^{-v_j}}{\qty(1+e^{-v_j})} \\
+        \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2} \\
         &\quad{   }\quad{      }  +
         \frac{1}{\sigma^4}\qty(a_k-x_k+\sum_j^N \frac{w_{kj}}{1+e^{-v_j}})^2
         \end{split}\numberthis\label{eq:E-L-second-deriv}
