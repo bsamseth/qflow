@@ -3,6 +3,7 @@
 
 #include "prettyprint.hpp"
 #include "metropolissampler.hpp"
+#include "importancesampler.hpp"
 #include "rbmharmonicoscillatorhamiltonian.hpp"
 #include "rbmwavefunction.hpp"
 
@@ -162,7 +163,7 @@ TEST(RBMWavefunction, correctForIdealCase) {
 TEST(RBMWavefunction, trainSimpleCase) {
     System init_system (1, 1);
     RBMWavefunction rbm (1, 2);
-    MetropolisSampler sampler (init_system, rbm, 0.5);
+    ImportanceSampler sampler (init_system, rbm, 0.5);
     RBMHarmonicOscillatorHamiltonian H;
 
     rbm.train(H, sampler, 10000, 100, 0.9, 0.0, false);
