@@ -369,6 +369,102 @@ Computational physics II: Quantum mechanical systems\\
     \end{align}
 
 
+    \section{Gibbs Sampling}
+
+    For the particular case of systems like the ones we are currently
+    considering, we know that the true wavefunction is positive definite. This
+    allows us to use (yet) another sampling algorithm: Gibbs sampling. In order
+    for us to make efficient use of Gibbs sampling, we have to change our
+    wavefunction representation a bit,
+    \begin{align}
+        \Psi_G(\vec x) = \sqrt{\Psi(\vec x)} = \sqrt{F_{RBM}(\vec
+        x)}\label{eq:Psi-gibbs-def},
+    \end{align}
+    such that $F_{RBM}$ models the probability $\abs{\Psi_G}^2$ directly, instead
+    of the probability amplitude $\Psi_G$. This transformation is only valid in
+    general when the wavefunction is positive definite, while the original
+    definition $\Psi$ remains valid in general. 
+
+    \subsection{The Algorithm}
+    Gibbs sampling comes up whenever we are dealing with a joint PDF from which 
+    we cannot easily (or at all) sample values.
+    In our case we are dealing with the PDF from \autoref{eq:F-RBM-def}, which
+    does not have a standard, direct sampling strategy.
+    In general, given a PDF $P(X_1=x_1, X_2=x_2,\dots,X_n=x_n)$, Gibbs relies on
+    the conditionals $P(X_i=x_i | X_j = x_j \forall j\neq i)$. \emph{If} these
+    conditionals are easy to sample from (i.e. can be expressed as one of the
+    known distributions for which direct sampling is possible), then we may
+    obtain approximate samples from the joint PDF by iteratively sampling
+    individual values from the conditionals. Going back to
+    \autoref{eq:F-RBM-def}, the algorithm becomes:
+
+\begin{algorithm}[H]
+    \caption{Gibbs sampling of $\vec x$ from $F_{RBM}(\vec x, \vec h)$}
+    \label{alg:gibbs}
+\begin{algorithmic}
+    \REQUIRE $n$ number of samples to yield.
+    \ENSURE $\vec x,\vec h \drawfrom P(\vec x, \vec h)$.
+    \STATE Initialize $\vec x$ randomly (e.g. normally).
+    \FOR{$n$ iterations}
+        \STATE $\vec h \setfrom P(\vec h | \vec x)$
+        \STATE $\vec x \setfrom P(\vec x | \vec h)$
+        \STATE Save $\vec x$ as the i-th sample.
+    \ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+    From \autoref{alg:gibbs} is is clear that we need to be able to sample from
+    both $P(\vec x|\vec h)$ and $P(\vec h|\vec x)$. These are simply stated here
+    without further derivation:
+
+    \begin{align}
+        P(\vec x|\vec h) &= \mathcal{N}\qty(\vec x; \vec a + \vec w\vec h,
+        \sigma^2)\label{eq:P-x-cond-h},\\
+        P(\vec h|\vec x) &= \prod_{j}^N \frac{e^{v_j h_j}}{1+e^{v_j}}
+    \end{align}
+    The first conditional is just the normal distribution, which there are
+    standard tools to sample from. The second seems a little harder, until we
+    look at it for one single $h_i$:
+    \begin{align}
+        P(h_j|\vec x) &= \frac{e^{v_j h_j}}{1+e^{v_j}}
+        \Rightarrow P(h_j=1|\vec x) = \frac{1}{1+e^{-v_j}}.
+    \end{align}
+    So to sample $h_i$ we set it to 1 with probability
+    $p=\qty(1+\exp(-v_j))^{-1}$, and 0 otherwise.
+    
+    \subsection{New Expressions for $\Psi_G$}
+
+    Using $\Psi_G$ as our wavefunction will slightly change all the expressions
+    for the derivatives. Luckily, not much work is needed to redo them all using
+    the following observations:
+    \begin{align}
+        \ln \Psi_G &= \ln \sqrt{\Psi} = \frac{1}{2}\ln \Psi,\\
+    \intertext{and}
+        \frac{1}{\Psi}\pdv{\Psi}{x_k} &= \pdv{\ln\Psi}{\Psi}\pdv{\Psi}{x_k} =
+        \pdv{\ln\Psi}{x_k}\\
+        \Rightarrow \frac{1}{\Psi_G}\pdv{\Psi_G}{x_k} &= \frac{1}{2}
+        \frac{1}{\Psi}\pdv{\Psi}{x_k}.
+    \end{align}
+
+    Propagating this factor of a half through all the expressions quite
+    easily yields:
+
+    \begin{align}
+        \frac{1}{\Psi_G}\pdv{\Psi_G}{a_k} &=
+        \frac{x_k-a_k}{2\sigma^2}\label{eq:pdv-a-gibbs}\\
+        \frac{1}{\Psi_G}\pdv{\Psi_G}{b_k} &= \frac{1}{2\qty(1 +
+        e^{-v_k})}\label{eq:pdv-b-gibbs}\\
+        \frac{1}{\Psi_G}\pdv{\Psi_G}{w_{kl}} &= \frac{1}{1 +
+        e^{-v_l}}\frac{x_k}{2\sigma^2}\label{eq:pdv-w-gibbs}
+    \end{align}
+    \begin{align*}
+        \frac{1}{\Psi_G}\pdv[2]{}{X_k}\Psi_G &= -\frac{1}{2\sigma^2} - \sum_j^N
+        \frac{w_{kj}^2}{2\sigma^4}
+        \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2} \\
+        &\quad{   }\quad{      }  +
+        \frac{1}{4\sigma^4}\qty(a_k-x_k+\sum_j^N \frac{w_{kj}}{1+e^{-v_j}})^2
+        \numberthis\label{eq:E-L-second-deriv-gibbs}
+    \end{align*}
 
     \section{Results}
 
