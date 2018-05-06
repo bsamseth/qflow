@@ -32,6 +32,7 @@ class System {
         Vector& operator() (int index);
 
         Real degree(int k) const;
+        Real& degree(int k);
 
         Real distance(int i, int j);
 
@@ -72,6 +73,9 @@ inline const Vector& System::operator[] (int index) const {
 }
 inline Real System::degree(int k) const {
     return _particles[k / get_dimensions()][k % get_dimensions()];
+}
+inline Real& System::degree(int k) {
+    return (*this)(k / get_dimensions())[k % get_dimensions()];
 }
 inline bool System::operator== (const System &other) const {
     return _particles == other.get_particles();
