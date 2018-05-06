@@ -33,7 +33,7 @@ def load_library():
 cmake_run()
 load_library()
 
-from cppyy.gbl import Vector, System, RBMHarmonicOscillatorHamiltonian, RBMInteractingHamiltonian, RBMWavefunction, MetropolisSampler, ImportanceSampler
+from cppyy.gbl import Vector, System, RBMHarmonicOscillatorHamiltonian, RBMInteractingHamiltonian, RBMWavefunction, MetropolisSampler, ImportanceSampler, GibbsSampler
 
 
 def array_to_vector(arr):
