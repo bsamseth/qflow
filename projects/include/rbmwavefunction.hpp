@@ -13,17 +13,16 @@
 
 class RBMWavefunction : public Wavefunction {
 
-    protected:
+    public:
 
         const Real _sigma2;
+        const Real _root_factor;
         const int _M;
         const int _N;
 
-        Real v_j(int j, const System &system) const;
+        constexpr static Real GIBBS_FACTOR = 0.5;
 
-    public:
-
-        RBMWavefunction(int M, int N, Real sigma2 = 1);
+        RBMWavefunction(int M, int N, Real sigma2 = 1, Real root_factor = 1);
 
         virtual Vector gradient(System &system) const;
 
@@ -48,6 +47,7 @@ class RBMWavefunction : public Wavefunction {
         virtual Real drift_force(const System &system, int particle_index, int) const;
 
         // Helpers. Public so that they are visible to the tests.
+        Real v_j(int j, const System &system) const;
         int a(int i) const;
         int b(int j) const;
         int w(int i, int j) const;

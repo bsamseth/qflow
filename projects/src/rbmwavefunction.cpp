@@ -6,8 +6,9 @@
 #include "rbmwavefunction.hpp"
 
 
-RBMWavefunction::RBMWavefunction(int M, int N, Real sigma2)
+RBMWavefunction::RBMWavefunction(int M, int N, Real sigma2, Real root_factor)
     : _sigma2(sigma2),
+      _root_factor(root_factor),
       _M(M),
       _N(N)
 {
@@ -38,19 +39,22 @@ Real RBMWavefunction::operator() (System &system) const {
         hidden *= (1 + std::exp(v_j(j, system)));
     }
 
-    return visible * hidden;
+    if (_root_factor < 1)
+        return std::sqrt(visible * hidden);
+    else
+        return visible * hidden;
 }
 
 Real RBMWavefunction::deriv_a(int k, System &system) const {
-    return (system.degree(k) - _parameters[a(k)]) / _sigma2;
+    return _root_factor * (system.degree(k) - _parameters[a(k)]) / _sigma2;
 }
 
 Real RBMWavefunction::deriv_b(int k, System &system) const {
-    return 1 / (1 + std::exp(-v_j(k, system)));
+    return _root_factor / (1 + std::exp(-v_j(k, system)));
 }
 
 Real RBMWavefunction::deriv_w(int k, int l, System &system) const {
-    return 1 / (1 + std::exp(-v_j(l, system))) * system.degree(k) / _sigma2;
+    return _root_factor / (1 + std::exp(-v_j(l, system))) * system.degree(k) / _sigma2;
 }
 
 Real RBMWavefunction::laplacian(System &system) const {
@@ -72,7 +76,7 @@ Real RBMWavefunction::laplacian(System &system) const {
 
         v = square(_parameters[a(k)] - system.degree(k) + v) / square(_sigma2);
 
-        res += -1 / _sigma2 - u + v;
+        res += -_root_factor / _sigma2 - _root_factor * u + square(_root_factor) * v;
     }
 
     return res;
@@ -106,7 +110,7 @@ Real RBMWavefunction::drift_force(const System &system, int particle_index, int 
     for (int j = 0; j < _N; ++j) {
         v += _parameters[w(k, j)] / (1 + std::exp(-v_j(j, system)));
     }
-    return 2.0 / _sigma2 * (_parameters[a(k)] - system.degree(k) + v);
+    return _root_factor * 2.0 / _sigma2 * (_parameters[a(k)] - system.degree(k) + v);
 }
 
 
