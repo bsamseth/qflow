@@ -57,6 +57,13 @@ class Hamiltonian {
          */
         virtual Real kinetic_energy(System &system, const Wavefunction &wavefunction) const;
         /**
+         * Compute the kinetic energy for a given system and wavefunction, using numerical differentiation.
+         * @param system System to calculate for.
+         * @param wavefunction Wavefunction to calculate for.
+         * @return Kinetic energy evaluation.
+         */
+        virtual Real kinetic_energy_numeric(System &system, const Wavefunction &wavefunction) const;
+        /**
          * Compute the Gross-Pitaevskii ideal case energy for a given system and wavefunction.
          * @param system System to calculate for.
          * @param wavefunction Wavefunction to calculate for.

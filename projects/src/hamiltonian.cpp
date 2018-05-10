@@ -7,7 +7,7 @@
 
 Hamiltonian::Hamiltonian(Real omega_z, Real a, Real h) : _omega_z(omega_z), _a(a), _h(h) {}
 
-Real Hamiltonian::kinetic_energy(System &system, const Wavefunction &psi) const {
+Real Hamiltonian::kinetic_energy_numeric(System &system, const Wavefunction &psi) const {
     Real E_k = -2 * (system.get_n_particles() * system.get_dimensions()) * psi(system);
 
     for (int i = 0; i < system.get_n_particles(); ++i) {
@@ -24,17 +24,21 @@ Real Hamiltonian::kinetic_energy(System &system, const Wavefunction &psi) const 
     return -0.5 * E_k / (_h * _h);
 }
 
+Real Hamiltonian::kinetic_energy(System &system, const Wavefunction &psi) const {
+    return -0.5 * psi.laplacian(system);
+}
+
 Real Hamiltonian::local_energy_numeric(System &system, const Wavefunction &psi) const {
     Real wavefunc = psi(system);
     if (wavefunc == 0) {
         return std::numeric_limits<Real>::max();
     }
 
-    return kinetic_energy(system, psi) / wavefunc
+    return kinetic_energy_numeric(system, psi) / wavefunc
          + external_potential(system)
          + internal_potential(system);
 }
 
 Real Hamiltonian::local_energy(System &system, const Wavefunction &psi) const {
-    return external_potential(system) + internal_potential(system) - 0.5 * psi.laplacian(system);
+    return external_potential(system) + internal_potential(system) + kinetic_energy(system, psi);
 }
