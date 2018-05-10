@@ -83,23 +83,19 @@ Real RBMWavefunction::laplacian(System &system) const {
 }
 
 Vector RBMWavefunction::gradient(System &system) const {
-    Vector grad_vec(_M + _N + _M * _N);
-
-    int k = 0;
+    Vector grad_vec(_parameters.size());
 
     for (int i = 0; i < _M; ++i) {
-        grad_vec[k++] = deriv_a(i, system);
+        grad_vec[a(i)] = deriv_a(i, system);
     }
     for (int j = 0; j < _N; ++j) {
-        grad_vec[k++] = deriv_b(j, system);
+        grad_vec[b(j)] = deriv_b(j, system);
     }
     for (int i = 0; i < _M; ++i) {
         for (int j = 0; j < _N; ++j) {
-            grad_vec[k++] = deriv_w(i, j, system);
+            grad_vec[w(i, j)] = deriv_w(i, j, system);
         }
     }
-
-    assert(k == grad_vec.size());
 
     return grad_vec;
 }
