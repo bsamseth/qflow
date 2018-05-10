@@ -7,3 +7,5 @@
 
 #include "rbmwavefunction.hpp"
 #include "rbmharmonicoscillatorhamiltonian.hpp"
+#include "rbminteractinghamiltonian.hpp"
+
