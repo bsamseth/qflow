@@ -122,7 +122,6 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
     for (int iteration = 0; iteration < iterations; ++iteration) {
         Vector grad (_M + _N + _M * _N);
         Vector grad_E = grad;
-        Vector updates = grad;
 
         // Thermalize the sampler to the new parameters.
         for (int run = 0; run < sample_points; ++run) {
@@ -145,7 +144,11 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
         grad /= sample_points;
         grad_E /= sample_points;
 
-        _parameters -= learning_rate * 2 * (grad_E - E_mean * grad);
+        grad *= E_mean;
+        grad_E -= grad;
+        grad_E *= - learning_rate * 2;
+
+        _parameters += grad_E;
 
         if (gamma > 0) {
             _parameters -= gamma * 2 * _parameters;
@@ -153,7 +156,8 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
 
         if (verbose) {
             printf("Iteration %d: <E> = %g\n", iteration, E_mean);
-            std::cout << "params = " << _parameters << '\n';
+            std::cout << _parameters << std::endl;
+            //std::cout << "params = " << _parameters << '\n';
         }
     }
 }
