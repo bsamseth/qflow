@@ -4,6 +4,7 @@
 #include "definitions.hpp"
 #include "wavefunction.hpp"
 #include "system.hpp"
+#include "sampler.hpp"
 
 /**
  * Class used to model a Hamiltonian.
@@ -70,6 +71,10 @@ class Hamiltonian {
          * @return Gross-Pitaevskii ideal energy.
          */
         Real gross_pitaevskii_energy(const System &system, const Wavefunction &wavefunction) const;
+
+        Real mean_distance(Sampler&, long samples) const;
+
+        Vector onebodydensity(Sampler &sampler, int n_bins, Real max_radius, long samples) const;
 
         friend std::ostream& operator<<(std::ostream&, const Hamiltonian&);
 };
