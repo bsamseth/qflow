@@ -118,7 +118,7 @@ TEST_F(RBMWavefunctionTest, gradient) {
 }
 
 TEST_F(RBMWavefunctionTest, laplacian) {
-    EXPECT_DOUBLE_EQ(0.489233619473537995, rbm->laplacian(*s));
+    EXPECT_DOUBLE_EQ(3.2384829101357431, rbm->laplacian(*s));
 }
 
 TEST_F(RBMWavefunctionTest, RBMHarmonicOscillatorHamiltonian) {
