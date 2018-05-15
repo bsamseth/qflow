@@ -4,6 +4,7 @@
 
 #include "prettyprint.hpp"
 #include "rbmwavefunction.hpp"
+#include "optimizer.hpp"
 
 
 RBMWavefunction::RBMWavefunction(int M, int N, Real sigma2, Real root_factor)
@@ -109,7 +110,6 @@ Real RBMWavefunction::drift_force(const System &system, int particle_index, int 
     return _root_factor * 2.0 / _sigma2 * (_parameters[a(k)] - system.degree(k) + v);
 }
 
-
 void RBMWavefunction::train(const Hamiltonian &hamiltonian,
         Sampler &sampler,
         int iterations,
@@ -118,6 +118,17 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
         Real gamma,
         bool verbose) {
 
+    SgdOptimizer optimizer(learning_rate);
+    train(hamiltonian, sampler, iterations, sample_points, &optimizer, gamma, verbose);
+}
+
+void RBMWavefunction::train(const Hamiltonian &hamiltonian,
+        Sampler &sampler,
+        int iterations,
+        int sample_points,
+        GeneralOptimizer *optimizer,
+        Real gamma,
+        bool verbose) {
 
     for (int iteration = 0; iteration < iterations; ++iteration) {
         Vector grad (_M + _N + _M * _N);
@@ -146,18 +157,16 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
 
         grad *= E_mean;
         grad_E -= grad;
-        grad_E *= - learning_rate * 2;
-
-        _parameters += grad_E;
+        grad_E *= 2;
 
         if (gamma > 0) {
-            _parameters -= gamma * 2 * _parameters;
+            grad_E += 2 * _parameters;
         }
+
+        _parameters += optimizer->update_term(grad_E);
 
         if (verbose) {
             printf("Iteration %d: <E> = %g\n", iteration, E_mean);
-            std::cout << _parameters << std::endl;
-            //std::cout << "params = " << _parameters << '\n';
         }
     }
 }

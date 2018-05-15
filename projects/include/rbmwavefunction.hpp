@@ -10,6 +10,7 @@
 #include "wavefunction.hpp"
 #include "sampler.hpp"
 #include "hamiltonian.hpp"
+#include "optimizer.hpp"
 
 class RBMWavefunction : public Wavefunction {
 
@@ -41,6 +42,14 @@ class RBMWavefunction : public Wavefunction {
                            int iterations,
                            int sample_points,
                            Real learning_rate,
+                           Real gamma = 0,
+                           bool verbose = true);
+
+        virtual void train(const Hamiltonian &hamiltonian,
+                           Sampler &sampler,
+                           int iterations,
+                           int sample_points,
+                           GeneralOptimizer *optimzer = nullptr,
                            Real gamma = 0,
                            bool verbose = true);
 
