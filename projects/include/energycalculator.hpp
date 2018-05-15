@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <fstream>
 
 #include "system.hpp"
 #include "wavefunction.hpp"
