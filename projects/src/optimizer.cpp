@@ -11,14 +11,14 @@
 namespace Optimizer {
 
 Real gradient_decent_optimizer(Wavefunction &wavefunction,
-                               const Hamiltonian &hamiltonian,
-                               Sampler& sampler,
-                               Real initial_guess,
-                               Real learning_rate,
-                               int sample_points,
-                               int max_iterations,
-                               Real dE_eps,
-                               bool verbose)
+        const Hamiltonian &hamiltonian,
+        Sampler& sampler,
+        Real initial_guess,
+        Real learning_rate,
+        int sample_points,
+        int max_iterations,
+        Real dE_eps,
+        bool verbose)
 {
     Real alpha = initial_guess;
 
@@ -79,3 +79,10 @@ Real gradient_decent_optimizer(Wavefunction &wavefunction,
 }
 
 } // namespace Optimizer
+
+
+SgdOptimizer::SgdOptimizer(Real eta) : _eta(eta) {}
+
+Vector SgdOptimizer::update_term(const Vector &gradient) {
+    return - _eta * gradient;
+}

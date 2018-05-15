@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include "definitions.hpp"
 #include "system.hpp"
 #include "wavefunction.hpp"
@@ -31,3 +32,18 @@ Real gradient_decent_optimizer(Wavefunction &wavefunction,
                                Real dE_eps = 1e-8,
                                bool verbose = true);
 }
+
+class GeneralOptimizer {
+    public:
+        virtual Vector update_term(const Vector &gradient) = 0;
+};
+
+class SgdOptimizer : public GeneralOptimizer {
+    private:
+        Real _eta;
+
+    public:
+        SgdOptimizer(Real eta = 0.1);
+
+        virtual Vector update_term(const Vector &gradient);
+};
