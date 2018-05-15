@@ -45,6 +45,14 @@ Vector& operator*= (Vector &lhs, Real rhs) {
     }
     return lhs;
 }
+Vector& operator%= (Vector &lhs, const Vector &rhs) {
+    assert(lhs.get_dimensions() == rhs.get_dimensions());
+    for (int i = 0; i < lhs.get_dimensions(); i++) {
+        lhs[i] *= rhs[i];
+    }
+    return lhs;
+}
+
 
 /*
  * All remaining implementations are made using the above, for simplicty,
@@ -84,4 +92,7 @@ Vector operator* (Vector lhs, Real rhs) {
 }
 Vector operator* (Real lhs, Vector rhs) {
     return rhs *= lhs;
+}
+Vector operator% (Vector lhs, const Vector &rhs) {
+    return lhs %= rhs;
 }

@@ -122,6 +122,10 @@ Vector& operator-= (Vector &lhs, const Vector &rhs);
 Vector& operator-= (Vector &lhs, Real rhs);
 Vector& operator/= (Vector &lhs, Real rhs);
 
+/* Schur product: element-wise multiplication of two vectors.  */
+Vector  operator% (Vector lhs, const Vector &rhs);
+Vector& operator%= (Vector &lhs, const Vector &rhs);
+
 
 inline std::ostream& operator<< (std::ostream& strm, const Vector &vec) {
     return strm << "Vector" << vec.get_position();
