@@ -131,42 +131,25 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
         bool verbose) {
 
     for (int iteration = 0; iteration < iterations; ++iteration) {
-        Vector grad (_M + _N + _M * _N);
-        Vector grad_E = grad;
 
         // Thermalize the sampler to the new parameters.
         for (int run = 0; run < 0.2 * sample_points; ++run) {
             sampler.next_configuration();
         }
 
-        Real E_mean = 0;
-
-        for (int sample = 0; sample < sample_points; ++sample) {
-            System &system = sampler.next_configuration();
-            Real E = hamiltonian.local_energy(system, *this);
-            E_mean += E;
-
-            Vector g = gradient(system);
-            grad += g;
-            grad_E += g * E;
-        }
-
-        E_mean /= sample_points;
-        grad /= sample_points;
-        grad_E /= sample_points;
-
-        grad *= E_mean;
-        grad_E -= grad;
-        grad_E *= 2;
+        Vector grad = hamiltonian.local_energy_gradient(sampler, *this, sample_points);
 
         if (gamma > 0) {
-            grad_E += 2 * _parameters;
+            grad += 2 * _parameters;
         }
 
-        _parameters += optimizer->update_term(grad_E);
+        _parameters += optimizer->update_term(grad);
 
         if (verbose) {
-            printf("Iteration %d: <E> = %g\n", iteration, E_mean);
+            Real E_mean = 0;
+            for (long i = 0; i < sample_points; ++i)
+                E_mean += hamiltonian.local_energy(sampler.next_configuration(), *this);
+            printf("Iteration %d: <E> = %g\n", iteration, E_mean / sample_points);
         }
     }
 }
