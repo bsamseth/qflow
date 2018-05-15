@@ -77,7 +77,7 @@ Vector Hamiltonian::onebodydensity(Sampler &sampler, int n_bins, Real max_radius
     for (long i = 0; i < samples; ++i) {
         System system = sampler.next_configuration();
         for (const Vector &particle : system.get_particles()) {
-            Real r_k = std::sqrt(square(particle));
+            Real r_k = particle.norm();
             if (r_k < max_radius) {
                 bins[(int) (r_k / r_step)]++;
                 total_count++;

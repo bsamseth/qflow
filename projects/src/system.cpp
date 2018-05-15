@@ -13,7 +13,7 @@ Real System::distance(int i, int j) {
     assert(0 <= i and i < get_n_particles());
     assert(0 <= j and j < get_n_particles());
     if (_dirty[i][j]) {
-        _distances[i][j] = _distances[j][i] = std::sqrt(square(_particles[i] - _particles[j]));
+        _distances[i][j] = _distances[j][i] = (_particles[i] - _particles[j]).norm();
         _dirty[i][j] = _dirty[j][i] = false;
     }
     return _distances[i][j];
