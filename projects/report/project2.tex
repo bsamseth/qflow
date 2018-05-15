@@ -378,6 +378,53 @@ Computational physics II: Quantum mechanical systems\\
     not pursue this large $P$ regime much further in this project, but this is
     something to note, if the RBM prove to be fruitful.
 
+    \subsubsection{Optimization Schemes}
+
+    Now equipped with a gradient, the general approach of optimization goes as
+    follows:
+\begin{algorithm}[H]
+    \caption{General Optimization Routine}
+    \label{alg:optimize}
+\begin{algorithmic}
+    \REQUIRE Cost function $Q$
+    \REQUIRE Update function $O$
+    \ENSURE $\vec \alpha$ minimizes $O$
+    \STATE Initialize $\vec\alpha$ with random values.
+    \WHILE{$\vec\alpha$ not converged}
+        \STATE $\vec\alpha \leftarrow \vec\alpha + O(\nabla Q)$
+    \ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+    What remains to plugged into Algorithm \ref{alg:optimize} is some update function
+    which should return a suitable update to apply to our parameters. There are
+    a myriad of versions for how to do this, with the most simple being
+    \emph{Stochastic Gradient Decent} (SGD). The basic algorithm for SGD is
+    shown in Algorithm \ref{alg:sgd}.
+
+\begin{algorithm}[H]
+    \caption{The Stochastic Gradient Decent Algorithm}
+    \label{alg:sgd}
+\begin{algorithmic}
+    \REQUIRE Cost function gradient $\nabla Q$
+    \REQUIRE Learning rate $\eta > 0$
+    \RETURN $-\eta \nabla Q$
+\end{algorithmic}
+\end{algorithm}
+
+
+    Many, many additions can be made to SGD in order to improve convergence
+    speed and stability. Examples of such modifications are using a decaying
+    learning rate $\eta$, including previous updates in the calculation of new
+    ones (momentum), and many other variations. We will limit this project to
+    implementing two update functions, the aforementioned SGD, and
+    ADAM~\cite{KingmaB14}. The ADAM optimizer is widely used in ML and
+    consistently performs on par or better than any other scheme currently
+    known. The pseudo-code for the algorithm is given in the original
+    paper~\cite{KingmaB14}, and the implementation can be found on the Github
+    repository under the filename \texttt{src/optimizer.cpp}
+    
+    
     \subsection{Regularization}
 
     We may wish to impose some regularization in the cost function as well.
