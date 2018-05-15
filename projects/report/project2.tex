@@ -326,7 +326,7 @@ Computational physics II: Quantum mechanical systems\\
     \begin{align}
         \begin{split}
         \frac{1}{\Psi}\pdv[2]{}{X_k}\Psi 
-        &= -\frac{1}{\sigma^2} - \sum_j^N
+        &= -\frac{1}{\sigma^2} + \sum_j^N
         \frac{w_{kj}^2}{\sigma^4}
         \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2} \\
         &\quad{   }\quad{      }  +
@@ -458,7 +458,7 @@ Computational physics II: Quantum mechanical systems\\
         e^{-v_l}}\frac{x_k}{2\sigma^2}\label{eq:pdv-w-gibbs}
     \end{align}
     \begin{align*}
-        \frac{1}{\Psi_G}\pdv[2]{}{X_k}\Psi_G &= -\frac{1}{2\sigma^2} - \sum_j^N
+        \frac{1}{\Psi_G}\pdv[2]{}{X_k}\Psi_G &= -\frac{1}{2\sigma^2} + \sum_j^N
         \frac{w_{kj}^2}{2\sigma^4}
         \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2} \\
         &\quad{   }\quad{      }  +
@@ -549,8 +549,8 @@ Computational physics II: Quantum mechanical systems\\
     \begin{align}
         \begin{split}
         \pdv{}{X_k}\qty(\frac{w_{kj}}{1+e^{-v_j}}) &=
-            w_{kj}\frac{e^{-v_j}}{\qty(1+e^{-v_j})^2}\pdv{(-v_j)}{X_k}\\
-        &= -\frac{w_{kj}^2}{\sigma^2} \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2}
+            -w_{kj}\frac{e^{-v_j}}{\qty(1+e^{-v_j})^2}\pdv{(-v_j)}{X_k}\\
+        &= \frac{w_{kj}^2}{\sigma^2} \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2}
         \end{split}
     \end{align}
 
@@ -565,7 +565,7 @@ Computational physics II: Quantum mechanical systems\\
         \frac{w_{kj}}{1+e^{-v_j}})\frac{1}{\Psi}\pdv{}{X_k}\Psi 
         \right]\\
         \begin{split}
-        &= -\frac{1}{\sigma^2} - \sum_j^N
+        &= -\frac{1}{\sigma^2} + \sum_j^N
         \frac{w_{kj}^2}{\sigma^4}
         \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2} \\
         &\quad{   }\quad{      }  +
