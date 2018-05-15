@@ -15,7 +15,8 @@ using Real = double;
 constexpr Real PI = 3.14159265358979323846; /**< Circle constant. */
 
 /**
- * Generic template for computing x * x, for any type.
+ * Generic template for computing x * x, for any type. Usefull
+ * when x is some expression which we do not want to compute twice.
  * @param x Value to multiply with itself.
  * @return Result of `x * x`.
  */
