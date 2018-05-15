@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <vector>
 #include <algorithm>
 #include <iostream>
@@ -53,6 +54,8 @@ class Vector {
          * @return Value for the given coordinate.
          */
         Real operator[] (int dimension) const;
+
+        Real norm() const;
 };
 
 template<typename Generator>
@@ -127,7 +130,10 @@ Vector  operator% (Vector lhs, const Vector &rhs);
 Vector& operator%= (Vector &lhs, const Vector &rhs);
 
 
+inline Real Vector::norm() const {
+    return std::sqrt(square(*this));
+}
+
 inline std::ostream& operator<< (std::ostream& strm, const Vector &vec) {
     return strm << "Vector" << vec.get_position();
 }
-
