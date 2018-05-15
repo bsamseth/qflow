@@ -25,35 +25,36 @@ class RBMWavefunction : public Wavefunction {
 
         RBMWavefunction(int M, int N, Real sigma2 = 1, Real root_factor = 1);
 
-        virtual Vector gradient(System &system) const;
+        Vector gradient(System &system) const;
 
-        virtual Real operator() (System &system) const;
+        Real operator() (System &system) const;
 
-        virtual Real deriv_a(int k, System &system) const;
+        Real deriv_a(int k, System &system) const;
 
-        virtual Real deriv_b(int k, System &system) const;
+        Real deriv_b(int k, System &system) const;
 
-        virtual Real deriv_w(int k, int l, System &system) const;
+        Real deriv_w(int k, int l, System &system) const;
 
-        virtual Real laplacian(System &system) const;
+        Real laplacian(System &system) const;
 
-        virtual void train(const Hamiltonian &hamiltonian,
-                           Sampler &sampler,
-                           int iterations,
-                           int sample_points,
-                           Real learning_rate,
-                           Real gamma = 0,
-                           bool verbose = true);
+        void train(const Hamiltonian &hamiltonian,
+                Sampler &sampler,
+                int iterations,
+                int sample_points,
+                Real learning_rate,
+                Real gamma = 0,
+                bool verbose = true);
 
-        virtual void train(const Hamiltonian &hamiltonian,
-                           Sampler &sampler,
-                           int iterations,
-                           int sample_points,
-                           GeneralOptimizer *optimzer = nullptr,
-                           Real gamma = 0,
-                           bool verbose = true);
+        void train(const Hamiltonian &hamiltonian,
+                Sampler &sampler,
+                int iterations,
+                int sample_points,
+                SgdOptimizer &optimizer,
+                Real gamma = 0,
+                bool verbose = true);
 
-        virtual Real drift_force(const System &system, int particle_index, int) const;
+
+        Real drift_force(const System &system, int particle_index, int) const;
 
         // Helpers. Public so that they are visible to the tests.
         Real v_j(int j, const System &system) const;

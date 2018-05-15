@@ -119,14 +119,14 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
         bool verbose) {
 
     SgdOptimizer optimizer(learning_rate);
-    train(hamiltonian, sampler, iterations, sample_points, &optimizer, gamma, verbose);
+    train(hamiltonian, sampler, iterations, sample_points, optimizer, gamma, verbose);
 }
 
 void RBMWavefunction::train(const Hamiltonian &hamiltonian,
         Sampler &sampler,
         int iterations,
         int sample_points,
-        GeneralOptimizer *optimizer,
+        SgdOptimizer &optimizer,
         Real gamma,
         bool verbose) {
 
@@ -143,7 +143,7 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
             grad += 2 * _parameters;
         }
 
-        _parameters += optimizer->update_term(grad);
+        _parameters += optimizer.update_term(grad);
 
         if (verbose) {
             Real E_mean = 0;
@@ -153,4 +153,3 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
         }
     }
 }
-
