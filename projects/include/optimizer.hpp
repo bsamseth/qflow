@@ -33,12 +33,7 @@ Real gradient_decent_optimizer(Wavefunction &wavefunction,
                                bool verbose = true);
 }
 
-class GeneralOptimizer {
-    public:
-        virtual Vector update_term(const Vector &gradient) = 0;
-};
-
-class SgdOptimizer : public GeneralOptimizer {
+class SgdOptimizer {
     private:
         Real _eta;
 
@@ -49,7 +44,7 @@ class SgdOptimizer : public GeneralOptimizer {
 };
 
 
-class AdamOptimizer : public GeneralOptimizer {
+class AdamOptimizer : public SgdOptimizer {
     private:
         const Real _alpha;
         Real _alpha_t;
