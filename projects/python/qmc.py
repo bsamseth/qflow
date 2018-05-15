@@ -16,16 +16,16 @@ print(current_dir, source_dir, include_dir)
 def cmake_run(build_type='Release', c_compiler='gcc', cxx_compiler='g++'):
     os.environ['CC'] = c_compiler
     os.environ['CXX'] = cxx_compiler
-    os.system(f'cd {install_dir} && cmake {source_dir} -DCMAKE_BUILD_TYPE={build_type}')
+    os.system('cd {} && cmake {} -DCMAKE_BUILD_TYPE={}'.format(install_dir, source_dir, build_type))
 
 def load_library():
-    os.system(f'cd {install_dir} && make engine')
+    os.system('cd {} && make engine'.format(install_dir))
     libraries = glob.glob(os.path.join(install_dir, 'libengine.*'))
-    print(f'Found libraries: {libraries}')
+    print('Found libraries: {}'.format(libraries))
     library = libraries[0]
     cppyy.load_library(library)
     for header in glob.glob(os.path.join(include_dir, '*.hpp')):
-        print(f'Loading {header}')
+        print('Loading {}'.format(header))
         cppyy.include(header)
 
 
