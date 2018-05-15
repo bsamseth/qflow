@@ -7,6 +7,7 @@
 #include "wavefunction.hpp"
 #include "hamiltonian.hpp"
 #include "sampler.hpp"
+#include "calculator.hpp"
 
 /**
  * Calculator for computing one-body densities.
