@@ -47,3 +47,21 @@ class SgdOptimizer : public GeneralOptimizer {
 
         virtual Vector update_term(const Vector &gradient);
 };
+
+
+class AdamOptimizer : public GeneralOptimizer {
+    private:
+        const Real _alpha;
+        Real _alpha_t;
+        const Real _beta1;
+        const Real _beta2;
+        const Real _epsilon;
+        long _t;
+        Vector _m;
+        Vector _v;
+
+    public:
+        AdamOptimizer(std::size_t n_parameters, Real alpha = 0.001, Real beta1 = 0.9, Real beta2 = 0.999, Real epsilon = 1e-8);
+
+        virtual Vector update_term(const Vector &gradient);
+};

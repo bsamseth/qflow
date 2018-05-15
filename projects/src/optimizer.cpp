@@ -86,3 +86,32 @@ SgdOptimizer::SgdOptimizer(Real eta) : _eta(eta) {}
 Vector SgdOptimizer::update_term(const Vector &gradient) {
     return - _eta * gradient;
 }
+
+AdamOptimizer::AdamOptimizer(std::size_t n_parameters, Real alpha, Real beta1, Real beta2, Real epsilon)
+    : _alpha(alpha),
+    _beta1(beta1),
+    _beta2(beta2),
+    _epsilon(epsilon),
+    _t(0),
+    _m(n_parameters),
+    _v(n_parameters)
+{ }
+
+Vector AdamOptimizer::update_term(const Vector &gradient) {
+    ++_t;
+    _m = _beta1 * _m + (1 - _beta1) * gradient;
+    _v = _beta2 * _v + (1 - _beta2) * (gradient % gradient);
+    _alpha_t = _alpha * std::sqrt(1 - std::pow(_beta2, _t)) / (1 - std::pow(_beta1, _t));
+
+    Vector update(_m.size());
+    for (int i = 0; i < _m.size(); ++i) {
+        update[i] = -_alpha_t * _m[i] / (std::sqrt(_v[i]) + _epsilon);
+    }
+    return update;
+}
+
+
+
+
+
+
