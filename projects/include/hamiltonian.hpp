@@ -64,6 +64,9 @@ class Hamiltonian {
          * @return Kinetic energy evaluation.
          */
         virtual Real kinetic_energy_numeric(System &system, const Wavefunction &wavefunction) const;
+
+        Vector local_energy_gradient(Sampler &sampler, const Wavefunction &psi, long samples) const;
+
         /**
          * Compute the Gross-Pitaevskii ideal case energy for a given system and wavefunction.
          * @param system System to calculate for.

@@ -44,6 +44,29 @@ Real Hamiltonian::local_energy(System &system, const Wavefunction &psi) const {
     return external_potential(system) + internal_potential(system) + kinetic_energy(system, psi);
 }
 
+Vector Hamiltonian::local_energy_gradient(Sampler &sampler, const Wavefunction &psi, long samples) const {
+    Real E_mean = 0;
+    Vector grad   (psi.get_parameters().size());
+    Vector grad_E (psi.get_parameters().size());
+    for (int sample = 0; sample < samples; ++sample) {
+        System &system = sampler.next_configuration();
+        Real E = local_energy(system, psi);
+        E_mean += E;
+
+        Vector g = psi.gradient(system);
+        grad += g;
+        grad_E += g * E;
+    }
+    E_mean /= samples;
+    grad /= samples;
+    grad_E /= samples;
+
+    grad *= E_mean;
+    grad_E -= grad;
+    grad_E *= 2;
+    return grad_E;
+}
+
 Real Hamiltonian::mean_distance(Sampler &sampler, long samples) const {
     if (sampler.get_current_system().get_n_particles() < 2)
         return 0;
