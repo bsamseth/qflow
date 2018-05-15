@@ -150,7 +150,7 @@ Computational physics II: Quantum mechanical systems\\
     \end{align}
     Using this wavefunction we can calculate the ground state
     energy\footnote{\label{fnt:sympy}See \texttt{projects/python/Sympy.ipynb} in the Github
-    reposirepository for an explicit calculation of the ground state energy},
+    repository for an explicit calculation of the ground state energy},
     \begin{align}
         \epsilon_{00} = \frac{\expval{\hat H_0}{\phi_{00}}}{\braket{\phi_{00}}}
         = \omega = \SI{1}{\au}
@@ -195,7 +195,7 @@ Computational physics II: Quantum mechanical systems\\
     Our machine learning model of choice is the Restricted Boltzmann Machine. It
     consists of of two densely interconnected layers, the \emph{visible} layer
     and the \emph{hidden} layer. It is called restricted because we only
-    connections between nodes in different layers - no visible-to-visible or
+    allow connections between nodes in different layers - no visible-to-visible or
     hidden-to-hidden connections are included.
 
     The RBM is a generative model, meaning it learns a probability distribution
@@ -212,10 +212,27 @@ Computational physics II: Quantum mechanical systems\\
     we shall use \emph{reinforcement training}, were updates of the model are
     based on the variational principle: The true ground state wavefunction is
     the wavefunction for which the lowest ground state energy is obtained. We
-    can treat the energy a certain wavefunction (model configuration) produces
-    as the penalty, and let the model adapt as to minimize the penalty it
-    receives.
-    
+    can treat the energy that a certain wavefunction (model configuration)
+    produces as the penalty, and let the model adapt as to minimize the penalty
+    it receives.
+
+    This approach should work in general, but there is one potential issue with
+    this. In order to evaluate how good (or bad) a proposed model work, we need
+    to evaluate the ground state energy. In order to do this we, as in project
+    1, use the proposed wavefunction to sample positions to be used in the
+    evaluation of the energy. This will only work well if the model is somewhat
+    decent at modeling the true wavefunction. If the proposed model is very far
+    off, the resulting energy evaluations will be very unstable, and we could
+    end up with large errors in the computed gradients. This could in turn lead
+    to an even worse model, and this could go on until something crashes. This
+    issue is similar to the \emph{exploding gradient} problem which often occurs
+    in neural network models, if not addressed properly. We will not address
+    this directly in this project, and instead lean on the fact that we probably
+    have rather decent starting guesses, as we have exact solutions to the ideal
+    case. It is, however, a potential issue if this approach should be applied
+    to systems for which we have a very poor sense of the underlying
+    wavefunction form.
+
     \subsection{The Math}
     
     In the following, $\vec x$ denotes the values of the visible layer (our
@@ -249,7 +266,8 @@ Computational physics II: Quantum mechanical systems\\
 
     \subsubsection{The Wavefunction}
 
-    The wavefunction is:
+    The wavefunction shall be the probability amplitude of any given system
+    configuration. We obtain this by tracing out the hidden values:
     \begin{align*}
         \Psi(\vec X) &= F_{RBM}(\vec x) = \sum_{\vec{h}} F_{RBM}(\vec x, \vec h)\\
         &=\frac{1}{Z} e^{-\sum_i^M \frac{\qty(X_i-a_i)^2}{2\sigma^2}}
@@ -257,43 +275,43 @@ Computational physics II: Quantum mechanical systems\\
         &\equiv \frac{1}{Z}e^{-\sum_i^M
         u_i}\prod_j^N(1+e^{v_j})\numberthis\label{eq:Psi-def}
     \end{align*}
-    where $u_i$ and $v_j$ are defined for convenience.
+    where $u_i$ and $v_j$ are defined for convenience. We will treat $a_i, b_i$
+    and $w_{ij}$ as tunable parameters, while $\sigma^2$ will be taken as some
+    constant, specifically the value we would have for the ideal wavefunction
+    for the non-interacting case.
 
 
-
-
-
-    \section{The Cost Function - Energy}
-    \subsection{Definition}
+    \section{Learning the Wavefunction}
+    \subsection{The Cost Function - Energy}
 
     The cost function we use to train the network shall be the expectation value
     of the Hamiltonian, under the wavefunction modeled by the network.
     Minimizing the energy will yield the best possible wavefunction obtainable
     within the model. The energy is expressed as
     \begin{align}
-        Q = E[H] = \expval{H} = \frac{\int \dd{\vec X} \Psi^* \hat H \Psi}{\int
+        Q = E[H] = \expval{H} = \frac{\int \dd{\vec x} \Psi^* \hat H \Psi}{\int
         \Psi^*\Psi}.
     \end{align}
-    where $\vec X$ is the vector containing all the positions of the particles in
-    the system, $\vec X = [x_1, y_1,\dots, x_n, y_n]$.
+    where $\vec x$ is the vector containing all the positions of the particles in
+    the system, $\vec x = [x_1, y_1,\dots, x_n, y_n]$.
     In order to numerically evaluate this integral we first manipulate it a bit.
-    The probability density at position $\vec X$, under the trial wave function, is
+    The probability density at position $\vec x$, under the trial wave function, is
     \begin{align}
-        P(\vec X) &= \frac{\abs{\Psi}^2}{\int \dd{\vec X}\abs{\Psi}^2}.
+        P(\vec x) &= \frac{\abs{\Psi}^2}{\int \dd{\vec x}\abs{\Psi}^2}.
     \end{align}
     We finally define a new quantity, called \textbf{the local energy}:
     \begin{align}
-        E_L(\vec X) &= \frac{1}{\Psi}\hat H\Psi\label{eq:E_L}
+        E_L(\vec x) &= \frac{1}{\Psi}\hat H\Psi\label{eq:E_L}
     \end{align}
     Combining these two definitions we can now rewrite $\expval{H}$ as follows:
     \begin{align}
         \begin{split}
-            \expval{H} &= \int \dd{\vec X} P(\vec X) E_L(\vec X)\\
+            \expval{H} &= \int \dd{\vec x} P(\vec x) E_L(\vec x)\\
             &\approx
-            \frac{1}{n}\sum_{i=1}^n E_L(\vec X_i),
+            \frac{1}{n}\sum_{i=1}^n E_L(\vec x_i),
         \end{split}\label{eq:the-objective}
     \end{align}
-    where $\vec X_i$ are $n$ randomly drawn positions from the PDF $P(\vec X)$.
+    where $\vec x_i$ are $n$ randomly drawn positions from the PDF $P(\vec x)$.
     We have therefore that estimating the average value of $E_L$ yields an
     approximated value for $\expval{H}$. 
     
@@ -379,8 +397,16 @@ Computational physics II: Quantum mechanical systems\\
         2\gamma\alpha_i,\label{eq:G-i-ridge}
     \end{align}
 
+    \section{Sampling Algorithms}
 
-    \section{Gibbs Sampling}
+    We will continue to use the Metropolis and Metropolis-Hastings algorithms
+    presented in project 1 for this project also. For the sake of conciseness,
+    we shall not repeat the derivations or motivations for these algorithms
+    here, as they are easily adapted to work with this new model. However, the
+    RBM model enables us to employ another sampling technique, \emph{Gibbs
+    sampling}.
+
+    \subsection{Gibbs Sampling}
 
     For the particular case of systems like the ones we are currently
     considering, we know that the true wavefunction is positive definite. This
@@ -392,21 +418,24 @@ Computational physics II: Quantum mechanical systems\\
         x)}\label{eq:Psi-gibbs-def},
     \end{align}
     such that $F_{RBM}$ models the probability $\abs{\Psi_G}^2$ directly, instead
-    of the probability amplitude $\Psi_G$. This transformation is only valid in
+    of the probability amplitude $\Psi_G$. This is done in order to have
+    efficient, direct expressions to sample from later (more in next section).
+    This transformation is only valid in
     general when the wavefunction is positive definite, while the original
     definition $\Psi$ remains valid in general. 
 
-    \subsection{The Algorithm}
-    Gibbs sampling comes up whenever we are dealing with a joint PDF from which 
-    we cannot easily (or at all) sample values.
-    In our case we are dealing with the PDF from \autoref{eq:F-RBM-def}, which
-    does not have a standard, direct sampling strategy.
-    In general, given a PDF $P(X_1=x_1, X_2=x_2,\dots,X_n=x_n)$, Gibbs relies on
-    the conditionals $P(X_i=x_i | X_j = x_j \forall j\neq i)$. \emph{If} these
-    conditionals are easy to sample from (i.e. can be expressed as one of the
-    known distributions for which direct sampling is possible), then we may
-    obtain approximate samples from the joint PDF by iteratively sampling
-    individual values from the conditionals. Going back to
+    \subsection{The Algorithm} 
+    
+    Gibbs sampling comes up whenever we are dealing
+    with a \emph{joint} PDF from which we cannot easily (or at all) sample
+    values.  In our case we are dealing with the PDF from
+    \autoref{eq:F-RBM-def}, which does not have a standard, direct sampling
+    strategy.  In general, given a PDF $P(X_1=x_1, X_2=x_2,\dots,X_n=x_n)$,
+    Gibbs relies on the conditionals $P(X_i=x_i | X_j = x_j \forall j\neq i)$.
+    \emph{If} these conditionals are easy to sample from (i.e. can be expressed
+    as one of the known distributions for which direct sampling is possible),
+    then we may obtain approximate samples from the joint PDF by iteratively
+    sampling individual values from the conditionals. Going back to
     \autoref{eq:F-RBM-def}, the algorithm becomes:
 
 \begin{algorithm}[H]
@@ -424,9 +453,9 @@ Computational physics II: Quantum mechanical systems\\
 \end{algorithmic}
 \end{algorithm}
 
-    From \autoref{alg:gibbs} is is clear that we need to be able to sample from
+    From Algorithm \ref{alg:gibbs} is is clear that we need to be able to sample from
     both $P(\vec x|\vec h)$ and $P(\vec h|\vec x)$. These are simply stated here
-    without further derivation:
+    without further derivation, and follow from the form of the RBM:
 
     \begin{align}
         P(\vec x|\vec h) &= \mathcal{N}\qty(\vec x; \vec a + \vec w\vec h,
