@@ -11,7 +11,8 @@ except NameError:
     current_dir = os.getcwd()
 source_dir = os.path.dirname(current_dir)
 include_dir = os.path.join(source_dir, 'include')
-print(current_dir, source_dir, include_dir)
+install_dir = os.path.join(source_dir, 'build-release')
+print(current_dir, source_dir, include_dir, install_dir)
 
 def cmake_run(build_type='Release', c_compiler='gcc', cxx_compiler='g++'):
     os.environ['CC'] = c_compiler
@@ -33,7 +34,7 @@ def load_library():
 cmake_run()
 load_library()
 
-from cppyy.gbl import Vector, System, RBMHarmonicOscillatorHamiltonian, RBMInteractingHamiltonian, RBMWavefunction, MetropolisSampler, ImportanceSampler, GibbsSampler
+from cppyy.gbl import rand_gen, Vector, System, RBMHarmonicOscillatorHamiltonian, RBMInteractingHamiltonian, RBMWavefunction, MetropolisSampler, ImportanceSampler, GibbsSampler, SgdOptimizer, AdamOptimizer
 
 
 def array_to_vector(arr):
