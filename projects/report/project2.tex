@@ -562,12 +562,12 @@ Computational physics II: Quantum mechanical systems\\
     sampling algorithm to begin with. \autoref{fig:rbm-1d-1p} shows the learned
     wavefunction after $\num{2e4}$ iterations, using a learning rate of $0.9$,
     and no regularization. The energy produced by this wavefunction comes out as
-    $0.50033\pm \num{5.6e-6}\si{\au}$, compared to the exact value of
+    $0.49999985\pm \num{2e-6}\si{\au}$, compared to the exact value of
     $\SI{0.5}{\au}$. The error given here is the standard error of the mean
     local energy, as calculated with the Blocking method discussed in project 1,
-    using $2^{15}$ samples. If we allow for more training, the energy is lower
+    using $2^{20}$ samples. If we allow for more training, the energy is lower
     somewhat more, although the gains diminish as $E_L$ approaches its ideal
-    value.
+    value. In any case, this is precision more than acceptable.
 
     Applying regularization in this case, for almost any reasonable choice for
     $\gamma$ (e.g. $0.1$), the RBM converges \emph{very} quickly to the exact
@@ -589,13 +589,107 @@ Computational physics II: Quantum mechanical systems\\
 \end{figure}
 
 \begin{multicols}{2}
+    
+    
+    \autoref{fig:rbm-training-samplers} shows the error we make as a function of
+    training iterations for the three different samplers discussed. We can
+    observe a couple of interesting points from this plot. First, brute force
+    Metropolis sampling has, as expected, a significantly higher variance in
+    energy compared with Metropolis-Hastings. Interestingly that does not appear
+    to affect the learning much, as both algorithms follow roughly the same
+    curve. However, we would prefer to use Metropolis-Hastings here due to the
+    stability it provides. 
+
+    Gibbs sampling affects the training in a noticeably different way. We see it
+    starting out with slower convergence compared the others, but as we continue
+    to train, the Gibbs sampling curve holds a steeper decline, and surpassing
+    the results obtained by the Metropolis variants. The effect is small though,
+    keeping in mind the logarithmic y-axis which acts to amplify such
+    differences. In fact, only the slightly slower start is always reproduced,
+    as we sometimes get stuck in a local minimum before Gibbs can catch up
+    fully.
+
+    One thing to note is that the constant value assumed for $\sigma^2$ here was
+    $\sigma^2=1$ for the Metropolis variants, and $\sigma^2=\flatfrac{1}{2}$ for
+    Gibbs. Both of these were chosen so that setting $\vec\alpha=\vec 0$ would
+    correspond to the ideal wavefunction. Using $\sigma^2=1$ with Gibbs makes it
+    significantly worse. While this could potentially be helped by adding more
+    parameters to the model (i.e. increasing $N$), this illustrates the
+    potential issue with this general approach, namely the dependence on
+    somewhat decent starting points.
+
+
+\end{multicols}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../results/learning-samplers.png}
+    \caption{Learning progression, comparing the three different sampling
+    algorithms. We see a slight difference, especially in the jaggedness of the
+    curve, indicating a difference in variance.}
+    \label{fig:rbm-training-samplers}
+\end{figure}
+
+
+\begin{multicols}{2}
+
+    \autoref{fig:rbm-training-optimizers} shows a similar comparison but for
+    various optimizers. We can see that choosing a smaller learning rate for SGD
+    results in slower convergence. Ideally, given sufficient training iterations
+    we expect the smaller $\eta$ to result in slightly better accuracy, as it
+    allows for more fine tuned adjustments. However, this is only guaranteed for
+    ideally convex cost functions. Here we observe the small-$\eta$ optimizer
+    getting stuck at some local minimum, unable to get out due to the small
+    learning rate. This goes to show the importance of choosing a suitable
+    learning rate when using vanilla SGD. Although not shown here, choosing to
+    large values can result in catastrophic results.
+
+    Better than both other methods is the Adam optmizer, here used with the
+    default parameters given by the original authors~\cite{KingmaB14}. Although
+    the large-$\eta$ SGD variant is initially somewhat faster, Adam ends up
+    close to an order of magnitude better. Interestingly we appear to reach a
+    point were further training reduces the energy slightly, while the variance
+    remains roughly the same (causing an apparent increase in variance, due to
+    the log-axis). In addition to the improved results, the main appeal of Adam
+    is how well it performs without hyper-parameter tuning. Due to its adaptive
+    nature, it performs well with the defaults in all scenarios attempted.
+\end{multicols}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../results/learning-optimizers.png}
+    \caption{Learning progression, comparing different optimization algorithms.
+    We observe Adam outperforming SGD, with the small learning rate converging
+    very slowly. Training was performed using $\num{4e4}$ iterations with $100$
+    samples per iterations.}
+    \label{fig:rbm-training-optimizers}
+\end{figure}
+
+
+\begin{multicols}{2}
+
+    \autoref{fig:rbm-training-N} shows yet again a similar plot of training
+    progression, this time for various values for $N$. Here we see that
+    increasing $N$ only served to slow down convergence significantly, as well
+    as increasing the run-time. This results makes sense, considering that the
+    ideal case has an optimum for $\vec \alpha=\vec 0$. Adding more parameters
+    just means it gets harder for the optimizer to locate the minimum, and
+    increases the density of local, non-optimal minima. Increasing $N$ might be
+    more interesting when we consider the non-trivial interacting case.
 
     \printbibliography
 
 \end{multicols}
 
-
-
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../results/learning-N-variants.png}
+    \caption{Learning progression, comparing different number of hidden neurons.
+    Training was performed using $\num{4e4}$ iterations with $100$
+    samples per iterations, using Metropolis-Hastings sampling and Adam
+    optimizer.}
+    \label{fig:rbm-training-N}
+\end{figure}
 
 \pagebreak
 \begin{multicols}{2}
