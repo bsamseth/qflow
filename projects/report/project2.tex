@@ -670,14 +670,16 @@ Computational physics II: Quantum mechanical systems\\
 
     \autoref{fig:rbm-training-N} shows yet again a similar plot of training
     progression, this time for various values for $N$. Here we see that
-    increasing $N$ only served to slow down convergence significantly, as well
-    as increasing the run-time. This results makes sense, considering that the
-    ideal case has an optimum for $\vec \alpha=\vec 0$. Adding more parameters
-    just means it gets harder for the optimizer to locate the minimum, and
-    increases the density of local, non-optimal minima. Increasing $N$ might be
-    more interesting when we consider the non-trivial interacting case.
+    increasing $N$ did not help, and only increased the run-time. Also,
+    depending on the random starting point of the parameters, the higher $N$
+    RBMs sometimes get stuck at local minima, and convergence stops. This
+    results makes sense, considering that the ideal case has an optimum for
+    $\vec \alpha=\vec 0$. Adding more parameters just means it gets harder for
+    the optimizer to locate the minimum, and increases the density of local,
+    non-optimal minima. Increasing $N$ might be more helpful when we
+    consider the non-trivial interacting case, which does not have this trivial
+    solution.
 
-    \printbibliography
 
 \end{multicols}
 
@@ -690,6 +692,51 @@ Computational physics II: Quantum mechanical systems\\
     optimizer.}
     \label{fig:rbm-training-N}
 \end{figure}
+
+\clearpage
+\begin{multicols}{2}
+
+    \subsection{Two Particles in Two Dimension} 
+
+    We now scale up to two particles in two dimensions, but not including the
+    interacting for now. We are once again able to obtain very good results
+    here. Using Metropolis-Hastings sampling, Adam optimizer, $N=2$ and
+    $\sigma^2=1$, running for $\num{4e4}$ iterations with $100$ samples per
+    iteration, we obtain the following results (all energies in atomic units):
+
+    \begin{tabular}{|c|c|c|c|c|}\hline
+        $\expval{E_L}$ & $SE_\expval{E_L}$ & $\expval{r_{12}}$ & $\expval{V_{pot}}$ &
+        $\expval{K}$ \\\hline
+        $2+\num{8e-8}$ & $\num{4e-8}$ & 1.25247 & 1.0002 & 0.9998
+        \\\hline
+    \end{tabular}
+    
+    Once again, the energies produced are very accurate. From the mean potential
+    and kinetic energy we see both coming out to about half of the total energy
+    each. Considering the Virial Theorem, which for a radial potential on the
+    form $V(r) = ar^n$ states that we should have
+    \begin{algin}
+        2\expval{K} = n\expval{V}\label{eq:virial},
+    \end{algin}
+   this fits the theory perfectly. Inserting $n=2$ in our case results in the
+    exact kinetic-potential ratio that we see. 
+
+    \autoref{fig:rbm-onebody-ideal} shows yet another indication that the
+    learned wavefunction is a very close approximation to the ideal.
+
+\end{multicols}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../results/P2-D2-onebody.png}
+    \caption{One-body density for two non-interacting particles in 2D. The
+    numerical approximation closely follows the exact form.}
+    \label{fig:rbm-onebody-ideal}
+\end{figure}
+
+\begin{multicols}{2}
+    \printbibliography
+\end{multicols}
 
 \pagebreak
 \begin{multicols}{2}
