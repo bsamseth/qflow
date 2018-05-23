@@ -1,6 +1,7 @@
 #include "definitions.hpp"
 #include "system.hpp"
 #include "rbminteractinghamiltonian.hpp"
+RBMInteractingHamiltonian::RBMInteractingHamiltonian(Real omega) : RBMHarmonicOscillatorHamiltonian(omega) {}
 
 Real RBMInteractingHamiltonian::internal_potential(System &system) const {
     const auto P = system.get_n_particles();

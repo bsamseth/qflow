@@ -11,7 +11,7 @@
 class RBMInteractingHamiltonian : public RBMHarmonicOscillatorHamiltonian {
     public:
 
-        using RBMHarmonicOscillatorHamiltonian::RBMHarmonicOscillatorHamiltonian;
+        RBMInteractingHamiltonian(Real omega = 1.0);
 
         virtual Real internal_potential(System&) const;
 };
