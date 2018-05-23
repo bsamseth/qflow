@@ -2,13 +2,14 @@
 #include "rbmharmonicoscillatorhamiltonian.hpp"
 
 
+RBMHarmonicOscillatorHamiltonian::RBMHarmonicOscillatorHamiltonian(Real omega) : _omega(omega) {}
 
 Real RBMHarmonicOscillatorHamiltonian::external_potential(System &system) const {
     Real res = 0;
     for (auto &&particle : system.get_particles()) {
         res += square(particle);
     }
-    return 0.5 * res;
+    return 0.5 * square(_omega) * res;
 }
 
 Real RBMHarmonicOscillatorHamiltonian::local_energy(System &system, const Wavefunction &psi) const {

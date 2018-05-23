@@ -9,7 +9,12 @@
  * Class representing the simple harmonic oscillator Hamiltonian.
  */
 class RBMHarmonicOscillatorHamiltonian : public Hamiltonian {
+    protected:
+        Real _omega;
+
     public:
+
+        RBMHarmonicOscillatorHamiltonian(Real omega = 1);
 
         virtual Real external_potential(System&) const;
 
