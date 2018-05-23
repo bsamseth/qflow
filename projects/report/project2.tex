@@ -737,7 +737,150 @@ Computational physics II: Quantum mechanical systems\\
 \end{figure}
 
 \begin{multicols}{2}
+    \subsection{With Interaction}
 
+    We turn now to the most interesting, and challenging part - including the
+    Coulomb interaction between the two particles. As mentioned before, we
+    expect the ground state energy to be $\SI{3}{\au}$ in this case. 
+
+    One of the most attractive features of using the RBM as our wavefunction
+    model is that we need not change anything about the model in order to learn
+    the new wavefunction. The only thing that is changed is the Hamiltonian. As
+    long as the model has sufficient flexibility (i.e. number of hidden units),
+    the hope is that it is able to adjust and optimize its response.
+
+    While experiments have been made with all sampling strategies discussed, the
+    results given here are using the Metropolis-Hastings algorithm. Little 
+    difference has been seen between the three candidates, and
+    Metropolis-Hastings has been deemed most appropriate only due to its
+    slightly less variant results.  
+
+    The first thing we note when training various configurations is the issue
+    mentioned previously, namely that training is far less stable due to us
+    having worse initialing guesses for the parameters to use, as well as the
+    increased complexity of the Hamiltonian it self. We find that using $100$
+    sample points as before to compute the gradient at each iteration is far to
+    little for stable learning, and the resulting learning plots in
+    \autoref{fig:N-variants-messy} are quite messy. Inspecting the plot with a
+    positive attitude we see some notion of improvement from start to finish,
+    despite the variance being far to high for us to make any quantitative
+    observations.
+
+    Ideally we fix this issue by increasing the number of samples per iteration.
+    For instance, using $10^6$ samples more or less removes the issue of
+    unstable results, but at the expense of increasing training time by four
+    orders of magnitude. The mitigate this, we can cut down on the number of
+    iterations. Considering the experiences from the ideal case, most of the
+    improvements happen early, with diminishing returns on further training.
+    However, a decent amount of iterations is still needed, somewhat dependent
+    on the optimization scheme used. Some balance must be struck here, and
+    experiments tend toward a preference towards many training iterations.
+
+
+    We present first some results for different number of hidden units. The
+    following table numbers were obtained using $10^4$ iterations of $10^3$
+    samples, and the means and standard errors were computed on the resulting
+    models using $2^{20}$ samples. As before, the standard error is as
+    calculated using the blocking method.
+
+    \begin{center}
+        \vspace{0.5cm}
+        \begin{tabular}{|c|c|c|}\hline
+            $N$ & $\expval{E_L}$ & $SE_{\expval{E_L}}$\\\hline
+            1 & 3.14811 & 0.00287\\
+            2 & 3.07651 & 0.00175\\
+            4 & 3.07969 & 0.00187\\
+            8 & 3.08267 & 0.00205\\
+            12 & 3.08562 & 0.00206\\\hline
+        \end{tabular}
+    \end{center}
+
+    Several interesting things can be observed. Firstly, using only a single
+    hidden unit seems to be inadequate to describe the system properly, as this
+    model has converged quite far of, compared to the rest. Increasing the
+    number to $N \geq 1$ we see a better result, although far from perfect.
+    Interestingly, using $N>2$ does not yield more accurate results, indicating
+    that $N=2$ is sufficient. As a consequence we see a slight trend of
+    decreasing accuracy when $N$ is increased. This fits earlier results, were
+    having $N$ excessively high not only increases the run-time, but also makes
+    training converge slightly slower and/or increases chances of local minima.
+    As such, it seems there is no point in using $N > 2$.\footnote{It would be,
+    given only these results, that training for longer would increase the
+    accuracy for high $N$, and that the results shown are simply due to using
+    too few iterations. This has, however, been seen to not be the case.
+    Increasing the number of training iterations on high $N$ models does not
+    yield improved results.}
+    
+    As such, a model using $N=2$ was trained using $\num{2e4}$ training
+    iterations of $10^3$ sample points using the Adam optimizer with default
+    parameters. The obtained energy estimate obtained was saw no improvement
+    over the above listed results, and so we conclude that this accuracy as
+    about as good as we can get it. 
+    
+    Using this model, the mean distance between the particles comes out as
+    $1.65$ for this oscillator strength, which is notably larger than what we
+    had in the ideal case. This follows our intuition, as adding a repelling
+    force should act to increase the distance between particles.
+    \autoref{fig:rbm-onebody-inter} shows the one-body density that the learned
+    wavefunction produces, with the exact ideal case curve drawn for reference.
+    It shows the same effect graphically, as we see that the density is somewhat
+    more spread out as a result of the particles hindering each other from
+    staying near the origin.
+
+
+\end{multicols}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../results/learning-N-variants-interacting.png}
+    \caption{Learning progression for some different RBMs, all using
+    Metropolis-Hastings for sampling and Adam with default settings for
+    optimization. The models were trained for $\num{2e4}$ iterations using $100$
+    sample points per iteration.}
+    \label{fig:N-variants-messy}
+\end{figure}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\linewidth]{../results/onebody-interacting-N2.png}
+    \caption{One-body density for the interacting case of two electrons in 2D,
+    and $\omega = 1$, as estimated using the trained $N=2$ RBM. The exact curve
+    for the non-interacting case is drawn for reference. }
+    \label{fig:rbm-onebody-inter}
+\end{figure}
+
+\begin{multicols}{2}
+    We now turn to investigate the effect of changing the trap strength
+    $\omega$. \autoref{tab:omegas} was made by training $N=2$ models the same way
+    as before, but a separate model for each value of $\omega$. The
+    corresponding one-body density plots are shown in
+    \autoref{fig:rbm-onebody-omegas}.
+
+\end{multicols}
+    \begin{table}
+        \centering
+        \caption{Results from trained RBMs for selected values of $\omega$.}
+        \label{tab:omegas}
+        \vspace{0.5cm}
+    \begin{tabular}{|c|c|c|c|c|c|}\hline
+        $\omega$ & $\expval{E_L}$ & $SE_\expval{E_L}$ & $\expval{r_{12}}$ & $\expval{V_{pot}}$ &
+        $\expval{K}$ \\\hline
+        0.01 & 1.0876 &  0.00149 &  12.1 &  1.000 &  0.087\\
+        0.05 & 1.0335 &  0.00129 &  6.46 &  0.833 &  0.201\\
+        0.1  & 1.0183 &  0.00120 &  5.50 &  0.729 &  0.289\\
+        0.5  & 1.8481 &  0.00111 &  2.32 &  0.726 &  1.121\\
+        1.0  & 3.0779 &  0.00116 &  1.65 &  0.799 &  2.281\\\hline
+    \end{tabular}
+\end{table}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{../results/onebody-omegas.png}
+    \caption{One-body densities for selected values of $\omega$. The curve for
+    $\omega=0.01$ is artificially highly peaked due to the way the curve is
+    normalized, and cut off at a given radius.}
+    \label{fig:rbm-onebody-inter}
+\end{figure}
+
+\begin{multicols}{2}
 
     \section{Conclusion}
 
