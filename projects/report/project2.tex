@@ -234,7 +234,7 @@ Computational physics II: Quantum mechanical systems\\
     wavefunction form.
 
     \subsection{The Math}
-    
+
     In the following, $\vec x$ denotes the values of the visible layer (our
     position coordinates), and $\vec h$ denotes the values of the hidden layer.
 
@@ -314,7 +314,7 @@ Computational physics II: Quantum mechanical systems\\
     where $\vec x_i$ are $n$ randomly drawn positions from the PDF $P(\vec x)$.
     We have therefore that estimating the average value of $E_L$ yields an
     approximated value for $\expval{H}$. 
-    
+
     \subsection{Optimization}
 
     In order to train the model to minimize $\expval{\hat H}$ we need to know
@@ -323,7 +323,7 @@ Computational physics II: Quantum mechanical systems\\
     algorithm, which will in turn be based on the partial derivatives of the
     expectation of the local energy~\cite{mhj-compphys-II}:
     \begin{align}
-            G_i &= \pdv{\expval{E_L}}{\alpha_i} 
+        G_i &= \pdv{\expval{E_L}}{\alpha_i} 
             = 2\qty(\expval{E_L
         \frac{1}{\Psi}\pdv{\Psi}{\alpha_i}} -
         \expval{E_L}\expval{\frac{1}{\Psi}\pdv{\Psi}{\alpha_i}})
@@ -354,12 +354,12 @@ Computational physics II: Quantum mechanical systems\\
     where,
     \begin{align}
         \begin{split}
-        \frac{1}{\Psi}\pdv[2]{}{X_k}\Psi 
-        &= -\frac{1}{\sigma^2} + \sum_j^N
-        \frac{w_{kj}^2}{\sigma^4}
-        \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2} \\
-        &\quad{   }\quad{      }  +
-        \frac{1}{\sigma^4}\qty(a_k-x_k+\sum_j^N \frac{w_{kj}}{1+e^{-v_j}})^2
+            \frac{1}{\Psi}\pdv[2]{}{X_k}\Psi 
+            &= -\frac{1}{\sigma^2} + \sum_j^N
+            \frac{w_{kj}^2}{\sigma^4}
+            \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2} \\
+            &\quad{   }\quad{      }  +
+            \frac{1}{\sigma^4}\qty(a_k-x_k+\sum_j^N \frac{w_{kj}}{1+e^{-v_j}})^2
         \end{split}
         \label{eq:E-L-second-deriv-main-section}
     \end{align}
@@ -385,15 +385,15 @@ Computational physics II: Quantum mechanical systems\\
 \begin{algorithm}[H]
     \caption{General Optimization Routine}
     \label{alg:optimize}
-\begin{algorithmic}
-    \REQUIRE Cost function $Q$
-    \REQUIRE Update function $O$
-    \ENSURE $\vec \alpha$ minimizes $O$
-    \STATE Initialize $\vec\alpha$ with random values.
-    \WHILE{$\vec\alpha$ not converged}
+    \begin{algorithmic}
+        \REQUIRE Cost function $Q$
+        \REQUIRE Update function $O$
+        \ENSURE $\vec \alpha$ minimizes $O$
+        \STATE Initialize $\vec\alpha$ with random values.
+        \WHILE{$\vec\alpha$ not converged}
         \STATE $\vec\alpha \leftarrow \vec\alpha + O(\nabla Q)$
-    \ENDWHILE
-\end{algorithmic}
+        \ENDWHILE
+    \end{algorithmic}
 \end{algorithm}
 
     What remains to plugged into Algorithm \ref{alg:optimize} is some update function
@@ -405,11 +405,11 @@ Computational physics II: Quantum mechanical systems\\
 \begin{algorithm}[H]
     \caption{The Stochastic Gradient Decent Algorithm}
     \label{alg:sgd}
-\begin{algorithmic}
-    \REQUIRE Cost function gradient $\nabla Q$
-    \REQUIRE Learning rate $\eta > 0$
-    \RETURN $-\eta \nabla Q$
-\end{algorithmic}
+    \begin{algorithmic}
+        \REQUIRE Cost function gradient $\nabla Q$
+        \REQUIRE Learning rate $\eta > 0$
+        \RETURN $-\eta \nabla Q$
+    \end{algorithmic}
 \end{algorithm}
 
 
@@ -423,8 +423,8 @@ Computational physics II: Quantum mechanical systems\\
     known. The pseudo-code for the algorithm is given in the original
     paper~\cite{KingmaB14}, and the implementation can be found on the Github
     repository under the filename \texttt{src/optimizer.cpp}
-    
-    
+
+
     \subsection{Regularization}
 
     We may wish to impose some regularization in the cost function as well.
@@ -472,7 +472,7 @@ Computational physics II: Quantum mechanical systems\\
     definition $\Psi$ remains valid in general. 
 
     \subsection{The Algorithm} 
-    
+
     Gibbs sampling comes up whenever we are dealing
     with a \emph{joint} PDF from which we cannot easily (or at all) sample
     values.  In our case we are dealing with the PDF from
@@ -488,16 +488,16 @@ Computational physics II: Quantum mechanical systems\\
 \begin{algorithm}[H]
     \caption{Gibbs sampling of $\vec x$ from $F_{RBM}(\vec x, \vec h)$}
     \label{alg:gibbs}
-\begin{algorithmic}
-    \REQUIRE $n$ number of samples to yield.
-    \ENSURE $\vec x,\vec h \drawfrom P(\vec x, \vec h)$.
-    \STATE Initialize $\vec x$ randomly (e.g. normally).
-    \FOR{$n$ iterations}
+    \begin{algorithmic}
+        \REQUIRE $n$ number of samples to yield.
+        \ENSURE $\vec x,\vec h \drawfrom P(\vec x, \vec h)$.
+        \STATE Initialize $\vec x$ randomly (e.g. normally).
+        \FOR{$n$ iterations}
         \STATE $\vec h \setfrom P(\vec h | \vec x)$
         \STATE $\vec x \setfrom P(\vec x | \vec h)$
         \STATE Save $\vec x$ as the i-th sample.
-    \ENDFOR
-\end{algorithmic}
+        \ENDFOR
+    \end{algorithmic}
 \end{algorithm}
 
     From Algorithm \ref{alg:gibbs} is is clear that we need to be able to sample from
@@ -518,7 +518,7 @@ Computational physics II: Quantum mechanical systems\\
     \end{align}
     So to sample $h_i$ we set it to 1 with probability
     $p=\qty(1+\exp(-v_j))^{-1}$, and 0 otherwise.
-    
+
     \subsection{New Expressions for $\Psi_G$}
 
     Using $\Psi_G$ as our wavefunction will slightly change all the expressions
@@ -526,7 +526,7 @@ Computational physics II: Quantum mechanical systems\\
     the following observations:
     \begin{align}
         \ln \Psi_G &= \ln \sqrt{\Psi} = \frac{1}{2}\ln \Psi,\\
-    \intertext{and}
+        \intertext{and}
         \frac{1}{\Psi}\pdv{\Psi}{x_k} &= \pdv{\ln\Psi}{\Psi}\pdv{\Psi}{x_k} =
         \pdv{\ln\Psi}{x_k}\\
         \Rightarrow \frac{1}{\Psi_G}\pdv{\Psi_G}{x_k} &= \frac{1}{2}
@@ -589,8 +589,8 @@ Computational physics II: Quantum mechanical systems\\
 \end{figure}
 
 \begin{multicols}{2}
-    
-    
+
+
     \autoref{fig:rbm-training-samplers} shows the error we make as a function of
     training iterations for the three different samplers discussed. We can
     observe a couple of interesting points from this plot. First, brute force
@@ -710,7 +710,7 @@ Computational physics II: Quantum mechanical systems\\
         $2+\num{8e-8}$ & $\num{4e-8}$ & 1.25247 & 1.0002 & 0.9998
         \\\hline
     \end{tabular}
-    
+
     Once again, the energies produced are very accurate. From the mean potential
     and kinetic energy we see both coming out to about half of the total energy
     each. Considering the Virial Theorem, which for a radial potential on the
@@ -718,11 +718,13 @@ Computational physics II: Quantum mechanical systems\\
     \begin{algin}
         2\expval{K} = n\expval{V}\label{eq:virial},
     \end{algin}
-   this fits the theory perfectly. Inserting $n=2$ in our case results in the
-    exact kinetic-potential ratio that we see. 
+    and for $n=2$ the two should be equal. Our results fit the theory well. 
 
     \autoref{fig:rbm-onebody-ideal} shows yet another indication that the
-    learned wavefunction is a very close approximation to the ideal.
+    learned wavefunction is a very close approximation to the ideal, this time
+    though the one-body density. The expected, ideal curve drawn was derived in
+    the report for project 1, and the technique used to calculate it is also as
+    described there.
 
 \end{multicols}
 
@@ -735,6 +737,21 @@ Computational physics II: Quantum mechanical systems\\
 \end{figure}
 
 \begin{multicols}{2}
+
+
+    \section{Conclusion}
+
+    Using the RBM as a model for the many-body wavefunction has proven to work
+    without issue in the non-interacting case. All results produced were in
+    strong agreement with the analytical expectations. Accuracy could be made
+    almost arbitrarily high using sufficient training iterations. We could also
+    achieve perfect results by using regularization, although this results was
+    artificially good due to the trivial nature of the ideal wavefunction. The
+    model was able to extend to a higher number of degrees of freedom without
+    issue. 
+
+    Extending to the interacting case...
+
     \printbibliography
 \end{multicols}
 
@@ -746,16 +763,16 @@ Computational physics II: Quantum mechanical systems\\
 
     \section{Analytic Expression for the Local Energy}
     \label{app:E-L-derivation}
-    
+
     To get started we will be needing a couple of partial derivatives:
-   \begin{align}
+    \begin{align}
         \pdv{}{X_k} (1+e^{v_j}) &=e^{v_j}\pdv{}{X_k}v_j =
         e^{v_j} \frac{w_{kj}}{\sigma^2}\\
         \begin{split}
-        \pdv{}{X_k}e^{-\sum_i^M u_i} &= e^{-\sum_i^M
-        u_i}\pdv{}{X_k}\qty(-\sum_i^M u_i) \\
-        &= e^{-\sum_i^M u_i}\pdv{}{X_k} (-u_k) \\
-        &= -e^{-\sum_i^M u_i} \frac{x_k-a_k}{\sigma^2}
+            \pdv{}{X_k}e^{-\sum_i^M u_i} &= e^{-\sum_i^M
+            u_i}\pdv{}{X_k}\qty(-\sum_i^M u_i) \\
+            &= e^{-\sum_i^M u_i}\pdv{}{X_k} (-u_k) \\
+            &= -e^{-\sum_i^M u_i} \frac{x_k-a_k}{\sigma^2}
         \end{split}
     \end{align}
 
@@ -776,9 +793,9 @@ Computational physics II: Quantum mechanical systems\\
     Before jumping into the second derivative, one more helpful derivative:
     \begin{align}
         \begin{split}
-        \pdv{}{X_k}\qty(\frac{w_{kj}}{1+e^{-v_j}}) &=
+            \pdv{}{X_k}\qty(\frac{w_{kj}}{1+e^{-v_j}}) &=
             -w_{kj}\frac{e^{-v_j}}{\qty(1+e^{-v_j})^2}\pdv{(-v_j)}{X_k}\\
-        &= \frac{w_{kj}^2}{\sigma^2} \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2}
+            &= \frac{w_{kj}^2}{\sigma^2} \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2}
         \end{split}
     \end{align}
 
@@ -793,11 +810,11 @@ Computational physics II: Quantum mechanical systems\\
         \frac{w_{kj}}{1+e^{-v_j}})\frac{1}{\Psi}\pdv{}{X_k}\Psi 
         \right]\\
         \begin{split}
-        &= -\frac{1}{\sigma^2} + \sum_j^N
-        \frac{w_{kj}^2}{\sigma^4}
-        \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2} \\
-        &\quad{   }\quad{      }  +
-        \frac{1}{\sigma^4}\qty(a_k-x_k+\sum_j^N \frac{w_{kj}}{1+e^{-v_j}})^2
+            &= -\frac{1}{\sigma^2} + \sum_j^N
+            \frac{w_{kj}^2}{\sigma^4}
+            \frac{e^{-v_j}}{\qty(1+e^{-v_j})^2} \\
+            &\quad{   }\quad{      }  +
+            \frac{1}{\sigma^4}\qty(a_k-x_k+\sum_j^N \frac{w_{kj}}{1+e^{-v_j}})^2
         \end{split}\numberthis\label{eq:E-L-second-deriv}
     \end{align*}
 
