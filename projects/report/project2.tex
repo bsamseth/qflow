@@ -34,16 +34,28 @@
 University of Oslo\\
 FYS4411\\
 Computational physics II: Quantum mechanical systems\\
-\huge Project 2: The Restricted Boltzmannn Machine Applied to the Quantum Many Body Problem}
+\huge Project 2: The Restricted Boltzmann Machine Applied to the Quantum Many Body Problem}
 \author{\textsc{Bendik Samseth}}
 \date{\today}
 \begin{document}
 \maketitle
 
 \begin{abstract}
-    Abstract here, please.
-    All material referenced in this report is available at
-    \url{https://github.com/bsamseth/FYS4411}.
+    We have applied a general reinforcement learning approach to solving quantum
+    mechanical many-body problems. The specific learning model applied is the
+    Restricted Boltzmann Machine (RBM), and we apply it to the system of two electrons trapped
+    in an harmonic oscillator. We investigate the system properties both with
+    and without considering the Coulomb interaction between them. We demonstrate
+    that the RBM is able to learn a wavefunction for the non-interacting system
+    with arbitrary precision. Including the inter-particle repulsion we obtain
+    only approximate results, and are not able to improve accuracy beyond a
+    certain level of precision. Still, the physical system that the modelled
+    wavefunction describes follows our intuitive expectations, as well as
+    following the predictions of the virial theorem.
+    All material referenced in this report, including all code, is documented
+    and available at \url{https://github.com/bsamseth/FYS4411}. All results
+    presented can be readily reproduced using the notebook linked to from the
+    above repository.
 \end{abstract}
 
 
@@ -190,6 +202,47 @@ Computational physics II: Quantum mechanical systems\\
         \ket{\downarrow\uparrow}).
     \end{align}
 
+    \subsection{Considerations from the Virial Theorem}
+
+    The Virial Theorem gives a general relation for the time-averaged kinetic
+    energy $\expval{K}$ and the corresponding potential energy
+    $\expval{V_{pot}}$ of a stable system of $N$ particles. In general the
+    theorem is stated as:
+
+    \begin{align}
+        \expval{K} = -\frac{1}{2}\sum_{k=1}^N \expval{\vec F_k \cdot \vec
+        r_k},\label{eq:virial-theorem}
+    \end{align}
+    where $\vec F_k$ denotes the combined forces acting on particle $k$, located
+    at position $\vec r_k$. For a radial potential on the form $V(r)=ar^n$, such
+    that the potential between any two particles in the system depends on some
+    power of the inter-particle distance, the
+    theorem takes the following form:
+    \begin{align}
+        \expval{K} = \frac{n}{2}\expval{V_{TOT}}
+    \end{align}
+    where $V_{TOT}$ denotes the sum of the potential energy $V(r)$ over all
+    pairs of particles. 
+
+    Although the harmonic oscillator potential does not depend on the
+    \emph{inter-particle} distance, but rather on each particles position, it
+    works out to the same relation in our case. Computing the full relation for
+    our Hamiltonian for two electrons in two dimensions, it even works out so
+    that we can use the same relation on the HO potential and the Coulomb
+    potential separately, and add the result.\footnote{We can (and have) work this out
+    via \autoref{eq:virial-theorem} directly using the corresponding forces for
+    the harmonic oscillator and Coulomb potential. A write-up of the derivation is not given
+    though, as this is a well known result.} This means that the Virial Theorem
+    predicts the following\cite{Katriel2012}:
+
+    \begin{align}
+        \expval{K} = \expval{V_{ext}} -
+        \frac{1}{2}\expval{V_{int}}.\label{eq:virial-result}
+    \end{align}
+
+    Note that this implies that we should consider the \emph{total} kinetic
+    energy, and the \emph{total} external and internal potential energies. 
+
     \section{Representing the Wavefunction with an RBM}
 
     Our machine learning model of choice is the Restricted Boltzmann Machine. It
@@ -278,7 +331,10 @@ Computational physics II: Quantum mechanical systems\\
     where $u_i$ and $v_j$ are defined for convenience. We will treat $a_i, b_i$
     and $w_{ij}$ as tunable parameters, while $\sigma^2$ will be taken as some
     constant, specifically the value we would have for the ideal wavefunction
-    for the non-interacting case.
+    for the non-interacting case. Looking at \autoref{eq:Phi-non-inter} in
+    comparison to Equation \ref{eq:Psi-def} we see that $\sigma^2=\omega^{-1}$
+    would yield the ideal non-interacting wavefunction when all parameters $\vec
+    \alpha=\vec 0$.
 
 
     \section{Learning the Wavefunction}
@@ -703,22 +759,17 @@ Computational physics II: Quantum mechanical systems\\
     here. Using Metropolis-Hastings sampling, Adam optimizer, $N=2$ and
     $\sigma^2=1$, running for $\num{4e4}$ iterations with $100$ samples per
     iteration, we obtain the following results (all energies in atomic units):
-
-    \begin{tabular}{|c|c|c|c|c|}\hline
-        $\expval{E_L}$ & $SE_\expval{E_L}$ & $\expval{r_{12}}$ & $\expval{V_{pot}}$ &
-        $\expval{K}$ \\\hline
-        $2+\num{8e-8}$ & $\num{4e-8}$ & 1.25247 & 1.0002 & 0.9998
-        \\\hline
+    \begin{center}
+    \begin{tabular}{|c|c|c|}\hline
+        $\expval{E_L}$ & $SE_\expval{E_L}$ & $\expval{r_{12}}$ \\\hline
+        $2+\num{8e-8}$ & $\num{4e-8}$ & 1.25247 \\\hline
+        $\expval{K}$ & $\expval{V_{pot}}$ & $\expval{K}_\text{virial}$\\\hline
+        0.9998 & 1.0002 & 1.0002 \\\hline
     \end{tabular}
-
+    \end{center}
     Once again, the energies produced are very accurate. From the mean potential
     and kinetic energy we see both coming out to about half of the total energy
-    each. Considering the Virial Theorem, which for a radial potential on the
-    form $V(r) = ar^n$ states that we should have
-    \begin{algin}
-        2\expval{K} = n\expval{V}\label{eq:virial},
-    \end{algin}
-    and for $n=2$ the two should be equal. Our results fit the theory well. 
+    each, as we would expect from \autoref{eq:virial-result}. Our results fit the theory well. 
 
     \autoref{fig:rbm-onebody-ideal} shows yet another indication that the
     learned wavefunction is a very close approximation to the ideal, this time
@@ -774,7 +825,7 @@ Computational physics II: Quantum mechanical systems\\
     improvements happen early, with diminishing returns on further training.
     However, a decent amount of iterations is still needed, somewhat dependent
     on the optimization scheme used. Some balance must be struck here, and
-    experiments tend toward a preference towards many training iterations.
+    experiments tend toward a preference for many training iterations.
 
 
     We present first some results for different number of hidden units. The
@@ -804,7 +855,7 @@ Computational physics II: Quantum mechanical systems\\
     decreasing accuracy when $N$ is increased. This fits earlier results, were
     having $N$ excessively high not only increases the run-time, but also makes
     training converge slightly slower and/or increases chances of local minima.
-    As such, it seems there is no point in using $N > 2$.\footnote{It would be,
+    As such, it seems there is no point in using $N > 2$.\footnote{It could be,
     given only these results, that training for longer would increase the
     accuracy for high $N$, and that the results shown are simply due to using
     too few iterations. This has, however, been seen to not be the case.
@@ -821,12 +872,18 @@ Computational physics II: Quantum mechanical systems\\
     $1.65$ for this oscillator strength, which is notably larger than what we
     had in the ideal case. This follows our intuition, as adding a repelling
     force should act to increase the distance between particles.
-    \autoref{fig:rbm-onebody-inter} shows the one-body density that the learned
+    \autoref{fig:rbm-onebody-inter-single} shows the one-body density that the learned
     wavefunction produces, with the exact ideal case curve drawn for reference.
     It shows the same effect graphically, as we see that the density is somewhat
     more spread out as a result of the particles hindering each other from
     staying near the origin.
 
+    We have also experimented with the regularization parameter. Despite the
+    ideal results seen by using regularization in the non-interacting system,
+    applying it to this case had very poor results. It seems that the problem at
+    hand does not suffer from the issue that regularization aims to fix, so
+    rather we just end up hampering the learning without any benefit. All
+    results presented are therefore obtained without regularization added.
 
 \end{multicols}
 
@@ -845,15 +902,45 @@ Computational physics II: Quantum mechanical systems\\
     \caption{One-body density for the interacting case of two electrons in 2D,
     and $\omega = 1$, as estimated using the trained $N=2$ RBM. The exact curve
     for the non-interacting case is drawn for reference. }
-    \label{fig:rbm-onebody-inter}
+    \label{fig:rbm-onebody-inter-single}
 \end{figure}
 
 \begin{multicols}{2}
     We now turn to investigate the effect of changing the trap strength
     $\omega$. \autoref{tab:omegas} was made by training $N=2$ models the same way
-    as before, but a separate model for each value of $\omega$. The
-    corresponding one-body density plots are shown in
-    \autoref{fig:rbm-onebody-omegas}.
+    as before, but a separate model for each value of $\omega$. Without knowing
+    the exact expected energies for all $\omegas$, it is hard to say much about
+    the accuracy. We know that the ideal case would have $E_0=2\omega$, which we
+    see all results overshooting, as one would expect. For the low-$\omega$
+    values we also see a relative difference from $2\omega$ which is much larger
+    than when $\omega =1$. 
+
+    Looking at the mean distance between the particles we see that it goes down
+    drastically with increasing $\omega$ values. This follows our intuition, as
+    increasing the trap strength should force the particles closer together. 
+
+    Lastly, we can see how the results perform with respect to the predictions
+    from the virial theorem. For $\omega=0.05$ and $\omega=0.10$ we are more or
+    less exactly correct. The other results are of by a little more. However,
+    considering $\omega=1$, we see that the error in the energy is very
+    comparable to the error in the kinetic energy vs the virial prediction. In
+    other words, the model respects the virial theorem to about the same
+    accuracy as it reproduces the correct energy. We consider this a very
+    positive result, showing that not only has the RBM been able to produce
+    energies that are comparable to the true values, but it has done so in a way
+    that does not conflict with the rest of the laws of physics. One could
+    perhaps argue that the RBM simply learned \emph{some} way to produce good
+    energies, but that the form of the wavefunction did not behave as the real
+    world would have. This is thankfully evidence against that fear.
+
+
+    The corresponding one-body density plots for the models trained are shown in
+    \autoref{fig:rbm-onebody-inter-omegasc}. We see the clear trend indicated
+    by the mean distances in \autoref{tab:omegas}. As $\omega$ decreases and the
+    pull towards the origin diminishes the electrons tend to drift further and
+    further away. As such, the plot once again follows our intuition, and gives
+    more quantitative evidence that the RBMs have successfully learned the
+    constraints imposed by the quantum laws, at least to a certain extent.
 
 \end{multicols}
     \begin{table}
@@ -861,23 +948,23 @@ Computational physics II: Quantum mechanical systems\\
         \caption{Results from trained RBMs for selected values of $\omega$.}
         \label{tab:omegas}
         \vspace{0.5cm}
-    \begin{tabular}{|c|c|c|c|c|c|}\hline
-        $\omega$ & $\expval{E_L}$ & $SE_\expval{E_L}$ & $\expval{r_{12}}$ & $\expval{V_{pot}}$ &
-        $\expval{K}$ \\\hline
-        0.01 & 1.0876 &  0.00149 &  12.1 &  1.000 &  0.087\\
-        0.05 & 1.0335 &  0.00129 &  6.46 &  0.833 &  0.201\\
-        0.1  & 1.0183 &  0.00120 &  5.50 &  0.729 &  0.289\\
-        0.5  & 1.8481 &  0.00111 &  2.32 &  0.726 &  1.121\\
-        1.0  & 3.0779 &  0.00116 &  1.65 &  0.799 &  2.281\\\hline
+    \begin{tabular}{|c|c|c|c|c|c|c|}\hline
+        $\omega$ & $\expval{E_L}$ & $SE_\expval{E_L}$ & $\expval{r_{12}}$ & $\expval{K}$ &
+        $\expval{V_{pot}}$ & $\expval{K}_\text{virial}$ \\\hline
+
+        0.01 & 0.1445 & 0.00166 & 12.64 & 0.0099 & 0.1327 & -0.0510\\
+        0.05 & 0.2776 & 0.00054 & 11.31 & 0.0508 & 0.2268 &  0.0611\\
+        0.10 & 0.4856 & 0.00068 &  7.15 & 0.0994 & 0.3857 &  0.1060\\
+        0.50 & 1.7207 & 0.00099 &  2.55 & 0.3809 & 1.3396 &  0.4557\\
+        1.00 & 3.0769 & 0.00114 &  1.65 & 0.7996 & 2.2775 &  0.8877\\\hline
     \end{tabular}
 \end{table}
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\linewidth]{../results/onebody-omegas.png}
-    \caption{One-body densities for selected values of $\omega$. The curve for
-    $\omega=0.01$ is artificially highly peaked due to the way the curve is
-    normalized, and cut off at a given radius.}
-    \label{fig:rbm-onebody-inter}
+    \includegraphics[width=\linewidth]{../results/onebody-omegas-v2.png}
+    \caption{One-body densities for selected values of $\omega$, as produced
+    from RBMs trained as described in the text.}
+    \label{fig:rbm-onebody-inter-omegas}
 \end{figure}
 
 \begin{multicols}{2}
@@ -893,7 +980,33 @@ Computational physics II: Quantum mechanical systems\\
     model was able to extend to a higher number of degrees of freedom without
     issue. 
 
-    Extending to the interacting case...
+    In the full interacting system we saw that the RBMs had a much harder time
+    converging to the correct energies. However, we were still able to produce
+    results within respectable bounds. In addition, we saw how the physical
+    properties of the system, such as mean inter-particle distance, distribution
+    of kinetic and potential energy, and one-body density all followed our
+    expectations to within the same degree of accuracy.
+
+    On the pessimistic side, we seemed to run up against a hard barrier on how
+    accurate we could make the results. Ideally we would have seen a trend
+    indicating that allowing sufficient flexibility of the model (i.e. high $N$)
+    and enough training, we could obtain arbitrary accuracy. We did not see such
+    a trend. However, this has not been disproved by this project, and it is
+    completely feasible that throwing sufficient computing power at this (i.e.
+    use many more samples per iteration, stabilizing the training, and letting
+    it go for a long as needed) could potentially improve the results somewhat. 
+
+    Despite the obvious lack of absolute accuracy, the approach used in this
+    project has one major benefit. That lies in its adaptability. If we would
+    like to investigate other systems, we only need to supply the Hamiltonian
+    describing it. The model can be left untouched, and deployed on new problems
+    without any hassle. This could prove to be a very useful tool, if we first
+    and foremost want to gain some higher level understanding of the system, and
+    (at least at first) do not have stringent requirements on the absolute
+    accuracy of the results. As we learn the wavefunction in this approach, this
+    gives us maximum information about the system, as apposed to just a single
+    property, and so we can investigate any property of the system we would
+    like.
 
     \printbibliography
 \end{multicols}
