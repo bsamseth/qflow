@@ -1,2 +1,5 @@
 *.ipynb linguist-generated=true
+*.tex linguist-generated=true
+*.sty linguist-generated=true
+*.bib linguist-generated=true
 */external/* linguist-vendored
