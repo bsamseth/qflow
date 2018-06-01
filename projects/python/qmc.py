@@ -11,7 +11,6 @@ except NameError:
     current_dir = os.getcwd()
 source_dir = os.path.dirname(current_dir)
 include_dir = os.path.join(source_dir, 'include')
-install_dir = os.path.join(source_dir, 'build-release')
 print(current_dir, source_dir, include_dir, install_dir)
 
 def cmake_run(build_type='Release', c_compiler='gcc', cxx_compiler='g++'):
