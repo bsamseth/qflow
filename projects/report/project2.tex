@@ -34,24 +34,26 @@
 University of Oslo\\
 FYS4411\\
 Computational physics II: Quantum mechanical systems\\
-\huge Project 2: The Restricted Boltzmann Machine Applied to the Quantum Many Body Problem}
+\huge Project 2: The Restricted Boltzmann Machine Applied to a Quantum Many Body Problem}
 \author{\textsc{Bendik Samseth}}
 \date{\today}
 \begin{document}
 \maketitle
 
 \begin{abstract}
-    We have applied a general reinforcement learning approach to solving quantum
+    We apply a general reinforcement learning approach to solving quantum
     mechanical many-body problems. The specific learning model applied is the
     Restricted Boltzmann Machine (RBM), and we apply it to the system of two electrons trapped
     in an harmonic oscillator. We investigate the system properties both with
     and without considering the Coulomb interaction between them. We demonstrate
     that the RBM is able to learn a wavefunction for the non-interacting system
     with arbitrary precision. Including the inter-particle repulsion we obtain
-    only approximate results, and are not able to improve accuracy beyond a
-    certain level of precision. Still, the physical system that the modelled
-    wavefunction describes follows our intuitive expectations, as well as
-    following the predictions of the virial theorem.
+    only approximate results, and are not able to improve accuracy beyond 
+    an error of about $10^{-1}\si{\au}$ Still, the physical system that the modelled
+    wavefunction describes follows intuitive expectations, as well as
+    following the predictions of the virial theorem, at least to the same degree
+    of accuracy.
+
     All material referenced in this report, including all code, is documented
     and available at \url{https://github.com/bsamseth/FYS4411}. All results
     presented can be readily reproduced using the notebook linked to from the
@@ -69,7 +71,7 @@ Computational physics II: Quantum mechanical systems\\
 
     A physicist faced with a quantum many body system is quickly forced to
     abandon any hope of solving the Schrödinger equation (or one of its even worse
-    relativistic siblings) exactly. Instead he must resort to one of two general
+    relativistic siblings) directly. Instead he must resort to one of two general
     workarounds: 1) make simplifying assumptions until the equation is solvable,
     or 2) make an educated guess for the solution. In either case, the desired
     quantity which solving the Schrödinger equation would yield is the quantum
@@ -149,7 +151,7 @@ Computational physics II: Quantum mechanical systems\\
         \frac{1}{2}\omega^2 r_i^2).
     \end{align}
     This Hamiltonian lends it self to analytical solutions, and the stationary
-    states are:
+    single particle states are:
     \begin{align}
         \phi_{n_x, n_y}(x, y) &= A H_{n_x}(\sqrt\omega x)H_{n_y}(\sqrt\omega y)
         e^{-\frac{\omega}{2}\qty(x^2 + y^2)},
@@ -233,7 +235,7 @@ Computational physics II: Quantum mechanical systems\\
     via \autoref{eq:virial-theorem} directly using the corresponding forces for
     the harmonic oscillator and Coulomb potential. A write-up of the derivation is not given
     though, as this is a well known result.} This means that the Virial Theorem
-    predicts the following\cite{Katriel2012}:
+    predicts the following~\cite{Katriel2012}:
 
     \begin{align}
         \expval{K} = \expval{V_{ext}} -
@@ -246,7 +248,7 @@ Computational physics II: Quantum mechanical systems\\
     \section{Representing the Wavefunction with an RBM}
 
     Our machine learning model of choice is the Restricted Boltzmann Machine. It
-    consists of of two densely interconnected layers, the \emph{visible} layer
+    consists of two densely interconnected layers, the \emph{visible} layer
     and the \emph{hidden} layer. It is called restricted because we only
     allow connections between nodes in different layers - no visible-to-visible or
     hidden-to-hidden connections are included.
@@ -273,18 +275,18 @@ Computational physics II: Quantum mechanical systems\\
     this. In order to evaluate how good (or bad) a proposed model work, we need
     to evaluate the ground state energy. In order to do this we, as in project
     1, use the proposed wavefunction to sample positions to be used in the
-    evaluation of the energy. This will only work well if the model is somewhat
-    decent at modeling the true wavefunction. If the proposed model is very far
-    off, the resulting energy evaluations will be very unstable, and we could
-    end up with large errors in the computed gradients. This could in turn lead
-    to an even worse model, and this could go on until something crashes. This
-    issue is similar to the \emph{exploding gradient} problem which often occurs
-    in neural network models, if not addressed properly. We will not address
-    this directly in this project, and instead lean on the fact that we probably
-    have rather decent starting guesses, as we have exact solutions to the ideal
-    case. It is, however, a potential issue if this approach should be applied
-    to systems for which we have a very poor sense of the underlying
-    wavefunction form.
+    evaluation of the energy. This kind of almost circular reasoning will only work
+    well if the model is somewhat decent at modeling the true wavefunction. If
+    the proposed model is very far off, the resulting energy evaluations will be
+    very unstable, and we could end up with large errors in the computed
+    gradients. This could in turn lead to an even worse model, and this could go
+    on until something crashes. This issue is similar to the \emph{exploding
+    gradient} problem which often occurs in neural network models, if not
+    addressed properly. We will not address this directly in this project, and
+    instead lean on the fact that we probably have rather decent starting
+    guesses, as we have exact solutions to the ideal case. It is, however, a
+    potential issue if this approach should be applied to systems for which we
+    have a very poor sense of the underlying wavefunction form.
 
     \subsection{The Math}
 
@@ -305,7 +307,7 @@ Computational physics II: Quantum mechanical systems\\
     \subsubsection{Gaussian-Binary RBM}
 
     The type of energy function we will use is called Gaussian-Binary, meaning
-    our inputs (the position coordinates) are Gaussian (continuous), while the
+    our inputs (the position coordinates) are Gaussian (continuous and normal), while the
     hidden nodes take binary values $h_j\in \{0, 1\}$. It looks as follows:
     \begin{align}
         E(\vec x, \vec h) = \frac{\norm{\vec x-\vec a}}{2\sigma^2} - \vec
@@ -621,9 +623,9 @@ Computational physics II: Quantum mechanical systems\\
     $0.49999985\pm \num{2e-6}\si{\au}$, compared to the exact value of
     $\SI{0.5}{\au}$. The error given here is the standard error of the mean
     local energy, as calculated with the Blocking method discussed in project 1,
-    using $2^{20}$ samples. If we allow for more training, the energy is lower
-    somewhat more, although the gains diminish as $E_L$ approaches its ideal
-    value. In any case, this is precision more than acceptable.
+    using $2^{20}$ samples. If we allow for more training, the energy is lowered
+    more, although the gains diminish as $E_L$ approaches its ideal
+    value. In any case, this precision is more than acceptable.
 
     Applying regularization in this case, for almost any reasonable choice for
     $\gamma$ (e.g. $0.1$), the RBM converges \emph{very} quickly to the exact
@@ -637,6 +639,7 @@ Computational physics II: Quantum mechanical systems\\
 
 \end{multicols}
 
+    \hrule
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\linewidth]{../results/rbm-1d-1p.png}
@@ -645,7 +648,6 @@ Computational physics II: Quantum mechanical systems\\
 \end{figure}
 
 \begin{multicols}{2}
-
 
     \autoref{fig:rbm-training-samplers} shows the error we make as a function of
     training iterations for the three different samplers discussed. We can
@@ -676,7 +678,7 @@ Computational physics II: Quantum mechanical systems\\
 
 
 \end{multicols}
-
+\hrule
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\linewidth]{../results/learning-samplers.png}
@@ -738,7 +740,7 @@ Computational physics II: Quantum mechanical systems\\
 
 
 \end{multicols}
-
+\hrule
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\linewidth]{../results/learning-N-variants.png}
@@ -752,7 +754,7 @@ Computational physics II: Quantum mechanical systems\\
 \clearpage
 \begin{multicols}{2}
 
-    \subsection{Two Particles in Two Dimension} 
+    \subsection{Two Particles in Two Dimensions} 
 
     We now scale up to two particles in two dimensions, but not including the
     interacting for now. We are once again able to obtain very good results
@@ -761,7 +763,7 @@ Computational physics II: Quantum mechanical systems\\
     iteration, we obtain the following results (all energies in atomic units):
     \begin{center}
     \begin{tabular}{|c|c|c|}\hline
-        $\expval{E_L}$ & $SE_\expval{E_L}$ & $\expval{r_{12}}$ \\\hline
+        $\expval{E_L}$ & $SE_{\expval{E_L}}$ & $\expval{r_{12}}$ \\\hline
         $2+\num{8e-8}$ & $\num{4e-8}$ & 1.25247 \\\hline
         $\expval{K}$ & $\expval{V_{pot}}$ & $\expval{K}_\text{virial}$\\\hline
         0.9998 & 1.0002 & 1.0002 \\\hline
@@ -773,12 +775,12 @@ Computational physics II: Quantum mechanical systems\\
 
     \autoref{fig:rbm-onebody-ideal} shows yet another indication that the
     learned wavefunction is a very close approximation to the ideal, this time
-    though the one-body density. The expected, ideal curve drawn was derived in
+    through the one-body density. The expected, ideal curve drawn was derived in
     the report for project 1, and the technique used to calculate it is also as
     described there.
 
 \end{multicols}
-
+\hrule
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\linewidth]{../results/P2-D2-onebody.png}
@@ -829,7 +831,7 @@ Computational physics II: Quantum mechanical systems\\
 
 
     We present first some results for different number of hidden units. The
-    following table numbers were obtained using $10^4$ iterations of $10^3$
+    following table was obtained using $10^4$ iterations of $10^3$
     samples, and the means and standard errors were computed on the resulting
     models using $2^{20}$ samples. As before, the standard error is as
     calculated using the blocking method.
@@ -864,7 +866,7 @@ Computational physics II: Quantum mechanical systems\\
     
     As such, a model using $N=2$ was trained using $\num{2e4}$ training
     iterations of $10^3$ sample points using the Adam optimizer with default
-    parameters. The obtained energy estimate obtained was saw no improvement
+    parameters. The obtained energy estimate obtained saw no improvement
     over the above listed results, and so we conclude that this accuracy as
     about as good as we can get it. 
     
@@ -883,10 +885,14 @@ Computational physics II: Quantum mechanical systems\\
     applying it to this case had very poor results. It seems that the problem at
     hand does not suffer from the issue that regularization aims to fix, so
     rather we just end up hampering the learning without any benefit. All
-    results presented are therefore obtained without regularization added.
+    results presented are therefore obtained without regularization added, and
+    no further discussion of regularization is included in this report. As a
+    footnote to future work, regularization should not be abandoned completely,
+    as other ML-models with different architectures and flexibilities might
+    still benefit.
 
 \end{multicols}
-
+\hrule
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\linewidth]{../results/learning-N-variants-interacting.png}
@@ -909,33 +915,45 @@ Computational physics II: Quantum mechanical systems\\
     We now turn to investigate the effect of changing the trap strength
     $\omega$. \autoref{tab:omegas} was made by training $N=2$ models the same way
     as before, but a separate model for each value of $\omega$. Without knowing
-    the exact expected energies for all $\omegas$, it is hard to say much about
+    the exact expected energies for all $\omega$, it is hard to say much about
     the accuracy. We know that the ideal case would have $E_0=2\omega$, which we
     see all results overshooting, as one would expect. For the low-$\omega$
     values we also see a relative difference from $2\omega$ which is much larger
-    than when $\omega =1$. 
+    than when $\omega =1$. From \cite{PedersenLohne2011} we have numerical
+    results for $\omega = 0.5$, which indicate that the exact energy should be
+    $E_0 \approx \SI{1.67}{\au}$ The results from the RBM are close, but once
+    again off by about the same magnitude as seen for $\omega=1$.
 
     Looking at the mean distance between the particles we see that it goes down
     drastically with increasing $\omega$ values. This follows our intuition, as
-    increasing the trap strength should force the particles closer together. 
+    increasing the trap strength should force the particles closer together,
+    with the opposite being true for the reverse.
 
     Lastly, we can see how the results perform with respect to the predictions
     from the virial theorem. For $\omega=0.05$ and $\omega=0.10$ we are more or
-    less exactly correct. The other results are of by a little more. However,
-    considering $\omega=1$, we see that the error in the energy is very
-    comparable to the error in the kinetic energy vs the virial prediction. In
-    other words, the model respects the virial theorem to about the same
-    accuracy as it reproduces the correct energy. We consider this a very
-    positive result, showing that not only has the RBM been able to produce
-    energies that are comparable to the true values, but it has done so in a way
-    that does not conflict with the rest of the laws of physics. One could
-    perhaps argue that the RBM simply learned \emph{some} way to produce good
-    energies, but that the form of the wavefunction did not behave as the real
-    world would have. This is thankfully evidence against that fear.
+    less exactly correct. The other results are off by a little more. However,
+    considering $\omega=1$ and $\omega=0.5$, for which we know the desired
+    results, we see that the error in the energy is very comparable to the error
+    in the kinetic energy vs the virial prediction. In other words, the model
+    respects the virial theorem to about the same accuracy as it reproduces the
+    correct energy. We consider this a very positive result, showing that not
+    only has the RBM been able to produce energies that are comparable to the
+    true values, but it has done so in a way that does not conflict with the
+    rest of the laws of physics. One could perhaps argue that the RBM simply
+    learned \emph{some} way to produce good energies, but that the form of the
+    wavefunction did not behave as the real world would have. This is thankfully
+    evidence against that fear.
 
+    Another note to make about the virial predictions is that the expected
+    values are, in the same way as every other numerical results here, computed
+    using positions sampled from the learned wavefunction. This means that 
+    the \emph{predicted} values for the total kinetic energy given in
+    \autoref{tab:omegas} are inaccurate as well. They still do show how the
+    virial theorem would have the energy distributed, and so it should still be
+    sensible to compare our results to these values.
 
     The corresponding one-body density plots for the models trained are shown in
-    \autoref{fig:rbm-onebody-inter-omegasc}. We see the clear trend indicated
+    \autoref{fig:rbm-onebody-inter-omegas}. We see the clear trend indicated
     by the mean distances in \autoref{tab:omegas}. As $\omega$ decreases and the
     pull towards the origin diminishes the electrons tend to drift further and
     further away. As such, the plot once again follows our intuition, and gives
@@ -943,13 +961,15 @@ Computational physics II: Quantum mechanical systems\\
     constraints imposed by the quantum laws, at least to a certain extent.
 
 \end{multicols}
-    \begin{table}
+\hrule
+\setcounter{table}{2}
+\begin{table}
         \centering
         \caption{Results from trained RBMs for selected values of $\omega$.}
         \label{tab:omegas}
         \vspace{0.5cm}
     \begin{tabular}{|c|c|c|c|c|c|c|}\hline
-        $\omega$ & $\expval{E_L}$ & $SE_\expval{E_L}$ & $\expval{r_{12}}$ & $\expval{K}$ &
+        $\omega$ & $\expval{E_L}$ & $SE_{\expval{E_L}}$ & $\expval{r_{12}}$ & $\expval{K}$ &
         $\expval{V_{pot}}$ & $\expval{K}_\text{virial}$ \\\hline
 
         0.01 & 0.1445 & 0.00166 & 12.64 & 0.0099 & 0.1327 & -0.0510\\
@@ -1008,10 +1028,21 @@ Computational physics II: Quantum mechanical systems\\
     property, and so we can investigate any property of the system we would
     like.
 
+    \section{Further Work}
+    The general approach employed here, applying the variational principle in a
+    reinforcement learning scheme, learning the wavefunction through some model,
+    has shown promise both in previous publications as well as in this project.
+    As such, an interesting point of further study would be to test different
+    models on this, and other systems of interest. Hopefully, deploying some
+    different architectures might help to overcome the apparent barrier which
+    the simple RBM seems to have run up against. Thankfully, the pool of
+    possible models to try is vast, and it only remains to find efficient ways
+    to apply them to the quantum problems.
+
     \printbibliography
 \end{multicols}
 
-\pagebreak
+\clearpage
 \begin{multicols}{2}
     \appendix
     \addcontentsline{toc}{section}{Appendices}
@@ -1086,6 +1117,30 @@ Computational physics II: Quantum mechanical systems\\
 
 \end{multicols}
 
-
-
+    \section{Example of Results of Bad $\sigma^2$ choices}
+    In earlier attempts, we
+    tried producing \autoref{fig:rbm-onebody-inter-omegas} using $\sigma^2=1$ in
+    all models. This lead to very interesting one-body-density plots, shown in
+    \autoref{fig:rbm-onebody-inter-omegas-bad-sigma}, showing
+    distinct peaks away from the origin. This came as a result of $\sigma^2$
+    being way to small for the weak traps, leading to overly specific selection
+    of positions. Although this plot might look more appealing in some sense,
+    the energy predictions suffer greatly as a result. This serves as an example
+    of how the assumptions we put into the model have a great deal to say on the
+    final results, especially when the model is as simple as the RBM. A more
+    flexible model would perhaps (given time) been able to adapt to bad starting
+    points. The model as presented here however did not show this capability,
+    resulting in strange results such as this.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\linewidth]{../results/onebody-omegas-v2-sigma2-fixed.png}
+    \caption{One-body density plots for various $\omega$, obtained by training
+    RBMs in a similar fashion to those used in
+    \autoref{fig:rbm-onebody-inter-omegas}, only with $\sigma^2=1$ for all
+    models. The overly specific spread parameter leads to peaks in the plot,
+    which are not observed before. The corresponding energies produced are
+    severely increased as $\omega$ gets smaller, indicating that these results
+    are much less accurate.}
+    \label{fig:rbm-onebody-inter-omegas-bad-sigma}
+\end{figure}
 \end{document}
