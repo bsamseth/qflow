@@ -33,17 +33,33 @@ Real gradient_decent_optimizer(Wavefunction &wavefunction,
                                bool verbose = true);
 }
 
+/**
+ * Class implementing a general stochastic gradient decent algorithm.
+ */
 class SgdOptimizer {
     private:
+        // Learning rate.
         Real _eta;
 
     public:
+        /**
+         * Construct an SGD optimizer with a given learning rate.
+         */
         SgdOptimizer(Real eta = 0.1);
 
+        /**
+         * Return a parameter update meant to be added to the existing parameters
+         * of the object/function that produced the given gradient.
+         * @param gradient the gradient of the objective function to be minimized.
+         * @return - _eta * gradient
+         */
         virtual Vector update_term(const Vector &gradient);
 };
 
 
+/**
+ * Class implementing the extension to SGD referred to as ADAM.
+ */
 class AdamOptimizer : public SgdOptimizer {
     private:
         const Real _alpha;
@@ -56,6 +72,9 @@ class AdamOptimizer : public SgdOptimizer {
         Vector _v;
 
     public:
+        /**
+         * Construct an ADAM optimizer with given parameters. The defaults are as proposed in the original article.
+         */
         AdamOptimizer(std::size_t n_parameters, Real alpha = 0.001, Real beta1 = 0.9, Real beta2 = 0.999, Real epsilon = 1e-8);
 
         virtual Vector update_term(const Vector &gradient);

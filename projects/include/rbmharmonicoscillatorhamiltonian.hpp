@@ -7,6 +7,7 @@
 
 /**
  * Class representing the simple harmonic oscillator Hamiltonian.
+ * See superclass for documentation of overridden methods.
  */
 class RBMHarmonicOscillatorHamiltonian : public Hamiltonian {
     protected:
@@ -18,9 +19,6 @@ class RBMHarmonicOscillatorHamiltonian : public Hamiltonian {
 
         virtual Real external_potential(System&) const;
 
-        /**
-         * @return Zero, as no interaction is active.
-         */
         virtual Real internal_potential(System&) const;
 
         virtual Real local_energy(System&, const Wavefunction&) const;

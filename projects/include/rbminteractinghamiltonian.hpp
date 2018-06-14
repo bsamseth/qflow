@@ -6,7 +6,7 @@
 #include "rbmharmonicoscillatorhamiltonian.hpp"
 
 /**
- * Class representing the hamiltonian with Coloumb interaction.
+ * Class representing the Hamiltonian with Coulomb interaction.
  */
 class RBMInteractingHamiltonian : public RBMHarmonicOscillatorHamiltonian {
     public:

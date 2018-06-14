@@ -14,6 +14,11 @@ class GibbsSampler : public Sampler {
         System _system;
         Real _stddev;
 
+        /**
+         * @param j index of hidden nodes to compute probability for.
+         * @param system configuration to evaluate for.
+         * @return P(h_j = 1 | x)
+         */
         Real P_h(int j, const System &system) const;
 
     public:
@@ -24,11 +29,13 @@ class GibbsSampler : public Sampler {
         GibbsSampler(const System&, const RBMWavefunction&);
 
         /**
-         * @return A new System instance.
+         * @return A new System instance, drawn from the wavefunction prob. distribution.
          */
         virtual System& next_configuration();
 
         virtual void initialize_system();
+
+        // These methods are not used in Gibbs, but need to be specified nonetheless.
         virtual void perturb_system();
         virtual Real acceptance_probability() const;
 };
