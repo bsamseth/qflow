@@ -83,8 +83,8 @@ class Hamiltonian {
 };
 
 inline Real Hamiltonian::gross_pitaevskii_energy(const System &system, const Wavefunction &psi) const {
-    const int N = system.get_n_particles();
-    const int D = system.get_dimensions();
+    const int N = system.cols();
+    const int D = system.rows();
     const Real alpha = psi.get_parameters()[0];
     const Real beta = psi.get_parameters()[1];
     assert(beta == _omega_z);   // GP equation used is for when gamma = beta = omega_z.

@@ -13,7 +13,7 @@ class HarmonicOscillatorHamiltonian: public Hamiltonian {
 
         using Hamiltonian::Hamiltonian;
 
-        virtual Real external_potential( System&) const;
+        virtual Real external_potential(System&) const;
 
         /**
          * @return Zero, as no interaction is active.

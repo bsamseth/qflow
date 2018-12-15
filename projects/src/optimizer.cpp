@@ -100,7 +100,7 @@ AdamOptimizer::AdamOptimizer(std::size_t n_parameters, Real alpha, Real beta1, R
 Vector AdamOptimizer::update_term(const Vector &gradient) {
     ++_t;
     _m = _beta1 * _m + (1 - _beta1) * gradient;
-    _v = _beta2 * _v + (1 - _beta2) * (gradient % gradient);
+    _v = _beta2 * _v + (1 - _beta2) * (gradient * gradient);
     _alpha_t = _alpha * std::sqrt(1 - std::pow(_beta2, _t)) / (1 - std::pow(_beta1, _t));
 
     Vector update(_m.size());
