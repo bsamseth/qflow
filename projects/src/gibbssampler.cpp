@@ -18,7 +18,7 @@ void GibbsSampler::initialize_system() {
     std::normal_distribution<Real> dist(0, _stddev);
     for (int i = 0; i < _system.cols(); ++i) {
         for (int d = 0; d < _system.rows(); ++d) {
-            _system(i, d) = dist(rand_gen);
+            _system(d, i) = dist(rand_gen);
         }
     }
 }

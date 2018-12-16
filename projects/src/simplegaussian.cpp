@@ -27,7 +27,7 @@ SimpleGaussian::SimpleGaussian(std::initializer_list<Real> parameters)
     : Wavefunction(parameters)
 {
     // Set default parameters.
-    const static Vector defaults = vector_from_sequence(std::vector<Real>{{0.5, 1}});
+    const static Vector defaults = vector_from_sequence({0.5, 1});
     _parameters = defaults;
 
     // Copy any given parameters.
@@ -70,6 +70,5 @@ Real SimpleGaussian::laplacian(System &system) const {
 
         E_L += 2 * alpha * (2 * alpha * (r_k.dot(r_k)) + one_body_beta_term);
     }
-
     return E_L;
 }

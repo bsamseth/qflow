@@ -21,7 +21,7 @@ namespace {
 }
 
 class RBMWavefunctionTest : public ::testing::Test {
-    protected:
+    public:
         constexpr static int P = 2;
         constexpr static int D = 3;
         constexpr static int M = P * D;
@@ -31,12 +31,12 @@ class RBMWavefunctionTest : public ::testing::Test {
         RBMWavefunction *rbm;
 
         virtual void SetUp() {
-            s = new System(P, D);
-            (*s)(0) = {{-0.5009136425144746,  0.0118290278182348,  1.0861838035029527}};
-            (*s)(1) = {{-0.1180658328483096, -1.0091187557423571, -0.5365339555565911}};
+            s = new System(3, 2);
+            s->col(0) << -0.5009136425144746,  0.0118290278182348,  1.0861838035029527;
+            s->col(1) << -0.1180658328483096, -1.0091187557423571, -0.5365339555565911;
 
             rbm = new RBMWavefunction(M, N, 2);
-            rbm->set_parameters({{-0.7665546243072233,  0.9406054576757206, -0.1411666581066846,
+            rbm->set_parameters({-0.7665546243072233,  0.9406054576757206, -0.1411666581066846,
                                    2.3698247761289206, -0.0925344556191133, -0.822443320890463 ,
                                   -0.3367728130900145,  0.6042382684274119,  1.1031676900053826,
                                   -1.11343573670209  , -1.2698025674851516,  0.6405021942562454,
@@ -54,7 +54,7 @@ class RBMWavefunctionTest : public ::testing::Test {
                                    1.0230129736402584,  0.4995386943252447, -0.9389995079735179,
                                   -0.1790977108647215, -0.0797636435834231, -0.6916788192310428,
                                   -0.0363434391489085, -1.2944879136187115,  0.8263967557636448,
-                                  -0.0240516420501065}});
+                                  -0.0240516420501065});
         }
         virtual void TearDown() {
             delete s;
@@ -79,12 +79,12 @@ TEST_F(RBMWavefunctionTest, evaluation) {
 
 TEST_F(RBMWavefunctionTest, gradient) {
     Vector gradient = rbm->gradient(*s);
-    Vector expected_a = {{0.1328204908963744, -0.4643882149287429,  0.6136752308048187,
-                          -1.2439453044886151, -0.4582921500616219,  0.142954682666936}};
-    Vector expected_b = {{0.6017040564983215,  0.6685085554779254,  0.8489820123505009,
+    Vector expected_a = vector_from_sequence({0.1328204908963744, -0.4643882149287429,  0.6136752308048187,
+                          -1.2439453044886151, -0.4582921500616219,  0.142954682666936});
+    Vector expected_b = vector_from_sequence({0.6017040564983215,  0.6685085554779254,  0.8489820123505009,
                           0.2817462931894426,  0.2952675674909326,  0.2801418147825886,
-                          0.7992927449865912}};
-    Vector expected_w = {{-0.1507008853281547045 , -0.16743252778826867022,
+                          0.7992927449865912});
+    Vector expected_w = vector_from_sequence({-0.1507008853281547045 , -0.16743252778826867022,
                           -0.21263333611787901822, -0.07056528099323740311,
                           -0.07395177637413576088, -0.07016342843168088539,
                           -0.20018832016331319923,  0.00355878701133167767,
@@ -104,7 +104,7 @@ TEST_F(RBMWavefunctionTest, gradient) {
                           -0.40329065014738102457, -0.16141732875374550926,
                           -0.17933876979699708842, -0.22775383864140447132,
                           -0.07558322657416934043, -0.07921053796674140668,
-                          -0.07515279800105209573, -0.214423849057670729}};
+                          -0.07515279800105209573, -0.214423849057670729});
     for (int i = 0; i < M; ++i)
         EXPECT_DOUBLE_EQ(expected_a[i], gradient[rbm->a(i)]);
     for (int j = 0; j < N; ++j)
@@ -143,38 +143,37 @@ TEST(RBMWavefunction, correctForIdealCase) {
     for (int runs = 0; runs < 1000; ++runs) {
         int P = square(dim_gen()), D = dim_gen();
         int M = P * D, N = 1;
-        System s (P, D);
+        System s (D, P);
         RBMWavefunction rbm(M, N, sigma2);
-        rbm.set_parameters(Vector(M + N + M * N));
+        rbm.set_parameters(Vector::Zero(M + N + M * N));
 
         // Random system config.
-        for (int i = 0; i < P; ++i) {
-            s(i) = Vector{D};
-            for (int j = 0; j < D; j++)
-                s(i)[j] = double_gen();
+        for (int i = 0; i < D; ++i) {
+            for (int j = 0; j < P; j++)
+                s(i, j) = double_gen();
         }
 
         Real expected = 0.5 * P * D;
-        ASSERT_NEAR(expected, H.local_energy_numeric(s, rbm), expected * 1e-6);
         ASSERT_NEAR(expected, H.local_energy(s, rbm), expected * 1e-15);
+        ASSERT_NEAR(expected, H.local_energy_numeric(s, rbm), expected * 1e-6);
     }
 }
 
-TEST(RBMWavefunction, trainSimpleCase) {
-    System init_system (1, 1);
-    RBMWavefunction rbm (1, 2);
+
+TEST(RBMWavefunction, trainSimpleCase3D) {
+    System init_system (3, 2);
+    RBMWavefunction rbm (6, 2);
     ImportanceSampler sampler (init_system, rbm, 0.5);
     RBMHarmonicOscillatorHamiltonian H;
+    SgdOptimizer sgd(0.5);
 
-    rbm.train(H, sampler, 10000, 100, 0.9, 0.0, false);
+    rbm.train(H, sampler, 10000, 100, sgd, 0.0, false);
 
     Real E_L = 0;
-    for (int i = 0; i < 1000; ++i)
+    for (int i = 0; i < 5000; ++i)
         E_L += H.local_energy(sampler.next_configuration(), rbm);
-    E_L /= 1000;
+    E_L /= 5000;
 
-    ASSERT_NEAR(0.5, E_L, 1e-3);
+    ASSERT_NEAR(3.0, E_L, 1e-3);
 }
-
-
 

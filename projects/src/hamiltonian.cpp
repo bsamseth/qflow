@@ -13,12 +13,12 @@ Real Hamiltonian::kinetic_energy_numeric(System &system, const Wavefunction &psi
 
     for (int i = 0; i < system.cols(); ++i) {
         for (int d = 0; d < system.rows(); ++d) {
-            const auto temp = system(i, d);
-            system(i, d) = temp + _h;
+            const auto temp = system(d, i);
+            system(d, i) = temp + _h;
             E_k += psi(system);
-            system(i, d) = temp - _h;
+            system(d, i) = temp - _h;
             E_k += psi(system);
-            system(i, d) = temp;
+            system(d, i) = temp;
         }
     }
 
@@ -46,8 +46,8 @@ Real Hamiltonian::local_energy(System &system, const Wavefunction &psi) const {
 
 Vector Hamiltonian::local_energy_gradient(Sampler &sampler, const Wavefunction &psi, long samples) const {
     Real E_mean = 0;
-    Vector grad   (psi.get_parameters().size());
-    Vector grad_E (psi.get_parameters().size());
+    Vector grad = Vector::Zero(psi.get_parameters().size());
+    Vector grad_E = Vector::Zero(psi.get_parameters().size());
     for (int sample = 0; sample < samples; ++sample) {
         System &system = sampler.next_configuration();
         Real E = local_energy(system, psi);

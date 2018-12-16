@@ -10,8 +10,7 @@ InteractingWavefunction::InteractingWavefunction(std::initializer_list<Real> par
     : SimpleGaussian(parameters)
 {
     // Set default parameters.
-    static Vector defaults;
-    defaults << 0.5, 1, 0;
+    const static Vector defaults = vector_from_sequence({0.5, 1, 0});
 
     _parameters = defaults;
 
@@ -62,7 +61,7 @@ Real InteractingWavefunction::laplacian(System &system) const {
 
         // Interaction terms:
 
-        Vector term1 (system.rows());
+        Vector term1 = Vector::Zero(system.rows());
         Real term2 = 0;
         Real term3 = 0;
         for (int j = 0; j < system.cols(); ++j) {

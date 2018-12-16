@@ -28,12 +28,12 @@ class HarmonicOscillatorHamiltonianTest : public ::testing::Test {
         HarmonicOscillatorHamiltonian H_2 {2.8};
 
         virtual void SetUp() {
-            s = new System(4, 3);
+            s = new System(3, 4);
             // Random values.
-            (*s)(0) = {{0.50833829,  0.07732213,  0.69294646}};
-            (*s)(1) = {{0.63837196,  0.48833327,  0.17570063}};
-            (*s)(2) = {{0.72436579,  0.36970369,  0.49771584}};
-            (*s)(3) = {{0.42984966,  0.72519657,  0.30454728}};
+            s->col(0) << 0.50833829,  0.07732213,  0.69294646;
+            s->col(1) << 0.63837196,  0.48833327,  0.17570063;
+            s->col(2) << 0.72436579,  0.36970369,  0.49771584;
+            s->col(3) << 0.42984966,  0.72519657,  0.30454728;
         }
         virtual void TearDown() {
             delete s;
@@ -49,8 +49,8 @@ TEST_F(HarmonicOscillatorHamiltonianTest, potential) {
 }
 
 TEST_F(HarmonicOscillatorHamiltonianTest, potential2D) {
-    System s (1, 2);
-    s(0) = {{0.75, -1.5}};
+    System s (2, 1);
+    s.col(0) << 0.75, -1.5;
 
     // Check potential for 2D case. Should be agnotic of
     // omega_z value.
@@ -86,12 +86,16 @@ TEST_F(HarmonicOscillatorHamiltonianTest, local_energy_simple) {
 
     // 1000, why not?
     for (int runs = 0; runs < 1000; ++runs) {
-        System s (dim_gen() * dim_gen() * dim_gen() * dim_gen(), dim_gen());
-        for (int i = 0; i < s.get_n_particles(); ++i) {
-            s(i) = {{ double_gen(), double_gen(), double_gen() }};
+        int dims = dim_gen();
+        int particles = dim_gen() * dim_gen() * dim_gen() * dim_gen();
+        System s (dims, particles);
+        for (int j = 0; j < s.cols(); ++j) {
+            for (int i = 0; i < s.rows(); ++i) {
+                s(i, j) = double_gen();
+            }
         }
 
-        Real expected = alpha * s.get_dimensions() * s.get_n_particles();
+        Real expected = alpha * s.rows() * s.cols();
         ASSERT_NEAR(expected, H_1.local_energy(s, psi), expected * 1e-15);
         ASSERT_NEAR(expected, H_1.local_energy_numeric(s, psi), expected * 1e-6);
     }

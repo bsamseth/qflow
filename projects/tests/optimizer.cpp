@@ -4,15 +4,15 @@
 #include "system.hpp"
 #include "simplegaussian.hpp"
 #include "harmonicoscillatorhamiltonian.hpp"
-#include "metropolissampler.hpp"
+#include "importancesampler.hpp"
 #include "optimizer.hpp"
 
 TEST(GradientDecent, findsOptmalForNonInteracting) {
 
-    System init_system(10, 3);
+    System init_system(3, 10);
     SimpleGaussian psi({-1, 1});
     HarmonicOscillatorHamiltonian H(1);
-    MetropolisSampler sampler(init_system, psi, 1);
+    ImportanceSampler sampler(init_system, psi, 0.5);
 
     Real learning_rate = 0.01;
     int n_cycles = 10000;

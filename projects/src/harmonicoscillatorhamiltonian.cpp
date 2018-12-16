@@ -7,7 +7,7 @@ Real HarmonicOscillatorHamiltonian::external_potential(System &system) const {
 
     for (int i = 0; i < system.cols(); ++i) {
         if (system.rows() == 3) {
-            pot += square(system(i, 0)) + square(system(i, 1)) + square(_omega_z * system(i, 2));
+            pot += square(system(0, i)) + square(system(1, i)) + square(_omega_z * system(2, i));
         } else {
             pot += squaredNorm(system.col(i));
         }

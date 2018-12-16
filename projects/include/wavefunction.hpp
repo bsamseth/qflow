@@ -51,6 +51,7 @@ class Wavefunction {
         const Vector& get_parameters() const;
 
         void set_parameters(const Vector &parameters);
+        void set_parameters(std::initializer_list<Real> parameters);
 
         virtual ~Wavefunction() = default;
 
@@ -65,6 +66,9 @@ inline const Vector& Wavefunction::get_parameters() const {
 }
 inline void Wavefunction::set_parameters(const Vector &parameters) {
     _parameters = parameters;
+}
+inline void Wavefunction::set_parameters(std::initializer_list<Real> parameters) {
+    set_parameters(vector_from_sequence(parameters));
 }
 inline Real Wavefunction::drift_force(const System &system, int k, int dim_index) const {
     SUPPRESS_WARNING(system);

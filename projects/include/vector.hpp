@@ -2,13 +2,14 @@
 
 #include <Eigen/Dense>
 #include <cmath>
+#include <initializer_list>
 #include "definitions.hpp"
 
 using Vector = Eigen::Matrix<Real, Eigen::Dynamic, 1>;
 using VectorXr = Vector;
 
-template<typename T>
-inline Vector vector_from_sequence(const T& seq) {
+
+inline Vector vector_from_sequence(std::initializer_list<Real> seq) {
     Vector vec(seq.size());
     for (auto it = seq.begin(); it != seq.end(); ++it) {
         vec[std::distance(seq.begin(), it)] = *it;

@@ -5,7 +5,7 @@
 RBMHarmonicOscillatorHamiltonian::RBMHarmonicOscillatorHamiltonian(Real omega) : _omega(omega) {}
 
 Real RBMHarmonicOscillatorHamiltonian::external_potential(System &system) const {
-    Real res = square(system).sum();
+    Real res = system.cwiseProduct(system).sum();
     return 0.5 * square(_omega) * res;
 }
 
