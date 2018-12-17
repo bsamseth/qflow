@@ -49,9 +49,39 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/tests
     ${PROJECT_SOURCE_DIR}/external/googletest
-    ${PROJECT_SOURCE_DIR}/external/googletest/include)
+    ${PROJECT_SOURCE_DIR}/external/googletest/include
+    ${PROJECT_SOURCE_DIR}/external/eigen
+    ${PROJECT_SOURCE_DIR}/external/eigen/Eigen)
 
 # Make variables referring to all the sources and test files.
+set(HEADERS
+    include/argumentparser.hpp
+    include/calculator.hpp
+    include/combinedcalculator.hpp
+    include/config.hpp.in
+    include/definitions.hpp
+    include/energycalculator.hpp
+    include/gibbssampler.hpp
+    include/hamiltonian.hpp
+    include/harmonicoscillatorhamiltonian.hpp
+    include/importancesampler.hpp
+    include/interactinghamiltonian.hpp
+    include/interactingwavefunction.hpp
+    include/metropolissampler.hpp
+    include/onebodydensitycalculator.hpp
+    include/optimizer.hpp
+    include/prettyprint.hpp
+    include/rbm.hpp
+    include/rbmharmonicoscillatorhamiltonian.hpp
+    include/rbminteractinghamiltonian.hpp
+    include/rbmwavefunction.hpp
+    include/sampler.hpp
+    include/simplegaussian.hpp
+    include/system.hpp
+    include/vector.hpp
+    include/vmc.hpp
+    include/wavefunction.hpp
+)
 file(GLOB SOURCES "src/*.cpp")
 file(GLOB TESTFILES "tests/*.cpp")
 set(TEST_MAIN unit_tests.x)  # Default name for test executable (change if you wish).
@@ -62,7 +92,7 @@ set(TEST_MAIN unit_tests.x)  # Default name for test executable (change if you w
 #                            Build! (Change as needed)
 # --------------------------------------------------------------------------------
 # Compile all sources into a library. Called engine here (change if you wish).
-add_library( engine SHARED ${SOURCES} )
+add_library( engine SHARED ${SOURCES} ${HEADERS} )
 
 # Add an executable for the file main.cpp, here called main.x.
 # If you add more executables, copy these three lines accordingly.
@@ -143,7 +173,6 @@ add_library( googletest
 add_dependencies(googletest git_update)
 set_source_files_properties(${PROJECT_SOURCE_DIR}/external/googletest/src/gtest-all.cc  PROPERTIES GENERATED 1)
 set_source_files_properties(${PROJECT_SOURCE_DIR}/external/googletest/src/gtest_main.cc PROPERTIES GENERATED 1)
-
 
 
 # --------------------------------------------------------------------------------

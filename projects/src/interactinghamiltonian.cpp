@@ -16,9 +16,9 @@ Real InteractingHamiltonian::local_energy(System &system, const Wavefunction &ps
 
 Real InteractingHamiltonian::internal_potential(System &system) const {
 
-    for (int i = 0; i < system.get_n_particles() - 1; ++i) {
-        for (int j = i + 1; j < system.get_n_particles(); ++j) {
-            if (system.distance(i, j) <= _a)
+    for (int i = 0; i < system.cols() - 1; ++i) {
+        for (int j = i + 1; j < system.cols(); ++j) {
+            if (distance(system, i, j) <= _a)
                 return std::numeric_limits<Real>::max();
         }
     }

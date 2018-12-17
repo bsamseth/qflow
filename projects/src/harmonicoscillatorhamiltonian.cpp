@@ -5,11 +5,11 @@
 Real HarmonicOscillatorHamiltonian::external_potential(System &system) const {
     Real pot = 0;
 
-    for (int i = 0; i < system.get_n_particles(); ++i) {
-        if (system.get_dimensions() == 3) {
-            pot += square(system[i][0]) + square(system[i][1]) + square(_omega_z * system[i][2]);
+    for (int i = 0; i < system.cols(); ++i) {
+        if (system.rows() == 3) {
+            pot += square(system(0, i)) + square(system(1, i)) + square(_omega_z * system(2, i));
         } else {
-            pot += system[i] * system[i];
+            pot += squaredNorm(system.col(i));
         }
     }
 

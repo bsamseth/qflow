@@ -52,4 +52,4 @@ def array_to_system(arr):
     return s
 
 def system_to_array(system):
-    return np.asarray([vector_to_array(system[i]) for i in range(system.get_n_particles())])
+    return np.asarray([vector_to_array(system[i]) for i in range(system.cols())])

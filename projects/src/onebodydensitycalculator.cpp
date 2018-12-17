@@ -37,8 +37,8 @@ OneBodyDensityCalculator::OneBodyDensityCalculator(const Wavefunction &wavefunct
 }
 
 void OneBodyDensityCalculator::process_state(System &system) {
-    for (const Vector &boson : system.get_particles()) {
-        Real r_k = boson.norm();
+    for (int p = 0; p < system.cols(); ++p) {
+        Real r_k = norm(system.col(p));
         if (r_k < _max_radius) {
             _bins[(int) (r_k / _r_step)]++;
             _total_count++;
@@ -51,7 +51,7 @@ void OneBodyDensityCalculator::finalize_calculation() {
     for (int bin = 0; bin < _n_bins; ++bin) {
         Real r_i = _r_step * bin;
         Real r_ip1 = _r_step * (bin+1);
-        _bins[bin] /= n_dim_volume(r_i, r_ip1, _sampler.get_current_system().get_dimensions());
+        _bins[bin] /= n_dim_volume(r_i, r_ip1, _sampler.get_current_system().rows());
         _bins[bin] /= _total_count;
     }
 

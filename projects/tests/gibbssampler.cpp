@@ -8,7 +8,7 @@
 #include "gibbssampler.hpp"
 
 TEST(GibbsSampler, integrationTest) {
-    System init_system(2, 2);
+    System init_system = System::Zero(2, 2);
     RBMWavefunction rbm(4, 2, 0.5, RBMWavefunction::GIBBS_FACTOR);
     RBMHarmonicOscillatorHamiltonian H;
     GibbsSampler sampler(init_system, rbm);

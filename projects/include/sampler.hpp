@@ -84,7 +84,7 @@ inline const System& Sampler::get_current_system() const {
 }
 inline void Sampler::prepare_for_next_run() {
     _total_steps++;
-    _particle_to_move = (_particle_to_move + 1) % _system_old.get_n_particles();
+    _particle_to_move = (_particle_to_move + 1) % _system_old.cols();
 }
 inline std::ostream& operator<<(std::ostream &strm, const Sampler& s) {
     return strm << "Sampler(step=" << s._step << ")";

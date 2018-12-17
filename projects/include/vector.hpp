@@ -1,139 +1,29 @@
 #pragma once
 
+#include <Eigen/Dense>
 #include <cmath>
-#include <vector>
-#include <algorithm>
-#include <iostream>
-#include "prettyprint.hpp"
+#include <initializer_list>
 #include "definitions.hpp"
 
-/**
- * N-dimensional mathematical vector.
- */
-class Vector {
-    private:
-        std::vector<Real> _pos;
+using Vector = Eigen::Matrix<Real, Eigen::Dynamic, 1>;
+using VectorXr = Vector;
 
-    public:
 
-        /**
-         * Initialize a vector with a given number of dimensions, initialized to origo.
-         * @param dimensions Number of dimensions to use.
-         */
-        explicit Vector(int dimensions);
-        /**
-         * Initialize a vector from a std::vector.
-         * @param vec Vector of initialization values.
-         */
-        Vector(const std::vector<Real> &vec);
-        /**
-          * Initialize with a given number of dimensions, and fill values using the
-          * provided generating function.
-          * @param dimensions Number of dimensions to use.
-          * @param g Generator function for values. Must be callable as g().
-          */
-        template<typename Generator>
-        Vector(int dimensions, Generator g);
-        /**
-         * @return Internal position vector.
-         */
-        const std::vector<Real>& get_position() const;
-        /**
-         * @return Number of dimensions of the vector.
-         */
-        int get_dimensions() const;
-        int size() const;
-
-        /**
-         * @param dimensions The coordinate to get.
-         * @return Reference to value for the given coordinate.
-         */
-        Real& operator[] (int dimension);
-        /**
-         * @param dimensions The coordinate to get.
-         * @return Value for the given coordinate.
-         */
-        Real operator[] (int dimension) const;
-
-        Real norm() const;
-};
-
-template<typename Generator>
-Vector::Vector(int dimensions, Generator g) : _pos(dimensions) {
-    std::generate(_pos.begin(), _pos.end(), g);
-}
-inline Real& Vector::operator[] (int dimension) {
-    return _pos[dimension];
-}
-inline Real Vector::operator[] (int dimension) const {
-    return _pos[dimension];
-}
-inline const std::vector<Real>& Vector::get_position() const {
-    return _pos;
-}
-inline int Vector::get_dimensions() const {
-    return _pos.size();
-}
-inline int Vector::size() const {
-    return get_dimensions();
+inline Vector vector_from_sequence(std::initializer_list<Real> seq) {
+    Vector vec(seq.size());
+    for (auto it = seq.begin(); it != seq.end(); ++it) {
+        vec[std::distance(seq.begin(), it)] = *it;
+    }
+    return vec;
 }
 
-/*
- * @param lhs Lhs. of the equality check.
- * @param rhs Rhs. of the equality check.
- * @return Result of `==` on the underlying container.
- */
-inline bool operator== (const Vector &lhs, const Vector &rhs) {
-    return lhs.get_position() == rhs.get_position();
+template<typename T>
+inline Real squaredNorm(const T& vec) {
+    assert(vec.cols() == 1);
+    return square(vec.array()).sum();
 }
-/*
- * @return Result of `!(lhs == rhs)`.
- */
-inline bool operator!= (const Vector &lhs, const Vector &rhs) {
-    return !(lhs == rhs);
+template<typename T>
+inline Real norm(const T& vec) {
+    return std::sqrt(squaredNorm(vec));
 }
 
-
-/*
- * All the following operator functions are defined as one would
- * expect when interpreting vectors as mathematical vectors.
- *
- *   vector (+-) vector  => Elementwise sum/difference.
- *   vector * vector     => Inner product
- *   vector (+*-/) Real => Elementwise add/mult/sub/div by scalar.
- *
- * For the sake of breviety, no further documentation is therefore
- * provided for each operator declaration.
- */
-
-Real operator* (const Vector &lhs, const Vector& rhs);
-Vector operator* (Vector lhs, Real rhs);
-Vector operator* (Real lhs, Vector rhs);
-Vector operator+ (Vector lhs, const Vector &rhs);
-Vector operator+ (Vector lhs, Real rhs);
-Vector operator+ (Real lhs, Vector rhs);
-Vector operator- (Vector lhs, const Vector &rhs);
-Vector operator- (Vector lhs, Real rhs);
-Vector operator- (Real lhs, Vector rhs);
-Vector operator/ (Vector lhs, Real rhs);
-Vector operator/ (Real lhs, Vector rhs);
-
-Vector& operator+= (Vector &lhs, const Vector &rhs);
-Vector& operator+= (Vector &lhs, Real rhs);
-Vector& operator*= (Vector &lhs, Real rhs);
-Vector& operator-= (Vector &lhs, const Vector &rhs);
-Vector& operator-= (Vector &lhs, Real rhs);
-Vector& operator/= (Vector &lhs, Real rhs);
-
-/* Schur product: element-wise multiplication of two vectors.  */
-Vector  operator% (Vector lhs, const Vector &rhs);
-Vector& operator%= (Vector &lhs, const Vector &rhs);
-
-
-inline Real Vector::norm() const {
-    return std::sqrt(square(*this));
-}
-
-inline std::ostream& operator<< (std::ostream& strm, const Vector &vec) {
-    return strm << "Vector" << vec.get_position();
-}

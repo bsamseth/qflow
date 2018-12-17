@@ -1,3 +1,6 @@
 [submodule "projects/external/googletest"]
 	path = projects/external/googletest
 	url = https://github.com/svn2github/googletest.git
+[submodule "projects/external/eigen"]
+	path = projects/external/eigen
+	url = https://github.com/eigenteam/eigen-git-mirror.git

@@ -16,9 +16,9 @@ GibbsSampler::GibbsSampler(const System &system, const RBMWavefunction &wavefunc
 void GibbsSampler::initialize_system() {
     _stddev = std::sqrt(_rbm._sigma2);
     std::normal_distribution<Real> dist(0, _stddev);
-    for (int i = 0; i < _system.get_n_particles(); ++i) {
-        for (int d = 0; d < _system.get_dimensions(); ++d) {
-            _system(i)[d] = dist(rand_gen);
+    for (int i = 0; i < _system.cols(); ++i) {
+        for (int d = 0; d < _system.rows(); ++d) {
+            _system(d, i) = dist(rand_gen);
         }
     }
 }
@@ -36,7 +36,7 @@ System& GibbsSampler::next_configuration() {
         }
 
         std::normal_distribution<Real> dist(mean, _stddev);
-        _system.degree(i) = dist(rand_gen);
+        _system.data()[i] = dist(rand_gen);
     }
 
     ++_accepted_steps;

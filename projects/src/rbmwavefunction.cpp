@@ -13,13 +13,16 @@ RBMWavefunction::RBMWavefunction(int M, int N, Real sigma2, Real root_factor)
     _M(M),
     _N(N)
 {
-    _parameters = Vector(M + N + M*N, rnorm_small_func);
+    _parameters = Vector::Zero(M + N + M * N);
+    for (int i = 0; i < _parameters.size(); ++i) {
+        _parameters[i] = rnorm_small_func();
+    }
 }
 
 Real RBMWavefunction::v_j(int j, const System &system) const {
     Real v = 0;
     for (int i = 0; i < _M; ++i) {
-        v += system.degree(i) * _parameters[w(i, j)];
+        v += system.data()[i] * _parameters[w(i, j)];
     }
     return _parameters[b(j)] + v / _sigma2;
 }
@@ -27,11 +30,11 @@ Real RBMWavefunction::v_j(int j, const System &system) const {
 Real RBMWavefunction::operator() (System &system) const {
 
     // Ensure that system is compatible with rbm, i.e. P*D = M.
-    assert(system.get_dimensions() * system.get_n_particles() == _M);
+    assert(system.rows() * system.cols() == _M);
 
     Real u = 0;
     for (int i = 0; i < _M; ++i) {
-        u += square( system.degree(i) - _parameters[a(i)] );
+        u += square( system.data()[i] - _parameters[a(i)] );
     }
     Real visible = std::exp(- 0.5 * u / _sigma2);
 
@@ -47,7 +50,7 @@ Real RBMWavefunction::operator() (System &system) const {
 }
 
 Real RBMWavefunction::deriv_a(int k, System &system) const {
-    return _root_factor * (system.degree(k) - _parameters[a(k)]) / _sigma2;
+    return _root_factor * (system.data()[k] - _parameters[a(k)]) / _sigma2;
 }
 
 Real RBMWavefunction::deriv_b(int k, System &system) const {
@@ -55,7 +58,7 @@ Real RBMWavefunction::deriv_b(int k, System &system) const {
 }
 
 Real RBMWavefunction::deriv_w(int k, int l, System &system) const {
-    return _root_factor / (1 + std::exp(-v_j(l, system))) * system.degree(k) / _sigma2;
+    return _root_factor / (1 + std::exp(-v_j(l, system))) * system.data()[k] / _sigma2;
 }
 
 Real RBMWavefunction::laplacian(System &system) const {
@@ -74,7 +77,7 @@ Real RBMWavefunction::laplacian(System &system) const {
             v += square(_parameters[w(k, j)]) * exp_v[j] / square(1 + exp_v[j]);
         }
 
-        Real dlnPsi  = _root_factor * (_parameters[a(k)] - system.degree(k) + u) / _sigma2;
+        Real dlnPsi  = _root_factor * (_parameters[a(k)] - system.data()[k] + u) / _sigma2;
         Real ddlnPsi = _root_factor * (- 1. / _sigma2 + v / square(_sigma2));
 
         res += square(dlnPsi) + ddlnPsi;
@@ -102,12 +105,12 @@ Vector RBMWavefunction::gradient(System &system) const {
 }
 
 Real RBMWavefunction::drift_force(const System &system, int particle_index, int dim_index) const {
-    const int k = system.get_dimensions() * particle_index + dim_index;
+    const int k = system.rows() * particle_index + dim_index;
     Real v = 0;
     for (int j = 0; j < _N; ++j) {
         v += _parameters[w(k, j)] / (1 + std::exp(-v_j(j, system)));
     }
-    return _root_factor * 2.0 / _sigma2 * (_parameters[a(k)] - system.degree(k) + v);
+    return _root_factor * 2.0 / _sigma2 * (_parameters[a(k)] - system.data()[k] + v);
 }
 
 void RBMWavefunction::train(const Hamiltonian &hamiltonian,
@@ -140,7 +143,7 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
         Vector grad = hamiltonian.local_energy_gradient(sampler, *this, sample_points);
 
         if (gamma > 0) {
-            grad += 2 * _parameters;
+            grad += gamma * _parameters;
         }
 
         _parameters += optimizer.update_term(grad);
