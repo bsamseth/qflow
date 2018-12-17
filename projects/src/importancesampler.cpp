@@ -19,6 +19,7 @@ void ImportanceSampler::initialize_system() {
         }
     }
     _system_new = _system_old;
+    _psi_old = (*_wavefunction)(_system_old);
 }
 
 void ImportanceSampler::perturb_system() {

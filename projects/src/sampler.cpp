@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 
 #include "definitions.hpp"
 #include "system.hpp"
@@ -15,6 +16,13 @@ Sampler::Sampler(const System &system,
                   _system_new(system)
 {
     _psi_new = _psi_old = (*_wavefunction)(_system_old);
+
+    // Some badly initialized systems/wavefunctions may give
+    // NaNs out, which can screw up all subsequent calculations.
+    // Catch this now and emulate a very unlikely state.
+    if (std::isnan(_psi_old )) {
+        _psi_new = _psi_old = 1e-15;
+    }
 }
 
 System &Sampler::next_configuration() {
