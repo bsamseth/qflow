@@ -165,7 +165,7 @@ TEST(RBMWavefunction, trainSimpleCase3D) {
     RBMWavefunction rbm (6, 2);
     ImportanceSampler sampler (init_system, rbm, 0.5);
     RBMHarmonicOscillatorHamiltonian H;
-    SgdOptimizer sgd(0.5);
+    AdamOptimizer sgd(rbm.get_parameters().size());
 
     rbm.train(H, sampler, 5000, 100, sgd, 0.0, false);
 
