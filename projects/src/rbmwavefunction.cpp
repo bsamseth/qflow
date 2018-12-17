@@ -143,7 +143,7 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
         Vector grad = hamiltonian.local_energy_gradient(sampler, *this, sample_points);
 
         if (gamma > 0) {
-            grad += 2 * _parameters;
+            grad += gamma * _parameters;
         }
 
         _parameters += optimizer.update_term(grad);
