@@ -167,12 +167,12 @@ TEST(RBMWavefunction, trainSimpleCase3D) {
     RBMHarmonicOscillatorHamiltonian H;
     SgdOptimizer sgd(0.5);
 
-    rbm.train(H, sampler, 10000, 100, sgd, 0.0, false);
+    rbm.train(H, sampler, 5000, 100, sgd, 0.0, false);
 
     Real E_L = 0;
-    for (int i = 0; i < 5000; ++i)
+    for (int i = 0; i < 1000; ++i)
         E_L += H.local_energy(sampler.next_configuration(), rbm);
-    E_L /= 5000;
+    E_L /= 1000;
 
     ASSERT_NEAR(3.0, E_L, 1e-3);
 }
