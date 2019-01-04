@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 2.8)
 
 # Set project name here.
 project(VMC)
-enable_language(C CXX)
+enable_language(CXX)
 
 # Set version number (change as needed). These definitions are available
 # by including "config.hpp" in the source. 
@@ -94,6 +94,10 @@ set(TEST_MAIN unit_tests.x)  # Default name for test executable (change if you w
 # Compile all sources into a library. Called engine here (change if you wish).
 add_library( engine SHARED ${SOURCES} ${HEADERS} )
 
+# Compile Python bindings.
+add_subdirectory(external)  # Includes external/pybind
+pybind11_add_module(qflow python/pybindexample.cpp)
+
 # Add an executable for the file main.cpp, here called main.x.
 # If you add more executables, copy these three lines accordingly.
 add_executable(main.x app/main.cpp)
@@ -107,7 +111,6 @@ target_link_libraries(optimize.x engine)
 add_executable(rbm_main.x app/rbm_main.cpp)
 add_dependencies(rbm_main.x engine)
 target_link_libraries(rbm_main.x engine)
-
 
 
 # --------------------------------------------------------------------------------
