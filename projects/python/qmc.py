@@ -10,7 +10,9 @@ try:
 except NameError:
     current_dir = os.getcwd()
 source_dir = os.path.dirname(current_dir)
+install_dir = os.path.join(source_dir, 'build')
 include_dir = os.path.join(source_dir, 'include')
+eigen_dir = os.path.join(source_dir, 'external', 'eigen')
 print(current_dir, source_dir, include_dir, install_dir)
 
 def cmake_run(build_type='Release', c_compiler='gcc', cxx_compiler='g++'):
@@ -22,7 +24,8 @@ def load_library():
     os.system('cd {} && make engine'.format(install_dir))
     libraries = glob.glob(os.path.join(install_dir, 'libengine.*'))
     print('Found libraries: {}'.format(libraries))
-    library = libraries[0]
+    library = libraries[-1]
+    cppyy.add_include_path(eigen_dir)
     cppyy.load_library(library)
     for header in glob.glob(os.path.join(include_dir, '*.hpp')):
         print('Loading {}'.format(header))
