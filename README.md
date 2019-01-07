@@ -1,8 +1,5 @@
-[![Build Status](https://travis-ci.org/bsamseth/FYS4411.svg?branch=master)](https://travis-ci.org/bsamseth/FYS4411)
-[![Coverage Status](https://coveralls.io/repos/github/bsamseth/FYS4411/badge.svg?branch=master)](https://coveralls.io/github/bsamseth/FYS4411?branch=master)
+# Projects
 
-# FYS4411
+## [Project 1](project1.md)
 
-This repository contains all material relevant to my work on the projects in 
-the course FYS4411 at UiO. See the various folders for project specific
-information.
+## [Project 2](project2.md)

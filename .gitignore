@@ -377,3 +377,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 .idea
+.idea/
+cmake-build*
+compile_commands.json
+results/
