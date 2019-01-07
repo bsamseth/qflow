@@ -28,7 +28,7 @@ before_script:
   - lcov --version
   - gcov --version
   - g++ --version
-  - PARENTDIR=$(pwd)/projects
+  - PARENTDIR=$(pwd)
   - mkdir $PARENTDIR/build && cd $PARENTDIR/build
 
 script:
