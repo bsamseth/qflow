@@ -55,11 +55,13 @@ include_directories(
 
 # Make variables referring to all the sources and test files.
 set(HEADERS
+    include/activation.hpp
     include/argumentparser.hpp
     include/calculator.hpp
     include/combinedcalculator.hpp
     include/config.hpp.in
     include/definitions.hpp
+    include/dnn.hpp
     include/energycalculator.hpp
     include/gibbssampler.hpp
     include/hamiltonian.hpp
@@ -67,6 +69,7 @@ set(HEADERS
     include/importancesampler.hpp
     include/interactinghamiltonian.hpp
     include/interactingwavefunction.hpp
+    include/layer.hpp
     include/metropolissampler.hpp
     include/onebodydensitycalculator.hpp
     include/optimizer.hpp
