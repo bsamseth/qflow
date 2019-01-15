@@ -7,5 +7,5 @@
 using System = Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic>;
 
 inline Real distance(const System& system, int i, int j) {
-    return norm(system.col(i) - system.col(j));
+    return norm(system.row(i) - system.row(j));
 }

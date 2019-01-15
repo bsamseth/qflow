@@ -13,7 +13,7 @@ class Wavefunction {
 
     protected:
 
-        Vector _parameters;
+        RowVector _parameters;
 
     public:
 
@@ -33,9 +33,9 @@ class Wavefunction {
         /**
          * Return grad(Psi)/Psi, with derivatives wrt. all parameters.
          * @param system System configuration to evaluate gradient for.
-         * @return Vector with derivatives.
+         * @return RowVector with derivatives.
          */
-        virtual Vector gradient(System &system) const = 0;
+        virtual RowVector gradient(System &system) const = 0;
 
 
         virtual Real drift_force(const System &system, int k, int dim_index) const;
@@ -47,10 +47,10 @@ class Wavefunction {
          */
         virtual Real laplacian(System &system) const = 0;
 
-        Vector& get_parameters();
-        const Vector& get_parameters() const;
+        RowVector& get_parameters();
+        const RowVector& get_parameters() const;
 
-        void set_parameters(const Vector &parameters);
+        void set_parameters(const RowVector &parameters);
         void set_parameters(std::initializer_list<Real> parameters);
 
         virtual ~Wavefunction() = default;
@@ -58,13 +58,13 @@ class Wavefunction {
         friend std::ostream& operator<<(std::ostream &strm, const Wavefunction &psi);
 };
 
-inline Vector& Wavefunction::get_parameters() {
+inline RowVector& Wavefunction::get_parameters() {
     return _parameters;
 }
-inline const Vector& Wavefunction::get_parameters() const {
+inline const RowVector& Wavefunction::get_parameters() const {
     return _parameters;
 }
-inline void Wavefunction::set_parameters(const Vector &parameters) {
+inline void Wavefunction::set_parameters(const RowVector &parameters) {
     _parameters = parameters;
 }
 inline void Wavefunction::set_parameters(std::initializer_list<Real> parameters) {

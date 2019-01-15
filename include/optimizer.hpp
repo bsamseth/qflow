@@ -53,7 +53,7 @@ class SgdOptimizer {
          * @param gradient the gradient of the objective function to be minimized.
          * @return - _eta * gradient
          */
-        virtual Vector update_term(const Vector &gradient);
+        virtual RowVector update_term(const RowVector &gradient);
 };
 
 
@@ -68,8 +68,8 @@ class AdamOptimizer : public SgdOptimizer {
         const Real _beta2;
         const Real _epsilon;
         long _t;
-        Vector _m;
-        Vector _v;
+        RowVector _m;
+        RowVector _v;
 
     public:
         /**
@@ -77,5 +77,5 @@ class AdamOptimizer : public SgdOptimizer {
          */
         AdamOptimizer(std::size_t n_parameters, Real alpha = 0.001, Real beta1 = 0.9, Real beta2 = 0.999, Real epsilon = 1e-8);
 
-        virtual Vector update_term(const Vector &gradient);
+        virtual RowVector update_term(const RowVector &gradient);
 };

@@ -36,7 +36,7 @@ void sampler_sanity(int sampler_type) {
     // All other particles should remain unchanged, and the moving
     // particle should be changed iff acceptance rate has not decreased.
     for (int run = 1; run <= runs; ++run) {
-        int moving = run % init_system.cols();
+        int moving = run % init_system.rows();
 
         long accepted = sampler.get_accepted_steps();
         long total = sampler.get_total_steps();
@@ -45,15 +45,15 @@ void sampler_sanity(int sampler_type) {
 
         ASSERT_TRUE(total == sampler.get_total_steps() - 1);
 
-        for (int i = 0; i < init_system.cols(); ++i) {
+        for (int i = 0; i < init_system.rows(); ++i) {
             if (i == moving) continue;
-            ASSERT_TRUE(before.col(i).isApprox(after.col(i)));
+            ASSERT_TRUE(before.row(i).isApprox(after.row(i)));
         }
 
         if (sampler.get_accepted_steps() > accepted) {
-            ASSERT_FALSE( before.col(moving).isApprox(after.col(moving)) );
+            ASSERT_FALSE( before.row(moving).isApprox(after.row(moving)) );
         } else {
-            ASSERT_TRUE( before.col(moving).isApprox(after.col(moving)) );
+            ASSERT_TRUE( before.row(moving).isApprox(after.row(moving)) );
         }
 
         Real E_L = H_0.local_energy(after, psi);

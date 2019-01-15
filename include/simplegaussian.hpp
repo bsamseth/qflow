@@ -15,7 +15,7 @@ class SimpleGaussian : public Wavefunction {
 
         virtual Real operator() (System&) const;
 
-        virtual Vector gradient(System &system) const;
+        virtual RowVector gradient(System &system) const;
 
         virtual Real laplacian(System &system) const;
 
@@ -28,5 +28,5 @@ class SimpleGaussian : public Wavefunction {
 inline Real SimpleGaussian::drift_force(const System &system, int k, int dim_index) const {
     const auto alpha = _parameters[0];
     const auto beta  = _parameters[1];
-    return -4 * alpha * (dim_index == 2 ? beta : 1) * system(dim_index, k);
+    return -4 * alpha * (dim_index == 2 ? beta : 1) * system(k, dim_index);
 }

@@ -28,12 +28,12 @@ class HarmonicOscillatorHamiltonianTest : public ::testing::Test {
         HarmonicOscillatorHamiltonian H_2 {2.8};
 
         virtual void SetUp() {
-            s = new System(3, 4);
+            s = new System(4, 3);
             // Random values.
-            s->col(0) << 0.50833829,  0.07732213,  0.69294646;
-            s->col(1) << 0.63837196,  0.48833327,  0.17570063;
-            s->col(2) << 0.72436579,  0.36970369,  0.49771584;
-            s->col(3) << 0.42984966,  0.72519657,  0.30454728;
+            s->row(0) << 0.50833829,  0.07732213,  0.69294646;
+            s->row(1) << 0.63837196,  0.48833327,  0.17570063;
+            s->row(2) << 0.72436579,  0.36970369,  0.49771584;
+            s->row(3) << 0.42984966,  0.72519657,  0.30454728;
         }
         virtual void TearDown() {
             delete s;
@@ -89,9 +89,9 @@ TEST_F(HarmonicOscillatorHamiltonianTest, local_energy_simple) {
         int dims = dim_gen();
         int particles = dim_gen() * dim_gen() * dim_gen() * dim_gen();
         System s (dims, particles);
-        for (int j = 0; j < s.cols(); ++j) {
-            for (int i = 0; i < s.rows(); ++i) {
-                s(i, j) = double_gen();
+        for (int j = 0; j < s.rows(); ++j) {
+            for (int i = 0; i < s.cols(); ++i) {
+                s(j, i) = double_gen();
             }
         }
 

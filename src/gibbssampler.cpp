@@ -16,15 +16,15 @@ GibbsSampler::GibbsSampler(const System &system, const RBMWavefunction &wavefunc
 void GibbsSampler::initialize_system() {
     _stddev = std::sqrt(_rbm._sigma2);
     std::normal_distribution<Real> dist(0, _stddev);
-    for (int i = 0; i < _system.cols(); ++i) {
-        for (int d = 0; d < _system.rows(); ++d) {
-            _system(d, i) = dist(rand_gen);
+    for (int i = 0; i < _system.rows(); ++i) {
+        for (int d = 0; d < _system.cols(); ++d) {
+            _system(i, d) = dist(rand_gen);
         }
     }
 }
 
 System& GibbsSampler::next_configuration() {
-    Vector h (_rbm._N);
+    RowVector h (_rbm._N);
     for (int j = 0; j < _rbm._N; ++j) {
         h[j] = unif(rand_gen) < P_h(j, _system) ? 1 : 0;
     }

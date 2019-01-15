@@ -11,14 +11,14 @@ Hamiltonian::Hamiltonian(Real omega_z, Real a, Real h) : _omega_z(omega_z), _a(a
 Real Hamiltonian::kinetic_energy_numeric(System &system, const Wavefunction &psi) const {
     Real E_k = -2 * (system.cols() * system.rows()) * psi(system);
 
-    for (int i = 0; i < system.cols(); ++i) {
-        for (int d = 0; d < system.rows(); ++d) {
-            const auto temp = system(d, i);
-            system(d, i) = temp + _h;
+    for (int i = 0; i < system.rows(); ++i) {
+        for (int d = 0; d < system.cols(); ++d) {
+            const auto temp = system(i, d);
+            system(i, d) = temp + _h;
             E_k += psi(system);
-            system(d, i) = temp - _h;
+            system(i, d) = temp - _h;
             E_k += psi(system);
-            system(d, i) = temp;
+            system(i, d) = temp;
         }
     }
 
@@ -44,16 +44,16 @@ Real Hamiltonian::local_energy(System &system, const Wavefunction &psi) const {
     return external_potential(system) + internal_potential(system) + kinetic_energy(system, psi);
 }
 
-Vector Hamiltonian::local_energy_gradient(Sampler &sampler, const Wavefunction &psi, long samples) const {
+RowVector Hamiltonian::local_energy_gradient(Sampler &sampler, const Wavefunction &psi, long samples) const {
     Real E_mean = 0;
-    Vector grad = Vector::Zero(psi.get_parameters().size());
-    Vector grad_E = Vector::Zero(psi.get_parameters().size());
+    RowVector grad = RowVector::Zero(psi.get_parameters().size());
+    RowVector grad_E = RowVector::Zero(psi.get_parameters().size());
     for (int sample = 0; sample < samples; ++sample) {
         System &system = sampler.next_configuration();
         Real E = local_energy(system, psi);
         E_mean += E;
 
-        Vector g = psi.gradient(system);
+        RowVector g = psi.gradient(system);
         grad += g;
         grad_E += g * E;
     }
@@ -68,7 +68,7 @@ Vector Hamiltonian::local_energy_gradient(Sampler &sampler, const Wavefunction &
 }
 
 Real Hamiltonian::mean_distance(Sampler &sampler, long samples) const {
-    if (sampler.get_current_system().cols() < 2)
+    if (sampler.get_current_system().rows() < 2)
         return 0;
 
     Real dist = 0;
@@ -92,15 +92,15 @@ Real n_dim_volume(Real r_i, Real r_ip1, int dim) {
 
 }
 
-Vector Hamiltonian::onebodydensity(Sampler &sampler, int n_bins, Real max_radius, long samples) const {
+RowVector Hamiltonian::onebodydensity(Sampler &sampler, int n_bins, Real max_radius, long samples) const {
     Real r_step = max_radius / n_bins;
-    Vector bins = Vector(n_bins);
+    RowVector bins = RowVector(n_bins);
     long total_count = 0;
 
     for (long i = 0; i < samples; ++i) {
         System& system = sampler.next_configuration();
-        for (int p = 0; p < system.cols(); ++p) {
-            Real r_k = norm(system.col(p));
+        for (int p = 0; p < system.rows(); ++p) {
+            Real r_k = norm(system.row(p));
             if (r_k < max_radius) {
                 bins[(int) (r_k / r_step)]++;
                 total_count++;
@@ -108,7 +108,7 @@ Vector Hamiltonian::onebodydensity(Sampler &sampler, int n_bins, Real max_radius
         }
     }
 
-    int dimensions = sampler.get_current_system().rows();
+    int dimensions = sampler.get_current_system().cols();
     for (int bin = 0; bin < n_bins; ++bin) {
         Real r_i = r_step * bin;
         Real r_ip1 = r_step * (bin+1);

@@ -5,12 +5,9 @@
 #include <initializer_list>
 #include "definitions.hpp"
 
-using Vector = Eigen::Matrix<Real, Eigen::Dynamic, 1>;
-using VectorXr = Vector;
 
-
-inline Vector vector_from_sequence(std::initializer_list<Real> seq) {
-    Vector vec(seq.size());
+inline RowVector vector_from_sequence(std::initializer_list<Real> seq) {
+    RowVector vec(seq.size());
     for (auto it = seq.begin(); it != seq.end(); ++it) {
         vec[std::distance(seq.begin(), it)] = *it;
     }
@@ -19,7 +16,7 @@ inline Vector vector_from_sequence(std::initializer_list<Real> seq) {
 
 template<typename T>
 inline Real squaredNorm(const T& vec) {
-    assert(vec.cols() == 1);
+    assert(vec.rows() == 1);
     return square(vec.array()).sum();
 }
 template<typename T>

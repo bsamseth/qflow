@@ -13,7 +13,7 @@ RBMWavefunction::RBMWavefunction(int M, int N, Real sigma2, Real root_factor)
     _M(M),
     _N(N)
 {
-    _parameters = Vector::Zero(M + N + M * N);
+    _parameters = RowVector::Zero(M + N + M * N);
     for (int i = 0; i < _parameters.size(); ++i) {
         _parameters[i] = rnorm_small_func();
     }
@@ -86,8 +86,8 @@ Real RBMWavefunction::laplacian(System &system) const {
     return res;
 }
 
-Vector RBMWavefunction::gradient(System &system) const {
-    Vector grad_vec(_parameters.size());
+RowVector RBMWavefunction::gradient(System &system) const {
+    RowVector grad_vec(_parameters.size());
 
     for (int i = 0; i < _M; ++i) {
         grad_vec[a(i)] = deriv_a(i, system);
@@ -105,7 +105,7 @@ Vector RBMWavefunction::gradient(System &system) const {
 }
 
 Real RBMWavefunction::drift_force(const System &system, int particle_index, int dim_index) const {
-    const int k = system.rows() * particle_index + dim_index;
+    const int k = system.cols() * particle_index + dim_index;
     Real v = 0;
     for (int j = 0; j < _N; ++j) {
         v += _parameters[w(k, j)] / (1 + std::exp(-v_j(j, system)));
@@ -140,7 +140,7 @@ void RBMWavefunction::train(const Hamiltonian &hamiltonian,
             sampler.next_configuration();
         }
 
-        Vector grad = hamiltonian.local_energy_gradient(sampler, *this, sample_points);
+        RowVector grad = hamiltonian.local_energy_gradient(sampler, *this, sample_points);
 
         if (gamma > 0) {
             grad += gamma * _parameters;

@@ -43,7 +43,7 @@ class RBMWavefunction : public Wavefunction {
          * @param system configuration to evaluate the gradient for.
          * @return Gradient of the expected local energy, wrt. all the parameters.
          */
-        Vector gradient(System &system) const;
+        RowVector gradient(System &system) const;
 
         /**
          * Evaluate the RBM.

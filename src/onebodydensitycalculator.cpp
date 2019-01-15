@@ -51,7 +51,7 @@ void OneBodyDensityCalculator::finalize_calculation() {
     for (int bin = 0; bin < _n_bins; ++bin) {
         Real r_i = _r_step * bin;
         Real r_ip1 = _r_step * (bin+1);
-        _bins[bin] /= n_dim_volume(r_i, r_ip1, _sampler.get_current_system().rows());
+        _bins[bin] /= n_dim_volume(r_i, r_ip1, _sampler.get_current_system().cols());
         _bins[bin] /= _total_count;
     }
 

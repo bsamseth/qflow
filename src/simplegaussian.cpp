@@ -8,10 +8,10 @@
 
 namespace {
     Real exponent(const System &system, Real beta) {
-        const bool is_3D = system.rows() == 3;
+        const bool is_3D = system.cols() == 3;
         Real g = 0;
-        for (int p = 0; p < system.cols(); ++p) {
-            const auto& boson = system.col(p);
+        for (int p = 0; p < system.rows(); ++p) {
+            const auto& boson = system.row(p);
             if (is_3D) {
                 g += square(boson[0]) + square(boson[1]) + beta * square(boson[2]);
             }
@@ -27,7 +27,7 @@ SimpleGaussian::SimpleGaussian(std::initializer_list<Real> parameters)
     : Wavefunction(parameters)
 {
     // Set default parameters.
-    const static Vector defaults = vector_from_sequence({0.5, 1});
+    const static RowVector defaults = vector_from_sequence({0.5, 1});
     _parameters = defaults;
 
     // Copy any given parameters.
@@ -47,9 +47,9 @@ Real SimpleGaussian::derivative_alpha(const System &system) const {
     return - exponent(system, beta);
 }
 
-Vector SimpleGaussian::gradient(System &system) const {
+RowVector SimpleGaussian::gradient(System &system) const {
     const auto beta = _parameters[1];
-    Vector grad(1);
+    RowVector grad(1);
     grad[0] = -exponent(system, beta);
     return grad;
 }
@@ -57,14 +57,14 @@ Vector SimpleGaussian::gradient(System &system) const {
 Real SimpleGaussian::laplacian(System &system) const {
     const auto alpha = _parameters[0];
     const auto beta  = _parameters[1];
-    const Real one_body_beta_term = - (system.rows() == 3 ? 2 + beta : system.rows());
+    const Real one_body_beta_term = - (system.cols() == 3 ? 2 + beta : system.cols());
 
     Real E_L = 0;
 
-    for (int k = 0; k < system.cols(); ++k) {
+    for (int k = 0; k < system.rows(); ++k) {
 
-        Vector r_k = system.col(k);
-        if (system.rows() == 3) {
+        RowVector r_k = system.row(k);
+        if (system.cols() == 3) {
             r_k[2] *= beta;
         }
 

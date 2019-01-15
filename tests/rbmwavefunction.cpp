@@ -78,13 +78,13 @@ TEST_F(RBMWavefunctionTest, evaluation) {
 }
 
 TEST_F(RBMWavefunctionTest, gradient) {
-    Vector gradient = rbm->gradient(*s);
-    Vector expected_a = vector_from_sequence({0.1328204908963744, -0.4643882149287429,  0.6136752308048187,
+    RowVector gradient = rbm->gradient(*s);
+    RowVector expected_a = vector_from_sequence({0.1328204908963744, -0.4643882149287429,  0.6136752308048187,
                           -1.2439453044886151, -0.4582921500616219,  0.142954682666936});
-    Vector expected_b = vector_from_sequence({0.6017040564983215,  0.6685085554779254,  0.8489820123505009,
+    RowVector expected_b = vector_from_sequence({0.6017040564983215,  0.6685085554779254,  0.8489820123505009,
                           0.2817462931894426,  0.2952675674909326,  0.2801418147825886,
                           0.7992927449865912});
-    Vector expected_w = vector_from_sequence({-0.1507008853281547045 , -0.16743252778826867022,
+    RowVector expected_w = vector_from_sequence({-0.1507008853281547045 , -0.16743252778826867022,
                           -0.21263333611787901822, -0.07056528099323740311,
                           -0.07395177637413576088, -0.07016342843168088539,
                           -0.20018832016331319923,  0.00355878701133167767,
@@ -145,7 +145,7 @@ TEST(RBMWavefunction, correctForIdealCase) {
         int M = P * D, N = 1;
         System s (D, P);
         RBMWavefunction rbm(M, N, sigma2);
-        rbm.set_parameters(Vector::Zero(M + N + M * N));
+        rbm.set_parameters(RowVector::Zero(M + N + M * N));
 
         // Random system config.
         for (int i = 0; i < D; ++i) {

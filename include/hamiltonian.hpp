@@ -65,7 +65,7 @@ class Hamiltonian {
          */
         virtual Real kinetic_energy_numeric(System &system, const Wavefunction &wavefunction) const;
 
-        Vector local_energy_gradient(Sampler &sampler, const Wavefunction &psi, long samples) const;
+        RowVector local_energy_gradient(Sampler &sampler, const Wavefunction &psi, long samples) const;
 
         /**
          * Compute the Gross-Pitaevskii ideal case energy for a given system and wavefunction.
@@ -77,14 +77,14 @@ class Hamiltonian {
 
         Real mean_distance(Sampler&, long samples) const;
 
-        Vector onebodydensity(Sampler &sampler, int n_bins, Real max_radius, long samples) const;
+        RowVector onebodydensity(Sampler &sampler, int n_bins, Real max_radius, long samples) const;
 
         friend std::ostream& operator<<(std::ostream&, const Hamiltonian&);
 };
 
 inline Real Hamiltonian::gross_pitaevskii_energy(const System &system, const Wavefunction &psi) const {
-    const int N = system.cols();
-    const int D = system.rows();
+    const int N = system.rows();
+    const int D = system.cols();
     const Real alpha = psi.get_parameters()[0];
     const Real beta = psi.get_parameters()[1];
     assert(beta == _omega_z);   // GP equation used is for when gamma = beta = omega_z.
