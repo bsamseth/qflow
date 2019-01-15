@@ -37,7 +37,6 @@ script:
   - cd $PARENTDIR/build
   - cmake -DCMAKE_BUILD_TYPE=Coverage $PARENTDIR
   - make
-  - make gtest
   - make coverage
 
 after_success:
