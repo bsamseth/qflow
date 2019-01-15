@@ -86,6 +86,7 @@ set(HEADERS
     include/wavefunction.hpp
 )
 file(GLOB SOURCES "src/*.cpp")
+file(GLOB PYSOURCES "py_src/*.cpp")
 file(GLOB TESTFILES "tests/*.cpp")
 set(TEST_MAIN unit_tests.x)  # Default name for test executable (change if you wish).
 
@@ -95,11 +96,11 @@ set(TEST_MAIN unit_tests.x)  # Default name for test executable (change if you w
 #                            Build! (Change as needed)
 # --------------------------------------------------------------------------------
 # Compile all sources into a library. Called engine here (change if you wish).
-add_library( engine SHARED ${SOURCES} ${HEADERS} )
+add_library( engine ${SOURCES})
 
 # Compile Python bindings.
 add_subdirectory(external)  # Includes external/pybind
-pybind11_add_module(qflow python/pybindexample.cpp)
+pybind11_add_module(qflow ${SOURCES} ${PYSOURCES})
 
 # Add an executable for the file main.cpp, here called main.x.
 # If you add more executables, copy these three lines accordingly.
