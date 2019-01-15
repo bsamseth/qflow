@@ -1,5 +1,6 @@
 #pragma once
 #include <random>
+#include <Eigen/Dense>
 
 // Macro for silencing  unused parameters on demand.
 #define SUPPRESS_WARNING(a) (void)a
@@ -15,7 +16,28 @@ using Real = double;
 constexpr Real PI = 3.14159265358979323846; /**< Circle constant. */
 
 /**
- * Generic template for computing x * x, for any type. Usefull
+ * Define various linear algebra types. Note that row-major storage order
+ * is used. Eigen should be equally performing with both, but row-major is
+ * compatible with NumPy and hence bindings are easy to make.
+ */
+using Matrix = Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+using Array  = Eigen::Array<Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+using Vector = Eigen::Matrix<Real, Eigen::Dynamic, 1>;
+using RowVector = Eigen::Matrix<Real, 1, Eigen::Dynamic>;
+
+/**
+ * Corresponding Eigen::Ref bindings for each linear algebra type.
+ * Most computations can be used as one of these types, useful for writing
+ * generic functions without having to use templates (which can make it
+ * difficult writing bindings for).
+ */
+using MatrixRef = Eigen::Ref<Matrix>;
+using ArrayRef = Eigen::Ref<Array>;
+using VectorRef = Eigen::Ref<Vector>;
+using RowVectorRef = Eigen::Ref<RowVector>;
+
+/**
+ * Generic template for computing x * x, for any type. Useful
  * when x is some expression which we do not want to compute twice.
  * @param x Value to multiply with itself.
  * @return Result of `x * x`.
@@ -25,6 +47,7 @@ inline auto square(T x) {
     return x * x;
 }
 
+// Random number generation.
 extern std::mt19937_64 rand_gen;  /**< Random number generator used. */
 extern std::uniform_real_distribution<Real> unif;  /**< Uniform random distribution (0, 1). */
 extern std::uniform_real_distribution<Real> centered;  /**< Uniform random distribution (-.5, .5). */
