@@ -5,7 +5,7 @@
 #
 # For many purposes, you may not need to change anything about this file.
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1)
 
 # Set project name here.
 project(VMC)
@@ -100,22 +100,9 @@ add_library( engine ${SOURCES})
 
 # Compile Python bindings.
 add_subdirectory(external)  # Includes external/pybind
-pybind11_add_module(qflow ${SOURCES} ${PYSOURCES})
-
-# Add an executable for the file main.cpp, here called main.x.
-# If you add more executables, copy these three lines accordingly.
-add_executable(main.x app/main.cpp)
-add_dependencies(main.x engine)
-target_link_libraries(main.x engine)
-
-add_executable(optimize.x app/optimize.cpp)
-add_dependencies(optimize.x engine)
-target_link_libraries(optimize.x engine)
-
-add_executable(rbm_main.x app/rbm_main.cpp)
-add_dependencies(rbm_main.x engine)
-target_link_libraries(rbm_main.x engine)
-
+pybind11_add_module(qflow ${PYSOURCES})
+add_dependencies(qflow engine)
+target_link_libraries(qflow INTERFACE engine)
 
 # --------------------------------------------------------------------------------
 #                         Make Tests (no change needed).
