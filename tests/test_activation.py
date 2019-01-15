@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from EigenNN.activation import identity, relu, sigmoid
+from qflow.activation import identity, relu, sigmoid
 
 
 class TestDnn(unittest.TestCase):

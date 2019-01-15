@@ -3,9 +3,9 @@ from autograd import numpy as auto_np
 from autograd import elementwise_grad, hessian
 import numpy as np
 
-from EigenNN import Dnn
-from EigenNN.layer import DenseLayer
-from EigenNN.activation import sigmoid, relu
+from qflow import Dnn
+from qflow.layer import DenseLayer
+from qflow.activation import sigmoid, relu
 
 
 def sigmoid_np(x):
