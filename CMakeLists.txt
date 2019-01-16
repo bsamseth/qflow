@@ -100,9 +100,7 @@ add_library( engine ${SOURCES})
 
 # Compile Python bindings.
 add_subdirectory(external)  # Includes external/pybind
-pybind11_add_module(qflow ${PYSOURCES})
-add_dependencies(qflow engine)
-target_link_libraries(qflow INTERFACE engine)
+pybind11_add_module(qflow ${PYSOURCES} ${SOURCES})
 
 # --------------------------------------------------------------------------------
 #                         Make Tests (no change needed).
