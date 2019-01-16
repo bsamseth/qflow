@@ -4,6 +4,7 @@ namespace py = pybind11;
 
 void init_wavefunction(py::module&);
 void init_sampler(py::module&);
+void init_hamiltonian(py::module&);
 void init_activation(py::module&);
 void init_layer(py::module&);
 void init_dnn(py::module&);
@@ -16,6 +17,7 @@ PYBIND11_MODULE(qflow, m) {
 
     init_wavefunction(m);
     init_sampler(m);
+    init_hamiltonian(m);
     init_activation(m);
     init_layer(m);
     init_dnn(m);
