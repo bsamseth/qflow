@@ -25,6 +25,7 @@ void init_hamiltonian(py::module& main) {
         .def("kinetic_energy", &Hamiltonian::kinetic_energy)
         .def("kinetic_energy_numeric", &Hamiltonian::kinetic_energy_numeric)
         .def("local_energy_gradient", &Hamiltonian::local_energy_gradient)
+        .def("optimize_wavefunction", &Hamiltonian::optimize_wavefunction)
         .def("mean_distance", &Hamiltonian::mean_distance)
         .def("onebodydensity", &Hamiltonian::onebodydensity)
         .def("gross_pitaevskii_energy", &Hamiltonian::gross_pitaevskii_energy);

@@ -5,6 +5,7 @@
 #include "wavefunction.hpp"
 #include "system.hpp"
 #include "sampler.hpp"
+#include "optimizer.hpp"
 
 /**
  * Class used to model a Hamiltonian.
@@ -78,6 +79,8 @@ class Hamiltonian {
         Real mean_distance(Sampler&, long samples) const;
 
         RowVector onebodydensity(Sampler &sampler, int n_bins, Real max_radius, long samples) const;
+
+        void optimize_wavefunction(Wavefunction& psi, Sampler &sampler, int iterations, int sample_points, SgdOptimizer &optimizer, Real gamma, bool verbose);
 
         friend std::ostream& operator<<(std::ostream&, const Hamiltonian&);
 };

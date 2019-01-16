@@ -9,30 +9,19 @@
 
 TEST(GradientDecent, findsOptmalForNonInteracting) {
 
-    System init_system = System::Zero(3, 10);
+    System init_system = System::Zero(10, 3);
     SimpleGaussian psi(0.3, 1);
     HarmonicOscillatorHamiltonian H(1);
     ImportanceSampler sampler(init_system, psi, 0.5);
 
-    Real learning_rate = 0.01;
-    int n_cycles = 10000;
-    int max_iterations = 1e4;
-    Real minimum_gradient = 1e-6;
+    AdamOptimizer adam(psi.get_parameters().size(), 0.01);
+
 
     for (Real initial_guess = 0.3; initial_guess < 1; initial_guess += 0.4) {
 
+        H.optimize_wavefunction(psi, sampler, 2000, 100, adam, 0, false);
 
-
-        Real alpha_optimal = Optimizer::gradient_decent_optimizer(psi,
-                                                                  H,
-                                                                  sampler,
-                                                                  initial_guess,
-                                                                  learning_rate,
-                                                                  n_cycles,
-                                                                  max_iterations,
-                                                                  minimum_gradient,
-                                                                  false);
-        ASSERT_NEAR(0.5, alpha_optimal, 5e-8);
+        ASSERT_NEAR(0.5, psi.get_parameters()[0], 5e-4);
     }
 }
 

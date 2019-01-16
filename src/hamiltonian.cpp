@@ -67,6 +67,33 @@ RowVector Hamiltonian::local_energy_gradient(Sampler &sampler, const Wavefunctio
     return grad_E;
 }
 
+void Hamiltonian::optimize_wavefunction(Wavefunction &psi, Sampler &sampler, int iterations,
+        int sample_points, SgdOptimizer &optimizer, Real gamma, bool verbose)
+{
+    for (int iteration = 0; iteration < iterations; ++iteration) {
+
+        // Thermalize the sampler to the new parameters.
+        for (int run = 0; run < 0.2 * sample_points; ++run) {
+            sampler.next_configuration();
+        }
+
+        RowVector grad = local_energy_gradient(sampler, psi, sample_points);
+
+        if (gamma > 0) {
+            grad += gamma * psi.get_parameters();
+        }
+
+        psi.get_parameters() += optimizer.update_term(grad);
+
+        if (verbose) {
+            Real E_mean = 0;
+            for (long i = 0; i < sample_points; ++i)
+                E_mean += local_energy(sampler.next_configuration(), psi);
+            printf("Iteration %d: <E> = %g\n", iteration, E_mean / sample_points);
+        }
+    }
+}
+
 Real Hamiltonian::mean_distance(Sampler &sampler, long samples) const {
     if (sampler.get_current_system().rows() < 2)
         return 0;
