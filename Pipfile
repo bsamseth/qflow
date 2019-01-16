@@ -4,6 +4,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pre-commit = "*"
+black = "*"
+v = {editable = true,version = "*"}
 
 [packages]
 numpy = "*"
