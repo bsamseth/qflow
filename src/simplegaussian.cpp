@@ -23,18 +23,13 @@ namespace {
     }
 }
 
-SimpleGaussian::SimpleGaussian(std::initializer_list<Real> parameters)
-    : Wavefunction(parameters)
-{
-    // Set default parameters.
-    const static RowVector defaults = vector_from_sequence({0.5, 1});
-    _parameters = defaults;
+SimpleGaussian::SimpleGaussian(Real alpha, Real beta)
+    : SimpleGaussian(vector_from_sequence({alpha, beta}))
+{ }
 
-    // Copy any given parameters.
-    int i = 0;
-    for (auto it = parameters.begin(); it != parameters.end() and i < defaults.size(); ++it, ++i)
-        _parameters[i] = *it;
-}
+/* SimpleGaussian::SimpleGaussian(const RowVector& parameters) */
+/*     : Wavefunction(parameters) */
+/* {} */
 
 Real SimpleGaussian::operator() (System &system) const {
     const auto alpha = _parameters[0];

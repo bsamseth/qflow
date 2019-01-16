@@ -7,7 +7,7 @@
 
 TEST(SimpleGaussian, zero_system) {
     System s = System::Zero(10, 3);
-    SimpleGaussian psi ({0.5, 1, 0});
+    SimpleGaussian psi (0.5, 1);
 
     // System all at origin.
     EXPECT_DOUBLE_EQ(1 , psi(s));
@@ -20,7 +20,7 @@ TEST(SimpleGaussian, call_with_beta) {
     s.row(2) << 0.72436579,  0.36970369,  0.49771584;
     s.row(3) << 0.42984966,  0.72519657,  0.30454728;
 
-    SimpleGaussian psi ({0.5, 2.8});
+    SimpleGaussian psi (0.5, 2.8);
 
     // Calculated by hand/calculator:
     RowVector F_0 = vector_from_sequence({-1.01667658, -0.15464426, -3.880500176});
@@ -38,8 +38,8 @@ TEST(SimpleGaussian, call_2D) {
     s.row(2) << 5, 6;
 
     // Beta shoudl not have any effect in 2D. Test both.
-    SimpleGaussian psi_with_beta ({0.5, 2.8});
-    SimpleGaussian psi ({0.5});
+    SimpleGaussian psi_with_beta (0.5, 2.8);
+    SimpleGaussian psi (0.5);
 
     // Calculated by hand/calculator:
     EXPECT_DOUBLE_EQ(1.7362052831002947e-20, psi_with_beta(s));

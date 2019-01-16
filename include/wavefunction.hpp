@@ -17,11 +17,7 @@ class Wavefunction {
 
     public:
 
-        /**
-         * Initialize wavefunction with the given parameters.
-         * @param parameters Initializer list of parameters.
-         */
-        Wavefunction(std::initializer_list<Real> parameters = {});
+        Wavefunction(const RowVector& parameters = vector_from_sequence({}));
 
         /**
          * Evaluate the wavefunction.

@@ -11,7 +11,10 @@
 class SimpleGaussian : public Wavefunction {
     public:
 
-        SimpleGaussian(std::initializer_list<Real> parameters = {});
+        using Wavefunction::Wavefunction;
+        SimpleGaussian(Real alpha = 0.5, Real beta = 1);
+
+        /* SimpleGaussian(const RowVector& parameters); */
 
         virtual Real operator() (System&) const;
 

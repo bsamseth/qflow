@@ -6,19 +6,8 @@
 #include "system.hpp"
 #include "interactingwavefunction.hpp"
 
-InteractingWavefunction::InteractingWavefunction(std::initializer_list<Real> parameters)
-    : SimpleGaussian(parameters)
-{
-    // Set default parameters.
-    const static RowVector defaults = vector_from_sequence({0.5, 1, 0});
-
-    _parameters = defaults;
-
-    // Copy any given parameters.
-    int i = 0;
-    for (auto it = parameters.begin(); it != parameters.end() and i < defaults.size(); ++it, ++i)
-        _parameters[i] = *it;
-}
+InteractingWavefunction::InteractingWavefunction(Real alpha, Real beta, Real a)
+    : SimpleGaussian(vector_from_sequence({alpha, beta, a})) { }
 
 Real InteractingWavefunction::correlation(System &system) const {
     const auto a = _parameters[2];

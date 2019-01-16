@@ -12,7 +12,7 @@
  */
 class InteractingWavefunction : public SimpleGaussian {
     public:
-        InteractingWavefunction(std::initializer_list<Real> parameters = {});
+        InteractingWavefunction(Real alpha = 0.5, Real beta = 1, Real a = 0);
 
         virtual Real operator() (System&) const;
         virtual Real correlation(System&) const;

@@ -10,7 +10,7 @@
 TEST(GradientDecent, findsOptmalForNonInteracting) {
 
     System init_system = System::Zero(3, 10);
-    SimpleGaussian psi({0.3, 1});
+    SimpleGaussian psi(0.3, 1);
     HarmonicOscillatorHamiltonian H(1);
     ImportanceSampler sampler(init_system, psi, 0.5);
 
