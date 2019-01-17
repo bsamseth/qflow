@@ -61,10 +61,7 @@ RowVector Hamiltonian::local_energy_gradient(Sampler &sampler, const Wavefunctio
     grad /= samples;
     grad_E /= samples;
 
-    grad *= E_mean;
-    grad_E -= grad;
-    grad_E *= 2;
-    return grad_E;
+    return 2 * (grad_E - grad * E_mean);
 }
 
 void Hamiltonian::optimize_wavefunction(Wavefunction &psi, Sampler &sampler, int iterations,
