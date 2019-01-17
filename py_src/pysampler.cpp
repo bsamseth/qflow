@@ -22,13 +22,13 @@ void init_sampler(py::module& main) {
 
 
     py::class_<MetropolisSampler, Sampler>(m, "MetropolisSampler")
-        .def(py::init<const System&, const Wavefunction&, Real>(),
+        .def(py::init<const System&, Wavefunction&, Real>(),
              py::arg("system"), py::arg("wavefunction"), py::arg("step_size"));
     py::class_<ImportanceSampler, Sampler>(m, "ImportanceSampler")
-        .def(py::init<const System&, const Wavefunction&, Real>(),
+        .def(py::init<const System&, Wavefunction&, Real>(),
              py::arg("system"), py::arg("wavefunction"), py::arg("step_size"));
     py::class_<GibbsSampler, Sampler>(m, "GibbsSampler")
-        .def(py::init<const System&, const RBMWavefunction&>(),
+        .def(py::init<const System&, RBMWavefunction&>(),
              py::arg("system"), py::arg("rbm_wavefunction"));
 }
 
