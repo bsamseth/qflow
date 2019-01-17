@@ -17,7 +17,7 @@ class Wavefunction {
 
     public:
 
-        Wavefunction(const RowVector& parameters = vector_from_sequence({}));
+        Wavefunction(const RowVector& parameters);
 
         /**
          * Evaluate the wavefunction.
