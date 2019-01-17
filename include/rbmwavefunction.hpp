@@ -43,14 +43,14 @@ class RBMWavefunction : public Wavefunction {
          * @param system configuration to evaluate the gradient for.
          * @return Gradient of the expected local energy, wrt. all the parameters.
          */
-        RowVector gradient(System &system);
+        RowVector gradient(System &system) override;
 
         /**
          * Evaluate the RBM.
          * @param system configuration to evaluate for.
          * @return Explicit value of the wavefunction, as given by the RBM.
          */
-        Real operator() (System &system);
+        Real operator() (System &system) override;
 
         /**
          * @param k bias index.
@@ -78,7 +78,7 @@ class RBMWavefunction : public Wavefunction {
          * @param system configuration to evaluate for.
          * @return 1/psi laplacian(psi)
          */
-        Real laplacian(System &system);
+        Real laplacian(System &system) override;
 
         /**
          * Train the parameters of the RBM in order to minimize the expected local energy.
@@ -117,7 +117,7 @@ class RBMWavefunction : public Wavefunction {
          * @param dim_index which dimension to evaluate the force for.
          * @return 2 grad(psi) / psi.
          */
-        Real drift_force(const System &system, int particle_index, int dim_index);
+        Real drift_force(const System &system, int particle_index, int dim_index) override;
 
         // Helpers. Public so that they are visible to the tests.
         Real v_j(int j, const System &system) const;

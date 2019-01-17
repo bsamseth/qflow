@@ -17,11 +17,11 @@ class RBMHarmonicOscillatorHamiltonian : public Hamiltonian {
 
         RBMHarmonicOscillatorHamiltonian(Real omega = 1);
 
-        virtual Real external_potential(System&) const;
+        Real external_potential(System&) const override;
 
-        virtual Real internal_potential(System&) const;
+        Real internal_potential(System&) const override;
 
-        virtual Real local_energy(System&, Wavefunction&) const;
+        Real local_energy(System&, Wavefunction&) const override;
 };
 
 inline Real RBMHarmonicOscillatorHamiltonian::internal_potential(__attribute__((unused)) System &system) const {

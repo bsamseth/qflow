@@ -13,12 +13,12 @@ class HarmonicOscillatorHamiltonian: public Hamiltonian {
 
         using Hamiltonian::Hamiltonian;
 
-        virtual Real external_potential(System&) const;
+        Real external_potential(System&) const override;
 
         /**
          * @return Zero, as no interaction is active.
          */
-        virtual Real internal_potential(System&) const;
+        Real internal_potential(System&) const override;
 };
 
 inline Real HarmonicOscillatorHamiltonian::internal_potential(__attribute__((unused)) System &system) const {

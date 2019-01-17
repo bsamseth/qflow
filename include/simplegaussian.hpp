@@ -16,13 +16,13 @@ class SimpleGaussian : public Wavefunction {
 
         /* SimpleGaussian(const RowVector& parameters); */
 
-        virtual Real operator() (System&);
+        Real operator() (System&) override;
 
-        virtual RowVector gradient(System &system);
+        RowVector gradient(System &system) override;
 
-        virtual Real laplacian(System &system);
+        Real laplacian(System &system) override;
 
-        Real drift_force(const System &system, int k, int dim_index);
+        Real drift_force(const System &system, int k, int dim_index) override;
 
         Real derivative_alpha(const System &system) const;
 
