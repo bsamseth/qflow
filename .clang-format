@@ -1,0 +1,10 @@
+﻿---
+BasedOnStyle: Google
+AccessModifierOffset: '-4'
+IndentWidth: '4'
+Language: Cpp
+PointerAlignment: Left
+TabWidth: '4'
+UseTab: Never
+
+...
