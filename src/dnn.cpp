@@ -35,7 +35,7 @@ Real Dnn::operator()(System& system) {
 }
 
 RowVector Dnn::gradient(System& system) {
-    (*this)(system);
+    Real output = (*this)(system);
     backward();
     unsigned k = 0;
     for (const auto& layer : layers) {
@@ -47,7 +47,7 @@ RowVector Dnn::gradient(System& system) {
             paramGradient(k++) = b_grad[i];
     }
     assert(k == paramCount);
-    return paramGradient;
+    return paramGradient / output;
 }
 
 const RowVector& Dnn::positionGradient(System& system) {
@@ -92,7 +92,7 @@ Real Dnn::laplacian(System& system) {
         res += ddaddx_j.sum();
     }
 
-    return res;
+    return res / layers[layers.size() - 1].getOutputs()(0,0);;
 }
 
 
