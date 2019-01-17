@@ -6,6 +6,19 @@ void Dnn::addLayer(layer::DenseLayer layer) {
     layers.push_back(layer);
     paramCount += layer.getNumberOfParameter();
     paramGradient.resize(paramCount);
+    _parameters.resize(paramCount);
+
+    // Copy parameters from layers.
+    unsigned k = 0;
+    for (auto& layer : layers) {
+        auto& W = layer.getWeights();
+        auto& b = layer.getBiases();
+        for (unsigned i = 0; i < W.size(); ++i)
+            _parameters[k++] = W.data()[i];
+        for (unsigned i = 0; i < b.size(); ++i)
+            _parameters[k++] = b[i];
+    }
+    assert(k == paramCount);
 
     if (layers.size() == 1)
         // inputGradient has size equal to the inputs to the first layer.
@@ -103,7 +116,7 @@ void Dnn::backward() {
 }
 
 void Dnn::set_parameters(const RowVector& parameters) {
-    set_parameters(parameters);
+    _parameters = parameters;
 
     // Fill in layers.
     unsigned k = 0;
