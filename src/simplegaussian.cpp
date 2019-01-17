@@ -44,8 +44,9 @@ Real SimpleGaussian::derivative_alpha(const System &system) const {
 
 RowVector SimpleGaussian::gradient(System &system) const {
     const auto beta = _parameters[1];
-    RowVector grad(1);
+    RowVector grad(2);
     grad[0] = -exponent(system, beta);
+    grad[1] = 0;  // Fix beta, alpha is only variational parameter.
     return grad;
 }
 

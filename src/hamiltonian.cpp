@@ -47,7 +47,7 @@ Real Hamiltonian::local_energy(System &system, const Wavefunction &psi) const {
 RowVector Hamiltonian::local_energy_gradient(Sampler &sampler, const Wavefunction &psi, long samples) const {
     Real E_mean = 0;
     RowVector grad = RowVector::Zero(psi.get_parameters().size());
-    RowVector grad_E = RowVector::Zero(psi.get_parameters().size());
+    RowVector grad_E = RowVector::Zero(grad.size());
     for (int sample = 0; sample < samples; ++sample) {
         System &system = sampler.next_configuration();
         Real E = local_energy(system, psi);
