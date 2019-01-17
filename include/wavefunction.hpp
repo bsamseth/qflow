@@ -43,10 +43,10 @@ class Wavefunction {
          */
         virtual Real laplacian(System &system) const = 0;
 
-        RowVector& get_parameters();
         const RowVector& get_parameters() const;
 
-        void set_parameters(const RowVector &parameters);
+        virtual void set_parameters(const RowVector &parameters);
+
         void set_parameters(std::initializer_list<Real> parameters);
 
         virtual ~Wavefunction() = default;
@@ -54,9 +54,6 @@ class Wavefunction {
         friend std::ostream& operator<<(std::ostream &strm, const Wavefunction &psi);
 };
 
-inline RowVector& Wavefunction::get_parameters() {
-    return _parameters;
-}
 inline const RowVector& Wavefunction::get_parameters() const {
     return _parameters;
 }
