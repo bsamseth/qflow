@@ -80,7 +80,7 @@ void Hamiltonian::optimize_wavefunction(Wavefunction &psi, Sampler &sampler, int
             grad += gamma * psi.get_parameters();
         }
 
-        psi.get_parameters() += optimizer.update_term(grad);
+        psi.set_parameters(psi.get_parameters() + optimizer.update_term(grad));
 
         if (verbose) {
             Real E_mean = 0;
