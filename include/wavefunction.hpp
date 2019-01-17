@@ -17,6 +17,7 @@ class Wavefunction {
 
     public:
 
+        Wavefunction() = default;
         Wavefunction(const RowVector& parameters);
 
         /**
@@ -24,24 +25,24 @@ class Wavefunction {
          * @param system System to evaluate the Wavefunction for.
          * @return Value of the wavefunction for the given system.
          */
-        virtual Real operator() (System &system) const = 0;
+        virtual Real operator() (System &system) = 0;
 
         /**
          * Return grad(Psi)/Psi, with derivatives wrt. all parameters.
          * @param system System configuration to evaluate gradient for.
          * @return RowVector with derivatives.
          */
-        virtual RowVector gradient(System &system) const = 0;
+        virtual RowVector gradient(System &system) = 0;
 
 
-        virtual Real drift_force(const System &system, int k, int dim_index) const;
+        virtual Real drift_force(const System &system, int k, int dim_index);
 
         /**
          * Return sum_{particles} laplacian(Psi)/Psi.
          * @param system System configuration to evaluate laplacian for.
          * @return The sum of laplacians for all particles in the system.
          */
-        virtual Real laplacian(System &system) const = 0;
+        virtual Real laplacian(System &system) = 0;
 
         const RowVector& get_parameters() const;
 
@@ -63,7 +64,7 @@ inline void Wavefunction::set_parameters(const RowVector &parameters) {
 inline void Wavefunction::set_parameters(std::initializer_list<Real> parameters) {
     set_parameters(vector_from_sequence(parameters));
 }
-inline Real Wavefunction::drift_force(const System &system, int k, int dim_index) const {
+inline Real Wavefunction::drift_force(const System &system, int k, int dim_index) {
     SUPPRESS_WARNING(system);
     SUPPRESS_WARNING(k);
     SUPPRESS_WARNING(dim_index;)

@@ -14,7 +14,7 @@ class ImportanceSampler : public Sampler {
         /**
          * @copydoc Sampler::Sampler
          */
-        ImportanceSampler(const System&, const Wavefunction&, Real step = 0.1);
+        ImportanceSampler(const System&, Wavefunction&, Real step = 0.1);
 
         virtual void initialize_system();
         virtual void perturb_system();

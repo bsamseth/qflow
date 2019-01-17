@@ -12,13 +12,17 @@ void Dnn::addLayer(layer::DenseLayer layer) {
         inputGradient.resize(layer.getWeights().rows());
 }
 
-const Matrix& Dnn::evaluate(const MatrixRef& x) {
+Real Dnn::operator()(System& system) {
+    assert(layers[layers.size() - 1].getWeights().cols() == 1);  // Output layer should have only one output.
+
+    Eigen::Map<RowVector> x(system.data(), system.size());  // Reshape as (1 x n) matrix
     forward(x);
-    return layers[layers.size() - 1].getOutputs();
+
+    return layers[layers.size() - 1].getOutputs()(0,0);
 }
 
-const Vector& Dnn::parameterGradient(const MatrixRef& x) {
-    forward(x);
+RowVector Dnn::gradient(System& system) {
+    (*this)(system);
     backward();
     unsigned k = 0;
     for (const auto& layer : layers) {
@@ -33,7 +37,10 @@ const Vector& Dnn::parameterGradient(const MatrixRef& x) {
     return paramGradient;
 }
 
-const Vector& Dnn::gradient(const MatrixRef& x) {
+const RowVector& Dnn::positionGradient(System& system) {
+    assert(layers[layers.size() - 1].getWeights().cols() == 1);  // Output layer should have only one output.
+
+    Eigen::Map<RowVector> x(system.data(), system.size());  // Reshape as (1 x n) matrix
     forward(x);
 
     for (int j = 0; j < x.cols(); ++j) {
@@ -52,7 +59,10 @@ const Vector& Dnn::gradient(const MatrixRef& x) {
     return inputGradient;
 }
 
-Real Dnn::laplace(const MatrixRef& x) {
+Real Dnn::laplacian(System& system) {
+    assert(layers[layers.size() - 1].getWeights().cols() == 1);  // Output layer should have only one output.
+
+    Eigen::Map<RowVector> x(system.data(), system.size());  // Reshape as (1 x n) matrix
     forward(x);
 
     Real res = 0;
@@ -92,3 +102,18 @@ void Dnn::backward() {
     }
 }
 
+void Dnn::set_parameters(const RowVector& parameters) {
+    set_parameters(parameters);
+
+    // Fill in layers.
+    unsigned k = 0;
+    for (auto& layer : layers) {
+        auto& W = layer.getWeights();
+        auto& b = layer.getBiases();
+        for (unsigned i = 0; i < W.size(); ++i)
+            W.data()[i] = parameters[k++];
+        for (unsigned i = 0; i < b.size(); ++i)
+            b[i] = parameters[k++];
+    }
+    assert(k == paramCount);
+}

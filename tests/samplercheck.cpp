@@ -14,8 +14,8 @@
 void sampler_sanity(int sampler_type) {
     const int runs = 10000;
     const System init_system (10, 3);
-    const SimpleGaussian psi(0.5, 1);
     const HarmonicOscillatorHamiltonian H_0;
+    SimpleGaussian psi(0.5, 1);
 
     Sampler *sp;
     if (sampler_type == METRO_SAMPLER)
@@ -71,8 +71,8 @@ void sampler_integration_test(int sampler_type, Real expected_acceptance, Real a
     const Real alpha = 0.5;
     const int runs = 10000;
     const System init_system (10, 3);
-    const SimpleGaussian psi(alpha, gamma);
     const HarmonicOscillatorHamiltonian H(gamma);
+    SimpleGaussian psi(alpha, gamma);
 
     Sampler *sp;
     if (sampler_type == METRO_SAMPLER)

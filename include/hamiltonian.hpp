@@ -43,30 +43,30 @@ class Hamiltonian {
          * @param wavefunction Wavefunction to calculate for.
          * @return Local energy evaluation.
          */
-        virtual Real local_energy(System &system, const Wavefunction &wavefunction) const;
+        virtual Real local_energy(System &system, Wavefunction &wavefunction) const;
         /**
          * Compute the local energy for a given system and wavefunction, using numerical differentiation.
          * @param system System to calculate for.
          * @param wavefunction Wavefunction to calculate for.
          * @return Local energy evaluation.
          */
-        virtual Real local_energy_numeric(System &system, const Wavefunction &wavefunction) const;
+        virtual Real local_energy_numeric(System &system, Wavefunction &wavefunction) const;
         /**
          * Compute the kinetic energy for a given system and wavefunction.
          * @param system System to calculate for.
          * @param wavefunction Wavefunction to calculate for.
          * @return Kinetic energy evaluation.
          */
-        virtual Real kinetic_energy(System &system, const Wavefunction &wavefunction) const;
+        virtual Real kinetic_energy(System &system, Wavefunction &wavefunction) const;
         /**
          * Compute the kinetic energy for a given system and wavefunction, using numerical differentiation.
          * @param system System to calculate for.
          * @param wavefunction Wavefunction to calculate for.
          * @return Kinetic energy evaluation.
          */
-        virtual Real kinetic_energy_numeric(System &system, const Wavefunction &wavefunction) const;
+        virtual Real kinetic_energy_numeric(System &system, Wavefunction &wavefunction) const;
 
-        RowVector local_energy_gradient(Sampler &sampler, const Wavefunction &psi, long samples) const;
+        RowVector local_energy_gradient(Sampler &sampler, Wavefunction &psi, long samples) const;
 
         /**
          * Compute the Gross-Pitaevskii ideal case energy for a given system and wavefunction.
@@ -74,7 +74,7 @@ class Hamiltonian {
          * @param wavefunction Wavefunction to calculate for.
          * @return Gross-Pitaevskii ideal energy.
          */
-        Real gross_pitaevskii_energy(const System &system, const Wavefunction &wavefunction) const;
+        Real gross_pitaevskii_energy(const System &system, Wavefunction &wavefunction) const;
 
         Real mean_distance(Sampler&, long samples) const;
 
@@ -85,7 +85,7 @@ class Hamiltonian {
         friend std::ostream& operator<<(std::ostream&, const Hamiltonian&);
 };
 
-inline Real Hamiltonian::gross_pitaevskii_energy(const System &system, const Wavefunction &psi) const {
+inline Real Hamiltonian::gross_pitaevskii_energy(const System &system, Wavefunction &psi) const {
     const int N = system.rows();
     const int D = system.cols();
     const Real alpha = psi.get_parameters()[0];

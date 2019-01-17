@@ -26,11 +26,11 @@ Real InteractingWavefunction::correlation(System &system) const {
     return f;
 }
 
-Real InteractingWavefunction::operator() (System &system) const {
+Real InteractingWavefunction::operator() (System &system) {
     return correlation(system) * SimpleGaussian::operator()(system);
 }
 
-Real InteractingWavefunction::laplacian(System &system) const {
+Real InteractingWavefunction::laplacian(System &system) {
     const auto alpha = _parameters[0];
     const auto beta  = _parameters[1];
     const auto a     = _parameters[2];

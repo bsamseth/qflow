@@ -11,7 +11,7 @@
 class Sampler {
     protected:
         const Real _step;
-        const Wavefunction *_wavefunction;
+        Wavefunction *_wavefunction;
 
         System _system_old;
         System _system_new;
@@ -31,7 +31,7 @@ class Sampler {
          * @param wavefunction Wavefunction to sample from.
          * @param step Step size to use in sampling.
          */
-        Sampler(const System &init, const Wavefunction &wavefunction, Real step);
+        Sampler(const System &init, Wavefunction &wavefunction, Real step);
 
         /**
          * Initialize system in some random configuration.

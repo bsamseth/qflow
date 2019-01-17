@@ -27,7 +27,7 @@ Real RBMWavefunction::v_j(int j, const System &system) const {
     return _parameters[b(j)] + v / _sigma2;
 }
 
-Real RBMWavefunction::operator() (System &system) const {
+Real RBMWavefunction::operator() (System &system) {
 
     // Ensure that system is compatible with rbm, i.e. P*D = M.
     assert(system.rows() * system.cols() == _M);
@@ -61,7 +61,7 @@ Real RBMWavefunction::deriv_w(int k, int l, System &system) const {
     return _root_factor / (1 + std::exp(-v_j(l, system))) * system.data()[k] / _sigma2;
 }
 
-Real RBMWavefunction::laplacian(System &system) const {
+Real RBMWavefunction::laplacian(System &system) {
 
     std::vector<Real> exp_v(_N);
     for (int j = 0; j < _N; ++j) {
@@ -86,7 +86,7 @@ Real RBMWavefunction::laplacian(System &system) const {
     return res;
 }
 
-RowVector RBMWavefunction::gradient(System &system) const {
+RowVector RBMWavefunction::gradient(System &system) {
     RowVector grad_vec(_parameters.size());
 
     for (int i = 0; i < _M; ++i) {
@@ -104,7 +104,7 @@ RowVector RBMWavefunction::gradient(System &system) const {
     return grad_vec;
 }
 
-Real RBMWavefunction::drift_force(const System &system, int particle_index, int dim_index) const {
+Real RBMWavefunction::drift_force(const System &system, int particle_index, int dim_index) {
     const int k = system.cols() * particle_index + dim_index;
     Real v = 0;
     for (int j = 0; j < _N; ++j) {

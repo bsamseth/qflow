@@ -1,16 +1,17 @@
 #pragma once
 #include <vector>
-#include "definitions.hpp"
+
+#include "wavefunction.hpp"
 #include "activation.hpp"
 #include "layer.hpp"
 
-class Dnn {
+class Dnn : public Wavefunction {
     protected:
 
         unsigned paramCount = 0;
         std::vector<layer::DenseLayer> layers;
-        Vector paramGradient;
-        Vector inputGradient;
+        RowVector paramGradient;
+        RowVector inputGradient;
 
         /**
          * Forward propagation of input (evaluation of network).
@@ -29,38 +30,40 @@ class Dnn {
 
     public:
 
+        Dnn() = default;
+
         /**
          * Append a layer to the network.
          */
         void addLayer(layer::DenseLayer layer);
 
-        /**
-         * Returns the output of the network for the input x.
-         */
-        const Matrix& evaluate(const MatrixRef& x);
+
+        Real operator() (System& system) override;
 
         /**
          * Returns the gradient of the output w.r.t. all parameters
          * in the network, summed over the rows of x, where each
          * row of x makes up one sample input.
          */
-        const Vector& parameterGradient(const MatrixRef& x);
+        RowVector gradient(System& system) override;
 
         /**
          * Returns the gradient of the output w.r.t. the input X,
          * summed over the rows of X, where each row in X makes up one
          * sample input.
          */
-        const Vector& gradient(const MatrixRef& x);
+        const RowVector& positionGradient(System& system);
 
         /**
          * Return the lapliacian of the output w.r.t. the inputs x
          * summed over the rows of X.
          */
-        Real laplace(const MatrixRef& x);
+        Real laplacian(System& system) override;
 
         // Getters.
         const std::vector<layer::DenseLayer>& getLayers() const;
+
+        void set_parameters(const RowVector& parameters) override;
 };
 
 inline const std::vector<layer::DenseLayer>& Dnn::getLayers() const {

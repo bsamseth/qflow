@@ -8,7 +8,7 @@
 #include "sampler.hpp"
 
 Sampler::Sampler(const System &system,
-                 const Wavefunction &wavefunction,
+                 Wavefunction &wavefunction,
                  Real step)
                 : _step(step),
                   _wavefunction(&wavefunction),

@@ -14,7 +14,7 @@ class MetropolisSampler : public Sampler {
         /**
          * @copydoc Sampler::Sampler
          */
-        MetropolisSampler(const System&, const Wavefunction&, Real step = 1.0);
+        MetropolisSampler(const System&, Wavefunction&, Real step = 1.0);
         virtual void initialize_system();
         virtual void perturb_system();
         virtual Real acceptance_probability() const;

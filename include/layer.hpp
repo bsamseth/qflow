@@ -27,7 +27,9 @@ class DenseLayer {
         // Getters
         const Matrix& getOutputs() const;
         const Matrix& getWeights() const;
+        Matrix& getWeights();
         const RowVector& getBiases() const;
+        RowVector& getBiases();
         const Matrix& getWeightsGradient() const;
         const RowVector& getBiasGradient() const;
         unsigned getNumberOfParameter() const;
@@ -39,7 +41,13 @@ inline const Matrix& DenseLayer::getOutputs() const {
 inline const Matrix& DenseLayer::getWeights() const {
     return W;
 }
+inline Matrix& DenseLayer::getWeights() {
+    return W;
+}
 inline const RowVector& DenseLayer::getBiases() const {
+    return b;
+}
+inline RowVector& DenseLayer::getBiases() {
     return b;
 }
 inline unsigned DenseLayer::getNumberOfParameter() const {

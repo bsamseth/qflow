@@ -8,7 +8,7 @@
 
 Hamiltonian::Hamiltonian(Real omega_z, Real a, Real h) : _omega_z(omega_z), _a(a), _h(h) {}
 
-Real Hamiltonian::kinetic_energy_numeric(System &system, const Wavefunction &psi) const {
+Real Hamiltonian::kinetic_energy_numeric(System &system, Wavefunction &psi) const {
     Real E_k = -2 * (system.cols() * system.rows()) * psi(system);
 
     for (int i = 0; i < system.rows(); ++i) {
@@ -25,11 +25,11 @@ Real Hamiltonian::kinetic_energy_numeric(System &system, const Wavefunction &psi
     return -0.5 * E_k / (_h * _h);
 }
 
-Real Hamiltonian::kinetic_energy(System &system, const Wavefunction &psi) const {
+Real Hamiltonian::kinetic_energy(System &system, Wavefunction &psi) const {
     return -0.5 * psi.laplacian(system);
 }
 
-Real Hamiltonian::local_energy_numeric(System &system, const Wavefunction &psi) const {
+Real Hamiltonian::local_energy_numeric(System &system, Wavefunction &psi) const {
     Real wavefunc = psi(system);
     if (wavefunc == 0) {
         return std::numeric_limits<Real>::max();
@@ -40,11 +40,11 @@ Real Hamiltonian::local_energy_numeric(System &system, const Wavefunction &psi) 
          + internal_potential(system);
 }
 
-Real Hamiltonian::local_energy(System &system, const Wavefunction &psi) const {
+Real Hamiltonian::local_energy(System &system, Wavefunction &psi) const {
     return external_potential(system) + internal_potential(system) + kinetic_energy(system, psi);
 }
 
-RowVector Hamiltonian::local_energy_gradient(Sampler &sampler, const Wavefunction &psi, long samples) const {
+RowVector Hamiltonian::local_energy_gradient(Sampler &sampler, Wavefunction &psi, long samples) const {
     Real E_mean = 0;
     RowVector grad = RowVector::Zero(psi.get_parameters().size());
     RowVector grad_E = RowVector::Zero(grad.size());

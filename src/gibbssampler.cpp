@@ -7,7 +7,7 @@
 
 
 
-GibbsSampler::GibbsSampler(const System &system, const RBMWavefunction &wavefunction)
+GibbsSampler::GibbsSampler(const System &system, RBMWavefunction &wavefunction)
     : Sampler(system, wavefunction, 0), _rbm(wavefunction), _system(system)
 {
    initialize_system();

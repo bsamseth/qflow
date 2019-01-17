@@ -5,7 +5,7 @@
 #include "importancesampler.hpp"
 
 ImportanceSampler::ImportanceSampler(const System &system,
-                                     const Wavefunction &wavefunction,
+                                     Wavefunction &wavefunction,
                                      Real step)
     : Sampler(system, wavefunction, step)
 {

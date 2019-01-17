@@ -21,7 +21,7 @@ class RBMHarmonicOscillatorHamiltonian : public Hamiltonian {
 
         virtual Real internal_potential(System&) const;
 
-        virtual Real local_energy(System&, const Wavefunction&) const;
+        virtual Real local_energy(System&, Wavefunction&) const;
 };
 
 inline Real RBMHarmonicOscillatorHamiltonian::internal_potential(__attribute__((unused)) System &system) const {

@@ -9,6 +9,6 @@ Real RBMHarmonicOscillatorHamiltonian::external_potential(System &system) const 
     return 0.5 * square(_omega) * res;
 }
 
-Real RBMHarmonicOscillatorHamiltonian::local_energy(System &system, const Wavefunction &psi) const {
+Real RBMHarmonicOscillatorHamiltonian::local_energy(System &system, Wavefunction &psi) const {
     return external_potential(system) + internal_potential(system) - 0.5 * psi.laplacian(system);
 }

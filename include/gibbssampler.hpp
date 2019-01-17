@@ -10,7 +10,7 @@
  */
 class GibbsSampler : public Sampler {
     protected:
-        const RBMWavefunction &_rbm;
+        RBMWavefunction &_rbm;
         System _system;
         Real _stddev;
 
@@ -26,7 +26,7 @@ class GibbsSampler : public Sampler {
         /**
          * @copydoc Sampler::Sampler
          */
-        GibbsSampler(const System&, const RBMWavefunction&);
+        GibbsSampler(const System&, RBMWavefunction&);
 
         /**
          * @return A new System instance, drawn from the wavefunction prob. distribution.

@@ -31,7 +31,7 @@ SimpleGaussian::SimpleGaussian(Real alpha, Real beta)
 /*     : Wavefunction(parameters) */
 /* {} */
 
-Real SimpleGaussian::operator() (System &system) const {
+Real SimpleGaussian::operator() (System &system) {
     const auto alpha = _parameters[0];
     const auto beta  = _parameters[1];
     return std::exp( - alpha * exponent(system, beta) );
@@ -42,7 +42,7 @@ Real SimpleGaussian::derivative_alpha(const System &system) const {
     return - exponent(system, beta);
 }
 
-RowVector SimpleGaussian::gradient(System &system) const {
+RowVector SimpleGaussian::gradient(System &system) {
     const auto beta = _parameters[1];
     RowVector grad(2);
     grad[0] = -exponent(system, beta);
@@ -50,7 +50,7 @@ RowVector SimpleGaussian::gradient(System &system) const {
     return grad;
 }
 
-Real SimpleGaussian::laplacian(System &system) const {
+Real SimpleGaussian::laplacian(System &system) {
     const auto alpha = _parameters[0];
     const auto beta  = _parameters[1];
     const Real one_body_beta_term = - (system.cols() == 3 ? 2 + beta : system.cols());
