@@ -381,3 +381,5 @@ venv.bak/
 cmake-build*
 compile_commands.json
 results/
+*.cpython*
+*.egg*
