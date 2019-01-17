@@ -11,6 +11,7 @@ v = {editable = true,version = "*"}
 [packages]
 numpy = "*"
 autograd = "*"
+matplotlib = "*"
 
 [requires]
 python_version = "3.7"
