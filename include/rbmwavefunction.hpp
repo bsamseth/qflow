@@ -81,36 +81,6 @@ class RBMWavefunction : public Wavefunction {
         Real laplacian(System &system) override;
 
         /**
-         * Train the parameters of the RBM in order to minimize the expected local energy.
-         * @param hamiltonian the Hamiltonian used to evaluate the local energy.
-         * @param sampler sampling algorithm used to produce new configurations.
-         * @param iterations the number of training iterations to use.
-         * @param sample_points the number of local energy evaluations to use per training iteration.
-         * @param learning_rate hyper-parameter determining the magnitude of the updates given by SGD.
-         * @param gamma hyper-parameter determining the amount of L2-regularization to use. Default is 0.
-         * @param verbose if true extra output will be given at every iteration.
-         */
-        void train(const Hamiltonian &hamiltonian,
-                Sampler &sampler,
-                int iterations,
-                int sample_points,
-                Real learning_rate,
-                Real gamma = 0,
-                bool verbose = true);
-
-        /**
-         * Overload of previous train method, were the optimizer object is given directly.
-         */
-        void train(const Hamiltonian &hamiltonian,
-                Sampler &sampler,
-                int iterations,
-                int sample_points,
-                SgdOptimizer &optimizer,
-                Real gamma = 0,
-                bool verbose = true);
-
-
-        /**
          * Return the drift force, as used in importance sampling.
          * @param system configuration to evaluate for.
          * @param particle_index which particle to evaluate the force for.

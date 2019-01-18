@@ -167,7 +167,7 @@ TEST(RBMWavefunction, trainSimpleCase3D) {
     RBMHarmonicOscillatorHamiltonian H;
     AdamOptimizer sgd(rbm.get_parameters().size());
 
-    rbm.train(H, sampler, 5000, 100, sgd, 0.0, false);
+    H.optimize_wavefunction(rbm, sampler, 5000, 100, sgd, 0.0, false);
 
     Real E_L = 0;
     for (int i = 0; i < 1000; ++i)

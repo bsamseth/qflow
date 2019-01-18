@@ -6,14 +6,16 @@
 #include "rbmwavefunction.hpp"
 #include "rbmharmonicoscillatorhamiltonian.hpp"
 #include "gibbssampler.hpp"
+#include "optimizer.hpp"
 
 TEST(GibbsSampler, integrationTest) {
     System init_system = System::Zero(2, 2);
     RBMWavefunction rbm(4, 2, 0.5, RBMWavefunction::GIBBS_FACTOR);
     RBMHarmonicOscillatorHamiltonian H;
     GibbsSampler sampler(init_system, rbm);
+    SgdOptimizer sgd(0.9);
 
-    rbm.train(H, sampler, 10000, 100, 0.9, 0, false);
+    H.optimize_wavefunction(rbm, sampler, 10000, 100, sgd, 0, false);
 
     Real E_L = 0;
     for (int i = 0; i < 1000; ++i) {
