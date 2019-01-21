@@ -3,9 +3,9 @@ from autograd import numpy as auto_np
 from autograd import elementwise_grad, hessian
 import numpy as np
 
-from qflow import Dnn
+from qflow.wavefunction import Dnn
 from qflow.layer import DenseLayer
-from qflow.activation import sigmoid, relu
+from qflow.layer.activation import sigmoid, relu
 
 
 def sigmoid_np(x):
@@ -23,8 +23,10 @@ def sigmoid_dbl_deriv(u):
 def relu_np(x):
     return auto_np.maximum(0, x)
 
+
 def relu_deriv(y):
     return auto_np.where(y > 0, 1, 0)
+
 
 def relu_dbl_deriv(y):
     return y * 0
@@ -57,15 +59,14 @@ class TestDnn(unittest.TestCase):
 
     def test_evaluate(self):
         for _ in range(10):
-            x = auto_np.random.randn(500, 2)
-            np.testing.assert_almost_equal(
-                self.f_np(x, *self.params), self.nn.evaluate(x)
-            )
+            for x in auto_np.random.randn(500, 2):
+                np.testing.assert_almost_equal(self.f_np(x, *self.params), self.nn(x))
 
     def test_parameter_gradients(self):
         for _ in range(10):
-            x = auto_np.random.randn(500, 2)
-            grads = self.nn.parameter_gradient(x)
+            x = auto_np.random.randn(1, 2)
+            output = self.nn(x)
+            grads = self.nn.gradient(x)
 
             # Compute gradients using autograd
             auto_grads = []
@@ -83,9 +84,10 @@ class TestDnn(unittest.TestCase):
                 np.testing.assert_almost_equal(b_grad, self.nn.layers[i].bias_gradient)
 
             # Test extraction of full gradient vector
-            np.testing.assert_almost_equal(auto_grads, grads)
+            np.testing.assert_almost_equal(auto_grads, grads * output)
 
-    def test_gradient(self):
+    @unittest.skip("Not part of wavefunction interface (yet?)")
+    def test_input_gradient(self):
         for _ in range(10):
             x = auto_np.random.randn(500, 2)
 
@@ -99,11 +101,12 @@ class TestDnn(unittest.TestCase):
     def test_laplace(self):
         hess = hessian(self.f_np)
         for _ in range(10):
-            x = auto_np.random.randn(50, 2)  # Autograd hessian slow, less testing.
+            x = auto_np.random.randn(1, 2)  # Autograd hessian slow, less testing.
+            output = self.nn(x)
 
             # Need to feed autograd hessian one row at a time and sum results.
             expected = sum(
                 np.trace(hess(x[i], *self.params)[0]) for i in range(x.shape[0])
             )
 
-            self.assertAlmostEqual(expected, self.nn.laplace(x))
+            self.assertAlmostEqual(expected, self.nn.laplacian(x) * output)
