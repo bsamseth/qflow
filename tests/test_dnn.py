@@ -1,4 +1,6 @@
 import unittest
+import warnings
+
 from autograd import numpy as auto_np
 from autograd import elementwise_grad, hessian
 import numpy as np
@@ -99,14 +101,18 @@ class TestDnn(unittest.TestCase):
             np.testing.assert_almost_equal(auto_gradient, self.nn.gradient(x))
 
     def test_laplace(self):
-        hess = hessian(self.f_np)
-        for _ in range(10):
-            x = auto_np.random.randn(1, 2)  # Autograd hessian slow, less testing.
-            output = self.nn(x)
+        # Autograd makes some warnings about code that is not ours. Ignore them here.
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=FutureWarning)
 
-            # Need to feed autograd hessian one row at a time and sum results.
-            expected = sum(
-                np.trace(hess(x[i], *self.params)[0]) for i in range(x.shape[0])
-            )
+            hess = hessian(self.f_np)
+            for _ in range(10):
+                x = auto_np.random.randn(1, 2)  # Autograd hessian slow, less testing.
+                output = self.nn(x)
 
-            self.assertAlmostEqual(expected, self.nn.laplacian(x) * output)
+                # Need to feed autograd hessian one row at a time and sum results.
+                expected = sum(
+                    np.trace(hess(x[i], *self.params)[0]) for i in range(x.shape[0])
+                )
+
+                self.assertAlmostEqual(expected, self.nn.laplacian(x) * output)
