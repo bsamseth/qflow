@@ -68,7 +68,7 @@ set(HEADERS
     include/wavefunction.hpp
 )
 file(GLOB SOURCES "src/*.cpp")
-file(GLOB PYSOURCES "py_src/*.cpp")
+file(GLOB PYSOURCES "qflow_backend/*.cpp")
 file(GLOB TESTFILES "tests/*.cpp")
 set(TEST_MAIN unit_tests.x)  # Default name for test executable (change if you wish).
 
@@ -82,7 +82,7 @@ add_library( engine ${SOURCES})
 
 # Compile Python bindings.
 add_subdirectory(external)  # Includes external/pybind
-pybind11_add_module(qflow ${PYSOURCES} ${SOURCES})
+pybind11_add_module(_qflow_backend ${PYSOURCES} ${SOURCES})
 
 # --------------------------------------------------------------------------------
 #                         Make Tests (no change needed).

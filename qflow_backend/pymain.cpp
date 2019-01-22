@@ -8,7 +8,7 @@ void init_hamiltonian(py::module&);
 void init_optimizer(py::module&);
 void init_layer(py::module&);
 
-PYBIND11_MODULE(qflow, m) {
+PYBIND11_MODULE(_qflow_backend, m) {
     m.doc() = R"pbdoc(
         QFlow - Quantum Variational Monte Carlo Framework
         -----------------------
