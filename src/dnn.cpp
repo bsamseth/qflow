@@ -2,7 +2,7 @@
 #include <iostream>
 #include "dnn.hpp"
 
-void Dnn::addLayer(layer::DenseLayer layer) {
+void Dnn::addLayer(const layer::DenseLayer& layer) {
     layers.push_back(layer);
     paramCount += layer.getNumberOfParameter();
     paramGradient.resize(paramCount);

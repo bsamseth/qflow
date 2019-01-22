@@ -35,7 +35,7 @@ class Dnn : public Wavefunction {
         /**
          * Append a layer to the network.
          */
-        void addLayer(layer::DenseLayer layer);
+        void addLayer(const layer::DenseLayer& layer);
 
 
         Real operator() (System& system) override;
