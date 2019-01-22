@@ -2,9 +2,9 @@
 #include <iostream>
 #include "dnn.hpp"
 
-void Dnn::addLayer(const layer::DenseLayer& layer) {
-    layers.push_back(layer);
-    paramCount += layer.getNumberOfParameter();
+void Dnn::addLayer(const layer::DenseLayer& new_layer) {
+    layers.push_back(new_layer);
+    paramCount += new_layer.getNumberOfParameter();
     paramGradient.resize(paramCount);
     _parameters.resize(paramCount);
 
@@ -22,7 +22,7 @@ void Dnn::addLayer(const layer::DenseLayer& layer) {
 
     if (layers.size() == 1)
         // inputGradient has size equal to the inputs to the first layer.
-        inputGradient.resize(layer.getWeights().rows());
+        inputGradient.resize(new_layer.getWeights().rows());
 }
 
 Real Dnn::operator()(System& system) {
