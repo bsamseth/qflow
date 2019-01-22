@@ -35,7 +35,12 @@ class Wavefunction {
         virtual RowVector gradient(System &system) = 0;
 
 
+        /**
+         * Return 2/Psi * d(Psi)/dx_{k, dim_index}.
+         */
         virtual Real drift_force(const System &system, int k, int dim_index);
+
+        RowVector drift_force(const System& system);
 
         /**
          * Return sum_{particles} laplacian(Psi)/Psi.
