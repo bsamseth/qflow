@@ -8,6 +8,10 @@ DenseLayer::DenseLayer(int inputs, int outputs, const activation::ReluActivation
     : DenseLayer(inputs, outputs, actFunc, std::sqrt(2.0 / inputs))
 {}
 
+DenseLayer::DenseLayer(int inputs, int outputs, const activation::TanhActivation& actFunc)
+    : DenseLayer(inputs, outputs, actFunc, std::sqrt(1.0 / inputs))
+{}
+
 DenseLayer::DenseLayer(int inputs, int outputs, const activation::ActivationFunction& actFunc)
     : DenseLayer(inputs, outputs, actFunc, std::sqrt(2.0 / (inputs + outputs)))
 {}

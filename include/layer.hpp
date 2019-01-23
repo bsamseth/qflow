@@ -20,6 +20,7 @@ class DenseLayer {
 
         DenseLayer(int inputs, int outputs, const activation::ActivationFunction& actFunc, Real scale_factor);
         DenseLayer(int inputs, int outputs, const activation::ReluActivation& actFunc);
+        DenseLayer(int inputs, int outputs, const activation::TanhActivation& actFunc);
         DenseLayer(int inputs, int outputs, const activation::ActivationFunction& actFunc);
         const Matrix& forward(const MatrixRef& x);
         Matrix backward(const MatrixRef& error);

@@ -27,6 +27,8 @@ void init_layer(py::module& main) {
                 py::arg("inputs"), py::arg("outputs"), py::arg("activation") = activation::identity)
         .def(py::init<int, int, const activation::ReluActivation&>(),
                 py::arg("inputs"), py::arg("outputs"), py::arg("activation"))
+        .def(py::init<int, int, const activation::TanhActivation&>(),
+                py::arg("inputs"), py::arg("outputs"), py::arg("activation"))
         .def(py::init<int, int, const activation::ActivationFunction&, Real>(),
                 py::arg("inputs"), py::arg("outputs"), py::arg("activation"), py::arg("scale_factor"))
         .def("evaluate", &layer::DenseLayer::forward)
