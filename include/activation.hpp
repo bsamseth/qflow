@@ -93,16 +93,37 @@ struct dblDeriv {
     }
 };
 }
+
+namespace tanh {
+struct eval {
+    constexpr Real operator() (Real x) const {
+        return std::tanh(x);
+    }
+};
+struct deriv {
+    constexpr Real operator() (Real y) const {
+        return 1 - y*y;
+    }
+};
+struct dblDeriv {
+    constexpr Real operator() (Real y) const {
+        Real x = std::atanh(y);
+        return - 2 * y / square(std::cosh(x));
+    }
+};
+}
 }
 
 
 using ReluActivation = DerivedActivationFunction<functors::relu::eval, functors::relu::deriv, functors::relu::dblDeriv>;
 using IdentityActivation = DerivedActivationFunction<functors::identity::eval, functors::identity::deriv, functors::identity::dblDeriv>;
 using SigmoidActivation = DerivedActivationFunction<functors::sigmoid::eval, functors::sigmoid::deriv, functors::sigmoid::dblDeriv>;
+using TanhActivation = DerivedActivationFunction<functors::tanh::eval, functors::tanh::deriv, functors::tanh::dblDeriv>;
 
 extern ReluActivation relu;
 extern IdentityActivation identity;
 extern SigmoidActivation sigmoid;
+extern TanhActivation tanh;
 
 }
 

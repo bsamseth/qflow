@@ -17,6 +17,7 @@ void init_activation(py::module& main) {
            identity
            relu
            sigmoid
+           tanh
     )pbdoc";
 
     // Register Classes.
@@ -27,10 +28,12 @@ void init_activation(py::module& main) {
     py::class_<activation::IdentityActivation, activation::ActivationFunction>(m, "IdentityActivation");
     py::class_<activation::ReluActivation, activation::ActivationFunction>(m, "ReluActivation");
     py::class_<activation::SigmoidActivation, activation::ActivationFunction>(m, "SigmoidActivation");
+    py::class_<activation::TanhActivation, activation::ActivationFunction>(m, "TanhActivation");
 
     // Register object instances.
     m.attr("identity") = activation::identity;
     m.attr("relu") = activation::relu;
     m.attr("sigmoid") = activation::sigmoid;
+    m.attr("tanh") = activation::tanh;
 }
 
