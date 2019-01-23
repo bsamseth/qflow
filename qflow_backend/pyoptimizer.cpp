@@ -7,7 +7,7 @@
 namespace py = pybind11;
 
 void init_optimizer(py::module& main) {
-    auto m = main.def_submodule("optimizer");
+    auto m = main.def_submodule("optimizers");
     m.doc() = R"doc(
         Optimizers
         -----------------------

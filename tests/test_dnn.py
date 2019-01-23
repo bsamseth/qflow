@@ -5,9 +5,9 @@ from autograd import numpy as auto_np
 from autograd import elementwise_grad, hessian
 import numpy as np
 
-from qflow.wavefunction import Dnn
-from qflow.layer import DenseLayer
-from qflow.layer.activation import sigmoid, relu
+from qflow.wavefunctions import Dnn
+from qflow.layers import DenseLayer
+from qflow.layers.activations import sigmoid, relu
 
 
 def sigmoid_np(x):

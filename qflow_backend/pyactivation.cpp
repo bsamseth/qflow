@@ -7,7 +7,7 @@
 namespace py = pybind11;
 
 void init_activation(py::module& main) {
-    auto m = main.def_submodule("activation");
+    auto m = main.def_submodule("activations");
     m.doc() = R"pbdoc(
         Activation Functions
         -----------------------

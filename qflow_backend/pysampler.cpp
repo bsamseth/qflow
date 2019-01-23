@@ -10,7 +10,7 @@
 namespace py = pybind11;
 
 void init_sampler(py::module& main) {
-    auto m = main.def_submodule("sampler");
+    auto m = main.def_submodule("samplers");
     m.doc() = R"doc(
         Samplers
         -----------------------

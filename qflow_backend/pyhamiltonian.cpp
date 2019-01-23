@@ -11,7 +11,7 @@
 namespace py = pybind11;
 
 void init_hamiltonian(py::module& main) {
-    auto m = main.def_submodule("hamiltonian");
+    auto m = main.def_submodule("hamiltonians");
     m.doc() = R"doc(
         Hamiltonians
         -----------------------

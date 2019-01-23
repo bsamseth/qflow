@@ -10,7 +10,7 @@ namespace py = pybind11;
 void init_activation(py::module&);
 
 void init_layer(py::module& main) {
-    auto m = main.def_submodule("layer");
+    auto m = main.def_submodule("layers");
     m.doc() = R"pbdoc(
         Network Layers
         -----------------------

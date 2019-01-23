@@ -13,7 +13,7 @@
 namespace py = pybind11;
 
 void init_wavefunction(py::module& main) {
-    auto m = main.def_submodule("wavefunction");
+    auto m = main.def_submodule("wavefunctions");
     m.doc() = R"doc(
         Wavefunctions
         -----------------------

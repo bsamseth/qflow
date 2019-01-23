@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from qflow.wavefunction import SimpleGaussian, WavefunctionProduct
+from qflow.wavefunctions import SimpleGaussian, WavefunctionProduct
 
 
 class TestWavefunctionProduct(unittest.TestCase):
