@@ -57,8 +57,8 @@ Real Dnn::drift_force(const System& system, int k, int dim_index) {
     forward(x);   // TODO: Sort out constness of x
 
     const int j = k * system.cols() + dim_index;
-    Matrix dadx_j = Matrix::Zero(x.rows(), x.cols());
-    dadx_j.col(j) = Matrix::Constant(x.rows(), 1, 1);
+    Matrix dadx_j = RowVector::Zero(x.cols());
+    dadx_j(j) = 1;
     for (auto& layer : layers) {
         dadx_j = layer.forwardGradient(dadx_j);
     }
@@ -66,7 +66,7 @@ Real Dnn::drift_force(const System& system, int k, int dim_index) {
     // If we need non-scalar outputs at some point, then this must be
     // rethinked in terms of what we want to mean by the gradient of a vector
     // output wrt. a matrix input.
-    assert(dadx_j.size() == x.rows());
+    assert(dadx_j.size() == 1);
     return 2 * dadx_j.sum() / layers[layers.size() - 1].getOutputs()(0,0);
 }
 
