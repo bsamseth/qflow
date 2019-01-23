@@ -26,6 +26,8 @@ class SimpleGaussian : public Wavefunction {
 
         Real derivative_alpha(const System &system) const;
 
+        void set_parameters(const RowVector &parameters) override;
+
 };
 
 inline Real SimpleGaussian::drift_force(const System &system, int k, int dim_index) {

@@ -68,3 +68,8 @@ Real SimpleGaussian::laplacian(System &system) {
     }
     return E_L;
 }
+
+void SimpleGaussian::set_parameters(const RowVector& parameters) {
+    _parameters[0] = parameters[0];
+    // Fix beta, alpha is only variational parameter.
+}
