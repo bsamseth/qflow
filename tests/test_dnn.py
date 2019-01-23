@@ -18,20 +18,12 @@ def sigmoid_deriv(u):
     return u * (1 - u)
 
 
-def sigmoid_dbl_deriv(u):
-    return u * (1 - u) * (1 - 2 * u)
-
-
 def relu_np(x):
     return auto_np.maximum(0, x)
 
 
 def relu_deriv(y):
     return auto_np.where(y > 0, 1, 0)
-
-
-def relu_dbl_deriv(y):
-    return y * 0
 
 
 class TestDnn(unittest.TestCase):
@@ -88,17 +80,18 @@ class TestDnn(unittest.TestCase):
             # Test extraction of full gradient vector
             np.testing.assert_almost_equal(auto_grads, grads * output)
 
-    @unittest.skip("Not part of wavefunction interface (yet?)")
-    def test_input_gradient(self):
+    def test_drift_force(self):
         for _ in range(10):
-            x = auto_np.random.randn(500, 2)
+            x = auto_np.random.randn(1, 2)
 
             # Autograd computes gradient per row of x. Want the sum over rows.
             auto_gradient = np.sum(
                 elementwise_grad(self.f_np, 0)(x, *self.params), axis=0
             )
 
-            np.testing.assert_almost_equal(auto_gradient, self.nn.gradient(x))
+            np.testing.assert_almost_equal(
+                auto_gradient, self.nn.drift_force(x) * self.nn(x) / 2
+            )
 
     def test_laplace(self):
         # Autograd makes some warnings about code that is not ours. Ignore them here.

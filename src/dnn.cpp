@@ -50,26 +50,24 @@ RowVector Dnn::gradient(System& system) {
     return paramGradient / output;
 }
 
-const RowVector& Dnn::positionGradient(System& system) {
+Real Dnn::drift_force(const System& system, int k, int dim_index) {
     assert(layers[layers.size() - 1].getWeights().cols() == 1);  // Output layer should have only one output.
 
-    Eigen::Map<RowVector> x(system.data(), system.size());  // Reshape as (1 x n) matrix
-    forward(x);
+    Eigen::Map<RowVector> x(const_cast<Real*>(system.data()), system.size());  // Reshape as (1 x n) matrix
+    forward(x);   // TODO: Sort out constness of x
 
-    for (int j = 0; j < x.cols(); ++j) {
-        Matrix dadx_j = Matrix::Zero(x.rows(), x.cols());
-        dadx_j.col(j) = Matrix::Constant(x.rows(), 1, 1);
-        for (auto& layer : layers) {
-            dadx_j = layer.forwardGradient(dadx_j);
-        }
-        // Note, we assume that the output of the network is scalar.
-        // If we need non-scalar outputs at some point, then this must be
-        // rethinked in terms of what we want to mean by the gradient of a vector
-        // output wrt. a matrix input.
-        assert(dadx_j.size() == x.rows());
-        inputGradient(j) = dadx_j.sum();
+    const int j = k * system.cols() + dim_index;
+    Matrix dadx_j = Matrix::Zero(x.rows(), x.cols());
+    dadx_j.col(j) = Matrix::Constant(x.rows(), 1, 1);
+    for (auto& layer : layers) {
+        dadx_j = layer.forwardGradient(dadx_j);
     }
-    return inputGradient;
+    // Note, we assume that the output of the network is scalar.
+    // If we need non-scalar outputs at some point, then this must be
+    // rethinked in terms of what we want to mean by the gradient of a vector
+    // output wrt. a matrix input.
+    assert(dadx_j.size() == x.rows());
+    return 2 * dadx_j.sum() / layers[layers.size() - 1].getOutputs()(0,0);
 }
 
 Real Dnn::laplacian(System& system) {
@@ -92,7 +90,7 @@ Real Dnn::laplacian(System& system) {
         res += ddaddx_j.sum();
     }
 
-    return res / layers[layers.size() - 1].getOutputs()(0,0);;
+    return res / layers[layers.size() - 1].getOutputs()(0,0);
 }
 
 

@@ -47,13 +47,7 @@ class Dnn : public Wavefunction {
          */
         RowVector gradient(System& system) override;
 
-        /**
-         * Returns the gradient of the output w.r.t. the input X,
-         * summed over the rows of X, where each row in X makes up one
-         * sample input.
-         */
-        const RowVector& positionGradient(System& system);
-
+        Real drift_force(const System& system, int k, int dim_index) override;
         /**
          * Return the lapliacian of the output w.r.t. the inputs x
          * summed over the rows of X.
