@@ -102,6 +102,10 @@ include(CTest)
 enable_testing()
 add_test(unit_tests ${PROJECT_BINARY_DIR}/${TEST_MAIN})
 
+# --------------------------------------------------------------------------------
+#                         Coverage (no change needed).
+# --------------------------------------------------------------------------------
+include(CodeCoverage)
 
 # --------------------------------------------------------------------------------
 #                         Documentation (no change needed).
