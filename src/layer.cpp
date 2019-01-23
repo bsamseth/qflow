@@ -1,17 +1,31 @@
 #include <iostream>
+#include <cmath>
 #include "layer.hpp"
 
 namespace layer {
 
+DenseLayer::DenseLayer(int inputs, int outputs, const activation::ReluActivation& actFunc)
+    : DenseLayer(inputs, outputs, actFunc, std::sqrt(2.0 / inputs))
+{}
+
 DenseLayer::DenseLayer(int inputs, int outputs, const activation::ActivationFunction& actFunc)
+    : DenseLayer(inputs, outputs, actFunc, std::sqrt(2.0 / (inputs + outputs)))
+{}
+
+DenseLayer::DenseLayer(int inputs, int outputs, const activation::ActivationFunction& actFunc, Real scale_factor)
     :
-        W(Matrix::Random(inputs, outputs)),
+        W(Matrix::Zero(inputs, outputs)),
         W_grad(W),
-        b(RowVector::Random(outputs)),
+        b(RowVector::Zero(outputs)),
         b_grad(b),
         actFunc(&actFunc)
 {
-    // TODO: Initialize W and b some sensible way.
+    for (int i = 0; i < inputs; ++i) {
+        for (int j = 0; j < outputs; ++j) {
+            W(i, j) = rnorm_func();
+        }
+    }
+    W *= scale_factor;
 }
 
 const Matrix& DenseLayer::forward(const MatrixRef& x)
