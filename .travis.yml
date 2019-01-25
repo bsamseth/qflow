@@ -1,8 +1,15 @@
 language: cpp
 compiler: gcc
-dist: trusty
+dist: xenial
 notifications:
   email: false
+
+addons:
+  apt:
+    sources:
+    - deadsnakes
+    packages:
+    - python3.7-dev
 
 before_install:
   - pyenv global $(pyenv whence 2to3)  # activate all python versions
