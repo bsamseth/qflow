@@ -8,9 +8,9 @@ WavefunctionProduct::WavefunctionProduct(Wavefunction& a, Wavefunction& b)
 }
 
 void WavefunctionProduct::set_parameters(const RowVector& a, const RowVector& b) {
-    _parameters << a, b;
     f->set_parameters(a);
     g->set_parameters(b);
+    _parameters << f->get_parameters(), g->get_parameters();
 }
 
 void WavefunctionProduct::set_parameters(const RowVector& parameters) {
