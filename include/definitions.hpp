@@ -43,7 +43,11 @@ using RowVectorRef = Eigen::Ref<RowVector>;
  * @return Result of `x * x`.
  */
 template<typename T>
-constexpr auto square(T x) {
+constexpr auto square(T&& x) {
+    return x * x;
+}
+template<typename T>
+constexpr auto square(const T& x) {
     return x * x;
 }
 
