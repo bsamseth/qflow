@@ -49,7 +49,7 @@ class Wavefunction {
          */
         virtual Real laplacian(System &system) = 0;
 
-        const RowVector& get_parameters() const;
+        virtual const RowVector& get_parameters() const;
 
         virtual void set_parameters(const RowVector &parameters);
 
