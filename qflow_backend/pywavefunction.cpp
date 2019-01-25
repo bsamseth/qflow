@@ -5,6 +5,7 @@
 
 #include "wavefunction.hpp"
 #include "wavefunctionproduct.hpp"
+#include "fixedwavefunction.hpp"
 #include "simplegaussian.hpp"
 #include "interactingwavefunction.hpp"
 #include "rbmwavefunction.hpp"
@@ -28,6 +29,9 @@ void init_wavefunction(py::module& main) {
         .def_property("parameters",
                 py::overload_cast<>(&Wavefunction::get_parameters, py::const_),
                 py::overload_cast<const RowVector&>(&Wavefunction::set_parameters));
+
+    py::class_<FixedWavefunction, Wavefunction>(m, "FixedWavefunction")
+        .def(py::init<Wavefunction&>(), py::arg("wavefunction"));
 
     py::class_<WavefunctionProduct, Wavefunction>(m, "WavefunctionProduct")
         .def(py::init<Wavefunction&, Wavefunction&>(), py::arg("Psi_1"), py::arg("Psi_2"));

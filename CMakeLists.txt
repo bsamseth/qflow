@@ -45,6 +45,7 @@ set(HEADERS
     include/definitions.hpp
     include/dnn.hpp
     include/energycalculator.hpp
+    include/fixedwavefunction.hpp
     include/gibbssampler.hpp
     include/hamiltonian.hpp
     include/harmonicoscillatorhamiltonian.hpp
