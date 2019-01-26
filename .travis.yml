@@ -26,9 +26,6 @@ install:
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
   - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-7 90
 
-  # Install coverals gem for uploading coverage to coveralls.
-  - gem install coveralls-lcov
-
   # Install Python virtual environment manager.
   - pip install pipenv
 
@@ -45,6 +42,5 @@ after_success:
   - lcov --capture --directory . --output-file coverage.info
   - lcov --remove coverage.info '*/tests/*' '/usr/*' '*/external/*' '/Applications/*' --output-file coverage.info # filter system-files
   - lcov --list coverage.info
-  - coveralls-lcov coverage_out.info  # uploads to coveralls
   - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
 
