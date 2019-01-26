@@ -64,4 +64,37 @@ Matrix DenseLayer::forwardLaplace(const MatrixRef& ddaddx_j, const MatrixRef& da
     return first + second;
 }
 
+const Matrix& InputLayer::forward(const MatrixRef& x) {
+    inputs = x;
+    Matrix z = (inputs * V.replicate(inputs.cols(), 1)).rowwise() + b;
+    return outputs = actFunc->evaluate(z);
+}
+
+Matrix InputLayer::backward(const MatrixRef& error)
+{
+    delta = error.cwiseProduct(actFunc->derivative(outputs));
+
+    V_grad = (inputs.transpose() * delta).row(0);
+    b_grad = delta.colwise().sum();
+
+    // Return value does not matter since this is the input layer.
+    // No one to send an error back to.
+    return Matrix::Zero(0, 0);
+}
+
+Matrix InputLayer::forwardGradient(const MatrixRef& dadx_j)
+{
+    return actFunc->derivative(outputs).cwiseProduct(dadx_j * V.replicate(dadx_j.cols(), 1));
+}
+
+Matrix InputLayer::forwardLaplace(const MatrixRef& ddaddx_j, const MatrixRef& dadx_j)
+{
+    // For some reason, Eigen needs to evaluate both parts as matrices completely
+    // before they can be summed. Letting 'first' be auto we get wrong answers, while
+    // letting second be auto does not compile. Strange, but this way works!
+    Matrix first  = actFunc->derivative(outputs).cwiseProduct(ddaddx_j * V.replicate(ddaddx_j.cols(), 1));
+    Matrix second = actFunc->dblDerivative(outputs).array() * (dadx_j * V.replicate(dadx_j.cols(), 1)).array().square();
+    return first + second;
+}
+
 }

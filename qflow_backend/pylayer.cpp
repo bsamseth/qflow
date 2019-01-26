@@ -38,5 +38,14 @@ void init_layer(py::module& main) {
         .def_property_readonly("bias_gradient", &layer::DenseLayer::getBiasGradient);
 
 
+    py::class_<layer::InputLayer, layer::DenseLayer>(m, "InputLayer")
+        .def(py::init<int, int, const activation::ActivationFunction&>(),
+                py::arg("inputs"), py::arg("outputs"), py::arg("activation") = activation::identity)
+        .def(py::init<int, int, const activation::ReluActivation&>(),
+                py::arg("inputs"), py::arg("outputs"), py::arg("activation"))
+        .def(py::init<int, int, const activation::TanhActivation&>(),
+                py::arg("inputs"), py::arg("outputs"), py::arg("activation"))
+        .def(py::init<int, int, const activation::ActivationFunction&, Real>(),
+                py::arg("inputs"), py::arg("outputs"), py::arg("activation"), py::arg("scale_factor"));
 
 }
