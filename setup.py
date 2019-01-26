@@ -66,12 +66,9 @@ class CMakeBuild(build_ext):
             build_args += ["--", "/m"]
         else:
             cmake_args += ["-DCMAKE_BUILD_TYPE=" + cfg]
-            build_args += [
-                "--",
-                "-j5",
-                BACKEND_NAME,
-                "gtest" if cfg.lower() == "coverage" else "",
-            ]
+            build_args += ["--", "-j5", BACKEND_NAME]
+            if cfg.lower() == "coverage":
+                build_args += ["gtest"]
 
         env["CXXFLAGS"] = '{} -DVERSION_INFO=\\"{}\\"'.format(
             env.get("CXXFLAGS", ""), self.distribution.get_version()
