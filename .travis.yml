@@ -10,6 +10,8 @@ addons:
     - deadsnakes
     packages:
     - python3.7-dev
+  apt:
+    packages: lcov
 
 before_install:
   - pyenv global $(pyenv whence 2to3)  # activate all python versions
@@ -24,12 +26,6 @@ install:
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90
   - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-7 90
 
-  # install newer LCOV (apt version outdated and fails for new gcov).
-  - wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
-  - tar xf lcov_1.11.orig.tar.gz
-  - sudo make -C lcov-1.11/ install
-  - which lcov
-
   # Install coverals gem for uploading coverage to coveralls.
   - gem install coveralls-lcov
 
@@ -40,25 +36,15 @@ before_script:
   - lcov --version
   - gcov --version
   - g++ --version
-  - PARENTDIR=$(pwd)
-  - mkdir $PARENTDIR/build && cd $PARENTDIR/build
 
 script:
-  - cd $PARENTDIR/build
-  - cmake -DCMAKE_BUILD_TYPE=Coverage $PARENTDIR
-  - make
-  - make coverage
-
-  - cd $PARENTDIR
   - pipenv install
   - pipenv run python setup.py test
 
 after_success:
-  - pwd
-  - ls -la
-  - cd $PARENTDIR/build
-  - pwd
-  - ls -la
-  - lcov --list coverage_out.info.cleaned  # Show test report in travis log.
-  - coveralls-lcov coverage_out.info.cleaned  # uploads to coveralls
+  - lcov --capture --directory . --output-file coverage.info
+  - lcov --remove coverage.info '*/tests/*' '/usr/*' '*/external/*' '/Applications/*'--output-file coverage.info # filter system-files
+  - lcov --list coverage.info
+  - coveralls-lcov coverage_out.info  # uploads to coveralls
+  - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
 
