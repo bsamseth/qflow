@@ -52,7 +52,9 @@ class CMakeBuild(build_ext):
             "-DPYTHON_EXECUTABLE=" + sys.executable,
         ]
 
-        cfg = "Debug" if self.debug else "Release"
+        env = os.environ.copy()
+
+        cfg = env.get("CMAKE_BUILD_TYPE", "Debug" if self.debug else "Release")
         build_args = ["--config", cfg]
 
         if platform.system() == "Windows":
@@ -64,9 +66,13 @@ class CMakeBuild(build_ext):
             build_args += ["--", "/m"]
         else:
             cmake_args += ["-DCMAKE_BUILD_TYPE=" + cfg]
-            build_args += ["--", "-j5", BACKEND_NAME]
+            build_args += [
+                "--",
+                "-j5",
+                BACKEND_NAME,
+                "gtest" if cfg.lower() == "coverage" else "",
+            ]
 
-        env = os.environ.copy()
         env["CXXFLAGS"] = '{} -DVERSION_INFO=\\"{}\\"'.format(
             env.get("CXXFLAGS", ""), self.distribution.get_version()
         )
