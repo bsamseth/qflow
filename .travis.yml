@@ -39,7 +39,7 @@ before_script:
 
 script:
   - pipenv install
-  - pipenv run python setup.py test
+  - CMAKE_BUILD_TYPE=Coverage pipenv run python setup.py test
 
 after_success:
   - lcov --capture --directory . --output-file coverage.info
