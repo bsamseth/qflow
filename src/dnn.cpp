@@ -2,8 +2,15 @@
 #include <iostream>
 #include "dnn.hpp"
 
-void Dnn::addLayer(const layer::DenseLayer& new_layer) {
-    layers.push_back(new_layer);
+void Dnn::addLayer(layer::DenseLayer& new_layer) {
+    if (layers.size() == 0) {
+        // First layer ought to be an InputLayer...
+        assert(dynamic_cast<const layer::InputLayer*>(&new_layer) != nullptr);
+
+        // inputGradient has size equal to the inputs to the first layer.
+        inputGradient.resize(new_layer.getWeights().rows());
+    }
+    layers.push_back(&new_layer);
     paramCount += new_layer.getNumberOfParameter();
     paramGradient.resize(paramCount);
     _parameters.resize(paramCount);
@@ -11,27 +18,23 @@ void Dnn::addLayer(const layer::DenseLayer& new_layer) {
     // Copy parameters from layers.
     unsigned k = 0;
     for (auto& layer : layers) {
-        auto& W = layer.getWeights();
-        auto& b = layer.getBiases();
+        auto& W = layer->getWeights();
+        auto& b = layer->getBiases();
         for (unsigned i = 0; i < W.size(); ++i)
             _parameters[k++] = W.data()[i];
         for (unsigned i = 0; i < b.size(); ++i)
             _parameters[k++] = b[i];
     }
     assert(k == paramCount);
-
-    if (layers.size() == 1)
-        // inputGradient has size equal to the inputs to the first layer.
-        inputGradient.resize(new_layer.getWeights().rows());
 }
 
 Real Dnn::operator()(System& system) {
-    assert(layers[layers.size() - 1].getWeights().cols() == 1);  // Output layer should have only one output.
+    assert(layers[layers.size() - 1]->getWeights().cols() == 1);  // Output layer should have only one output.
 
     Eigen::Map<RowVector> x(system.data(), system.size());  // Reshape as (1 x n) matrix
     forward(x);
 
-    return layers[layers.size() - 1].getOutputs()(0,0);
+    return layers[layers.size() - 1]->getOutputs()(0,0);
 }
 
 RowVector Dnn::gradient(System& system) {
@@ -39,10 +42,10 @@ RowVector Dnn::gradient(System& system) {
     backward();
     unsigned k = 0;
     for (const auto& layer : layers) {
-        const auto& W_grad = layer.getWeightsGradient();
+        const auto& W_grad = layer->getWeightsGradient();
         for (unsigned i = 0; i < W_grad.size(); ++i)
             paramGradient(k++) = W_grad.data()[i];
-        const auto& b_grad = layer.getBiasGradient();
+        const auto& b_grad = layer->getBiasGradient();
         for (unsigned i = 0; i < b_grad.size(); ++i)
             paramGradient(k++) = b_grad[i];
     }
@@ -51,7 +54,7 @@ RowVector Dnn::gradient(System& system) {
 }
 
 Real Dnn::drift_force(const System& system, int k, int dim_index) {
-    assert(layers[layers.size() - 1].getWeights().cols() == 1);  // Output layer should have only one output.
+    assert(layers[layers.size() - 1]->getWeights().cols() == 1);  // Output layer should have only one output.
 
     Eigen::Map<RowVector> x(const_cast<Real*>(system.data()), system.size());  // Reshape as (1 x n) matrix
     forward(x);   // TODO: Sort out constness of x
@@ -60,18 +63,18 @@ Real Dnn::drift_force(const System& system, int k, int dim_index) {
     Matrix dadx_j = RowVector::Zero(x.cols());
     dadx_j(j) = 1;
     for (auto& layer : layers) {
-        dadx_j = layer.forwardGradient(dadx_j);
+        dadx_j = layer->forwardGradient(dadx_j);
     }
     // Note, we assume that the output of the network is scalar.
     // If we need non-scalar outputs at some point, then this must be
     // rethinked in terms of what we want to mean by the gradient of a vector
     // output wrt. a matrix input.
     assert(dadx_j.size() == 1);
-    return 2 * dadx_j.sum() / layers[layers.size() - 1].getOutputs()(0,0);
+    return 2 * dadx_j.sum() / layers[layers.size() - 1]->getOutputs()(0,0);
 }
 
 Real Dnn::laplacian(System& system) {
-    assert(layers[layers.size() - 1].getWeights().cols() == 1);  // Output layer should have only one output.
+    assert(layers[layers.size() - 1]->getWeights().cols() == 1);  // Output layer should have only one output.
 
     Eigen::Map<RowVector> x(system.data(), system.size());  // Reshape as (1 x n) matrix
     forward(x);
@@ -84,13 +87,13 @@ Real Dnn::laplacian(System& system) {
         dadx_j.col(j)   = Matrix::Constant(x.rows(), 1, 1);
 
         for (auto& layer : layers) {
-            ddaddx_j = layer.forwardLaplace(ddaddx_j, dadx_j);
-            dadx_j = layer.forwardGradient(dadx_j);
+            ddaddx_j = layer->forwardLaplace(ddaddx_j, dadx_j);
+            dadx_j = layer->forwardGradient(dadx_j);
         }
         res += ddaddx_j.sum();
     }
 
-    return res / layers[layers.size() - 1].getOutputs()(0,0);
+    return res / layers[layers.size() - 1]->getOutputs()(0,0);
 }
 
 
@@ -98,18 +101,18 @@ void Dnn::forward(const MatrixRef& x) {
     assert(layers.size() > 0);
 
     auto layerIterator = layers.begin();
-    Matrix y = layerIterator->forward(x);
+    Matrix y = (*layerIterator)->forward(x);
     for (++layerIterator; layerIterator != layers.end(); ++layerIterator) {
-        y = layerIterator->forward(y);
+        y = (*layerIterator)->forward(y);
     }
 }
 
 void Dnn::backward() {
     assert(layers.size() > 0);
-    const auto& output = layers[layers.size() - 1].getOutputs();
+    const auto& output = layers[layers.size() - 1]->getOutputs();
     Matrix y = Matrix::Ones(output.rows(), output.cols());
     for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
-        y = it->backward(y);
+        y = (*it)->backward(y);
     }
 }
 
@@ -119,8 +122,8 @@ void Dnn::set_parameters(const RowVector& parameters) {
     // Fill in layers.
     unsigned k = 0;
     for (auto& layer : layers) {
-        auto& W = layer.getWeights();
-        auto& b = layer.getBiases();
+        auto& W = layer->getWeights();
+        auto& b = layer->getBiases();
         for (unsigned i = 0; i < W.size(); ++i)
             W.data()[i] = parameters[k++];
         for (unsigned i = 0; i < b.size(); ++i)

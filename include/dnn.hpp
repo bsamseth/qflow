@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <memory>
 
 #include "wavefunction.hpp"
 #include "activation.hpp"
@@ -9,7 +10,7 @@ class Dnn : public Wavefunction {
     protected:
 
         unsigned paramCount = 0;
-        std::vector<layer::DenseLayer> layers;
+        std::vector<layer::DenseLayer*> layers;
         RowVector paramGradient;
         RowVector inputGradient;
 
@@ -35,7 +36,7 @@ class Dnn : public Wavefunction {
         /**
          * Append a layer to the network.
          */
-        void addLayer(const layer::DenseLayer& layer);
+        void addLayer(layer::DenseLayer& layer);
 
 
         Real operator() (System& system) override;
@@ -55,11 +56,11 @@ class Dnn : public Wavefunction {
         Real laplacian(System& system) override;
 
         // Getters.
-        const std::vector<layer::DenseLayer>& getLayers() const;
+        const std::vector<layer::DenseLayer*>& getLayers() const;
 
         void set_parameters(const RowVector& parameters) override;
 };
 
-inline const std::vector<layer::DenseLayer>& Dnn::getLayers() const {
+inline const std::vector<layer::DenseLayer*>& Dnn::getLayers() const {
     return layers;
 }

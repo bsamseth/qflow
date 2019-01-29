@@ -6,7 +6,7 @@ from autograd import elementwise_grad, hessian
 import numpy as np
 
 from qflow.wavefunctions import Dnn
-from qflow.layers import DenseLayer
+from qflow.layers import DenseLayer, InputLayer
 from qflow.layers.activations import sigmoid, relu
 
 
@@ -30,11 +30,15 @@ class TestDnn(unittest.TestCase):
     def setUp(self):
         auto_np.random.seed(1234)
         self.nn = Dnn()
-        self.nn.add_layer(DenseLayer(2, 3, activation=sigmoid))
-        self.nn.add_layer(DenseLayer(3, 4, activation=relu))
-        self.nn.add_layer(DenseLayer(4, 1))
+        self.input_layer = InputLayer(2, 3, activation=sigmoid)
+        self.middle_layer = DenseLayer(3, 4, activation=relu)
+        self.output_layer = DenseLayer(4, 1)
+        self.nn.add_layer(self.input_layer)
+        self.nn.add_layer(self.middle_layer)
+        self.nn.add_layer(self.output_layer)
 
         self.W1 = self.nn.layers[0].weights
+        self.W1 = np.tile(self.W1, (2, 1))  # Emulate full matrix.
         self.b1 = self.nn.layers[0].biases
         self.W2 = self.nn.layers[1].weights
         self.b2 = self.nn.layers[1].biases
