@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from qflow.layers.activations import identity, relu, sigmoid, tanh
+from qflow.layers.activations import identity, relu, sigmoid, tanh, exponential
 
 
 class TestDnn(unittest.TestCase):
@@ -52,4 +52,17 @@ class TestDnn(unittest.TestCase):
                 -2 * np.sinh(x) / np.cosh(x) ** 3,
                 tanh.dbl_derivative(tanh.evaluate(x)),
                 rtol=1e-12,
+            )
+
+    def test_exponential(self):
+        for rows, cols in np.random.randint(1, 100, size=(50, 2)):
+            x = np.random.randn(rows, cols)
+            exp = np.exp(x)
+
+            np.testing.assert_array_equal(exp, exponential.evaluate(x))
+            np.testing.assert_array_equal(
+                exp, exponential.derivative(exponential.evaluate(x))
+            )
+            np.testing.assert_array_equal(
+                exp, exponential.dbl_derivative(exponential.evaluate(x))
             )

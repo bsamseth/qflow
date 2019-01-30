@@ -29,11 +29,13 @@ void init_activation(py::module& main) {
     py::class_<activation::ReluActivation, activation::ActivationFunction>(m, "ReluActivation");
     py::class_<activation::SigmoidActivation, activation::ActivationFunction>(m, "SigmoidActivation");
     py::class_<activation::TanhActivation, activation::ActivationFunction>(m, "TanhActivation");
+    py::class_<activation::ExponentialActivation, activation::ActivationFunction>(m, "ExponentialActivation");
 
     // Register object instances.
     m.attr("identity") = activation::identity;
     m.attr("relu") = activation::relu;
     m.attr("sigmoid") = activation::sigmoid;
     m.attr("tanh") = activation::tanh;
+    m.attr("exponential") = activation::exponential;
 }
 
