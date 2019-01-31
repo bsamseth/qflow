@@ -44,6 +44,15 @@ Real Hamiltonian::local_energy(System &system, Wavefunction &psi) const {
     return external_potential(system) + internal_potential(system) + kinetic_energy(system, psi);
 }
 
+Real Hamiltonian::local_energy(Sampler &sampler, Wavefunction &psi, long samples) const {
+    Real E_L = 0;
+
+    for (long i = 0; i < samples; ++i)
+        E_L += local_energy(sampler.next_configuration(), psi);
+
+    return E_L / samples;
+}
+
 RowVector Hamiltonian::local_energy_gradient(Sampler &sampler, Wavefunction &psi, long samples) const {
     Real E_mean = 0;
     RowVector grad = RowVector::Zero(psi.get_parameters().size());

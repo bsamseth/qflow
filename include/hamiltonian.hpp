@@ -68,6 +68,8 @@ class Hamiltonian {
 
         RowVector local_energy_gradient(Sampler &sampler, Wavefunction &psi, long samples) const;
 
+        Real local_energy(Sampler &sampler, Wavefunction &psi, long samples) const;
+
         /**
          * Compute the Gross-Pitaevskii ideal case energy for a given system and wavefunction.
          * @param system System to calculate for.
