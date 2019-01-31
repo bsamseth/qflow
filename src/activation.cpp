@@ -6,5 +6,6 @@ ReluActivation relu;
 IdentityActivation identity;
 SigmoidActivation sigmoid;
 TanhActivation tanh;
+ExponentialActivation exponential;
 
 }

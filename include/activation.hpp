@@ -112,6 +112,25 @@ struct dblDeriv {
     }
 };
 }
+
+namespace exponential {
+struct eval {
+    constexpr Real operator() (Real x) const {
+        return std::exp(x);
+    }
+};
+struct deriv {
+    constexpr Real operator() (Real y) const {
+        return y;
+    }
+};
+struct dblDeriv {
+    constexpr Real operator() (Real y) const {
+        return y;
+    }
+};
+}
+
 }
 
 
@@ -119,11 +138,13 @@ using ReluActivation = DerivedActivationFunction<functors::relu::eval, functors:
 using IdentityActivation = DerivedActivationFunction<functors::identity::eval, functors::identity::deriv, functors::identity::dblDeriv>;
 using SigmoidActivation = DerivedActivationFunction<functors::sigmoid::eval, functors::sigmoid::deriv, functors::sigmoid::dblDeriv>;
 using TanhActivation = DerivedActivationFunction<functors::tanh::eval, functors::tanh::deriv, functors::tanh::dblDeriv>;
+using ExponentialActivation = DerivedActivationFunction<functors::exponential::eval, functors::exponential::deriv, functors::exponential::dblDeriv>;
 
 extern ReluActivation relu;
 extern IdentityActivation identity;
 extern SigmoidActivation sigmoid;
 extern TanhActivation tanh;
+extern ExponentialActivation exponential;
 
 }
 
