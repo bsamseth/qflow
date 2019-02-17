@@ -1,4 +1,5 @@
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 #include <pybind11/eigen.h>
 #include <Eigen/Dense>
 
@@ -18,15 +19,15 @@ void init_sampler(py::module& main) {
 
     py::class_<Sampler>(m, "Sampler")
         .def("next_configuration", &Sampler::next_configuration, py::arg("i") = 0)
-        .def_property_readonly("acceptance_rate", &Sampler::get_acceptance_rate, py::arg("i") = 0);
+        .def("acceptance_rate", &Sampler::get_acceptance_rate, py::arg("i") = 0);
 
 
     py::class_<MetropolisSampler, Sampler>(m, "MetropolisSampler")
         .def(py::init<const System&, Wavefunction&, Real>(),
-             py::arg("system"), py::arg("wavefunction"), py::arg("step_size"));
+             py::arg("system"), py::arg("wavefunction"), py::arg("step_size") = 1);
     py::class_<ImportanceSampler, Sampler>(m, "ImportanceSampler")
         .def(py::init<const System&, Wavefunction&, Real>(),
-             py::arg("system"), py::arg("wavefunction"), py::arg("step_size"));
+             py::arg("system"), py::arg("wavefunction"), py::arg("step_size") = 0.1);
     py::class_<GibbsSampler, Sampler>(m, "GibbsSampler")
         .def(py::init<const System&, RBMWavefunction&>(),
              py::arg("system"), py::arg("rbm_wavefunction"));
