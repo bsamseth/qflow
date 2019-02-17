@@ -19,7 +19,7 @@ void init_sampler(py::module& main) {
 
     py::class_<Sampler>(m, "Sampler")
         .def("next_configuration", &Sampler::next_configuration, py::arg("i") = 0)
-        .def("acceptance_rate", &Sampler::get_acceptance_rate, py::arg("i") = 0);
+        .def_property_readonly("acceptance_rate", &Sampler::get_acceptance_rate);
 
 
     py::class_<MetropolisSampler, Sampler>(m, "MetropolisSampler")
