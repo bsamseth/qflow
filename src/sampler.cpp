@@ -22,8 +22,7 @@ Sampler::StateInfo::StateInfo(System s, Wavefunction& psi) : system_old(s), syst
 
 Sampler::Sampler(const System &system,
                  Wavefunction &wavefunction,
-                 Real step,
-                 std::size_t N)
+                 Real step)
                 : _step(step),
                   _wavefunction(&wavefunction),
                   _N_instances(mpiutil::proc_count())

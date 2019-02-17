@@ -5,14 +5,12 @@
 #include "system.hpp"
 #include "wavefunction.hpp"
 
+
 /**
  * Abstract sampler class defining the iterface for a generic Monte Carlo sampler.
  */
 class Sampler {
     protected:
-        const Real _step;
-        Wavefunction *_wavefunction;
-        const std::size_t _N_instances;
 
         struct StateInfo {
             System system_old;
@@ -26,6 +24,9 @@ class Sampler {
             StateInfo(System s, Wavefunction &wavefunction);
         };
 
+        const Real _step;
+        Wavefunction * const _wavefunction;
+        const std::size_t _N_instances;
         std::vector<StateInfo> _instances;
 
         void prepare_for_next_run(std::size_t i);
@@ -56,7 +57,6 @@ class Sampler {
          * @return A new System instance.
          */
         virtual System& next_configuration(std::size_t i = 0);
-
         /**
          * @return Number of accepted steps.
          */
