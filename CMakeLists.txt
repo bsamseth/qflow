@@ -60,6 +60,7 @@ set(HEADERS
     include/interactingwavefunction.hpp
     include/layer.hpp
     include/metropolissampler.hpp
+    include/mpiutil.hpp
     include/onebodydensitycalculator.hpp
     include/optimizer.hpp
     include/prettyprint.hpp

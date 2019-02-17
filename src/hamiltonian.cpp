@@ -53,6 +53,7 @@ Real Hamiltonian::local_energy(Sampler &sampler, Wavefunction &psi, long samples
     return E_L / samples;
 }
 
+
 RowVector Hamiltonian::local_energy_gradient(Sampler &sampler, Wavefunction &psi, long samples) const {
     Real E_mean = 0;
     RowVector grad = RowVector::Zero(psi.get_parameters().size());
