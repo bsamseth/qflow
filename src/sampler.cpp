@@ -6,50 +6,40 @@
 #include "wavefunction.hpp"
 #include "hamiltonian.hpp"
 #include "sampler.hpp"
-#include "mpiutil.hpp"
-
-Sampler::StateInfo::StateInfo(System s, Wavefunction& psi) : system_old(s), system_new(s)
-{
-    psi_old = psi_new = psi(s);
-
-    // Some badly initialized systems/wavefunctions may give
-    // NaNs out, which can screw up all subsequent calculations.
-    // Catch this now and emulate a very unlikely state.
-    if (std::isnan(psi_old)) {
-        psi_new = psi_old = 1e-15;
-    }
-}
 
 Sampler::Sampler(const System &system,
                  Wavefunction &wavefunction,
                  Real step)
                 : _step(step),
                   _wavefunction(&wavefunction),
-                  _N_instances(mpiutil::proc_count())
-
+                  _system_old(system),
+                  _system_new(system)
 {
-    for (std::size_t i = 0; i < _N_instances; ++i) {
-        _instances.push_back({system, wavefunction});
-    }
+    _psi_new = _psi_old = (*_wavefunction)(_system_old);
 
+    // Some badly initialized systems/wavefunctions may give
+    // NaNs out, which can screw up all subsequent calculations.
+    // Catch this now and emulate a very unlikely state.
+    if (std::isnan(_psi_old )) {
+        _psi_new = _psi_old = 1e-15;
+    }
 }
 
-System &Sampler::next_configuration(std::size_t i) {
+System &Sampler::next_configuration() {
 
-    perturb_system(i);
+    perturb_system();
 
-    StateInfo& state = _instances[i];
-    if (unif(rand_gen) <= acceptance_probability(i)) {
-        state.accepted_steps++;
-        state.system_old.row(state.particle_to_move) = state.system_new.row(state.particle_to_move);
-        state.psi_old = state.psi_new;
+    if (unif(rand_gen) <= acceptance_probability()) {
+        _accepted_steps++;
+        _system_old.row(_particle_to_move) = _system_new.row(_particle_to_move);
+        _psi_old = _psi_new;
     } else {
-        state.system_new.row(state.particle_to_move) = state.system_old.row(state.particle_to_move);
+        _system_new.row(_particle_to_move) = _system_old.row(_particle_to_move);
     }
 
-    assert(state.system_old == state.system_new);
+    assert(_system_old == _system_new);
 
-    prepare_for_next_run(i);
+    prepare_for_next_run();
 
-    return state.system_new;
+    return _system_new;
 }

@@ -16,9 +16,9 @@ class ImportanceSampler : public Sampler {
          */
         ImportanceSampler(const System&, Wavefunction&, Real step = 0.1);
 
-        void initialize_system(std::size_t i) override;
-        void perturb_system(std::size_t i) override;
-        Real acceptance_probability(std::size_t i) const override;
+        void initialize_system() override;
+        void perturb_system() override;
+        Real acceptance_probability() const override;
 
         friend std::ostream& operator<<(std::ostream&, const ImportanceSampler&);
 };

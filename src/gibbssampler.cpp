@@ -8,29 +8,25 @@
 
 
 GibbsSampler::GibbsSampler(const System &system, RBMWavefunction &wavefunction)
-    : Sampler(system, wavefunction, 0), _rbm(wavefunction)
+    : Sampler(system, wavefunction, 0), _rbm(wavefunction), _system(system)
 {
-    for (std::size_t i = 0; i < _N_instances; ++i) {
-        initialize_system(i);
-    }
+   initialize_system();
 }
 
-void GibbsSampler::initialize_system(std::size_t i) {
-    StateInfo& state = _instances[i];
+void GibbsSampler::initialize_system() {
     _stddev = std::sqrt(_rbm._sigma2);
     std::normal_distribution<Real> dist(0, _stddev);
-    for (int i = 0; i < state.system_old.rows(); ++i) {
-        for (int d = 0; d < state.system_old.cols(); ++d) {
-            state.system_old(i, d) = dist(rand_gen);
+    for (int i = 0; i < _system.rows(); ++i) {
+        for (int d = 0; d < _system.cols(); ++d) {
+            _system(i, d) = dist(rand_gen);
         }
     }
 }
 
-System& GibbsSampler::next_configuration(std::size_t i) {
-    StateInfo& state = _instances[i];
+System& GibbsSampler::next_configuration() {
     RowVector h (_rbm._N);
     for (int j = 0; j < _rbm._N; ++j) {
-        h[j] = unif(rand_gen) < P_h(j, state.system_old) ? 1 : 0;
+        h[j] = unif(rand_gen) < P_h(j, _system) ? 1 : 0;
     }
 
     for (int i = 0; i < _rbm._M; ++i) {
@@ -40,11 +36,11 @@ System& GibbsSampler::next_configuration(std::size_t i) {
         }
 
         std::normal_distribution<Real> dist(mean, _stddev);
-        state.system_old.data()[i] = dist(rand_gen);
+        _system.data()[i] = dist(rand_gen);
     }
 
-    ++state.accepted_steps;
-    ++state.total_steps;
+    ++_accepted_steps;
+    ++_total_steps;
 
-    return state.system_old;
+    return _system;
 }

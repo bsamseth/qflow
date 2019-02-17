@@ -9,30 +9,26 @@ MetropolisSampler::MetropolisSampler(const System &system,
                                      Real step)
     : Sampler(system, wavefunction, step)
 {
-    for (std::size_t i = 0; i < _N_instances; ++i) {
-        initialize_system(i);
-    }
+    initialize_system();
 }
 
-void MetropolisSampler::initialize_system(std::size_t i) {
-    StateInfo& state = _instances[i];
-    for (int i = 0; i < state.system_old.rows(); ++i) {
-        for (int d = 0; d < state.system_old.cols(); ++d) {
-            state.system_old(i, d) = _step * centered(rand_gen);
+void MetropolisSampler::initialize_system() {
+    for (int i = 0; i < _system_old.rows(); ++i) {
+        for (int d = 0; d < _system_old.cols(); ++d) {
+            _system_old(i, d) = _step * centered(rand_gen);
         }
     }
-    state.system_new = state.system_old;
-    state.psi_old = (*_wavefunction)(state.system_old);
+    _system_new = _system_old;
+    _psi_old = (*_wavefunction)(_system_old);
 }
 
-void MetropolisSampler::perturb_system(std::size_t i) {
-    StateInfo& state = _instances[i];
-    for (int d = 0; d < state.system_new.cols(); ++d) {
-        state.system_new(state.particle_to_move, d) += _step * centered(rand_gen);
+void MetropolisSampler::perturb_system() {
+    for (int d = 0; d < _system_new.cols(); ++d) {
+        _system_new(_particle_to_move, d) += _step * centered(rand_gen);
     }
-    state.psi_new = (*_wavefunction)(state.system_new);
+    _psi_new = (*_wavefunction)(_system_new);
 }
 
-Real MetropolisSampler::acceptance_probability(std::size_t i) const {
-    return square(_instances[i].psi_new) / square(_instances[i].psi_old);
+Real MetropolisSampler::acceptance_probability() const {
+    return square(_psi_new) / square(_psi_old);
 }
