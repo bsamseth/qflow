@@ -54,7 +54,7 @@ Real Hamiltonian::local_energy(Sampler &sampler, Wavefunction &psi, long samples
     Real E_L = 0;
 
     for (long i = 0; i < samples_per_proc; ++i)
-        E_L += local_energy(sampler.next_configuration(rank), psi);
+        E_L += local_energy(sampler.next_configuration(), psi);
 
     Real global_E_L;
     MPI_Allreduce(&E_L, &global_E_L, 1, mpiutil::MPI_REAL_TYPE, MPI_SUM, MPI_COMM_WORLD);
@@ -72,7 +72,7 @@ RowVector Hamiltonian::local_energy_gradient(Sampler &sampler, Wavefunction &psi
     RowVector grad = RowVector::Zero(psi.get_parameters().size());
     RowVector grad_E = RowVector::Zero(grad.size());
     for (int sample = 0; sample < samples_per_proc; ++sample) {
-        System &system = sampler.next_configuration(rank);
+        System &system = sampler.next_configuration();
         Real E = local_energy(system, psi);
         E_mean += E;
 
@@ -80,29 +80,26 @@ RowVector Hamiltonian::local_energy_gradient(Sampler &sampler, Wavefunction &psi
         grad += g;
         grad_E += g * E;
     }
-    E_mean /= samples;
-    grad /= samples;
-    grad_E /= samples;
 
-    RowVector E_grad_local = 2 * (grad_E - grad * E_mean);
-    RowVector global_E_grad(E_grad_local.size());
-    MPI_Allreduce(E_grad_local.data(), global_E_grad.data(), E_grad_local.size(), mpiutil::MPI_REAL_TYPE, MPI_SUM, MPI_COMM_WORLD);
+    // Gather results from all workers
+    Real E_mean_global;
+    RowVector grad_global(grad.size());
+    RowVector grad_E_global(grad_E.size());
+    MPI_Allreduce(&E_mean, &E_mean_global, 1, mpiutil::MPI_REAL_TYPE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(grad.data(), grad_global.data(), grad.size(), mpiutil::MPI_REAL_TYPE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(grad_E.data(), grad_E_global.data(), grad_E.size(), mpiutil::MPI_REAL_TYPE, MPI_SUM, MPI_COMM_WORLD);
 
-    return global_E_grad / n_procs;
+    return 2 * (grad_E_global / samples - (grad_global * E_mean_global) / samples / samples);
 }
 
 void Hamiltonian::optimize_wavefunction(Wavefunction &psi, Sampler &sampler, int iterations,
         int sample_points, SgdOptimizer &optimizer, Real gamma, bool verbose)
 {
-    int n_procs = mpiutil::proc_count();
-    int rank = mpiutil::get_rank();
-    long samples_per_proc = sample_points / n_procs + (rank < sample_points % n_procs ? 1 : 0);
-
     for (int iteration = 0; iteration < iterations; ++iteration) {
 
         // Thermalize the sampler to the new parameters.
-        for (int run = 0; run < 0.2 * samples_per_proc; ++run) {
-            sampler.next_configuration(rank);
+        for (int run = 0; run < 0.2 * sample_points; ++run) {
+            sampler.next_configuration();
         }
 
         RowVector grad = local_energy_gradient(sampler, psi, sample_points);
@@ -111,11 +108,12 @@ void Hamiltonian::optimize_wavefunction(Wavefunction &psi, Sampler &sampler, int
         if (gamma > 0) {
             grad += gamma * psi.get_parameters();
         }
+
         psi.set_parameters(psi.get_parameters() + optimizer.update_term(grad));
 
         if (verbose) {
             Real E_mean = local_energy(sampler, psi, sample_points);
-            if (rank == 0)
+            if (mpiutil::get_rank() == 0)
                 printf("Iteration %d: <E> = %g\n", iteration, E_mean / sample_points);
         }
     }
@@ -125,11 +123,19 @@ Real Hamiltonian::mean_distance(Sampler &sampler, long samples) const {
     if (sampler.get_current_system().rows() < 2)
         return 0;
 
+    int n_procs = mpiutil::proc_count();
+    int rank = mpiutil::get_rank();
+    long samples_per_proc = samples / n_procs + (rank < samples % n_procs ? 1 : 0);
+
     Real dist = 0;
-    for (long i = 0; i < samples; ++i) {
+    for (long i = 0; i < samples_per_proc; ++i) {
         dist += distance(sampler.next_configuration(), 0, 1);
     }
-    return dist / samples;
+
+    Real global_dist;
+    MPI_Allreduce(&dist, &global_dist, 1, mpiutil::MPI_REAL_TYPE, MPI_SUM, MPI_COMM_WORLD);
+
+    return global_dist / samples;
 }
 
 namespace {
