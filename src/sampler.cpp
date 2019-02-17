@@ -6,6 +6,7 @@
 #include "wavefunction.hpp"
 #include "hamiltonian.hpp"
 #include "sampler.hpp"
+#include "mpiutil.hpp"
 
 Sampler::StateInfo::StateInfo(System s, Wavefunction& psi) : system_old(s), system_new(s)
 {
@@ -25,7 +26,8 @@ Sampler::Sampler(const System &system,
                  std::size_t N)
                 : _step(step),
                   _wavefunction(&wavefunction),
-                  _N_instances(N)
+                  _N_instances(mpiutil::proc_count())
+
 {
     for (std::size_t i = 0; i < _N_instances; ++i) {
         _instances.push_back({system, wavefunction});

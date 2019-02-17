@@ -37,9 +37,8 @@ class Sampler {
          * @param init Shape of System instances to generate.
          * @param wavefunction Wavefunction to sample from.
          * @param step Step size to use in sampling.
-         * @param N Number of simultaneous states to set up.
          */
-        Sampler(const System &init, Wavefunction &wavefunction, Real step = 1, std::size_t N = 1);
+        Sampler(const System &init, Wavefunction &wavefunction, Real step = 1);
 
         /**
          * Initialize system in some random configuration.

@@ -7,8 +7,8 @@
 
 
 
-GibbsSampler::GibbsSampler(const System &system, RBMWavefunction &wavefunction, std::size_t N)
-    : Sampler(system, wavefunction, 0, N), _rbm(wavefunction)
+GibbsSampler::GibbsSampler(const System &system, RBMWavefunction &wavefunction)
+    : Sampler(system, wavefunction, 0), _rbm(wavefunction)
 {
     for (std::size_t i = 0; i < _N_instances; ++i) {
         initialize_system(i);

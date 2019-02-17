@@ -25,7 +25,7 @@ class GibbsSampler : public Sampler {
         /**
          * @copydoc Sampler::Sampler
          */
-        GibbsSampler(const System&, RBMWavefunction&, std::size_t N = 1);
+        GibbsSampler(const System&, RBMWavefunction&);
 
         /**
          * @return A new System instance, drawn from the wavefunction prob. distribution.

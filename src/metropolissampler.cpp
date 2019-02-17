@@ -6,9 +6,8 @@
 
 MetropolisSampler::MetropolisSampler(const System &system,
                                      Wavefunction &wavefunction,
-                                     Real step,
-                                     std::size_t N)
-    : Sampler(system, wavefunction, step, N)
+                                     Real step)
+    : Sampler(system, wavefunction, step)
 {
     for (std::size_t i = 0; i < _N_instances; ++i) {
         initialize_system(i);
