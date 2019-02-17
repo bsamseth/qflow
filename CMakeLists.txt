@@ -7,6 +7,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 include(ConfigSafeGuards)
 include(Colors)
 
+
+
 # --------------------------------------------------------------------------------
 #                          Compile flags (change as needed).
 # --------------------------------------------------------------------------------
@@ -25,6 +27,8 @@ message(STATUS "Building with the following extra flags: ${CMAKE_CXX_FLAGS}")
 # --------------------------------------------------------------------------------
 #                         Locate files (no change needed).
 # --------------------------------------------------------------------------------
+find_package(MPI REQUIRED)
+
 # We make sure that CMake sees all the files.
 include_directories(
     ${PROJECT_SOURCE_DIR}/src
@@ -33,7 +37,9 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/external/googletest
     ${PROJECT_SOURCE_DIR}/external/googletest/include
     ${PROJECT_SOURCE_DIR}/external/eigen
-    ${PROJECT_SOURCE_DIR}/external/eigen/Eigen)
+    ${PROJECT_SOURCE_DIR}/external/eigen/Eigen
+    ${MPI_INCLUDE_PATH})
+
 
 # Make variables referring to all the sources and test files.
 set(HEADERS
@@ -79,12 +85,27 @@ set(TEST_MAIN unit_tests.x)  # Default name for test executable (change if you w
 #                            Build! (Change as needed)
 # --------------------------------------------------------------------------------
 # Compile all sources into a library. Called engine here (change if you wish).
-add_library( engine ${SOURCES})
+add_library( engine SHARED ${SOURCES})
+target_link_libraries(engine PRIVATE ${MPI_LIBRARIES})
 
 # Compile Python bindings.
 add_subdirectory(external)  # Includes external/pybind
-pybind11_add_module(_qflow_backend ${PYSOURCES} ${SOURCES})
+pybind11_add_module(_qflow_backend SHARED ${PYSOURCES})
+target_link_libraries(_qflow_backend PRIVATE engine)
 
+if(MPI_COMPILE_FLAGS)
+  set_target_properties(engine PROPERTIES
+    COMPILE_FLAGS "${MPI_COMPILE_FLAGS}")
+  set_target_properties(_qflow_backend PROPERTIES
+    COMPILE_FLAGS "${MPI_COMPILE_FLAGS}")
+endif()
+
+if(MPI_LINK_FLAGS)
+  set_target_properties(engine PROPERTIES
+    LINK_FLAGS "${MPI_LINK_FLAGS}")
+  set_target_properties(_qflow_backend PROPERTIES
+    LINK_FLAGS "${MPI_LINK_FLAGS}")
+endif()
 # --------------------------------------------------------------------------------
 #                         Make Tests (no change needed).
 # --------------------------------------------------------------------------------
