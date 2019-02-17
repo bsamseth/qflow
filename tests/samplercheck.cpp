@@ -7,13 +7,11 @@
 #include "sampler.hpp"
 #include "metropolissampler.hpp"
 #include "importancesampler.hpp"
-#include "mpiutil.hpp"
 
 #define METRO_SAMPLER 1
 #define IMPO_SAMPLER 2
 
 void sampler_sanity(int sampler_type) {
-    const int rank = mpiutil::get_rank();
     const int runs = 10000;
     const System init_system (10, 3);
     const HarmonicOscillatorHamiltonian H_0;
@@ -26,8 +24,8 @@ void sampler_sanity(int sampler_type) {
         sp = new ImportanceSampler(init_system, psi);
     Sampler &sampler = *sp;
 
-    System before = sampler.get_current_system(rank);
-    System after  = sampler.next_configuration(rank);
+    System before = sampler.get_current_system();
+    System after  = sampler.next_configuration();
 
     EXPECT_EQ(init_system.rows(), before.rows());
     EXPECT_EQ(init_system.cols(), before.cols());
@@ -40,19 +38,19 @@ void sampler_sanity(int sampler_type) {
     for (int run = 1; run <= runs; ++run) {
         int moving = run % init_system.rows();
 
-        long accepted = sampler.get_accepted_steps(rank);
-        long total = sampler.get_total_steps(rank);
-        System before = sampler.get_current_system(rank);
-        System after  = sampler.next_configuration(rank);
+        long accepted = sampler.get_accepted_steps();
+        long total = sampler.get_total_steps();
+        System before = sampler.get_current_system();
+        System after  = sampler.next_configuration();
 
-        ASSERT_TRUE(total == sampler.get_total_steps(rank) - 1);
+        ASSERT_TRUE(total == sampler.get_total_steps() - 1);
 
         for (int i = 0; i < init_system.rows(); ++i) {
             if (i == moving) continue;
             ASSERT_TRUE(before.row(i).isApprox(after.row(i)));
         }
 
-        if (sampler.get_accepted_steps(rank) > accepted) {
+        if (sampler.get_accepted_steps() > accepted) {
             ASSERT_FALSE( before.row(moving).isApprox(after.row(moving)) );
         } else {
             ASSERT_TRUE( before.row(moving).isApprox(after.row(moving)) );
