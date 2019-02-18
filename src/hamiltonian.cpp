@@ -121,7 +121,7 @@ void Hamiltonian::optimize_wavefunction(Wavefunction &psi, Sampler &sampler, int
         if (verbose) {
             Real E_mean = local_energy(sampler, psi, sample_points);
             if (mpiutil::get_rank() == 0)
-                printf("Iteration %d: <E> = %g\n", iteration, E_mean / sample_points);
+                printf("Iteration %d: <E> = %g\n", iteration, E_mean);
         }
     }
 }
