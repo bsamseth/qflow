@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include "mpiutil.hpp"
+#include "definitions.hpp"
 
 namespace mpiutil {
 
@@ -11,6 +12,9 @@ void initialize_mpi() {
     {
         MPI_Init(nullptr, nullptr);
         atexit(library_onexit);
+
+        // Seed random number generator differently for each proc.
+        rand_gen.seed(12345 + get_rank());
     }
 }
 
