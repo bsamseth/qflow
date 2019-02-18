@@ -21,6 +21,7 @@ class RBMHarmonicOscillatorHamiltonian : public Hamiltonian {
 
         Real internal_potential(System&) const override;
 
+        using Hamiltonian::local_energy;
         Real local_energy(System&, Wavefunction&) const override;
 };
 
