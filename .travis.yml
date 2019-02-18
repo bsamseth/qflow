@@ -1,5 +1,4 @@
 language: cpp
-compiler: gcc
 dist: xenial
 notifications:
   email: false
@@ -22,12 +21,12 @@ matrix:
             - openssh-server
             - libopenmpi-dev
       env:
-        - CC="gcc-7"
-        - CXX="g++-7"
+        - CC7="gcc-7"
+        - CXX7="g++-7"
 
 
 before_install:
-  - sudo update-alternatives --install /usr/bin/g++ g++ `which $CXX` 90
+  - sudo update-alternatives --install /usr/bin/g++ g++ `which $CXX7` 90
   - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-7 90
 
   - lcov --version
