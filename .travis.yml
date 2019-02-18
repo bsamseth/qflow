@@ -3,6 +3,11 @@ dist: xenial
 notifications:
   email: false
 
+cache:
+  directories:
+    - openmpi
+    - openmpi-2.0.1
+
 matrix:
   include:
     - os: linux
@@ -15,19 +20,12 @@ matrix:
             - python3.7-dev
             - lcov
             - g++-7
-            # MPI
-            - openmpi-bin
-            - openssh-client
-            - openssh-server
-            - libopenmpi-dev
       env:
-        - CC7="gcc-7"
-        - CXX7="g++-7"
+        - C_COMPILER="gcc-7"
+        - CXX_COMPILER="g++-7"
 
 
 before_install:
-  - sudo update-alternatives --install /usr/bin/g++ g++ `which $CXX7` 90
-  - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-7 90
   # Disable CC and CXX, which interferes with MPI
   - test -n $CC  && unset CC
   - test -n $CXX && unset CXX
@@ -35,16 +33,14 @@ before_install:
   - gcov --version
   - g++ --version
   - pyenv global $(pyenv whence 2to3)  # activate all python versions
-  # Install Python virtual environment manager.
-  - pip install pipenv
-  - pipenv install
-  - pipenv run pip install pytest
 
 install:
-  - CMAKE_BUILD_TYPE=Coverage pipenv run python setup.py develop
+  - bash .travis.mpi
+  - pip install pipenv
+  - pipenv install
 
 script:
-  - CMAKE_BUILD_TYPE=Coverage pipenv run python setup.py test
+  - CMAKE_CXX_COMPILER=$CXX_COMPILER CMAKE_C_COMPILER=$C_COMPILER CMAKE_BUILD_TYPE=Coverage pipenv run python setup.py test
 
 after_success:
   - lcov --capture --directory . --output-file coverage.info
