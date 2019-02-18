@@ -27,10 +27,11 @@ matrix:
 
 
 before_install:
-  # Install Python virtual environment manager.
   - lcov --version
   - gcov --version
   - g++ --version
+  - pyenv global $(pyenv whence 2to3)  # activate all python versions
+  # Install Python virtual environment manager.
   - pip install pipenv
   - pipenv install
   - pipenv run pip install pytest
