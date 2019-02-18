@@ -38,15 +38,9 @@ before_install:
 
 install:
   - CMAKE_BUILD_TYPE=Coverage pipenv run python setup.py develop
-  - BUILD_DIR=`find build -name 'Makefile' -not -path '*/external*' | sed 's|/[^/]*$||'`
-  - cd $BUILDDIR
-  - make unit_tests.x
 
 script:
-  - cd $BUILDDIR
-  - ./unit_tests.x
-  - cd -
-  - pipenv run pytest tests
+  - CMAKE_BUILD_TYPE=Coverage pipenv run python setup.py test
 
 after_success:
   - lcov --capture --directory . --output-file coverage.info
