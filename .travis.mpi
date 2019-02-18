@@ -18,5 +18,6 @@ else
 fi
 MPI_DIR=$TRAVIS_BUILD_DIR/openmpi
 export LD_LIBRARY_PATH=$MPI_DIR/lib:$LD_LIBRARY_PATH
+export PATH=$MPI_DIR/bin:$PATH
 test -n $CC && unset CC
 test -n $CXX && unset CXX
