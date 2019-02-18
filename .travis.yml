@@ -17,6 +17,12 @@ matrix:
             - lcov
             - g++-7
             - gcov-7
+            # MPI
+            - openmpi-bin
+            - openssh-client
+            - openssh-server
+            - libopenmpi-dbg
+            - libopenmpi-dev
       env:
         - CC="gcc-7"
         - CXX="g++-7"
