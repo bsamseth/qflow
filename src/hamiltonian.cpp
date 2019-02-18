@@ -105,11 +105,18 @@ void Hamiltonian::optimize_wavefunction(Wavefunction &psi, Sampler &sampler, int
         RowVector grad = local_energy_gradient(sampler, psi, sample_points);
 
 
-        if (gamma > 0) {
-            grad += gamma * psi.get_parameters();
+        // Do updates on rank 0
+        if (mpiutil::get_rank() == 0) {
+            if (gamma > 0) {
+                grad += gamma * psi.get_parameters();
+            }
+            psi.set_parameters(psi.get_parameters() + optimizer.update_term(grad));
         }
 
-        psi.set_parameters(psi.get_parameters() + optimizer.update_term(grad));
+        // Broadcast updated psi to all.
+        RowVector params = psi.get_parameters();  // Copy.
+        MPI_Bcast(params.data(), params.size(), mpiutil::MPI_REAL_TYPE, 0, MPI_COMM_WORLD);
+        psi.set_parameters(params);
 
         if (verbose) {
             Real E_mean = local_energy(sampler, psi, sample_points);
