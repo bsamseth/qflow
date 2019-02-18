@@ -18,7 +18,7 @@ void init_sampler(py::module& main) {
     )doc";
 
     py::class_<Sampler>(m, "Sampler")
-        .def("next_configuration", &Sampler::next_configuration, py::arg("i") = 0)
+        .def("next_configuration", &Sampler::next_configuration)
         .def_property_readonly("acceptance_rate", &Sampler::get_acceptance_rate);
 
 
