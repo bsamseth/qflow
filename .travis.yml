@@ -6,7 +6,7 @@ notifications:
 cache:
   directories:
     - openmpi
-    - openmpi-2.0.1
+    - openmpi-4.0.0
 
 matrix:
   include:
