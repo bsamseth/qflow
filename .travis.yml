@@ -28,7 +28,9 @@ matrix:
 before_install:
   - sudo update-alternatives --install /usr/bin/g++ g++ `which $CXX7` 90
   - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-7 90
-
+  # Disable CC and CXX, which interferes with MPI
+  - test -n $CC  && unset CC
+  - test -n $CXX && unset CXX
   - lcov --version
   - gcov --version
   - g++ --version
