@@ -47,9 +47,9 @@ Real Hamiltonian::local_energy(System &system, Wavefunction &psi) const {
 }
 
 Real Hamiltonian::local_energy(Sampler &sampler, Wavefunction &psi, long samples) const {
-    int n_procs = mpiutil::proc_count();
-    int rank = mpiutil::get_rank();
-    long samples_per_proc = samples / n_procs + (rank < samples % n_procs ? 1 : 0);
+    const int n_procs = mpiutil::proc_count();
+    const int rank = mpiutil::get_rank();
+    const long samples_per_proc = samples / n_procs + (rank < samples % n_procs ? 1 : 0);
 
     Real E_L = 0;
 
@@ -64,9 +64,9 @@ Real Hamiltonian::local_energy(Sampler &sampler, Wavefunction &psi, long samples
 
 
 RowVector Hamiltonian::local_energy_gradient(Sampler &sampler, Wavefunction &psi, long samples) const {
-    int n_procs = mpiutil::proc_count();
-    int rank = mpiutil::get_rank();
-    long samples_per_proc = samples / n_procs + (rank < samples % n_procs ? 1 : 0);
+    const int n_procs = mpiutil::proc_count();
+    const int rank = mpiutil::get_rank();
+    const long samples_per_proc = samples / n_procs + (rank < samples % n_procs ? 1 : 0);
 
     Real E_mean = 0;
     RowVector grad = RowVector::Zero(psi.get_parameters().size());
@@ -130,9 +130,9 @@ Real Hamiltonian::mean_distance(Sampler &sampler, long samples) const {
     if (sampler.get_current_system().rows() < 2)
         return 0;
 
-    int n_procs = mpiutil::proc_count();
-    int rank = mpiutil::get_rank();
-    long samples_per_proc = samples / n_procs + (rank < samples % n_procs ? 1 : 0);
+    const int n_procs = mpiutil::proc_count();
+    const int rank = mpiutil::get_rank();
+    const long samples_per_proc = samples / n_procs + (rank < samples % n_procs ? 1 : 0);
 
     Real dist = 0;
     for (long i = 0; i < samples_per_proc; ++i) {
@@ -160,11 +160,14 @@ Real n_dim_volume(Real r_i, Real r_ip1, int dim) {
 }
 
 RowVector Hamiltonian::onebodydensity(Sampler &sampler, int n_bins, Real max_radius, long samples) const {
-    Real r_step = max_radius / n_bins;
+    const int n_procs = mpiutil::proc_count();
+    const int rank = mpiutil::get_rank();
+    const long samples_per_proc = samples / n_procs + (rank < samples % n_procs ? 1 : 0);
+    const Real r_step = max_radius / n_bins;
     RowVector bins = RowVector(n_bins);
     long total_count = 0;
 
-    for (long i = 0; i < samples; ++i) {
+    for (long i = 0; i < samples_per_proc; ++i) {
         System& system = sampler.next_configuration();
         for (int p = 0; p < system.rows(); ++p) {
             Real r_k = norm(system.row(p));
@@ -175,11 +178,18 @@ RowVector Hamiltonian::onebodydensity(Sampler &sampler, int n_bins, Real max_rad
         }
     }
 
+    // Gather results.
+    long global_total_count;
+    RowVector global_bins(bins.size());
+    MPI_Allreduce(&total_count, &global_total_count, 1, MPI_LONG, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(bins.data(), global_bins.data(), bins.size(), mpiutil::MPI_REAL_TYPE, MPI_SUM, MPI_COMM_WORLD);
+
+    // Normalize counts to physical size of each bin.
     int dimensions = sampler.get_current_system().cols();
     for (int bin = 0; bin < n_bins; ++bin) {
         Real r_i = r_step * bin;
         Real r_ip1 = r_step * (bin+1);
-        bins[bin] /= n_dim_volume(r_i, r_ip1, dimensions) * total_count;
+        global_bins[bin] /= n_dim_volume(r_i, r_ip1, dimensions) * global_total_count;
     }
-    return bins;
+    return global_bins;
 }
