@@ -30,7 +30,7 @@ class TestDnn(unittest.TestCase):
     def setUp(self):
         auto_np.random.seed(1234)
         self.nn = Dnn()
-        self.input_layer = InputLayer(2, 3, activation=sigmoid)
+        self.input_layer = DenseLayer(2, 3, activation=sigmoid)
         self.middle_layer = DenseLayer(3, 4, activation=relu)
         self.output_layer = DenseLayer(4, 1)
         self.nn.add_layer(self.input_layer)
@@ -38,7 +38,6 @@ class TestDnn(unittest.TestCase):
         self.nn.add_layer(self.output_layer)
 
         self.W1 = self.nn.layers[0].weights
-        self.W1 = np.tile(self.W1, (2, 1))  # Emulate full matrix.
         self.b1 = self.nn.layers[0].biases
         self.W2 = self.nn.layers[1].weights
         self.b2 = self.nn.layers[1].biases
