@@ -45,6 +45,7 @@ before_install:
   - env MPICC=$MPI_CC pipenv install --skip-lock --pre
 
 install:
+  # Build, being super explicit about where to find stuff!
   - mkdir build-py && cd build-py
   - cmake .. -DCMAKE_BUILD_TYPE=Coverage -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DMPI_C_COMPILER=$MPI_CC -DMPI_CXX_COMPILER=$MPI_CXX -DMPI_CXX_SKIP_MPICXX=1
   - make -j3
@@ -52,6 +53,8 @@ install:
 
 script:
   - pipenv run python setup.py test
+  # Check that the tests can run with MPI (if Travis has more than one CPU available).
+  - $MPI_EXEC -n 2 build-py/unit_tests.x || $MPI_EXEC -n 1 build-py/unit_tests.x
 
 after_success:
   - lcov --capture --directory . --output-file coverage.info
