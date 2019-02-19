@@ -39,8 +39,11 @@ install:
   - env MPICC=$MPI_CC pipenv install --skip-lock --pre
 
 before_script:
-  - export CMAKE_C_COMPILER=$MPI_CC
-  - export CMAKE_CXX_COMPILER=$MPI_CXX
+  - export CMAKE_C_COMPILER=$C_COMPILER
+  - export CMAKE_CXX_COMPILER=$CXX_COMPILER
+  - export MPI_C_COMPILER=$MPI_CC
+  - export MPI_CXX_COMPILER=$MPI_CXX
+  - export MPI_CXX_SKIP_MPICXX=1
   - export CMAKE_BUILD_TYPE=Coverage
 
 script:
