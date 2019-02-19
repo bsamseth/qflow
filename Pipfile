@@ -9,12 +9,12 @@ black = "*"
 v = {editable = true,version = "*"}
 
 [packages]
+mpi4py = "*"
 numpy = "*"
 autograd = "*"
 matplotlib = "*"
 scipy = "*"
 seaborn = "*"
-mpi4py = "*"
 
 [requires]
 python_version = "3.7"
