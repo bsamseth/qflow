@@ -5,8 +5,8 @@ notifications:
 
 cache:
   directories:
-    - openmpi
-    - openmpi-4.0.0
+    - $TRAVIS_BUILD_DIR/openmpi-build
+    - $TRAVIS_BUILD_DIR/openmpi-3.1.3
 
 matrix:
   include:
@@ -18,12 +18,10 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - python3.7-dev
-            - lcov
             - g++-7
+            - lcov
       env:
-        - C_COMPILER="gcc-7"
-        - CXX_COMPILER="g++-7"
-
+        - C_COMPILER="gcc-7", CXX_COMPILER="g++-7"
 
 before_install:
   # Disable CC and CXX, which interferes with MPI
@@ -33,14 +31,23 @@ before_install:
   - gcov --version
   - g++ --version
   - pyenv global $(pyenv whence 2to3)  # activate all python versions
+  - pip install pipenv
+  - export MPI_BUILD_DIR=$TRAVIS_BUILD_DIR/openmpi-build
+  - export MPI_VERSION="3.1"
+  - export MPI_FULL_VERSION="3.1.3"
 
 install:
-  - bash .travis.mpi
-  - pip install pipenv
-  - pipenv install
+  # Install Python virtual environment manager.
+  - source ci/install-openmpi.sh
+  - env MPICC=$MPI_CC pipenv install --skip-lock
+
+before_script:
+  - export CMAKE_C_COMPILER=$C_COMPILER
+  - export CMAKE_CXX_COMPILER=$CXX_COMPILER
+  - export CMAKE_BUILD_TYPE=Coverage
 
 script:
-  - CMAKE_CXX_COMPILER=$CXX_COMPILER CMAKE_C_COMPILER=$C_COMPILER CMAKE_BUILD_TYPE=Coverage pipenv run python setup.py test
+  - pipenv run python setup.py test
 
 after_success:
   - lcov --capture --directory . --output-file coverage.info
