@@ -1,13 +1,13 @@
 import os
-import re
-import sys
 import platform
+import re
 import subprocess
+import sys
 import unittest
-
-from setuptools import setup, Extension
-from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
+
+from setuptools import Extension, setup
+from setuptools.command.build_ext import build_ext
 
 PACKAGE_NAME = "qflow"
 BACKEND_NAME = f"_{PACKAGE_NAME}_backend"
