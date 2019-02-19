@@ -26,9 +26,7 @@ matrix:
 before_install:
   # Setup Python environemnt
   - pyenv global $(pyenv whence 2to3)
-  - pip install virtualenv
-  - virtualenv -p python3.7 .venv
-  - source .venv/bin/activate
+  - pip install pipenv
   # Setup MPI
   - export MPI_BUILD_DIR=$TRAVIS_BUILD_DIR/openmpi-build
   - export MPI_VERSION="3.1"
@@ -44,12 +42,14 @@ before_install:
   - export MPI_CXX_COMPILER=$MPI_CXX
   - export MPI_CXX_SKIP_MPICXX=1
   - export CMAKE_BUILD_TYPE=Coverage
+  - env MPICC=$MPI_CC pipenv install --skip-lock --pre
 
 install:
-  - env MPICC=$MPI_CC pip install .
+  - mkdir build-py && cd build-py
+  - make -j3
 
 script:
-  - python setup.py test
+  - pipenv run python setup.py test
 
 after_success:
   - lcov --capture --directory . --output-file coverage.info

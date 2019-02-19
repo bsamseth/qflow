@@ -74,7 +74,7 @@ class CMakeBuild(build_ext):
             env.get("CXXFLAGS", ""), self.distribution.get_version()
         )
         print(f"Running build with this env: {env}")
-
+        self.build_temp = os.path.join(os.path.dirname(__file__), "build-py")
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
         subprocess.check_call(
@@ -103,12 +103,4 @@ if __name__ == "__main__":
         cmdclass=dict(build_ext=CMakeBuild),
         zip_safe=False,
         test_suite="setup.load_test_suite",
-        install_requires=[
-            "mpi4py",
-            "numpy",
-            "autograd",
-            "matplotlib",
-            "scipy",
-            "seaborn",
-        ],
     )
