@@ -36,6 +36,7 @@ before_install:
   - $MPI_EXEC --version
   # Install Python environment.
   - env MPICC=$MPI_CC pipenv install --skip-lock --pre
+  - pipenv shell
   # Setup variables for build.
   - export CMAKE_C_COMPILER=$C_COMPILER
   - export CMAKE_CXX_COMPILER=$CXX_COMPILER
@@ -45,10 +46,10 @@ before_install:
   - export CMAKE_BUILD_TYPE=Coverage
 
 install:
-  - pipenv run python setup.py develop
+  - python setup.py develop
 
 script:
-  - pipenv run python setup.py test
+  - python setup.py test
 
 after_success:
   - lcov --capture --directory . --output-file coverage.info
