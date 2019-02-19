@@ -46,6 +46,7 @@ before_install:
 
 install:
   - mkdir build-py && cd build-py
+  - cmake ..
   - make -j3
 
 script:
