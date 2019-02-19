@@ -26,25 +26,26 @@ matrix:
 before_install:
   - pyenv global $(pyenv whence 2to3)
   - pip install pipenv
+  # Setup MPI
   - export MPI_BUILD_DIR=$TRAVIS_BUILD_DIR/openmpi-build
   - export MPI_VERSION="3.1"
   - export MPI_FULL_VERSION="3.1.3"
-
-install:
-  # Install Python virtual environment manager.
   - source ci/install-openmpi.sh
   - $MPI_CC --version
   - $MPI_CXX --version
   - $MPI_EXEC --version
+  # Install Python environment.
   - env MPICC=$MPI_CC pipenv install --skip-lock --pre
-
-before_script:
+  # Setup variables for build.
   - export CMAKE_C_COMPILER=$C_COMPILER
   - export CMAKE_CXX_COMPILER=$CXX_COMPILER
   - export MPI_C_COMPILER=$MPI_CC
   - export MPI_CXX_COMPILER=$MPI_CXX
   - export MPI_CXX_SKIP_MPICXX=1
   - export CMAKE_BUILD_TYPE=Coverage
+
+install:
+  - pipenv run python setup.py develop
 
 script:
   - pipenv run python setup.py test
