@@ -46,7 +46,7 @@ before_install:
   - export CMAKE_BUILD_TYPE=Coverage
 
 install:
-  - python setup.py test
+  - env MPICC=$MPI_CC python setup.py test
 
 after_success:
   - lcov --capture --directory . --output-file coverage.info
