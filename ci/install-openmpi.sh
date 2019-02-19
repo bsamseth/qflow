@@ -1,3 +1,5 @@
+#!/usr/bin/bash
+#
 # Variables that should be set:
 # MPI_BUILD_DIR=/path/to/install/openmpi
 # MPI_VERSION="3.1" or some other supported version (see open-mpi.org)
