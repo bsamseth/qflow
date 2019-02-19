@@ -24,13 +24,7 @@ matrix:
         - C_COMPILER="gcc-7", CXX_COMPILER="g++-7"
 
 before_install:
-  # Disable CC and CXX, which interferes with MPI
-  - test -n $CC  && unset CC
-  - test -n $CXX && unset CXX
-  - lcov --version
-  - gcov --version
-  - g++ --version
-  - pyenv global $(pyenv whence 2to3)  # activate all python versions
+  - pyenv global $(pyenv whence 2to3)
   - pip install pipenv
   - export MPI_BUILD_DIR=$TRAVIS_BUILD_DIR/openmpi-build
   - export MPI_VERSION="3.1"
@@ -42,7 +36,7 @@ install:
   - $MPI_CC --version
   - $MPI_CXX --version
   - $MPI_EXEC --version
-  # - env MPICC=$MPI_CC pipenv install --skip-lock
+  - env MPICC=$MPI_CC pipenv install --skip-lock --pre
 
 before_script:
   - export CMAKE_C_COMPILER=$C_COMPILER
@@ -50,12 +44,11 @@ before_script:
   - export CMAKE_BUILD_TYPE=Coverage
 
 script:
-  - echo "Success"
-  # - pipenv run python setup.py test
+  - pipenv run python setup.py test
 
 after_success:
-  # - lcov --capture --directory . --output-file coverage.info
-  # - lcov --remove coverage.info '*/tests/*' '/usr/*' '*/external/*' '/Applications/*' --output-file coverage.info # filter system-files
-  # - lcov --list coverage.info
-  # - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
+  - lcov --capture --directory . --output-file coverage.info
+  - lcov --remove coverage.info '*/tests/*' '/usr/*' '*/external/*' '/Applications/*' --output-file coverage.info # filter system-files
+  - lcov --list coverage.info
+  - bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
 
