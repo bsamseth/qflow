@@ -1,13 +1,13 @@
 import os
-import re
-import sys
 import platform
+import re
 import subprocess
+import sys
 import unittest
-
-from setuptools import setup, Extension
-from setuptools.command.build_ext import build_ext
 from distutils.version import LooseVersion
+
+from setuptools import Extension, setup
+from setuptools.command.build_ext import build_ext
 
 PACKAGE_NAME = "qflow"
 BACKEND_NAME = f"_{PACKAGE_NAME}_backend"
@@ -73,13 +73,20 @@ class CMakeBuild(build_ext):
         env["CXXFLAGS"] = '{} -DVERSION_INFO=\\"{}\\"'.format(
             env.get("CXXFLAGS", ""), self.distribution.get_version()
         )
+        self.build_temp = os.path.join(os.path.dirname(__file__), "build-py")
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
         subprocess.check_call(
-            ["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env
+            " ".join(["cmake", ext.sourcedir] + cmake_args),
+            cwd=self.build_temp,
+            env=env,
+            shell=True,
         )
         subprocess.check_call(
-            ["cmake", "--build", "."] + build_args, cwd=self.build_temp
+            " ".join(["cmake", "--build", "."] + build_args),
+            cwd=self.build_temp,
+            env=env,
+            shell=True,
         )
 
 

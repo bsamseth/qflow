@@ -17,11 +17,6 @@ TEST(GibbsSampler, integrationTest) {
 
     H.optimize_wavefunction(rbm, sampler, 10000, 100, sgd, 0, false);
 
-    Real E_L = 0;
-    for (int i = 0; i < 1000; ++i) {
-        E_L += H.local_energy(sampler.next_configuration(), rbm);
-    }
-    E_L /= 1000;
-
+    Real E_L = H.local_energy(sampler, rbm , 1000);
     ASSERT_NEAR(2.0, E_L, 1e-3);
 }

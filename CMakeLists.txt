@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1.3)
 
-project(VMC VERSION 0.1.0.0 LANGUAGES CXX)
+project(VMC VERSION 0.1.0.0 LANGUAGES C CXX)
 
 # Include stuff.
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
@@ -60,6 +60,7 @@ set(HEADERS
     include/interactingwavefunction.hpp
     include/layer.hpp
     include/metropolissampler.hpp
+    include/mpiutil.hpp
     include/onebodydensitycalculator.hpp
     include/optimizer.hpp
     include/prettyprint.hpp
@@ -113,7 +114,7 @@ endif()
 # The setup of Google Test is done at the very end of this file.
 add_executable(${TEST_MAIN} ${TESTFILES})
 add_dependencies(${TEST_MAIN} googletest engine)
-target_link_libraries(${TEST_MAIN} googletest engine pthread)
+target_link_libraries(${TEST_MAIN} googletest engine pthread ${MPI_LIBRARIES})
 add_custom_target(gtest
     COMMAND "${PROJECT_BINARY_DIR}/${TEST_MAIN}"
     DEPENDS engine ${TEST_MAIN})

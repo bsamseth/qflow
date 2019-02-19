@@ -1,13 +1,13 @@
 import unittest
 import warnings
 
-from autograd import numpy as auto_np
-from autograd import elementwise_grad, hessian
 import numpy as np
+from autograd import elementwise_grad, hessian
+from autograd import numpy as auto_np
 
-from qflow.wavefunctions import Dnn
 from qflow.layers import DenseLayer, InputLayer
-from qflow.layers.activations import sigmoid, relu
+from qflow.layers.activations import relu, sigmoid
+from qflow.wavefunctions import Dnn
 
 
 def sigmoid_np(x):

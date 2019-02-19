@@ -1,4 +1,5 @@
 #include <pybind11/pybind11.h>
+#include "mpiutil.hpp"
 
 namespace py = pybind11;
 
@@ -13,6 +14,8 @@ PYBIND11_MODULE(_qflow_backend, m) {
         QFlow - Quantum Variational Monte Carlo Framework
         -----------------------
     )pbdoc";
+
+    m.def("_init_mpi", &mpiutil::initialize_mpi);
 
     init_wavefunction(m);
     init_sampler(m);
