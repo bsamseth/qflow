@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1.3)
 
-project(VMC VERSION 0.1.0.0 LANGUAGES CXX)
+project(VMC VERSION 0.1.0.0 LANGUAGES C CXX)
 
 # Include stuff.
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
