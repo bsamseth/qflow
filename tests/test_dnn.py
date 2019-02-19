@@ -1,13 +1,13 @@
 import unittest
 import warnings
 
-from autograd import numpy as auto_np
-from autograd import elementwise_grad, hessian
 import numpy as np
+from autograd import elementwise_grad, hessian
+from autograd import numpy as auto_np
 
-from qflow.wavefunctions import Dnn
 from qflow.layers import DenseLayer, InputLayer
-from qflow.layers.activations import sigmoid, relu
+from qflow.layers.activations import relu, sigmoid
+from qflow.wavefunctions import Dnn
 
 
 def sigmoid_np(x):
@@ -59,7 +59,6 @@ class TestDnn(unittest.TestCase):
             for x in auto_np.random.randn(500, 2):
                 np.testing.assert_almost_equal(self.f_np(x, *self.params), self.nn(x))
 
-    @unittest.skip("Temporary skipped while symmetric dnns are worked out")
     def test_parameter_gradients(self):
         for _ in range(10):
             x = auto_np.random.randn(1, 2)
