@@ -4,9 +4,6 @@
 
 void Dnn::addLayer(layer::DenseLayer& new_layer) {
     if (layers.size() == 0) {
-        // First layer ought to be an InputLayer...
-        assert(dynamic_cast<const layer::InputLayer*>(&new_layer) != nullptr);
-
         // inputGradient has size equal to the inputs to the first layer.
         inputGradient.resize(new_layer.getWeights().rows());
     }
