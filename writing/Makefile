@@ -18,4 +18,4 @@ watch:
 
 clean:
 	latexmk -CA
-	rm -f ${MAIN}.run.xml
+	rm -f ${MAIN}.run.xml ${MAIN}.bbl
