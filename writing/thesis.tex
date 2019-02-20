@@ -1,6 +1,6 @@
 \documentclass[twoside,english]{uiofysmaster}
 
-%\bibliography{references}
+\usepackage{subfiles}
 \usepackage{datetime}
 \newdateformat{monthyeardate}{%
   \monthname[\THEMONTH], \THEYEAR}
@@ -29,8 +29,8 @@ In this thesis we explore this, this and that. We find that this outperforms tha
 
 \tableofcontents
 
-\chapter{The beginning is here}
+\subfile{Introduction.tex}
+\subfile{Appendix.tex}
 
-Start your chapter by writing something smart. Then go get coffee.
 
 \end{document}
