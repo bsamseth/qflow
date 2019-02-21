@@ -67,6 +67,7 @@ set(HEADERS
     include/rbm.hpp
     include/rbmharmonicoscillatorhamiltonian.hpp
     include/rbminteractinghamiltonian.hpp
+    include/rbmsymmetricwavefunction.hpp
     include/rbmwavefunction.hpp
     include/sampler.hpp
     include/simplegaussian.hpp

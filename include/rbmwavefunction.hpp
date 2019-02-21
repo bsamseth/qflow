@@ -57,7 +57,7 @@ class RBMWavefunction : public Wavefunction {
          * @param system configuration to evaluate for.
          * @return 1/psi d(psi)/d(a_k)
          */
-        Real deriv_a(int k, System &system) const;
+        virtual Real deriv_a(int k, System &system) const;
 
         /**
          * @param k bias index.
@@ -72,7 +72,7 @@ class RBMWavefunction : public Wavefunction {
          * @param system configuration to evaluate for.
          * @return 1/psi d(psi)/d(w_kl)
          */
-        Real deriv_w(int k, int l, System &system) const;
+        virtual Real deriv_w(int k, int l, System &system) const;
 
         /**
          * @param system configuration to evaluate for.
@@ -93,9 +93,9 @@ class RBMWavefunction : public Wavefunction {
         Real v_j(int j, const System &system) const;
         // The following functions return the index into the full parameter vector which
         // point to the specified parameter.
-        int a(int i) const;
-        int b(int j) const;
-        int w(int i, int j) const;
+        virtual int a(int i) const;
+        virtual int b(int j) const;
+        virtual int w(int i, int j) const;
 
 };
 
