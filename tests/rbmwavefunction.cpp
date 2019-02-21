@@ -31,9 +31,9 @@ class RBMWavefunctionTest : public ::testing::Test {
         RBMWavefunction *rbm;
 
         virtual void SetUp() {
-            s = new System(3, 2);
-            s->col(0) << -0.5009136425144746,  0.0118290278182348,  1.0861838035029527;
-            s->col(1) << -0.1180658328483096, -1.0091187557423571, -0.5365339555565911;
+            s = new System(2, 3);
+            s->row(0) << -0.5009136425144746,  0.0118290278182348,  1.0861838035029527;
+            s->row(1) << -0.1180658328483096, -1.0091187557423571, -0.5365339555565911;
 
             rbm = new RBMWavefunction(M, N, 2);
             rbm->set_parameters({-0.7665546243072233,  0.9406054576757206, -0.1411666581066846,
@@ -69,6 +69,7 @@ TEST_F(RBMWavefunctionTest, init) {
     ASSERT_DOUBLE_EQ(-0.3367728130900145, rbm->get_parameters()[rbm->b(0)]);
     ASSERT_DOUBLE_EQ(1.1083481552380658, rbm->get_parameters()[rbm->b(N-1)]);
     ASSERT_DOUBLE_EQ(0.9132139881362205, rbm->get_parameters()[rbm->w(0, 0)]);
+    ASSERT_DOUBLE_EQ(-0.5289324083374893, rbm->get_parameters()[rbm->w(0, 1)]);
     ASSERT_DOUBLE_EQ(-0.0240516420501065, rbm->get_parameters()[rbm->w(M-1, N-1)]);
 }
 
