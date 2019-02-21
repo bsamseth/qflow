@@ -9,6 +9,7 @@
 #include "simplegaussian.hpp"
 #include "interactingwavefunction.hpp"
 #include "rbmwavefunction.hpp"
+#include "rbmsymmetricwavefunction.hpp"
 #include "dnn.hpp"
 
 namespace py = pybind11;
@@ -45,6 +46,10 @@ void init_wavefunction(py::module& main) {
     py::class_<RBMWavefunction, Wavefunction>(m, "RBMWavefunction")
         .def(py::init<int, int, Real, Real>(),
                 py::arg("M"), py::arg("N"), py::arg("sigma2") = 1, py::arg("root_factor") = 1);
+
+    py::class_<RBMSymmetricWavefunction, Wavefunction>(m, "RBMSymmetricWavefunction")
+        .def(py::init<int, int, int, Real, Real>(),
+                py::arg("M"), py::arg("N"), py::arg("f"), py::arg("sigma2") = 1, py::arg("root_factor") = 1);
 
     py::class_<Dnn, Wavefunction>(m, "Dnn")
         .def(py::init<>())
