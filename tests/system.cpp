@@ -20,6 +20,8 @@ TEST(System, basics) {
     EXPECT_EQ( 123, ss(0, 2));
     EXPECT_EQ( 10, ss.rows() );
     EXPECT_EQ( 3 , ss.cols() );
+
+    EXPECT_EQ(123, s.data()[2]);  // Check rowmajor storage order.
 }
 
 TEST(System, distances) {
