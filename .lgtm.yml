@@ -2,3 +2,5 @@ extraction:
   python:
     python_setup:
       version: 3
+    index:
+      exclude: .ycm_extra_conf.py
