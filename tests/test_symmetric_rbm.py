@@ -39,9 +39,9 @@ def srbm_np(X, a, b, w, sigma2=1):
     return res
 
 
-def randomized(test_func, size=50):
+def randomized(test_func, size=10, max_dim=20):
     """Run a test function on randomized setups of SRBMs"""
-    for P, D, N in np.random.randint(1, 20, size=(size, 3)):
+    for P, D, N in np.random.randint(1, max_dim, size=(size, 3)):
         sigma2 = 1  # np.random.rand() * 5
         srbm = SRBM(P * D, N, D, sigma2=sigma2)
         a, b, w = (
@@ -50,7 +50,10 @@ def randomized(test_func, size=50):
             np.array(srbm.parameters[D + N :]).reshape(D, N),
         )
         X = 0.1 * np.random.randn(P, D)
-        test_func(srbm, X, a, b, w, sigma2)
+
+        # Rolling X along axis 0 will make particle i -> i + 1, with loopover.
+        for shift in range(max(5, X.shape[0])):
+            test_func(srbm, np.roll(X, shift, axis=0), a, b, w, sigma2)
 
 
 class TestSRBM(unittest.TestCase):
@@ -80,7 +83,9 @@ class TestSRBM(unittest.TestCase):
     def test_evaluation(self):
         def test(srbm, X, a, b, w, sigma2):
             # Check evaluation against the dedicated Symmetric RBM Numpy impl.
+            # Do this for any permutation of the particles.
             np_expect = srbm_np(X.flatten(), a, b, w, sigma2=sigma2)
+
             self.assertAlmostEqual(1, srbm(X) / np_expect)
 
         randomized(test)
@@ -134,4 +139,5 @@ class TestSRBM(unittest.TestCase):
                 else:
                     self.assertAlmostEqual(1, actual / np_expect)
 
-        randomized(test, size=5)
+        # Hessian is slow, do smaller tests.
+        randomized(test, size=5, max_dim=6)
