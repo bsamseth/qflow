@@ -13,7 +13,7 @@ autograd = "*"
 matplotlib = "*"
 scipy = "*"
 seaborn = "*"
-jupyterlab = "*"
+mypy = "*"
 
 [packages]
 
