@@ -7,14 +7,18 @@ verify_ssl = true
 pre-commit = "*"
 black = "*"
 v = {editable = true,version = "*"}
-
-[packages]
 mpi4py = "*"
 numpy = "*"
 autograd = "*"
 matplotlib = "*"
 scipy = "*"
 seaborn = "*"
+jupyterlab = "*"
+
+[packages]
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
