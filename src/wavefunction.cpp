@@ -22,13 +22,7 @@ RowVector Wavefunction::drift_force(const System& system) {
 
 namespace {
 
-/* Return n!, or cap if n! > cap.  */
-unsigned capped_factorial(unsigned n, unsigned cap) {
-    unsigned long fac = 1;
-    for (unsigned i = 2; i <= n && fac < cap; fac *= i++);
-    return std::min((unsigned) fac, cap);
-}
-
+/* TODO: Consider changing this from random to Steinhaus–Johnson–Trotter algorithm */
 void random_permutation(System& s) {
     assert(s.rows() > 1);
     std::uniform_int_distribution<int> uni(0, s.rows() - 1);
@@ -50,21 +44,24 @@ Real Wavefunction::symmetry_metric(Sampler& sampler, long samples, int max_permu
         return 1;   // Single argument psi is symmetric by definition.
 
     // How many permutations? Ensure an even number.
-    unsigned permutations = capped_factorial(s.rows(), max_permutations) & (~1U);
+    int permutations = std::min((long)max_permutations, 5 * s.rows()) & (~1);
 
     Real num = 0;
     Real den = 0;
     for (long iter = 0; iter < samples; ++iter) {
         System s = sampler.next_configuration();
         Real base, sum;
-        base = sum = (*this)(s);
-        for (unsigned perm = 0; perm < permutations - 1; ++perm) {
+        sum = (*this)(s);
+        base = sum * sum;
+        for (int perm = 0; perm < permutations - 1; ++perm) {
             random_permutation(s);
-            sum += (*this)(s);
+            Real eval = (*this)(s);
+            sum += eval;
+            base = std::max(eval*eval, base);
         }
         sum /= permutations;
         num += sum * sum;
-        den += base * base;
+        den += base;
     }
 
     return num / den;
