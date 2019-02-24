@@ -27,6 +27,8 @@ void init_wavefunction(py::module& main) {
         .def("laplacian", &Wavefunction::laplacian)
         .def("drift_force", py::overload_cast<const System&, int, int>(&Wavefunction::drift_force))
         .def("drift_force", py::overload_cast<const System&>(&Wavefunction::drift_force))
+        .def("symmetry_metric", &Wavefunction::symmetry_metric,
+            py::arg("sampler"), py::arg("samples"), py::arg("max_permutations") = 100)
         .def_property("parameters",
                 py::overload_cast<>(&Wavefunction::get_parameters, py::const_),
                 py::overload_cast<const RowVector&>(&Wavefunction::set_parameters));

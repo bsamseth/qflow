@@ -49,6 +49,8 @@ class Wavefunction {
          */
         virtual Real laplacian(System &system) = 0;
 
+        Real symmetry_metric(Sampler& sampler, long samples, int max_permutations = 100);
+
         virtual const RowVector& get_parameters() const;
 
         virtual void set_parameters(const RowVector &parameters);
