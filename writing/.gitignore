@@ -258,3 +258,4 @@ TSWLatexianTemp*
 # standalone packages
 *.sta
 Thesis.pdf
+betterbib_cache.sqlite
