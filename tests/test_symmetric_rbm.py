@@ -8,7 +8,6 @@ from autograd import numpy as auto_np
 from qflow.wavefunctions import RBMSymmetricWavefunction as SRBM
 from qflow.wavefunctions import RBMWavefunction as RBM
 
-
 auto_np.random.seed(2019)
 
 

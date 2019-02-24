@@ -1,7 +1,8 @@
 import unittest
+
 import numpy as np
 
-from qflow.layers.activations import identity, relu, sigmoid, tanh, exponential
+from qflow.layers.activations import exponential, identity, relu, sigmoid, tanh
 
 
 class TestDnn(unittest.TestCase):
