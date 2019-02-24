@@ -34,7 +34,7 @@ void random_permutation(System& s) {
     std::uniform_int_distribution<int> uni(0, s.rows() - 1);
     int i = uni(rand_gen);
     int j = uni(rand_gen);
-    while (i != j)
+    while (i == j)
         j = uni(rand_gen);
 
     s.row(i).swap(s.row(j));
