@@ -67,6 +67,8 @@ class Sampler {
          */
         const System& get_current_system() const;
 
+        void thermalize(long samples);
+
         friend std::ostream& operator<<(std::ostream &strm, const Sampler& s);
 };
 

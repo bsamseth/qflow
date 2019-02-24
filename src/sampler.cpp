@@ -43,3 +43,8 @@ System &Sampler::next_configuration() {
 
     return _system_new;
 }
+
+void Sampler::thermalize(long samples) {
+    for (long i = 0; i < samples; ++i)
+        next_configuration();
+}
