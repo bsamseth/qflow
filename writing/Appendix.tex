@@ -114,9 +114,25 @@ metric should have.
 
     \begin{align}\label{eq:symmetry-metric-def}
         S(\Psi) &\defeq  \ddfrac{\intfy \dd{\vb X}\abs{\frac{1}{n!}
-        \sum_{\vb\alpha\in \mathcal{P}_n} P_{\vb\alpha}\Psi}^2}{\intfy\dd{\vb X} \abs{\Psi}^2}
+        \sum_{\vb\alpha\in \mathcal{P}_n} P_{\vb\alpha}\Psi}^2}{\intfy\dd{\vb X}
+        \max_{\vb\alpha\in \mathcal{P}} \abs{P_{\vb\alpha}\Psi}^2}
     \end{align}
 \end{definition}
+\begin{corollary}
+    The symmetry metric is bounded to the interval $[0, 1]$ for all functions where the integrals are defined.
+\end{corollary}
+\begin{proof}
+    Both the numerator and denominator of \autoref{eq:symmetry-metric-def} are
+    integrals of absolute values. Hence they cannot be negative, which proves
+    the lower bound $S(\Psi) \geq 0$ for all $\Psi$ where the integrals are defined. Further, the
+    absolute value of the average of a set must be less than or equal to the maximum
+    absolute value of the set, and equal iff. all values are equal. That is,
+    \begin{align}
+        \abs{\frac{1}{n!} \sum_{\vb\alpha\in \mathcal{P}_n} P_{\vb\alpha}\Psi}^2
+        \leq \max_{\vb\alpha\in \mathcal{P}} \abs{P_{\vb\alpha}\Psi}^2.
+    \end{align}
+    From this it follows that $S(\Psi) \leq 1$.
+\end{proof}
 \begin{corollary}
    The symmetry metric is scale invariant, i.e.
     \begin{align}
@@ -156,7 +172,14 @@ This definition of the symmetry metric has all the attributes we wanted, except
 the computational cost. The asymptotic complexity of $S$ is $\mathcal{O}(n!)$,
 which is about as bad as asymptotic complexities get. In addition, the integrals
 are many-dimensional and intractable for any non-trivial $n$. In practice we
-will therefore approximate $S$ by only considering a subset of all the permutations, and of course approximating the integrals with Monte Carlo integration as before.
+will therefore approximate $S$ by only considering a random subset of all the
+permutations, and of course approximating the integrals with Monte Carlo
+integration as before.
+
+This now provides a consistent metric for comparing potential wavefunctions in
+terms of their symmetry. This will be helpful when considering trail
+wavefunctions whose functional form does not guarantee symmetry, and to observe
+to what extent optimizing them changes the symmetry metric favourably.
 
 \section{Derivatives for the Symmetric RBM}
 
