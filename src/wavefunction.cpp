@@ -1,6 +1,7 @@
 #include <random>
 #include "definitions.hpp"
 #include "wavefunction.hpp"
+#include "sampler.hpp"
 #include "mpiutil.hpp"
 
 Wavefunction::Wavefunction(const RowVector& parameters)
@@ -24,13 +25,13 @@ namespace {
 /* Return n!, or cap if n! > cap.  */
 unsigned capped_factorial(unsigned n, unsigned cap) {
     unsigned long fac = 1;
-    for (int i = 2; i <= n && fac < cap; fac *= i++);
+    for (unsigned i = 2; i <= n && fac < cap; fac *= i++);
     return std::min((unsigned) fac, cap);
 }
 
 void random_permutation(System& s) {
     assert(s.rows() > 1);
-    std::uniform_int_distribution uni(0, s.rows() - 1);
+    std::uniform_int_distribution<int> uni(0, s.rows() - 1);
     int i = uni(rand_gen);
     int j = uni(rand_gen);
     while (i != j)

@@ -6,6 +6,8 @@
 #include "vector.hpp"
 #include "system.hpp"
 
+class Sampler;
+
 /**
  * Abstract base class for representing a Wavefunction.
  */
