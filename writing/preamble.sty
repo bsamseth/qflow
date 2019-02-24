@@ -20,9 +20,20 @@
     \sisetup{exponent-product = \cdot}	    % Dot as multiplication symbol (not cross).
  	\sisetup{separate-uncertainty = true} 	% Use pluss-minus form for uncertainty.
 
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\theoremstyle{corollary}
+\newtheorem{corollary}{Corollary}
+
+
+
+
 \renewcommand{\vb}[1]{\bm{#1}}
 \newcommand{\centerthis}[1]{\makebox[\textwidth]{#1}}  % Attempt to make the argument centered.
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}  % Number equations in align*.
+
+% Fractions with display style in both numerator and denominator
+\newcommand\ddfrac[2]{\frac{\displaystyle #1}{\displaystyle #2}}
 
 \newcommand{\sepanswer}{\vspace{0.5cm}\hrule\vspace{0.5cm}}
 
