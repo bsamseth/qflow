@@ -2,6 +2,162 @@
 \begin{document}
 \chapter{Appendix}
 
+\section{Symmetry of Wavefunctions}
+
+Nature has many example of systems made up of several particles of the same
+species. That is, the particles all have the same mass, spin, electromagnetic
+charge etc. such that there is no way to  distinguish one from the other by
+measuring their properties. An example could be the electron of an atom, all of
+which have the exact same physical properties.
+
+In classical mechanics, we can still distinguish identical particles by other
+means. Imagine for instance a set of perfectly identical planets in orbit. Even
+though they have all of the same physical properties, we can still enumerate
+them and keep track of which is which. This is due to the fact that their
+position in time and space is deterministically defined by their current state,
+which allows us to track them.
+
+In quantum mechanics, however, we no longer have this deterministic view. In
+this world, even if we know where all the individual electron are at a specific
+point in time, we cannot say with certainty where they will be at a later
+time. We blame this on the uncertainty principle. The result is that systems of
+identical particles become systems of \emph{indistinguishable} particles in
+quantum mechanics.
+
+Consider now a system of two indistinguishable particles, labeled $\vb X_1$ and
+$\vb X_2$, where $\vb X_i$ contains all the quantum numbers required to describe
+particle $i$ (e.g. position coordinates and the $z$ component of spin). The
+systems is then described by a wavefunction
+
+\begin{align}
+    \Psi(\vb X_1, \vb X_2).
+\end{align}
+
+Because the particles are indistinguishable, this labeling of 1 and 2 is
+arbitrary, and so we should be able to relabel them:
+
+\begin{align}
+    \Psi(\vb X_2, \vb X_1)
+\end{align}
+
+These two equations, which represents exchanging the two particles, \emph{must}
+describe the same physical system, that is:
+
+\begin{align}
+    \abs{\Psi(\vb X_1, \vb X_2)}^2 &= \abs{\Psi(\vb X_2, \vb X_1)}^2\\
+    \iff \Psi(\vb X_1,\vb X_2) &= e^{i\alpha}\Psi(\vb X_2, \vb X_1),
+\end{align}
+i.e. they can only differ in their complex phase. Repeating the exchange once
+more yields the original wavefunction, and so
+
+\begin{align}
+    \Psi(\vb X_1,\vb X_2) &= e^{2i\alpha}\Psi(\vb X_1, \vb X_2)\\
+    \iff e^{i\alpha} &= \pm 1.
+\end{align}
+This results states that any wavefunction, upon the exchange of
+indistinguishable particles, must be either symmetric (same sign) or
+anti-symmetric (opposite sign) to that of the original. This is generalizable to
+any number of particles, and is summarized in the following theorem.
+
+\begin{theorem}[Spin-Statistic
+    Theorem~\cite{PhysRev-58-716}]\label{theorem:spin-statistic}
+
+The wave function of a system of identical integer-spin particles
+has the same value when the positions of any two particles are
+swapped. Particles with wave functions symmetric under exchange are
+called bosons.
+
+The wave function of a system of identical half-integer–spin particles changes sign when two particles are swapped. Particles with wave functions antisymmetric under exchange are called fermions.
+\end{theorem}
+
+\subsection{Symmetry Metric}
+
+In the context of our Variational Monte Carlo framework, we should in general
+take care that the ansatz we make for the functional form of $\Psi_T$ is such
+that it obeys \autoref{theorem:spin-statistic}. Not all proposed wavefunctions
+will necessary \emph{guarantee} this property, however, and optimization might
+find a minima in which this is not true. A such, we shall define a metric to
+measure the \emph{symmetry-ness} of a wavefunction.
+
+Before giving a definition, there are a couple of desired properties such a
+metric should have.
+
+\begin{enumerate}
+    \item Fully symmetric functions should yield a distinct, finite value.
+    \item Fully anti-symmetric functions should yield a distinct, finite value,
+        which must be different from fully symmetric functions.
+    \item Scale invariant, i.e. scaling the function by
+        some constant factor does not change its symmetry metric.
+    \item Computationally feasible to evaluate.
+\end{enumerate}
+
+\begin{definition}{Permutation Operator.}
+
+     Let $\mathcal{P}_n$ denote the set of all permutations of the first $n$
+     natural numbers, $\{1, 2, \dots, n\}$, and let $\vb\alpha\in \mathcal{P}_n$
+     be one of these. Given a function $\Psi(\vb X_1, \vb X_2,\dots,\vb X_n)$ of
+     $n$ vectors $\vb X_i\in \mathbb{R}^f$, we let $P_{\vb\alpha}$ be an
+     operator with the following property:
+
+    \begin{align}
+        P_{\vb\alpha}\Psi(\vb X_1,\vb X_2,\dots,\vb X_n)
+        \defeq
+        \Psi(\vb X_{\alpha_1},\vb X_{\alpha_1},\dots,\vb X_{\alpha_n}).
+    \end{align}
+\end{definition}
+
+\begin{definition}{Symmetry Metric.}
+
+    Given a function $\Psi(\vb X_1, \vb X_2,\dots,\vb X_n)$ of $n$ vectors $\vb
+    X_i\in \mathbb{R}^f$. We use the notation $\dd{\vb X}\defeq \dd{\vb X_1}\dots\dd{\vb X_n}$.
+    The Symmetry Metric of $\Psi$ is then defined as the following:
+
+    \begin{align}\label{eq:symmetry-metric-def}
+        S(\Psi) &\defeq  \ddfrac{\intfy \dd{\vb X}\abs{\frac{1}{n!}
+        \sum_{\vb\alpha\in \mathcal{P}_n} P_{\vb\alpha}\Psi}^2}{\intfy\dd{\vb X} \abs{\Psi}^2}
+    \end{align}
+\end{definition}
+\begin{corollary}
+   The symmetry metric is scale invariant, i.e.
+    \begin{align}
+        S(c\Psi) = S(\Psi),
+    \end{align}
+    for any scalar $c\in \mathbb{C}$.
+\end{corollary}
+\begin{proof}
+   Obvious.
+\end{proof}
+\begin{corollary}
+    For a symmetric function $\Psi$ we have
+
+    \begin{align}
+        S(\Psi) &= 1.
+    \end{align}
+\end{corollary}
+\begin{proof}
+    For a symmetric function we have $P_{\vb\alpha}\Psi=\Psi$ for all
+    $\vb\alpha\in\mathcal{P}_n$ by definition. The result then follows directly.\end{proof}
+\begin{corollary}
+    For a anti-symmetric function $\overline\Psi$ we have
+    \begin{align}
+        S(\overline\Psi)&=0.
+    \end{align}
+\end{corollary}
+\begin{proof}
+   Of the $n!$ possible permutations, half can be written as an even number of
+    pairwise exchanges, and half as an odd number. This implies
+    \begin{align}
+        \sum_{\vb\alpha\in \mathcal{P}_n} P_{\vb\alpha}\Psi = 0,
+    \end{align}
+    and thus the result following from this.
+\end{proof}
+
+This definition of the symmetry metric has all the attributes we wanted, except
+the computational cost. The asymptotic complexity of $S$ is $\mathcal{O}(n!)$,
+which is about as bad as asymptotic complexities get. In addition, the integrals
+are many-dimensional and intractable for any non-trivial $n$. In practice we
+will therefore approximate $S$ by only considering a subset of all the permutations, and of course approximating the integrals with Monte Carlo integration as before.
+
 \section{Derivatives for the Symmetric RBM}
 
 The standard RBM definition is stated for reference:
@@ -17,9 +173,9 @@ particle has $f$ of them related to its coordinates. In this case, for the RBM
 to be symmetric upon the exchange of particles, each group of $f$ entries in
 $\vb X$ should be treated equally within the wavefunction.
 
-We define $\vb b\in \mathds{R}^{N}$ as before, i.e. one bias value per hidden
-node in the RBM. Let $\vb a\in \mathds{R}^{f}$ be a vector of biases, with one
-value \emph{per coordinate direction}. Further, let $\vb W\in \mathds{R}^{f
+We define $\vb b\in \mathbb{R}^{N}$ as before, i.e. one bias value per hidden
+node in the RBM. Let $\vb a\in \mathbb{R}^{f}$ be a vector of biases, with one
+value \emph{per coordinate direction}. Further, let $\vb W\in \mathbb{R}^{f
 \times N}$ be a matrix of weights. The weights connect each coordinate to every
 hidden node. For notational breviety, we also denote $c(i) \defeq i \pmod{f} + 1$. We
 define the symmetric version of the RBM then as follows:
@@ -74,7 +230,7 @@ which is simply the sum over all suitable $k$'s of the derivatives we obtain
 from the regular RBM.
 
 Finally, we shall compute the first- and second order derivatives needed. Before
-jumping into this, we can note that the transformation $\Psi\right\Psi_S$ really
+jumping into this, we can note that the transformation $\Psi\rightarrow\Psi_S$ really
 only changed the indices of the weights and biases, but did not change how the
 $X_i$ components appear in the wavefunction. If we were to start carying out the
 same precedure as done for RBM in ??, we would quickly see that we end with the
