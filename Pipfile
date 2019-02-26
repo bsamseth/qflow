@@ -16,6 +16,7 @@ seaborn = "*"
 mypy = "*"
 blackcellmagic = "*"
 hypothesis = {extras = ["numpy"],version = "*"}
+sympy = "*"
 
 [packages]
 
