@@ -11,6 +11,7 @@
 #include "rbmwavefunction.hpp"
 #include "rbmsymmetricwavefunction.hpp"
 #include "dnn.hpp"
+#include "jastroworion.hpp"
 
 namespace py = pybind11;
 
@@ -44,6 +45,9 @@ void init_wavefunction(py::module& main) {
 
     py::class_<InteractingWavefunction, SimpleGaussian>(m, "InteractingWavefunction")
         .def(py::init<Real, Real, Real>(), py::arg("alpha") = 0.5, py::arg("beta") = 1, py::arg("a") = 0);
+
+    py::class_<JastrowOrion, Wavefunction>(m, "JastrowOrion")
+        .def(py::init<Real, Real>(), py::arg("beta") = 1.0, py::arg("gamma") = 0);
 
     py::class_<RBMWavefunction, Wavefunction>(m, "RBMWavefunction")
         .def(py::init<int, int, Real, Real>(),
