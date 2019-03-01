@@ -1,7 +1,7 @@
 import unittest
 
 import numpy as np
-from hypothesis import given
+from hypothesis import given, settings
 from hypothesis import strategies as st
 
 from qflow.samplers import MetropolisSampler
@@ -16,6 +16,7 @@ class TestSymmetryMetric(unittest.TestCase):
         D=st.integers(min_value=1, max_value=3),
         alpha=st.floats(min_value=0, max_value=100),
     )
+    @settings(deadline=None)
     def test_gaussian_is_symmetric(self, P, D, alpha):
         psi = SimpleGaussian(alpha)
         sampler = MetropolisSampler(np.empty((P, D)), psi, 0.1)
@@ -28,6 +29,7 @@ class TestSymmetryMetric(unittest.TestCase):
         N=st.integers(min_value=1, max_value=20),
         sigma2=st.floats(min_value=0.1, max_value=100),
     )
+    @settings(deadline=None)
     def test_symmetric_rbm_is_symmetric(self, P, D, N, sigma2):
         psi = SRBM(P * D, N, D, sigma2=sigma2)
         sampler = MetropolisSampler(np.empty((P, D)), psi, 0.1)
