@@ -17,6 +17,7 @@ mypy = "*"
 blackcellmagic = "*"
 hypothesis = {extras = ["numpy"],version = "*"}
 sympy = "*"
+pytest = "*"
 
 [packages]
 
