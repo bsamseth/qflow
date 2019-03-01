@@ -51,6 +51,20 @@ constexpr auto square(const T& x) {
     return x * x;
 }
 
+/** Type safe sign(x). */
+template <typename T> inline constexpr
+int sign(T x, std::false_type) {
+    return T(0) < x;
+}
+template <typename T> inline constexpr
+int sign(T x, std::true_type) {
+    return (T(0) < x) - (x < T(0));
+}
+template <typename T> inline constexpr
+int sign(T x) {
+    return sign(x, std::is_signed<T>());
+}
+
 // Random number generation.
 extern std::mt19937_64 rand_gen;  /**< Random number generator used. */
 extern std::uniform_real_distribution<Real> unif;  /**< Uniform random distribution (0, 1). */
