@@ -1,10 +1,13 @@
-#include <cstdlib>
 #include "mpiutil.hpp"
+
 #include "definitions.hpp"
 
-namespace mpiutil {
+#include <cstdlib>
 
-void initialize_mpi() {
+namespace mpiutil
+{
+void initialize_mpi()
+{
     int inited;
 
     MPI_Initialized(&inited);
@@ -18,7 +21,8 @@ void initialize_mpi() {
     }
 }
 
-void library_onexit() {
+void library_onexit()
+{
     int finalized;
 
     MPI_Finalized(&finalized);
@@ -26,4 +30,4 @@ void library_onexit() {
         MPI_Finalize();
 }
 
-}
+}  // namespace mpiutil

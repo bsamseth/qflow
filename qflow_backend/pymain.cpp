@@ -1,5 +1,6 @@
-#include <pybind11/pybind11.h>
 #include "mpiutil.hpp"
+
+#include <pybind11/pybind11.h>
 
 namespace py = pybind11;
 
@@ -9,7 +10,8 @@ void init_hamiltonian(py::module&);
 void init_optimizer(py::module&);
 void init_layer(py::module&);
 
-PYBIND11_MODULE(_qflow_backend, m) {
+PYBIND11_MODULE(_qflow_backend, m)
+{
     m.doc() = R"pbdoc(
         QFlow - Quantum Variational Monte Carlo Framework
         -----------------------
