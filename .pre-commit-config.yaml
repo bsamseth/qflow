@@ -6,10 +6,11 @@ repos:
     language_version: python3.7
 
 - repo: https://gist.github.com/bsamseth/0abbcee0655e8023abc63c2c2b27c122
-  rev: b1439b8c65c476e389a02c590d920196adfd5354
+  rev: ed37a7af537bbb369fc18f4f60be9d8cc746e8cb
   hooks:
   - id: isort
     language_version: python3.7
+  - id: clang-format
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v2.1.0
@@ -17,3 +18,4 @@ repos:
   - id: trailing-whitespace
     args: [--markdown-linebreak-ext=md]
   - id: check-yaml
+
