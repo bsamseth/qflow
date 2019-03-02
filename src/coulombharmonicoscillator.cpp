@@ -1,6 +1,5 @@
-#include "rbminteractinghamiltonian.hpp"
-
 #include "definitions.hpp"
+#include "rbminteractinghamiltonian.hpp"
 #include "system.hpp"
 RBMInteractingHamiltonian::RBMInteractingHamiltonian(Real omega)
     : RBMHarmonicOscillatorHamiltonian(omega)

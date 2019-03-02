@@ -1,6 +1,5 @@
-#include "interactingwavefunction.hpp"
-
 #include "definitions.hpp"
+#include "interactingwavefunction.hpp"
 #include "system.hpp"
 #include "vector.hpp"
 
