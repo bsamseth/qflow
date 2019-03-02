@@ -27,14 +27,14 @@ class Wavefunction {
          * @param system System to evaluate the Wavefunction for.
          * @return Value of the wavefunction for the given system.
          */
-        virtual Real operator() (System &system) = 0;
+        virtual Real operator() (const System &system) = 0;
 
         /**
          * Return grad(Psi)/Psi, with derivatives wrt. all parameters.
          * @param system System configuration to evaluate gradient for.
          * @return RowVector with derivatives.
          */
-        virtual RowVector gradient(System &system) = 0;
+        virtual RowVector gradient(const System &system) = 0;
 
 
         /**
@@ -49,7 +49,7 @@ class Wavefunction {
          * @param system System configuration to evaluate laplacian for.
          * @return The sum of laplacians for all particles in the system.
          */
-        virtual Real laplacian(System &system) = 0;
+        virtual Real laplacian(const System &system) = 0;
 
         Real symmetry_metric(Sampler& sampler, long samples, int max_permutations = 100);
 
