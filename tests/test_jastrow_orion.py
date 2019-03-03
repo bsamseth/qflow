@@ -5,16 +5,8 @@ import numpy
 from autograd import numpy as np, grad, hessian
 from hypothesis import given, settings
 from hypothesis import strategies as st
-from hypothesis.extra.numpy import arrays, array_shapes
-
+from .testutils import float_strat, array_strat
 from qflow.wavefunctions import JastrowOrion
-
-float_strat = lambda: st.floats(allow_nan=False, allow_infinity=False, width=32)
-array_strat = lambda max_size=10: arrays(
-    dtype=np.float64,
-    shape=array_shapes(min_dims=2, max_dims=2, min_side=2, max_side=max_size),
-    elements=float_strat(),
-)
 
 
 def jastrow_np(X, beta, gamma):
@@ -26,7 +18,7 @@ def jastrow_np(X, beta, gamma):
     return np.exp(exponent)
 
 
-@given(X=array_strat(), beta=float_strat(), gamma=float_strat())
+@given(X=array_strat(min_size=2), beta=float_strat(), gamma=float_strat())
 def test_eval(X, beta, gamma):
     psi = JastrowOrion(beta, gamma)
     with warnings.catch_warnings():
@@ -34,7 +26,7 @@ def test_eval(X, beta, gamma):
         assert np.isclose(jastrow_np(X, beta, gamma), psi(X))
 
 
-@given(X=array_strat(), beta=float_strat(), gamma=float_strat())
+@given(X=array_strat(min_size=2), beta=float_strat(), gamma=float_strat())
 @settings(deadline=None)
 def test_gradient(X, beta, gamma):
     with warnings.catch_warnings():
@@ -52,7 +44,7 @@ def test_gradient(X, beta, gamma):
         assert np.isclose(np_grad_gamma, actual[1])
 
 
-@given(X=array_strat(), beta=float_strat(), gamma=float_strat())
+@given(X=array_strat(min_size=2), beta=float_strat(), gamma=float_strat())
 @settings(deadline=None)
 def test_drift_force(X, beta, gamma):
     with warnings.catch_warnings():
@@ -66,7 +58,7 @@ def test_drift_force(X, beta, gamma):
 
 
 # Hessian calculation is super slow, limit size of inputs.
-@given(X=array_strat(max_size=5), beta=float_strat(), gamma=float_strat())
+@given(X=array_strat(min_size=2, max_size=5), beta=float_strat(), gamma=float_strat())
 @settings(deadline=None)
 def test_laplace(X, beta, gamma):
     with warnings.catch_warnings():

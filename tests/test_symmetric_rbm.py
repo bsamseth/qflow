@@ -40,7 +40,7 @@ def srbm_np(X, a, b, w, sigma2=1):
 def randomized(test_func, size=10, max_dim=20):
     """Run a test function on randomized setups of SRBMs"""
     for P, D, N in np.random.randint(1, max_dim, size=(size, 3)):
-        sigma2 = 1  # np.random.rand() * 5
+        sigma2 = np.random.rand() * 5
         srbm = SRBM(P * D, N, D, sigma2=sigma2)
         a, b, w = (
             np.array(srbm.parameters[:D]),
