@@ -13,10 +13,10 @@
 
 void sampler_sanity(int sampler_type)
 {
-    const int                           runs = 10000;
-    const System                        init_system(10, 3);
+    const int                runs = 10000;
+    const System             init_system(10, 3);
     const HarmonicOscillator H_0;
-    SimpleGaussian                      psi(0.5, 1);
+    SimpleGaussian           psi(0.5, 1);
 
     Sampler* sp;
     if (sampler_type == METRO_SAMPLER)
@@ -79,12 +79,12 @@ void sampler_integration_test(int  sampler_type,
                               Real analytic_tol,
                               Real numeric_tol)
 {
-    const Real                          gamma = 2.82843;
-    const Real                          alpha = 0.5;
-    const int                           runs  = 10000;
-    const System                        init_system(10, 3);
+    const Real               gamma = 2.82843;
+    const Real               alpha = 0.5;
+    const int                runs  = 10000;
+    const System             init_system(10, 3);
     const HarmonicOscillator H(1, gamma);
-    SimpleGaussian                      psi(alpha, gamma);
+    SimpleGaussian           psi(alpha, gamma);
 
     Sampler* sp;
     if (sampler_type == METRO_SAMPLER)

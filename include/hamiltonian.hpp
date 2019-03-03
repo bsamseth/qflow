@@ -87,6 +87,4 @@ public:
                                SgdOptimizer& optimizer,
                                Real          gamma,
                                bool          verbose) const;
-
 };
-

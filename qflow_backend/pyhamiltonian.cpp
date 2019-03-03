@@ -1,7 +1,7 @@
-#include "hamiltonian.hpp"
-#include "harmonicoscillator.hpp"
-#include "hardsphereharmonicoscillator.hpp"
 #include "coulombharmonicoscillator.hpp"
+#include "hamiltonian.hpp"
+#include "hardsphereharmonicoscillator.hpp"
+#include "harmonicoscillator.hpp"
 
 #include <Eigen/Dense>
 #include <pybind11/eigen.h>
@@ -22,7 +22,7 @@ void init_hamiltonian(py::module& main)
         .def("internal_potential", &Hamiltonian::internal_potential)
         .def("local_energy",
              py::overload_cast<const System&, Wavefunction&>(&Hamiltonian::local_energy,
-                                                       py::const_))
+                                                             py::const_))
         .def("local_energy",
              py::overload_cast<Sampler&, Wavefunction&, long>(
                  &Hamiltonian::local_energy, py::const_))
@@ -34,26 +34,25 @@ void init_hamiltonian(py::module& main)
         .def("mean_distance", &Hamiltonian::mean_distance)
         .def("onebodydensity", &Hamiltonian::onebodydensity);
 
-    py::class_<HarmonicOscillator, Hamiltonian>(
-        m, "HarmonicOscillator")
+    py::class_<HarmonicOscillator, Hamiltonian>(m, "HarmonicOscillator")
         .def(py::init<Real, Real, Real>(),
              py::arg("omega_ho") = 1,
-             py::arg("omega_z") = 1,
-             py::arg("h")       = NUMMERIC_DIFF_STEP)
+             py::arg("omega_z")  = 1,
+             py::arg("h")        = NUMMERIC_DIFF_STEP)
         .def("gross_pitaevskii_energy", &HarmonicOscillator::gross_pitaevskii_energy);
 
     py::class_<HardSphereHarmonicOscillator, HarmonicOscillator>(
         m, "HardSphereHarmonicOscillator")
         .def(py::init<Real, Real, Real, Real>(),
              py::arg("omega_ho") = 1,
-             py::arg("omega_z") = 1,
-             py::arg("a")       = 0,
-             py::arg("h")       = NUMMERIC_DIFF_STEP);
+             py::arg("omega_z")  = 1,
+             py::arg("a")        = 0,
+             py::arg("h")        = NUMMERIC_DIFF_STEP);
 
     py::class_<CoulombHarmonicOscillator, HarmonicOscillator>(
         m, "CoulombHarmonicOscillator")
         .def(py::init<Real, Real, Real>(),
              py::arg("omega_ho") = 1,
-             py::arg("omega_z") = 1,
-             py::arg("h") = NUMMERIC_DIFF_STEP);
+             py::arg("omega_z")  = 1,
+             py::arg("h")        = NUMMERIC_DIFF_STEP);
 }

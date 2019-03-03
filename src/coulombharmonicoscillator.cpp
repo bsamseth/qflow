@@ -1,5 +1,6 @@
-#include "definitions.hpp"
 #include "coulombharmonicoscillator.hpp"
+
+#include "definitions.hpp"
 #include "system.hpp"
 
 Real CoulombHarmonicOscillator::internal_potential(const System& system) const

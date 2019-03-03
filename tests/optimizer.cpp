@@ -10,10 +10,10 @@
 
 TEST(GradientDecent, findsOptmalForNonInteracting)
 {
-    System                        init_system = System::Zero(10, 3);
-    SimpleGaussian                psi(0.3, 1);
+    System             init_system = System::Zero(10, 3);
+    SimpleGaussian     psi(0.3, 1);
     HarmonicOscillator H(1);
-    ImportanceSampler             sampler(init_system, psi, 0.5);
+    ImportanceSampler  sampler(init_system, psi, 0.5);
 
     AdamOptimizer adam(psi.get_parameters().size(), 0.01);
 

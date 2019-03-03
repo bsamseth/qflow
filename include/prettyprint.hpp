@@ -536,4 +536,3 @@ inline typename enable_if<::pretty_print::is_container<T>::value,
                container);
 }
 }  // namespace std
-

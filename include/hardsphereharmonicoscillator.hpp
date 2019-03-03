@@ -18,9 +18,9 @@ public:
     using HarmonicOscillator::HarmonicOscillator;
 
     HardSphereHarmonicOscillator(Real omega_ho = 1,
-                                 Real omega_z = 1,
-                                 Real a       = 0,
-                                 Real h       = NUMMERIC_DIFF_STEP);
+                                 Real omega_z  = 1,
+                                 Real a        = 0,
+                                 Real h        = NUMMERIC_DIFF_STEP);
 
     Real internal_potential(const System&) const override;
 

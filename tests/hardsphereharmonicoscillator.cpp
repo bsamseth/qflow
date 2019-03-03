@@ -11,9 +11,9 @@
 class HardSphereHarmonicOscillatorTest : public ::testing::Test
 {
 protected:
-    const Real             a = 0.0043;
-    System*                s1;
-    System*                s2;
+    const Real                   a = 0.0043;
+    System*                      s1;
+    System*                      s2;
     HardSphereHarmonicOscillator H_1 {1, 1, a};
     HardSphereHarmonicOscillator H_2 {1, 2.8, a};
     HardSphereHarmonicOscillator H_3 {1, 2.8, 0.0};
@@ -55,10 +55,10 @@ TEST_F(HardSphereHarmonicOscillatorTest, potential)
 
 TEST_F(HardSphereHarmonicOscillatorTest, localEnergy)
 {
-    const Real                    gamma = 2.8;
-    SimpleGaussian                psi_0(0.5, gamma);
-    HardSphereWavefunction       psi_T(0.5, gamma, a);
-    HarmonicOscillator H_0(1, gamma);
+    const Real             gamma = 2.8;
+    SimpleGaussian         psi_0(0.5, gamma);
+    HardSphereWavefunction psi_T(0.5, gamma, a);
+    HarmonicOscillator     H_0(1, gamma);
 
     // With a = 0, no difference to the simple case shoudl be observed.
     EXPECT_DOUBLE_EQ(H_0.local_energy(*s1, psi_0), H_3.local_energy(*s1, psi_0));

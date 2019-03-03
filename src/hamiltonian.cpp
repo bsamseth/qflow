@@ -9,9 +9,7 @@
 #include <iostream>
 #include <limits>
 
-Hamiltonian::Hamiltonian(Real h) : h_(h)
-{
-}
+Hamiltonian::Hamiltonian(Real h) : h_(h) {}
 
 Real Hamiltonian::kinetic_energy_numeric(const System& system, Wavefunction& psi) const
 {
@@ -23,7 +21,7 @@ Real Hamiltonian::kinetic_energy_numeric(const System& system, Wavefunction& psi
         for (int d = 0; d < s.cols(); ++d)
         {
             const auto temp = s(i, d);
-            s(i, d)    = temp + h_;
+            s(i, d)         = temp + h_;
             E_k += psi(s);
             s(i, d) = temp - h_;
             E_k += psi(s);

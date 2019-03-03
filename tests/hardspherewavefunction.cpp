@@ -9,7 +9,7 @@
 
 TEST(HardSphereWavefunction, zero_system)
 {
-    System                  s = System::Zero(3, 10);
+    System                 s = System::Zero(3, 10);
     HardSphereWavefunction psi(0.5, 1, 0);
 
     // System all at origin - impossible for interacting case.
@@ -30,7 +30,7 @@ TEST(HardSphereWavefunction, call_with_beta)
 
     HardSphereWavefunction psi_1(0.5, 2.8, 0.0043);
     HardSphereWavefunction psi_2(0.5, 2.8, 0.);
-    SimpleGaussian          psi(0.5, 2.8);
+    SimpleGaussian         psi(0.5, 2.8);
 
     // With a set to zero, this system should behave as a simple gaussian wavefunc.
     EXPECT_DOUBLE_EQ(psi(s), psi_2(s));

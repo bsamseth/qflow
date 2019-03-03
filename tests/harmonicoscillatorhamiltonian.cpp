@@ -1,6 +1,5 @@
-#include "harmonicoscillator.hpp"
-
 #include "definitions.hpp"
+#include "harmonicoscillator.hpp"
 #include "importancesampler.hpp"
 #include "metropolissampler.hpp"
 #include "simplegaussian.hpp"
@@ -28,7 +27,7 @@ int dim_gen()
 class HarmonicOscillatorTest : public ::testing::Test
 {
 protected:
-    System*                       s;
+    System*            s;
     HarmonicOscillator H_1 {1, 1};
     HarmonicOscillator H_2 {1, 2.8};
 

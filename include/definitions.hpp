@@ -19,10 +19,10 @@ constexpr Real NUMMERIC_DIFF_STEP
     = 0.001; /**< Default step used in numerical differentiation. */
 
 /**
-* Define various linear algebra types. Note that row-major storage order
-* is used. Eigen should be equally performing with both, but row-major is
-* compatible with NumPy and hence bindings are easy to make.
-*/
+ * Define various linear algebra types. Note that row-major storage order
+ * is used. Eigen should be equally performing with both, but row-major is
+ * compatible with NumPy and hence bindings are easy to make.
+ */
 using Matrix    = Eigen::Matrix<Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 using Array     = Eigen::Array<Real, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 using Vector    = Eigen::Matrix<Real, Eigen::Dynamic, 1>;

@@ -17,9 +17,7 @@ protected:
 public:
     HarmonicOscillator(Real omega_ho = 1);
 
-    HarmonicOscillator(Real omega_ho,
-                       Real omega_z,
-                       Real h        = NUMMERIC_DIFF_STEP);
+    HarmonicOscillator(Real omega_ho, Real omega_z, Real h = NUMMERIC_DIFF_STEP);
 
     Real external_potential(const System&) const override;
 

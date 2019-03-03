@@ -1,8 +1,8 @@
 #include "gibbssampler.hpp"
 
 #include "definitions.hpp"
-#include "optimizer.hpp"
 #include "harmonicoscillator.hpp"
+#include "optimizer.hpp"
 #include "rbmwavefunction.hpp"
 #include "system.hpp"
 #include "vector.hpp"
@@ -11,11 +11,11 @@
 
 TEST(GibbsSampler, integrationTest)
 {
-    System                           init_system = System::Zero(2, 2);
-    RBMWavefunction                  rbm(4, 2, 0.5, RBMWavefunction::GIBBS_FACTOR);
+    System             init_system = System::Zero(2, 2);
+    RBMWavefunction    rbm(4, 2, 0.5, RBMWavefunction::GIBBS_FACTOR);
     HarmonicOscillator H;
-    GibbsSampler                     sampler(init_system, rbm);
-    SgdOptimizer                     sgd(0.9);
+    GibbsSampler       sampler(init_system, rbm);
+    SgdOptimizer       sgd(0.9);
 
     H.optimize_wavefunction(rbm, sampler, 10000, 100, sgd, 0, false);
 

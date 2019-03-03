@@ -1,4 +1,5 @@
 #include "hardspherewavefunction.hpp"
+
 #include "definitions.hpp"
 #include "system.hpp"
 #include "vector.hpp"

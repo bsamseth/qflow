@@ -1,9 +1,9 @@
 #include "rbmwavefunction.hpp"
 
+#include "harmonicoscillator.hpp"
 #include "importancesampler.hpp"
 #include "metropolissampler.hpp"
 #include "prettyprint.hpp"
-#include "harmonicoscillator.hpp"
 
 #include <gtest/gtest.h>
 #include <string>
@@ -153,7 +153,7 @@ TEST_F(RBMWavefunctionTest, HarmonicOscillator)
  */
 TEST(RBMWavefunction, correctForIdealCase)
 {
-    const Real                       sigma2 = 1;
+    const Real         sigma2 = 1;
     HarmonicOscillator H;
 
     // 1000, why not?
@@ -180,11 +180,11 @@ TEST(RBMWavefunction, correctForIdealCase)
 
 TEST(RBMWavefunction, trainSimpleCase3D)
 {
-    System                           init_system(3, 2);
-    RBMWavefunction                  rbm(6, 2);
-    ImportanceSampler                sampler(init_system, rbm, 0.5);
+    System             init_system(3, 2);
+    RBMWavefunction    rbm(6, 2);
+    ImportanceSampler  sampler(init_system, rbm, 0.5);
     HarmonicOscillator H;
-    AdamOptimizer                    sgd(rbm.get_parameters().size());
+    AdamOptimizer      sgd(rbm.get_parameters().size());
 
     H.optimize_wavefunction(rbm, sampler, 5000, 100, sgd, 0.0, false);
 
