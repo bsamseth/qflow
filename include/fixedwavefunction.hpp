@@ -18,7 +18,7 @@ private:
     Wavefunction* const psi;
 
 public:
-    FixedWavefunction(Wavefunction& wavefunction) : psi(&wavefunction) {}
+    explicit FixedWavefunction(Wavefunction& wavefunction) : psi(&wavefunction) {}
 
     Real             operator()(const System& system) override;
     RowVector        gradient(const System& system) override;

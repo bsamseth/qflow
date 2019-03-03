@@ -10,7 +10,7 @@ private:
     Wavefunction* const f;
 
 public:
-    SumPooling(Wavefunction&);
+    explicit SumPooling(Wavefunction&);
 
     Real      operator()(const System&) override;
     RowVector gradient(const System&) override;

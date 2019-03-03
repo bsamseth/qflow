@@ -18,7 +18,7 @@ public:
     /**
      * Construct an SGD optimizer with a given learning rate.
      */
-    SgdOptimizer(Real eta = 0.1);
+    explicit SgdOptimizer(Real eta = 0.1);
 
     /**
      * Return a parameter update meant to be added to the existing parameters

@@ -20,7 +20,7 @@ public:
      * Instantiate a Hamiltonian with the given parameters.
      * @param h Step to use in numerical differentiation.
      */
-    Hamiltonian(Real h = NUMMERIC_DIFF_STEP);
+    explicit Hamiltonian(Real h = NUMMERIC_DIFF_STEP);
 
     /**
      * Compute the oscillator trap potential for a given system.
