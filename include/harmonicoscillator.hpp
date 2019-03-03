@@ -50,6 +50,6 @@ inline Real HarmonicOscillator::gross_pitaevskii_energy(const System& system,
     const int  D     = system.cols();
     const Real alpha = psi.get_parameters()[0];
     const Real beta  = psi.get_parameters()[1];
-    assert(beta == _omega_z);  // GP equation used is for when gamma = beta = omega_z.
+    assert(beta == omega_z_);  // GP equation used is for when gamma = beta = omega_z.
     return N * (1 / (4 * alpha) + alpha) * (D == 3 ? 2 + beta : D) * 0.5;
 }
