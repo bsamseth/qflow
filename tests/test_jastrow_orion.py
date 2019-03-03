@@ -1,12 +1,15 @@
-import warnings
 import math
+import warnings
 
 import numpy
-from autograd import numpy as np, grad, hessian
+from autograd import grad, hessian
+from autograd import numpy as np
 from hypothesis import given, settings
 from hypothesis import strategies as st
-from .testutils import float_strat, array_strat
+
 from qflow.wavefunctions import JastrowOrion
+
+from .testutils import array_strat, float_strat
 
 
 def jastrow_np(X, beta, gamma):

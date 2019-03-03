@@ -1,10 +1,10 @@
 import numpy as np
-
 from hypothesis import given, settings
 from hypothesis import strategies as st
-from .testutils import array_strat, assert_close
 
 from qflow.layers.activations import exponential, identity, relu, sigmoid, tanh
+
+from .testutils import array_strat, assert_close
 
 
 @given(array_strat(max_size=100))

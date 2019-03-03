@@ -1,6 +1,6 @@
 import numpy as np
 from hypothesis import strategies as st
-from hypothesis.extra.numpy import arrays, array_shapes
+from hypothesis.extra.numpy import array_shapes, arrays
 
 float_strat = lambda: st.floats(allow_nan=False, allow_infinity=False, width=32)
 array_strat = lambda min_size=1, max_size=10: arrays(
