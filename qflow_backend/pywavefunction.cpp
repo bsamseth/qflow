@@ -1,6 +1,6 @@
 #include "dnn.hpp"
 #include "fixedwavefunction.hpp"
-#include "interactingwavefunction.hpp"
+#include "hardspherewavefunction.hpp"
 #include "jastroworion.hpp"
 #include "rbmsymmetricwavefunction.hpp"
 #include "rbmwavefunction.hpp"
@@ -52,7 +52,7 @@ void init_wavefunction(py::module& main)
     py::class_<SimpleGaussian, Wavefunction>(m, "SimpleGaussian")
         .def(py::init<Real, Real>(), py::arg("alpha") = 0.5, py::arg("beta") = 1);
 
-    py::class_<InteractingWavefunction, SimpleGaussian>(m, "InteractingWavefunction")
+    py::class_<HardSphereWavefunction, SimpleGaussian>(m, "HardSphereWavefunction")
         .def(py::init<Real, Real, Real>(),
              py::arg("alpha") = 0.5,
              py::arg("beta")  = 1,

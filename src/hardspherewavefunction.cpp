@@ -1,17 +1,17 @@
+#include "hardspherewavefunction.hpp"
 #include "definitions.hpp"
-#include "interactingwavefunction.hpp"
 #include "system.hpp"
 #include "vector.hpp"
 
 #include <cassert>
 #include <cmath>
 
-InteractingWavefunction::InteractingWavefunction(Real alpha, Real beta, Real a)
+HardSphereWavefunction::HardSphereWavefunction(Real alpha, Real beta, Real a)
     : SimpleGaussian(vector_from_sequence({alpha, beta, a}))
 {
 }
 
-Real InteractingWavefunction::correlation(System& system) const
+Real HardSphereWavefunction::correlation(const System& system) const
 {
     const auto a = _parameters[2];
     Real       f = 1;
@@ -30,12 +30,12 @@ Real InteractingWavefunction::correlation(System& system) const
     return f;
 }
 
-Real InteractingWavefunction::operator()(System& system)
+Real HardSphereWavefunction::operator()(const System& system)
 {
     return correlation(system) * SimpleGaussian::operator()(system);
 }
 
-Real InteractingWavefunction::laplacian(System& system)
+Real HardSphereWavefunction::laplacian(const System& system)
 {
     const auto alpha              = _parameters[0];
     const auto beta               = _parameters[1];

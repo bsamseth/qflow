@@ -10,18 +10,18 @@
 /**
  * Class modeling the N-boson wavefunction with the Jastrow factor.
  */
-class InteractingWavefunction : public SimpleGaussian
+class HardSphereWavefunction : public SimpleGaussian
 {
 public:
-    InteractingWavefunction(Real alpha = 0.5, Real beta = 1, Real a = 0);
+    HardSphereWavefunction(Real alpha = 0.5, Real beta = 1, Real a = 0);
 
-    Real operator()(System&) override;
-    Real correlation(System&) const;
+    Real operator()(const System&) override;
+    Real correlation(const System&) const;
     Real drift_force(const System&, int, int) override;
-    Real laplacian(System& system) override;
+    Real laplacian(const System& system) override;
 };
 
-inline Real InteractingWavefunction::drift_force(const System&, int, int)
+inline Real HardSphereWavefunction::drift_force(const System&, int, int)
 {
     throw std::logic_error(
         "Importance sampling not implemented for interacting system.");

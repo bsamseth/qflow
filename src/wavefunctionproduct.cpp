@@ -22,7 +22,7 @@ void WavefunctionProduct::set_parameters(const RowVector& parameters)
     set_parameters(a, b);
 }
 
-RowVector WavefunctionProduct::gradient(System& system)
+RowVector WavefunctionProduct::gradient(const System& system)
 {
     RowVector grad_a = f->gradient(system);
     RowVector grad_b = g->gradient(system);

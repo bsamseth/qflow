@@ -7,9 +7,7 @@
 //
 // Usage:
 // Include this header, and operator<< will "just work".
-
-#ifndef H_PRETTY_PRINT
-#define H_PRETTY_PRINT
+#pragma once
 
 #include <cstddef>
 #include <iterator>
@@ -539,4 +537,3 @@ inline typename enable_if<::pretty_print::is_container<T>::value,
 }
 }  // namespace std
 
-#endif  // H_PRETTY_PRINT

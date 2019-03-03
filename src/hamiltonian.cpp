@@ -9,36 +9,37 @@
 #include <iostream>
 #include <limits>
 
-Hamiltonian::Hamiltonian(Real omega_z, Real a, Real h) : _omega_z(omega_z), _a(a), _h(h)
+Hamiltonian::Hamiltonian(Real h) : h_(h)
 {
 }
 
-Real Hamiltonian::kinetic_energy_numeric(System& system, Wavefunction& psi) const
+Real Hamiltonian::kinetic_energy_numeric(const System& system, Wavefunction& psi) const
 {
     Real E_k = -2 * (system.cols() * system.rows()) * psi(system);
 
-    for (int i = 0; i < system.rows(); ++i)
+    System& s = const_cast<System&>(system);
+    for (int i = 0; i < s.rows(); ++i)
     {
-        for (int d = 0; d < system.cols(); ++d)
+        for (int d = 0; d < s.cols(); ++d)
         {
-            const auto temp = system(i, d);
-            system(i, d)    = temp + _h;
-            E_k += psi(system);
-            system(i, d) = temp - _h;
-            E_k += psi(system);
-            system(i, d) = temp;
+            const auto temp = s(i, d);
+            s(i, d)    = temp + h_;
+            E_k += psi(s);
+            s(i, d) = temp - h_;
+            E_k += psi(s);
+            s(i, d) = temp;
         }
     }
 
-    return -0.5 * E_k / (_h * _h);
+    return -0.5 * E_k / (h_ * h_);
 }
 
-Real Hamiltonian::kinetic_energy(System& system, Wavefunction& psi) const
+Real Hamiltonian::kinetic_energy(const System& system, Wavefunction& psi) const
 {
     return -0.5 * psi.laplacian(system);
 }
 
-Real Hamiltonian::local_energy_numeric(System& system, Wavefunction& psi) const
+Real Hamiltonian::local_energy_numeric(const System& system, Wavefunction& psi) const
 {
     Real wavefunc = psi(system);
     if (wavefunc == 0)
@@ -50,7 +51,7 @@ Real Hamiltonian::local_energy_numeric(System& system, Wavefunction& psi) const
            + internal_potential(system);
 }
 
-Real Hamiltonian::local_energy(System& system, Wavefunction& psi) const
+Real Hamiltonian::local_energy(const System& system, Wavefunction& psi) const
 {
     return external_potential(system) + internal_potential(system)
            + kinetic_energy(system, psi);
@@ -128,7 +129,7 @@ void Hamiltonian::optimize_wavefunction(Wavefunction& psi,
                                         int           sample_points,
                                         SgdOptimizer& optimizer,
                                         Real          gamma,
-                                        bool          verbose)
+                                        bool          verbose) const
 {
     for (int iteration = 0; iteration < iterations; ++iteration)
     {

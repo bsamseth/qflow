@@ -54,10 +54,10 @@ set(HEADERS
     include/fixedwavefunction.hpp
     include/gibbssampler.hpp
     include/hamiltonian.hpp
-    include/harmonicoscillatorhamiltonian.hpp
+    include/harmonicoscillator.hpp
     include/importancesampler.hpp
-    include/interactinghamiltonian.hpp
-    include/interactingwavefunction.hpp
+    include/hardsphereharmonicoscillator.hpp
+    include/hardspherewavefunction.hpp
     include/layer.hpp
     include/metropolissampler.hpp
     include/mpiutil.hpp
@@ -65,8 +65,7 @@ set(HEADERS
     include/optimizer.hpp
     include/prettyprint.hpp
     include/rbm.hpp
-    include/rbmharmonicoscillatorhamiltonian.hpp
-    include/rbminteractinghamiltonian.hpp
+    include/coulombharmonicoscillator.hpp
     include/rbmsymmetricwavefunction.hpp
     include/rbmwavefunction.hpp
     include/sampler.hpp

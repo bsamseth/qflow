@@ -29,18 +29,18 @@ void Dnn::addLayer(layer::DenseLayer& new_layer)
     assert(k == paramCount);
 }
 
-Real Dnn::operator()(System& system)
+Real Dnn::operator()(const System& system)
 {
     assert(layers[layers.size() - 1]->getWeights().cols()
            == 1);  // Output layer should have only one output.
 
-    Eigen::Map<RowVector> x(system.data(), system.size());  // Reshape as (1 x n) matrix
+    Eigen::Map<RowVector> x(const_cast<Real*>(system.data()), system.size());  // Reshape as (1 x n) matrix
     forward(x);
 
     return layers[layers.size() - 1]->getOutputs()(0, 0);
 }
 
-RowVector Dnn::gradient(System& system)
+RowVector Dnn::gradient(const System& system)
 {
     Real output = (*this)(system);
     backward();
@@ -82,12 +82,12 @@ Real Dnn::drift_force(const System& system, int k, int dim_index)
     return 2 * dadx_j.sum() / layers[layers.size() - 1]->getOutputs()(0, 0);
 }
 
-Real Dnn::laplacian(System& system)
+Real Dnn::laplacian(const System& system)
 {
     assert(layers[layers.size() - 1]->getWeights().cols()
            == 1);  // Output layer should have only one output.
 
-    Eigen::Map<RowVector> x(system.data(), system.size());  // Reshape as (1 x n) matrix
+    Eigen::Map<RowVector> x(const_cast<Real*>(system.data()), system.size());  // Reshape as (1 x n) matrix
     forward(x);
 
     Real res = 0;

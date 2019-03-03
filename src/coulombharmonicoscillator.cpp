@@ -1,12 +1,8 @@
 #include "definitions.hpp"
-#include "rbminteractinghamiltonian.hpp"
+#include "coulombharmonicoscillator.hpp"
 #include "system.hpp"
-RBMInteractingHamiltonian::RBMInteractingHamiltonian(Real omega)
-    : RBMHarmonicOscillatorHamiltonian(omega)
-{
-}
 
-Real RBMInteractingHamiltonian::internal_potential(System& system) const
+Real CoulombHarmonicOscillator::internal_potential(const System& system) const
 {
     const auto P   = system.rows();
     Real       pot = 0;

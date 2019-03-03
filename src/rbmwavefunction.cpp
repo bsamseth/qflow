@@ -27,7 +27,7 @@ Real RBMWavefunction::v_j(int j, const System& system) const
     return _parameters[b(j)] + v / _sigma2;
 }
 
-Real RBMWavefunction::operator()(System& system)
+Real RBMWavefunction::operator()(const System& system)
 {
     // Ensure that system is compatible with rbm, i.e. P*D = M.
     assert(system.rows() * system.cols() == _M);
@@ -51,22 +51,22 @@ Real RBMWavefunction::operator()(System& system)
         return visible * hidden;
 }
 
-Real RBMWavefunction::deriv_a(int k, System& system) const
+Real RBMWavefunction::deriv_a(int k, const System& system) const
 {
     return _root_factor * (system.data()[k] - _parameters[a(k)]) / _sigma2;
 }
 
-Real RBMWavefunction::deriv_b(int k, System& system) const
+Real RBMWavefunction::deriv_b(int k, const System& system) const
 {
     return _root_factor / (1 + std::exp(-v_j(k, system)));
 }
 
-Real RBMWavefunction::deriv_w(int k, int l, System& system) const
+Real RBMWavefunction::deriv_w(int k, int l, const System& system) const
 {
     return _root_factor / (1 + std::exp(-v_j(l, system))) * system.data()[k] / _sigma2;
 }
 
-Real RBMWavefunction::laplacian(System& system)
+Real RBMWavefunction::laplacian(const System& system)
 {
     std::vector<Real> exp_v(_N);
     for (int j = 0; j < _N; ++j)
@@ -94,7 +94,7 @@ Real RBMWavefunction::laplacian(System& system)
     return res;
 }
 
-RowVector RBMWavefunction::gradient(System& system)
+RowVector RBMWavefunction::gradient(const System& system)
 {
     RowVector grad_vec(_parameters.size());
 

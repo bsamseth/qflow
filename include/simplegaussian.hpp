@@ -16,11 +16,11 @@ public:
 
     /* SimpleGaussian(const RowVector& parameters); */
 
-    Real operator()(System&) override;
+    Real operator()(const System&) override;
 
-    RowVector gradient(System& system) override;
+    RowVector gradient(const System& system) override;
 
-    Real laplacian(System& system) override;
+    Real laplacian(const System& system) override;
 
     Real drift_force(const System& system, int k, int dim_index) override;
 

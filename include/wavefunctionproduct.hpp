@@ -13,16 +13,16 @@ private:
 public:
     WavefunctionProduct(Wavefunction&, Wavefunction&);
 
-    Real      operator()(System&) override;
-    RowVector gradient(System&) override;
+    Real      operator()(const System&) override;
+    RowVector gradient(const System&) override;
     Real      drift_force(const System& system, int k, int dim_index) override;
-    Real      laplacian(System&) override;
+    Real      laplacian(const System&) override;
 
     void set_parameters(const RowVector&) override;
     void set_parameters(const RowVector&, const RowVector&);
 };
 
-inline Real WavefunctionProduct::operator()(System& system)
+inline Real WavefunctionProduct::operator()(const System& system)
 {
     return (*f)(system) * (*g)(system);
 }
@@ -32,7 +32,7 @@ inline Real WavefunctionProduct::drift_force(const System& system, int k, int di
     return f->drift_force(system, k, dim_index) + g->drift_force(system, k, dim_index);
 }
 
-inline Real WavefunctionProduct::laplacian(System& system)
+inline Real WavefunctionProduct::laplacian(const System& system)
 {
     return f->laplacian(system) + g->laplacian(system)
            + 0.5 * f->drift_force(system).dot(g->drift_force(system));

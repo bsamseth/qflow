@@ -1,7 +1,7 @@
 #include "optimizer.hpp"
 
 #include "definitions.hpp"
-#include "harmonicoscillatorhamiltonian.hpp"
+#include "harmonicoscillator.hpp"
 #include "importancesampler.hpp"
 #include "simplegaussian.hpp"
 #include "system.hpp"
@@ -12,7 +12,7 @@ TEST(GradientDecent, findsOptmalForNonInteracting)
 {
     System                        init_system = System::Zero(10, 3);
     SimpleGaussian                psi(0.3, 1);
-    HarmonicOscillatorHamiltonian H(1);
+    HarmonicOscillator H(1);
     ImportanceSampler             sampler(init_system, psi, 0.5);
 
     AdamOptimizer adam(psi.get_parameters().size(), 0.01);

@@ -1,4 +1,4 @@
-#include "harmonicoscillatorhamiltonian.hpp"
+#include "harmonicoscillator.hpp"
 
 #include "definitions.hpp"
 #include "importancesampler.hpp"
@@ -25,12 +25,12 @@ int dim_gen()
 }
 }  // namespace
 
-class HarmonicOscillatorHamiltonianTest : public ::testing::Test
+class HarmonicOscillatorTest : public ::testing::Test
 {
 protected:
     System*                       s;
-    HarmonicOscillatorHamiltonian H_1 {1};
-    HarmonicOscillatorHamiltonian H_2 {2.8};
+    HarmonicOscillator H_1 {1, 1};
+    HarmonicOscillator H_2 {1, 2.8};
 
     virtual void SetUp()
     {
@@ -44,7 +44,7 @@ protected:
     virtual void TearDown() { delete s; }
 };
 
-TEST_F(HarmonicOscillatorHamiltonianTest, potential)
+TEST_F(HarmonicOscillatorTest, potential)
 {
     // Calculated by hand/calculator.
     EXPECT_DOUBLE_EQ(4.4791622360462391, H_2.external_potential(*s));
@@ -53,7 +53,7 @@ TEST_F(HarmonicOscillatorHamiltonianTest, potential)
     EXPECT_DOUBLE_EQ(0, H_1.internal_potential(*s));
 }
 
-TEST_F(HarmonicOscillatorHamiltonianTest, potential2D)
+TEST_F(HarmonicOscillatorTest, potential2D)
 {
     System s(2, 1);
     s.col(0) << 0.75, -1.5;
@@ -68,7 +68,7 @@ TEST_F(HarmonicOscillatorHamiltonianTest, potential2D)
     EXPECT_DOUBLE_EQ(0, H_1.internal_potential(s));
 }
 
-TEST_F(HarmonicOscillatorHamiltonianTest, localEnergyAlphaBetaOmegaZ)
+TEST_F(HarmonicOscillatorTest, localEnergyAlphaBetaOmegaZ)
 {
     SimpleGaussian psi_1(0.6, 1);
     SimpleGaussian psi_2(0.6, 2.8);
@@ -87,7 +87,7 @@ TEST_F(HarmonicOscillatorHamiltonianTest, localEnergyAlphaBetaOmegaZ)
  * Therefore, we can run randomized tests, as the expression used to check
  * against is not the same as the one we use the generate our answer.
  */
-TEST_F(HarmonicOscillatorHamiltonianTest, local_energy_simple)
+TEST_F(HarmonicOscillatorTest, local_energy_simple)
 {
     const Real     alpha = 0.5;
     SimpleGaussian psi(alpha);

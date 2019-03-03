@@ -35,7 +35,7 @@ public:
      * @param system configuration to evaluate for.
      * @return 1/psi d(psi)/d(a_k)
      */
-    Real deriv_a(int k, System& system) const override;
+    Real deriv_a(int k, const System& system) const override;
 
     /**
      * @param k first weight index.
@@ -43,13 +43,13 @@ public:
      * @param system configuration to evaluate for.
      * @return 1/psi d(psi)/d(w_kl)
      */
-    Real deriv_w(int k, int l, System& system) const override;
+    Real deriv_w(int k, int l, const System& system) const override;
 
     /**
      * @param system configuration to evaluate the gradient for.
      * @return Gradient of the expected local energy, wrt. all the parameters.
      */
-    RowVector gradient(System& system) override;
+    RowVector gradient(const System& system) override;
 
     // The following functions return the index into the full parameter vector which
     // point to the specified parameter.

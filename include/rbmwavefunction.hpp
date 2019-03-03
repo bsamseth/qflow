@@ -43,28 +43,28 @@ public:
      * @param system configuration to evaluate the gradient for.
      * @return Gradient of the expected local energy, wrt. all the parameters.
      */
-    RowVector gradient(System& system) override;
+    RowVector gradient(const System& system) override;
 
     /**
      * Evaluate the RBM.
      * @param system configuration to evaluate for.
      * @return Explicit value of the wavefunction, as given by the RBM.
      */
-    Real operator()(System& system) override;
+    Real operator()(const System& system) override;
 
     /**
      * @param k bias index.
      * @param system configuration to evaluate for.
      * @return 1/psi d(psi)/d(a_k)
      */
-    virtual Real deriv_a(int k, System& system) const;
+    virtual Real deriv_a(int k, const System& system) const;
 
     /**
      * @param k bias index.
      * @param system configuration to evaluate for.
      * @return 1/psi d(psi)/d(b_k)
      */
-    Real deriv_b(int k, System& system) const;
+    Real deriv_b(int k, const System& system) const;
 
     /**
      * @param k first weight index.
@@ -72,13 +72,13 @@ public:
      * @param system configuration to evaluate for.
      * @return 1/psi d(psi)/d(w_kl)
      */
-    virtual Real deriv_w(int k, int l, System& system) const;
+    virtual Real deriv_w(int k, int l, const System& system) const;
 
     /**
      * @param system configuration to evaluate for.
      * @return 1/psi laplacian(psi)
      */
-    Real laplacian(System& system) override;
+    Real laplacian(const System& system) override;
 
     /**
      * Return the drift force, as used in importance sampling.

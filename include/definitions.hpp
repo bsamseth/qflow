@@ -16,7 +16,7 @@ using Real = double;
 constexpr Real PI = 3.14159265358979323846; /**< Circle constant. */
 
 constexpr Real NUMMERIC_DIFF_STEP
-    = 0.001; /**< Default step used in numerical differentiation.
+    = 0.001; /**< Default step used in numerical differentiation. */
 
 /**
 * Define various linear algebra types. Note that row-major storage order

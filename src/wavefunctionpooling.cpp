@@ -11,7 +11,7 @@ void SumPooling::set_parameters(const RowVector& a)
     _parameters = a;
 }
 
-Real SumPooling::operator()(System& system)
+Real SumPooling::operator()(const System& system)
 {
     const int N   = system.rows();
     Real      sum = 0;
@@ -29,7 +29,7 @@ Real SumPooling::operator()(System& system)
     return sum;
 }
 
-RowVector SumPooling::gradient(System& system)
+RowVector SumPooling::gradient(const System& system)
 {
     const int N    = system.rows();
     RowVector grad = RowVector::Zero(f->get_parameters().size());
@@ -66,7 +66,7 @@ Real SumPooling::drift_force(const System& system, int k, int dim_index)
     return drift / (*this)(system);
 }
 
-Real SumPooling::laplacian(System& system)
+Real SumPooling::laplacian(const System& system)
 {
     const int N   = system.rows();
     Real      res = 0;

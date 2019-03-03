@@ -20,17 +20,17 @@ private:
 public:
     FixedWavefunction(Wavefunction& wavefunction) : psi(&wavefunction) {}
 
-    Real             operator()(System& system) override;
-    RowVector        gradient(System& system) override;
+    Real             operator()(const System& system) override;
+    RowVector        gradient(const System& system) override;
     Real             drift_force(const System& system, int k, int dim_index) override;
     RowVector        drift_force(const System& system);
-    Real             laplacian(System& system) override;
+    Real             laplacian(const System& system) override;
     const RowVector& get_parameters() const override;
     void             set_parameters(const RowVector& parameters) override;
     void             set_parameters(std::initializer_list<Real> parameters);
 };
 
-inline Real FixedWavefunction::operator()(System& system)
+inline Real FixedWavefunction::operator()(const System& system)
 {
     return psi->operator()(system);
 }
@@ -42,7 +42,7 @@ inline RowVector FixedWavefunction::drift_force(const System& system)
 {
     return psi->drift_force(system);
 }
-inline Real FixedWavefunction::laplacian(System& system)
+inline Real FixedWavefunction::laplacian(const System& system)
 {
     return psi->laplacian(system);
 }
@@ -50,7 +50,7 @@ inline const RowVector& FixedWavefunction::get_parameters() const
 {
     return psi->get_parameters();
 }
-inline RowVector FixedWavefunction::gradient(System& system)
+inline RowVector FixedWavefunction::gradient(const System& system)
 {
     SUPPRESS_WARNING(system);
     return RowVector::Zero(psi->get_parameters().size());

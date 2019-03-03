@@ -18,7 +18,7 @@ RBMSymmetricWavefunction::RBMSymmetricWavefunction(int  M,
     }
 }
 
-Real RBMSymmetricWavefunction::deriv_a(int k, System& system) const
+Real RBMSymmetricWavefunction::deriv_a(int k, const System& system) const
 {
     Real res = 0;
     for (int i = k; i < _M; i += _f)
@@ -28,7 +28,7 @@ Real RBMSymmetricWavefunction::deriv_a(int k, System& system) const
     return res;
 }
 
-Real RBMSymmetricWavefunction::deriv_w(int k, int l, System& system) const
+Real RBMSymmetricWavefunction::deriv_w(int k, int l, const System& system) const
 {
     Real res = 0;
     for (int i = k; i < _M; i += _f)
@@ -39,7 +39,7 @@ Real RBMSymmetricWavefunction::deriv_w(int k, int l, System& system) const
     return res;
 }
 
-RowVector RBMSymmetricWavefunction::gradient(System& system)
+RowVector RBMSymmetricWavefunction::gradient(const System& system)
 {
     RowVector grad_vec(_parameters.size());
 

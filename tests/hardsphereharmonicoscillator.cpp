@@ -1,22 +1,22 @@
-#include "interactinghamiltonian.hpp"
+#include "hardsphereharmonicoscillator.hpp"
 
 #include "definitions.hpp"
-#include "interactingwavefunction.hpp"
+#include "hardspherewavefunction.hpp"
 #include "system.hpp"
 
 #include <gtest/gtest.h>
 #include <limits>
 #include <random>
 
-class InteractingHamiltonianTest : public ::testing::Test
+class HardSphereHarmonicOscillatorTest : public ::testing::Test
 {
 protected:
     const Real             a = 0.0043;
     System*                s1;
     System*                s2;
-    InteractingHamiltonian H_1 {1, a};
-    InteractingHamiltonian H_2 {2.8, a};
-    InteractingHamiltonian H_3 {2.8, 0.0};
+    HardSphereHarmonicOscillator H_1 {1, 1, a};
+    HardSphereHarmonicOscillator H_2 {1, 2.8, a};
+    HardSphereHarmonicOscillator H_3 {1, 2.8, 0.0};
 
     virtual void SetUp()
     {
@@ -42,7 +42,7 @@ protected:
     }
 };
 
-TEST_F(InteractingHamiltonianTest, potential)
+TEST_F(HardSphereHarmonicOscillatorTest, potential)
 {
     // Result should be agnostic to omega_z value
     EXPECT_DOUBLE_EQ(0, H_1.internal_potential(*s1));
@@ -53,12 +53,12 @@ TEST_F(InteractingHamiltonianTest, potential)
     EXPECT_DOUBLE_EQ(0, H_3.internal_potential(*s2));
 }
 
-TEST_F(InteractingHamiltonianTest, localEnergy)
+TEST_F(HardSphereHarmonicOscillatorTest, localEnergy)
 {
     const Real                    gamma = 2.8;
     SimpleGaussian                psi_0(0.5, gamma);
-    InteractingWavefunction       psi_T(0.5, gamma, a);
-    HarmonicOscillatorHamiltonian H_0(gamma);
+    HardSphereWavefunction       psi_T(0.5, gamma, a);
+    HarmonicOscillator H_0(1, gamma);
 
     // With a = 0, no difference to the simple case shoudl be observed.
     EXPECT_DOUBLE_EQ(H_0.local_energy(*s1, psi_0), H_3.local_energy(*s1, psi_0));

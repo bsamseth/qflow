@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "wavefunction.hpp"
@@ -13,10 +12,10 @@ private:
 public:
     SumPooling(Wavefunction&);
 
-    Real      operator()(System&) override;
-    RowVector gradient(System&) override;
+    Real      operator()(const System&) override;
+    RowVector gradient(const System&) override;
     Real      drift_force(const System& system, int k, int dim_index) override;
-    Real      laplacian(System&) override;
+    Real      laplacian(const System&) override;
 
     void set_parameters(const RowVector&) override;
 };

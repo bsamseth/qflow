@@ -1,5 +1,5 @@
 #include "definitions.hpp"
-#include "harmonicoscillatorhamiltonian.hpp"
+#include "harmonicoscillator.hpp"
 #include "importancesampler.hpp"
 #include "metropolissampler.hpp"
 #include "sampler.hpp"
@@ -15,7 +15,7 @@ void sampler_sanity(int sampler_type)
 {
     const int                           runs = 10000;
     const System                        init_system(10, 3);
-    const HarmonicOscillatorHamiltonian H_0;
+    const HarmonicOscillator H_0;
     SimpleGaussian                      psi(0.5, 1);
 
     Sampler* sp;
@@ -83,7 +83,7 @@ void sampler_integration_test(int  sampler_type,
     const Real                          alpha = 0.5;
     const int                           runs  = 10000;
     const System                        init_system(10, 3);
-    const HarmonicOscillatorHamiltonian H(gamma);
+    const HarmonicOscillator H(1, gamma);
     SimpleGaussian                      psi(alpha, gamma);
 
     Sampler* sp;

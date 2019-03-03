@@ -7,8 +7,8 @@
 #include <cmath>
 #include <limits>
 
-HardSphereHarmonicOscillator::HardSphereHarmonicOscillator(Real omega_z, Real a, Real h)
-    : HarmonicOscillator(omega_z, h), a_(a)
+HardSphereHarmonicOscillator::HardSphereHarmonicOscillator(Real omega_ho, Real omega_z, Real a, Real h)
+    : HarmonicOscillator(omega_ho, omega_z, h), a_(a)
 {
 }
 

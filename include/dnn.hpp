@@ -37,21 +37,21 @@ public:
      */
     void addLayer(layer::DenseLayer& layer);
 
-    Real operator()(System& system) override;
+    Real operator()(const System& system) override;
 
     /**
      * Returns the gradient of the output w.r.t. all parameters
      * in the network, summed over the rows of x, where each
      * row of x makes up one sample input.
      */
-    RowVector gradient(System& system) override;
+    RowVector gradient(const System& system) override;
 
     Real drift_force(const System& system, int k, int dim_index) override;
     /**
      * Return the lapliacian of the output w.r.t. the inputs x
      * summed over the rows of X.
      */
-    Real laplacian(System& system) override;
+    Real laplacian(const System& system) override;
 
     // Getters.
     const std::vector<layer::DenseLayer*>& getLayers() const;

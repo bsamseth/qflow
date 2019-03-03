@@ -17,9 +17,9 @@ from qflow.layers.activations import sigmoid, tanh, relu, identity, exponential
 from qflow.statistics import compute_statistics_for_series
 
 from qflow.hamiltonians import (
-    HarmonicOscillatorHamiltonian,
-    RBMHarmonicOscillatorHamiltonian,
-    RBMInteractingHamiltonian,
+    HarmonicOscillator,
+    HarmonicOscillator,
+    CoulombHarmonicOscillator,
 )
 from qflow.samplers import MetropolisSampler, ImportanceSampler
 
@@ -38,7 +38,7 @@ psi = WavefunctionProduct(rbm, dnn)
 
 psi.parameters = np.load("model-parameters.npy")
 
-H = RBMInteractingHamiltonian()
+H = CoulombHarmonicOscillator()
 samp = ImportanceSampler(np.zeros((2, 2)), psi, 0.5)
 
 for _ in range(10000):

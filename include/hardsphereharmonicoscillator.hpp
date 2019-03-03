@@ -17,7 +17,8 @@ private:
 public:
     using HarmonicOscillator::HarmonicOscillator;
 
-    HardSphereHarmonicOscillator(Real omega_z = 1,
+    HardSphereHarmonicOscillator(Real omega_ho = 1,
+                                 Real omega_z = 1,
                                  Real a       = 0,
                                  Real h       = NUMMERIC_DIFF_STEP);
 

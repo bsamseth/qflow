@@ -3,7 +3,7 @@
 #include "importancesampler.hpp"
 #include "metropolissampler.hpp"
 #include "prettyprint.hpp"
-#include "rbmharmonicoscillatorhamiltonian.hpp"
+#include "harmonicoscillator.hpp"
 
 #include <gtest/gtest.h>
 #include <string>
@@ -136,9 +136,9 @@ TEST_F(RBMWavefunctionTest, laplacian)
     EXPECT_DOUBLE_EQ(3.2384829101357431, rbm->laplacian(*s));
 }
 
-TEST_F(RBMWavefunctionTest, RBMHarmonicOscillatorHamiltonian)
+TEST_F(RBMWavefunctionTest, HarmonicOscillator)
 {
-    RBMHarmonicOscillatorHamiltonian H;
+    HarmonicOscillator H;
     EXPECT_DOUBLE_EQ(1.3754892738453772, H.external_potential(*s));
     EXPECT_DOUBLE_EQ(0.0, H.internal_potential(*s));
     EXPECT_DOUBLE_EQ(H.external_potential(*s) - 0.5 * rbm->laplacian(*s),
@@ -154,7 +154,7 @@ TEST_F(RBMWavefunctionTest, RBMHarmonicOscillatorHamiltonian)
 TEST(RBMWavefunction, correctForIdealCase)
 {
     const Real                       sigma2 = 1;
-    RBMHarmonicOscillatorHamiltonian H;
+    HarmonicOscillator H;
 
     // 1000, why not?
     for (int runs = 0; runs < 1000; ++runs)
@@ -183,7 +183,7 @@ TEST(RBMWavefunction, trainSimpleCase3D)
     System                           init_system(3, 2);
     RBMWavefunction                  rbm(6, 2);
     ImportanceSampler                sampler(init_system, rbm, 0.5);
-    RBMHarmonicOscillatorHamiltonian H;
+    HarmonicOscillator H;
     AdamOptimizer                    sgd(rbm.get_parameters().size());
 
     H.optimize_wavefunction(rbm, sampler, 5000, 100, sgd, 0.0, false);

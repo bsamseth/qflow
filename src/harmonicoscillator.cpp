@@ -1,5 +1,10 @@
 #include "harmonicoscillator.hpp"
 
+HarmonicOscillator::HarmonicOscillator(Real omega_ho)
+    : HarmonicOscillator(omega_ho, omega_ho)
+{
+}
+
 HarmonicOscillator::HarmonicOscillator(Real omega_ho, Real omega_z, Real h)
     : Hamiltonian(h), omega_ho_(omega_ho), omega_z_(omega_z)
 {

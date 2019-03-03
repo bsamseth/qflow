@@ -7,7 +7,7 @@ JastrowOrion::JastrowOrion(Real beta, Real gamma)
 {
 }
 
-Real JastrowOrion::operator()(System& system)
+Real JastrowOrion::operator()(const System& system)
 {
     const Real beta = _parameters[0], gamma = _parameters[1];
     const int  N   = system.rows();
@@ -23,7 +23,7 @@ Real JastrowOrion::operator()(System& system)
     return std::exp(res);
 }
 
-RowVector JastrowOrion::gradient(System& system)
+RowVector JastrowOrion::gradient(const System& system)
 {
     const Real beta = _parameters[0], gamma = _parameters[1];
     RowVector  grad = RowVector::Zero(2);
@@ -61,7 +61,7 @@ Real JastrowOrion::drift_force(const System& system, int k, int d)
     return 2 * res;
 }
 
-Real JastrowOrion::laplacian(System& system)
+Real JastrowOrion::laplacian(const System& system)
 {
     const Real beta = _parameters[0], gamma = _parameters[1];
     const int  N = system.rows();
