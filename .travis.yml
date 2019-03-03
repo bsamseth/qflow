@@ -24,6 +24,7 @@ matrix:
         - C_COMPILER="gcc-7", CXX_COMPILER="g++-7"
 
 before_install:
+  - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-7 90
   # Setup Python environemnt
   - pyenv global $(pyenv whence 2to3)
   - pip install pipenv
