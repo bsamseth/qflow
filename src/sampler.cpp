@@ -1,39 +1,42 @@
+#include "sampler.hpp"
+
+#include "definitions.hpp"
+#include "hamiltonian.hpp"
+#include "system.hpp"
+#include "wavefunction.hpp"
+
 #include <cassert>
 #include <cmath>
 
-#include "definitions.hpp"
-#include "system.hpp"
-#include "wavefunction.hpp"
-#include "hamiltonian.hpp"
-#include "sampler.hpp"
-
-Sampler::Sampler(const System &system,
-                 Wavefunction &wavefunction,
-                 Real step)
-                : _step(step),
-                  _wavefunction(&wavefunction),
-                  _system_old(system),
-                  _system_new(system)
+Sampler::Sampler(const System& system, Wavefunction& wavefunction, Real step)
+    : _step(step)
+    , _wavefunction(&wavefunction)
+    , _system_old(system)
+    , _system_new(system)
 {
     _psi_new = _psi_old = (*_wavefunction)(_system_old);
 
     // Some badly initialized systems/wavefunctions may give
     // NaNs out, which can screw up all subsequent calculations.
     // Catch this now and emulate a very unlikely state.
-    if (std::isnan(_psi_old )) {
+    if (std::isnan(_psi_old))
+    {
         _psi_new = _psi_old = 1e-15;
     }
 }
 
-System &Sampler::next_configuration() {
-
+System& Sampler::next_configuration()
+{
     perturb_system();
 
-    if (unif(rand_gen) <= acceptance_probability()) {
+    if (unif(rand_gen) <= acceptance_probability())
+    {
         _accepted_steps++;
         _system_old.row(_particle_to_move) = _system_new.row(_particle_to_move);
-        _psi_old = _psi_new;
-    } else {
+        _psi_old                           = _psi_new;
+    }
+    else
+    {
         _system_new.row(_particle_to_move) = _system_old.row(_particle_to_move);
     }
 
@@ -44,7 +47,8 @@ System &Sampler::next_configuration() {
     return _system_new;
 }
 
-void Sampler::thermalize(long samples) {
+void Sampler::thermalize(long samples)
+{
     for (long i = 0; i < samples; ++i)
         next_configuration();
 }

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "definitions.hpp"
-#include "vector.hpp"
 #include "system.hpp"
+#include "vector.hpp"
 #include "wavefunction.hpp"
 
 /**
@@ -17,16 +17,16 @@
  *      Parabolic Quantum Dots. Modern Physics Letters B - MOD PHYS LETT B. 23.
  *      3055-3064. 10.1142/S0217984909021120.
  */
-class JastrowOrion : public Wavefunction {
-    public:
+class JastrowOrion : public Wavefunction
+{
+public:
+    JastrowOrion(Real beta = 1, Real gamma = 0);
 
-        JastrowOrion(Real beta = 1, Real gamma = 0);
+    Real operator()(const System&) override;
 
-        Real operator() (System&) override;
+    RowVector gradient(const System& system) override;
 
-        RowVector gradient(System &system) override;
+    Real laplacian(const System& system) override;
 
-        Real laplacian(System &system) override;
-
-        Real drift_force(const System &system, int k, int dim_index) override;
+    Real drift_force(const System& system, int k, int dim_index) override;
 };

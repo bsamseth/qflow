@@ -15,9 +15,9 @@ from qflow.layers import DenseLayer
 from qflow.layers.activations import sigmoid, tanh, relu, identity, exponential
 
 from qflow.hamiltonians import (
-    HarmonicOscillatorHamiltonian,
-    RBMHarmonicOscillatorHamiltonian,
-    RBMInteractingHamiltonian,
+    HarmonicOscillator,
+    HarmonicOscillator,
+    CoulombHarmonicOscillator,
 )
 from qflow.samplers import MetropolisSampler, ImportanceSampler
 from qflow.optimizers import AdamOptimizer
@@ -86,8 +86,8 @@ simple = SimpleGaussian(0.5)
 rbm = RBMWavefunction(4, 2)
 psi = WavefunctionProduct(rbm, dnn)
 
-# H = RBMHarmonicOscillatorHamiltonian()
-H = RBMInteractingHamiltonian()
+# H = HarmonicOscillator()
+H = CoulombHarmonicOscillator()
 samp = ImportanceSampler(np.zeros((2, 2)), psi, 0.5)
 adam = AdamOptimizer(len(psi.parameters))
 

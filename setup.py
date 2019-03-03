@@ -3,7 +3,6 @@ import platform
 import re
 import subprocess
 import sys
-import unittest
 from distutils.version import LooseVersion
 
 from setuptools import Extension, setup
@@ -11,12 +10,6 @@ from setuptools.command.build_ext import build_ext
 
 PACKAGE_NAME = "qflow"
 BACKEND_NAME = f"_{PACKAGE_NAME}_backend"
-
-
-def load_test_suite():
-    test_loader = unittest.TestLoader()
-    test_suite = test_loader.discover("tests", pattern="test_*.py")
-    return test_suite
 
 
 class CMakeExtension(Extension):
@@ -101,5 +94,6 @@ if __name__ == "__main__":
         ext_modules=[CMakeExtension(BACKEND_NAME)],
         cmdclass=dict(build_ext=CMakeBuild),
         zip_safe=False,
-        test_suite="setup.load_test_suite",
+        setup_requires=["pytest-runner"],
+        tests_require=["pytest"],
     )

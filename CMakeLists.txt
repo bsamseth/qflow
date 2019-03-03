@@ -21,6 +21,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -fopenmp")
 SET(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 SET(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "Building with the following extra flags: ${CMAKE_CXX_FLAGS}")
 
 
@@ -54,10 +55,10 @@ set(HEADERS
     include/fixedwavefunction.hpp
     include/gibbssampler.hpp
     include/hamiltonian.hpp
-    include/harmonicoscillatorhamiltonian.hpp
+    include/harmonicoscillator.hpp
     include/importancesampler.hpp
-    include/interactinghamiltonian.hpp
-    include/interactingwavefunction.hpp
+    include/hardsphereharmonicoscillator.hpp
+    include/hardspherewavefunction.hpp
     include/layer.hpp
     include/metropolissampler.hpp
     include/mpiutil.hpp
@@ -65,8 +66,7 @@ set(HEADERS
     include/optimizer.hpp
     include/prettyprint.hpp
     include/rbm.hpp
-    include/rbmharmonicoscillatorhamiltonian.hpp
-    include/rbminteractinghamiltonian.hpp
+    include/coulombharmonicoscillator.hpp
     include/rbmsymmetricwavefunction.hpp
     include/rbmwavefunction.hpp
     include/sampler.hpp

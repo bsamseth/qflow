@@ -3,7 +3,7 @@ import math
 
 import numpy
 from autograd import numpy as np, grad, hessian
-from hypothesis import given, settings, reproduce_failure
+from hypothesis import given, settings
 from hypothesis import strategies as st
 from hypothesis.extra.numpy import arrays, array_shapes
 
@@ -76,6 +76,5 @@ def test_laplace(X, beta, gamma):
         ) / jastrow_np(X, beta, gamma)
 
     psi = JastrowOrion(beta, gamma)
-    actual = psi.laplacian(X)
     if math.isfinite(np_expect):
         assert numpy.isclose(np_expect, psi.laplacian(X))

@@ -1,4 +1,3 @@
-import unittest
 import warnings
 
 import numpy as np
@@ -55,88 +54,91 @@ def randomized(test_func, size=10, max_dim=20):
             test_func(srbm, np.roll(X, shift, axis=0), a, b, w, sigma2)
 
 
-class TestSRBM(unittest.TestCase):
-    def test_evaluation_consistency(self):
-        """
-        Symmetric RBM should give same as RBM if RBM is given the same parameters,
-        with biases and weights replicated.
-        """
+def test_evaluation_consistency():
+    """
+    Symmetric RBM should give same as RBM if RBM is given the same parameters,
+    with biases and weights replicated.
+    """
 
-        def test(srbm, X, a, b, w, sigma2):
-            # Setup regualr RBM with copied parameters to emulate symmetric RBM.
-            (P, D), N = X.shape, len(b)
-            rbm = RBM(P * D, N, sigma2=sigma2)
-            X, a, b, w = sym_to_full(X, a, b, w)
-            rbm.parameters = np.concatenate((a.flatten(), b.flatten(), w.flatten()))
+    def test(srbm, X, a, b, w, sigma2):
+        # Setup regualr RBM with copied parameters to emulate symmetric RBM.
+        (P, D), N = X.shape, len(b)
+        rbm = RBM(P * D, N, sigma2=sigma2)
+        X, a, b, w = sym_to_full(X, a, b, w)
+        rbm.parameters = np.concatenate((a.flatten(), b.flatten(), w.flatten()))
 
-            # Three different evaluations, should all be equal.
-            # Equallity best tested comparing their ratio to unity. The default
-            # tolerances used are tuned well for number expected close to unity.
-            # Note also that the numpy true expression _cannot_ be zero.
-            np_expect = rbm_np(X.flatten(), a, b, w, sigma2)
-            self.assertAlmostEqual(1, rbm(X) / np_expect)
-            self.assertAlmostEqual(1, srbm(X) / np_expect)
+        # Three different evaluations, should all be equal.
+        # Equallity best tested comparing their ratio to unity. The default
+        # tolerances used are tuned well for number expected close to unity.
+        # Note also that the numpy true expression _cannot_ be zero.
+        np_expect = rbm_np(X.flatten(), a, b, w, sigma2)
+        assert np.isclose(1, rbm(X) / np_expect)
+        assert np.isclose(1, srbm(X) / np_expect)
 
-        randomized(test)
+    randomized(test)
 
-    def test_evaluation(self):
-        def test(srbm, X, a, b, w, sigma2):
-            # Check evaluation against the dedicated Symmetric RBM Numpy impl.
-            # Do this for any permutation of the particles.
-            np_expect = srbm_np(X.flatten(), a, b, w, sigma2=sigma2)
 
-            self.assertAlmostEqual(1, srbm(X) / np_expect)
+def test_evaluation():
+    def test(srbm, X, a, b, w, sigma2):
+        # Check evaluation against the dedicated Symmetric RBM Numpy impl.
+        # Do this for any permutation of the particles.
+        np_expect = srbm_np(X.flatten(), a, b, w, sigma2=sigma2)
 
-        randomized(test)
+        assert np.isclose(1, srbm(X) / np_expect)
 
-    def test_gradient(self):
-        def test(srbm, X, a, b, w, sigma2):
-            # Check evaluation against the dedicated Symmetric RBM Numpy impl.
-            a_grad = elementwise_grad(srbm_np, 1)(X.flatten(), a, b, w, sigma2)
-            b_grad = elementwise_grad(srbm_np, 2)(X.flatten(), a, b, w, sigma2)
-            w_grad = elementwise_grad(srbm_np, 3)(X.flatten(), a, b, w, sigma2)
+    randomized(test)
 
-            # Remember that gradient returned is grad / eval
-            np_expect = np.concatenate((a_grad, b_grad, w_grad.ravel())) / srbm_np(
-                X.flatten(), a, b, w, sigma2
-            )
 
-            for expect, actual in zip(np_expect, srbm.gradient(X)):
-                if expect == 0:
-                    self.assertEqual(expect, actual)
-                else:
-                    self.assertAlmostEqual(1, actual / expect)
+def test_gradient():
+    def test(srbm, X, a, b, w, sigma2):
+        # Check evaluation against the dedicated Symmetric RBM Numpy impl.
+        a_grad = elementwise_grad(srbm_np, 1)(X.flatten(), a, b, w, sigma2)
+        b_grad = elementwise_grad(srbm_np, 2)(X.flatten(), a, b, w, sigma2)
+        w_grad = elementwise_grad(srbm_np, 3)(X.flatten(), a, b, w, sigma2)
 
-        randomized(test)
+        # Remember that gradient returned is grad / eval
+        np_expect = np.concatenate((a_grad, b_grad, w_grad.ravel())) / srbm_np(
+            X.flatten(), a, b, w, sigma2
+        )
 
-    def test_drift_force(self):
-        def test(srbm, X, a, b, w, sigma2):
-            np_expect = (
-                2
-                * elementwise_grad(srbm_np, 0)(X.flatten(), a, b, w, sigma2)
-                / srbm_np(X.flatten(), a, b, w, sigma2)
-            )
+        for expect, actual in zip(np_expect, srbm.gradient(X)):
+            if expect == 0:
+                assert expect == actual
+            else:
+                assert np.isclose(1, actual / expect)
 
-            for expect, actual in zip(np_expect, srbm.drift_force(X)):
-                if expect == 0:
-                    self.assertEqual(expect, actual)
-                else:
-                    self.assertAlmostEqual(1, actual / expect)
+    randomized(test)
 
-        randomized(test)
 
-    def test_laplacian(self):
-        def test(srbm, X, a, b, w, sigma2):
-            with warnings.catch_warnings():
-                warnings.filterwarnings("ignore", category=FutureWarning)
-                np_expect = np.trace(
-                    hessian(srbm_np)(X.flatten(), a, b, w, sigma2)
-                ) / srbm_np(X.flatten(), a, b, w, sigma2)
-                actual = srbm.laplacian(X)
-                if np_expect == 0:
-                    self.assertEqual(np_expect, actual)
-                else:
-                    self.assertAlmostEqual(1, actual / np_expect)
+def test_drift_force():
+    def test(srbm, X, a, b, w, sigma2):
+        np_expect = (
+            2
+            * elementwise_grad(srbm_np, 0)(X.flatten(), a, b, w, sigma2)
+            / srbm_np(X.flatten(), a, b, w, sigma2)
+        )
 
-        # Hessian is slow, do smaller tests.
-        randomized(test, size=5, max_dim=6)
+        for expect, actual in zip(np_expect, srbm.drift_force(X)):
+            if expect == 0:
+                assert expect == actual
+            else:
+                assert np.isclose(1, actual / expect)
+
+    randomized(test)
+
+
+def test_laplacian():
+    def test(srbm, X, a, b, w, sigma2):
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=FutureWarning)
+            np_expect = np.trace(
+                hessian(srbm_np)(X.flatten(), a, b, w, sigma2)
+            ) / srbm_np(X.flatten(), a, b, w, sigma2)
+            actual = srbm.laplacian(X)
+            if np_expect == 0:
+                assert np_expect == actual
+            else:
+                assert np.isclose(1, actual / np_expect)
+
+    # Hessian is slow, do smaller tests.
+    randomized(test, size=5, max_dim=6)

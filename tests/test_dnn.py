@@ -5,7 +5,7 @@ import numpy as np
 from autograd import elementwise_grad, hessian
 from autograd import numpy as auto_np
 
-from qflow.layers import DenseLayer, InputLayer
+from qflow.layers import DenseLayer
 from qflow.layers.activations import relu, sigmoid
 from qflow.wavefunctions import Dnn
 
