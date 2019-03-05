@@ -6,6 +6,7 @@
 #include "rbmwavefunction.hpp"
 #include "simplegaussian.hpp"
 #include "wavefunction.hpp"
+#include "wavefunctionpooling.hpp"
 #include "wavefunctionproduct.hpp"
 
 #include <Eigen/Dense>
@@ -48,6 +49,9 @@ void init_wavefunction(py::module& main)
         .def(py::init<Wavefunction&, Wavefunction&>(),
              py::arg("Psi_1"),
              py::arg("Psi_2"));
+
+    py::class_<SumPooling, Wavefunction>(m, "SumPooling")
+        .def(py::init<Wavefunction&>());
 
     py::class_<SimpleGaussian, Wavefunction>(m, "SimpleGaussian")
         .def(py::init<Real, Real>(), py::arg("alpha") = 0.5, py::arg("beta") = 1);

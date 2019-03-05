@@ -16,13 +16,16 @@ Real SumPooling::operator()(const System& system)
     const int N   = system.rows();
     Real      sum = 0;
     System    sub(2, system.cols());
-    for (int k = 0; k < N; ++k)
+    for (int i = 0; i < N; ++i)
     {
-        sub.row(0) = system.row(k);
+        sub.row(0) = system.row(i);
         for (int j = 0; j < N; ++j)
         {
-            sub.row(1) = system.row(j);
-            sum += (*f)(sub);
+            if (i != j)
+            {
+                sub.row(1) = system.row(j);
+                sum += (*f)(sub);
+            }
         }
     }
 
@@ -34,16 +37,22 @@ RowVector SumPooling::gradient(const System& system)
     const int N    = system.rows();
     RowVector grad = RowVector::Zero(f->get_parameters().size());
     System    sub(2, system.cols());
-    for (int k = 0; k < N; ++k)
+    Real      divisor = 0;
+    for (int i = 0; i < N; ++i)
     {
-        sub.row(0) = system.row(k);
+        sub.row(0) = system.row(i);
         for (int j = 0; j < N; ++j)
         {
-            sub.row(1) = system.row(j);
-            grad += (*f)(sub) *f->gradient(sub);
+            if (i != j)
+            {
+                sub.row(1) = system.row(j);
+                Real eval  = (*f)(sub);
+                grad += eval * f->gradient(sub);
+                divisor += eval;
+            }
         }
     }
-    return grad / (*this)(system);
+    return grad / divisor;
 }
 
 Real SumPooling::drift_force(const System& system, int k, int dim_index)
@@ -51,34 +60,48 @@ Real SumPooling::drift_force(const System& system, int k, int dim_index)
     const int N     = system.rows();
     Real      drift = 0;
     System    sub(2, system.cols());
+
     sub.row(0) = system.row(k);
     for (int j = 0; j < N; ++j)
     {
-        sub.row(1) = system.row(j);
-        drift += (*f)(sub) *f->drift_force(sub, k, dim_index);
+        if (j != k)
+        {
+            sub.row(1) = system.row(j);
+            drift += (*f)(sub) *f->drift_force(sub, 0, dim_index);
+        }
     }
+
     sub.row(1) = system.row(k);
     for (int j = 0; j < N; ++j)
     {
-        sub.row(0) = system.row(j);
-        drift += (*f)(sub) *f->drift_force(sub, k, dim_index);
+        if (j != k)
+        {
+            sub.row(0) = system.row(j);
+            drift += (*f)(sub) *f->drift_force(sub, 1, dim_index);
+        }
     }
     return drift / (*this)(system);
 }
 
 Real SumPooling::laplacian(const System& system)
 {
-    const int N   = system.rows();
-    Real      res = 0;
+    const int N       = system.rows();
+    Real      res     = 0;
+    Real      divisor = 0;
     System    sub(2, system.cols());
-    for (int k = 0; k < N; ++k)
+    for (int i = 0; i < N; ++i)
     {
-        sub.row(0) = system.row(k);
+        sub.row(0) = system.row(i);
         for (int j = 0; j < N; ++j)
         {
-            sub.row(1) = system.row(j);
-            res += (*f)(sub) *f->laplacian(sub);
+            if (i != j)
+            {
+                sub.row(1) = system.row(j);
+                Real eval  = (*f)(sub);
+                res += eval * f->laplacian(sub);
+                divisor += eval;
+            }
         }
     }
-    return res / (*this)(system);
+    return res / divisor;
 }
