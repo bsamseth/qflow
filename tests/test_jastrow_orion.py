@@ -21,7 +21,7 @@ def jastrow_np(X, beta, gamma):
     return np.exp(exponent)
 
 
-@given(X=array_strat(min_size=2), beta=float_strat(), gamma=float_strat())
+@given(X=array_strat(min_dims=2), beta=float_strat(), gamma=float_strat())
 def test_eval(X, beta, gamma):
     psi = JastrowOrion(beta, gamma)
     with warnings.catch_warnings():
@@ -29,7 +29,7 @@ def test_eval(X, beta, gamma):
         assert np.isclose(jastrow_np(X, beta, gamma), psi(X))
 
 
-@given(X=array_strat(min_size=2), beta=float_strat(), gamma=float_strat())
+@given(X=array_strat(min_dims=2), beta=float_strat(), gamma=float_strat())
 @settings(deadline=None)
 def test_gradient(X, beta, gamma):
     with warnings.catch_warnings():
@@ -47,7 +47,7 @@ def test_gradient(X, beta, gamma):
         assert np.isclose(np_grad_gamma, actual[1])
 
 
-@given(X=array_strat(min_size=2), beta=float_strat(), gamma=float_strat())
+@given(X=array_strat(min_dims=2), beta=float_strat(), gamma=float_strat())
 @settings(deadline=None)
 def test_drift_force(X, beta, gamma):
     with warnings.catch_warnings():
@@ -61,7 +61,7 @@ def test_drift_force(X, beta, gamma):
 
 
 # Hessian calculation is super slow, limit size of inputs.
-@given(X=array_strat(min_size=2, max_size=5), beta=float_strat(), gamma=float_strat())
+@given(X=array_strat(min_dims=2, max_size=5), beta=float_strat(), gamma=float_strat())
 @settings(deadline=None)
 def test_laplace(X, beta, gamma):
     with warnings.catch_warnings():
