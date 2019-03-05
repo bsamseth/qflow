@@ -3,7 +3,6 @@
 #include "harmonicoscillator.hpp"
 #include "importancesampler.hpp"
 #include "metropolissampler.hpp"
-#include "prettyprint.hpp"
 
 #include <gtest/gtest.h>
 #include <string>

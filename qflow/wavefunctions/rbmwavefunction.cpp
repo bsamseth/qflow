@@ -1,7 +1,6 @@
 #include "rbmwavefunction.hpp"
 
 #include "optimizer.hpp"
-#include "prettyprint.hpp"
 
 #include <algorithm>
 #include <cassert>

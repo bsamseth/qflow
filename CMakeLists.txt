@@ -32,9 +32,14 @@ find_package(MPI REQUIRED)
 
 # We make sure that CMake sees all the files.
 include_directories(
-    ${PROJECT_SOURCE_DIR}/src
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/tests
+    ${PROJECT_SOURCE_DIR}/qflow
+    ${PROJECT_SOURCE_DIR}/qflow/wavefunctions
+    ${PROJECT_SOURCE_DIR}/qflow/wavefunctions/nn
+    ${PROJECT_SOURCE_DIR}/qflow/wavefunctions/nn/layers
+    ${PROJECT_SOURCE_DIR}/qflow/wavefunctions/nn/activations
+    ${PROJECT_SOURCE_DIR}/qflow/hamiltonians
+    ${PROJECT_SOURCE_DIR}/qflow/samplers
+    ${PROJECT_SOURCE_DIR}/qflow/optimizers
     ${PROJECT_SOURCE_DIR}/external/googletest
     ${PROJECT_SOURCE_DIR}/external/googletest/include
     ${PROJECT_SOURCE_DIR}/external/eigen
@@ -42,42 +47,40 @@ include_directories(
     ${MPI_INCLUDE_PATH})
 
 
-# Make variables referring to all the sources and test files.
-set(HEADERS
-    include/activation.hpp
-    include/argumentparser.hpp
-    include/calculator.hpp
-    include/combinedcalculator.hpp
-    include/config.hpp.in
-    include/definitions.hpp
-    include/dnn.hpp
-    include/energycalculator.hpp
-    include/fixedwavefunction.hpp
-    include/gibbssampler.hpp
-    include/hamiltonian.hpp
-    include/harmonicoscillator.hpp
-    include/importancesampler.hpp
-    include/hardsphereharmonicoscillator.hpp
-    include/hardspherewavefunction.hpp
-    include/layer.hpp
-    include/metropolissampler.hpp
-    include/mpiutil.hpp
-    include/onebodydensitycalculator.hpp
-    include/optimizer.hpp
-    include/prettyprint.hpp
-    include/rbm.hpp
-    include/coulombharmonicoscillator.hpp
-    include/rbmsymmetricwavefunction.hpp
-    include/rbmwavefunction.hpp
-    include/sampler.hpp
-    include/simplegaussian.hpp
-    include/system.hpp
-    include/vector.hpp
-    include/vmc.hpp
-    include/wavefunction.hpp
+set(SOURCES
+    qflow/definitions.cpp
+    qflow/hamiltonians/coulombharmonicoscillator.cpp
+    qflow/hamiltonians/hamiltonian.cpp
+    qflow/hamiltonians/hardsphereharmonicoscillator.cpp
+    qflow/hamiltonians/harmonicoscillator.cpp
+    qflow/mpiutil.cpp
+    qflow/optimizers/optimizer.cpp
+    qflow/samplers/gibbssampler.cpp
+    qflow/samplers/importancesampler.cpp
+    qflow/samplers/metropolissampler.cpp
+    qflow/samplers/sampler.cpp
+    qflow/wavefunctions/hardspherewavefunction.cpp
+    qflow/wavefunctions/jastroworion.cpp
+    qflow/wavefunctions/nn/activations/activation.cpp
+    qflow/wavefunctions/nn/dnn.cpp
+    qflow/wavefunctions/nn/layers/layer.cpp
+    qflow/wavefunctions/rbmsymmetricwavefunction.cpp
+    qflow/wavefunctions/rbmwavefunction.cpp
+    qflow/wavefunctions/simplegaussian.cpp
+    qflow/wavefunctions/wavefunction.cpp
+    qflow/wavefunctions/wavefunctionpooling.cpp
+    qflow/wavefunctions/wavefunctionproduct.cpp
 )
-file(GLOB SOURCES "src/*.cpp")
-file(GLOB PYSOURCES "qflow_backend/*.cpp")
+set(PYSOURCES
+    qflow/hamiltonians/pyhamiltonian.cpp
+    qflow/optimizers/pyoptimizer.cpp
+    qflow/pymain.cpp
+    qflow/samplers/pysampler.cpp
+    qflow/wavefunctions/nn/activations/pyactivation.cpp
+    qflow/wavefunctions/nn/layers/pylayer.cpp
+    qflow/wavefunctions/pywavefunction.cpp
+)
+
 file(GLOB TESTFILES "tests/*.cpp")
 set(TEST_MAIN unit_tests.x)  # Default name for test executable (change if you wish).
 
@@ -167,17 +170,6 @@ set_source_files_properties(${PROJECT_SOURCE_DIR}/external/googletest/src/gtest_
 # --------------------------------------------------------------------------------
 #                            Misc (no change needed).
 # --------------------------------------------------------------------------------
-# Have CMake parse the config file, generating the config header, with
-# correct definitions. Here only used to make version number available to
-# the source code. Include "config.hpp" (no .in suffix) in the source.
-configure_file (
-  "${PROJECT_SOURCE_DIR}/include/config.hpp.in"
-  "${PROJECT_BINARY_DIR}/config.hpp")
-# add the binary tree to the search path for include files
-# so that we will find config.hpp
-include_directories("${PROJECT_BINARY_DIR}")
-
-
 # Ask CMake to output a compile_commands.json file for YCM.
 set( CMAKE_EXPORT_COMPILE_COMMANDS 1 )
 
