@@ -16,6 +16,8 @@
 
 namespace py = pybind11;
 
+void init_nn(py::module&);
+
 void init_wavefunction(py::module& main)
 {
     auto m  = main.def_submodule("wavefunctions");
@@ -23,6 +25,8 @@ void init_wavefunction(py::module& main)
         Wavefunctions
         -----------------------
     )doc";
+
+    init_nn(m);
 
     py::class_<Wavefunction>(m, "Wavefunction")
         .def("__call__", &Wavefunction::operator())

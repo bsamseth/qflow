@@ -1,1 +1,1 @@
-from _qflow_backend.layers import *
+from _qflow_backend.wavefunctions.nn.layers import *

@@ -78,6 +78,7 @@ set(PYSOURCES
     qflow/samplers/pysampler.cpp
     qflow/wavefunctions/nn/activations/pyactivation.cpp
     qflow/wavefunctions/nn/layers/pylayer.cpp
+    qflow/wavefunctions/nn/pynn.cpp
     qflow/wavefunctions/pywavefunction.cpp
 )
 

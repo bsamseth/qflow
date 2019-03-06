@@ -8,7 +8,6 @@ void init_wavefunction(py::module&);
 void init_sampler(py::module&);
 void init_hamiltonian(py::module&);
 void init_optimizer(py::module&);
-void init_layer(py::module&);
 
 PYBIND11_MODULE(_qflow_backend, m)
 {
@@ -23,7 +22,6 @@ PYBIND11_MODULE(_qflow_backend, m)
     init_sampler(m);
     init_hamiltonian(m);
     init_optimizer(m);
-    init_layer(m);
 
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;

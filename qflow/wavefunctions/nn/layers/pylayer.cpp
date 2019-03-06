@@ -7,8 +7,6 @@
 
 namespace py = pybind11;
 
-void init_activation(py::module&);
-
 void init_layer(py::module& main)
 {
     auto m  = main.def_submodule("layers");
@@ -20,8 +18,6 @@ void init_layer(py::module& main)
            :toctree: _generate
            DenseLayer
     )pbdoc";
-
-    init_activation(m);
 
     py::class_<layer::DenseLayer>(m, "DenseLayer")
         .def(py::init<int, int, const activation::ActivationFunction&>(),
