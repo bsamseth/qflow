@@ -7,6 +7,7 @@ from .hamiltonians import Hamiltonian
 from .wavefunctions import Wavefunction
 from .samplers import Sampler
 from .optimizers import SgdOptimizer
+from .mpi import mpiprint
 
 
 class Callback(ABC, list):
@@ -22,7 +23,7 @@ class EnergyCallback(Callback):
     def __call__(self, iter_count, psi, H, sampler, optimizer):
         self.append(H.local_energy(sampler, psi, self.samples))
         if self.verbose:
-            print(f"EnergyCallback(iter={iter_count}): {self.__getitem__(-1)}")
+            mpiprint(f"EnergyCallback(iter={iter_count}): {self.__getitem__(-1)}")
 
 
 class SymmetryCallback(Callback):
@@ -32,7 +33,7 @@ class SymmetryCallback(Callback):
     def __call__(self, iter_count, psi, H, sampler, optimizer):
         self.append(psi.symmetry_metric(sampler, self.samples, self.permutations))
         if self.verbose:
-            print(f"SymmetryCallback(iter={iter_count}): {self.__getitem__(-1)}")
+            mpiprint(f"SymmetryCallback(iter={iter_count}): {self.__getitem__(-1)}")
 
 
 class ParameterCallback(Callback):
