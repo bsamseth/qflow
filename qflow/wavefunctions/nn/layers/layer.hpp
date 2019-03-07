@@ -25,20 +25,20 @@ public:
     DenseLayer(int inputs, int outputs, const activation::ReluActivation& actFunc);
     DenseLayer(int inputs, int outputs, const activation::TanhActivation& actFunc);
     DenseLayer(int inputs, int outputs, const activation::ActivationFunction& actFunc);
-    virtual const Matrix& forward(const MatrixRef& x);
-    virtual Matrix        backward(const MatrixRef& error);
-    virtual Matrix        forwardGradient(const MatrixRef& dadx_j_prev);
-    virtual Matrix forwardLaplace(const MatrixRef& ddaddx_j, const MatrixRef& dadx_j);
+    const Matrix& forward(const MatrixRef& x);
+    Matrix        backward(const MatrixRef& error);
+    Matrix        forwardGradient(const MatrixRef& dadx_j_prev);
+    Matrix        forwardLaplace(const MatrixRef& ddaddx_j, const MatrixRef& dadx_j);
 
     // Getters
-    const Matrix&         getOutputs() const;
-    virtual const Matrix& getWeights() const;
-    virtual Matrix&       getWeights();
-    const RowVector&      getBiases() const;
-    RowVector&            getBiases();
-    virtual const Matrix& getWeightsGradient() const;
-    const RowVector&      getBiasGradient() const;
-    virtual unsigned      getNumberOfParameter() const;
+    const Matrix&    getOutputs() const;
+    const Matrix&    getWeights() const;
+    Matrix&          getWeights();
+    const RowVector& getBiases() const;
+    RowVector&       getBiases();
+    const Matrix&    getWeightsGradient() const;
+    const RowVector& getBiasGradient() const;
+    unsigned         getNumberOfParameter() const;
 };
 
 //
