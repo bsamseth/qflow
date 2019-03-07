@@ -132,10 +132,7 @@ void Hamiltonian::optimize_wavefunction(Wavefunction& psi,
     for (int iteration = 0; iteration < iterations; ++iteration)
     {
         // Thermalize the sampler to the new parameters.
-        for (int run = 0; run < 0.2 * sample_points; ++run)
-        {
-            sampler.next_configuration();
-        }
+        sampler.thermalize(0.2 * sample_points);
 
         RowVector grad = local_energy_gradient(sampler, psi, sample_points);
 
