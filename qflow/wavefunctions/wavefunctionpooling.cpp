@@ -1,5 +1,7 @@
 #include "wavefunctionpooling.hpp"
 
+#include "omp.h"
+
 SumPooling::SumPooling(Wavefunction& psi) : f(&psi)
 {
     _parameters = f->get_parameters();
@@ -13,95 +15,151 @@ void SumPooling::set_parameters(const RowVector& a)
 
 Real SumPooling::operator()(const System& system)
 {
-    const int N   = system.rows();
-    Real      sum = 0;
-    System    sub(2, system.cols());
+    const int N  = system.rows();
+    Real      s1 = 0;
+    Real      s2 = 0;
+    System    sub1(2, system.cols());
+    System    sub2(2, system.cols());
     for (int i = 0; i < N; ++i)
     {
-        sub.row(0) = system.row(i);
-        for (int j = 0; j < N; ++j)
+        sub1.row(0) = system.row(i);
+        sub2.row(0) = system.row(i);
+#pragma omp parallel sections
         {
-            if (i != j)
+#pragma omp section
             {
-                sub.row(1) = system.row(j);
-                sum += (*f)(sub);
+                for (int j = 0; j < i; ++j)
+                {
+                    sub1.row(1) = system.row(j);
+                    s1 += (*f)(sub1);
+                }
+            }
+#pragma omp section
+            {
+                for (int j = i + 1; j < N; ++j)
+                {
+                    sub2.row(1) = system.row(j);
+                    s2 += (*f)(sub2);
+                }
             }
         }
     }
-
-    return sum;
+    return s1 + s2;
 }
 
 RowVector SumPooling::gradient(const System& system)
 {
-    const int N    = system.rows();
-    RowVector grad = RowVector::Zero(f->get_parameters().size());
-    System    sub(2, system.cols());
-    Real      divisor = 0;
+    const int N  = system.rows();
+    RowVector g1 = RowVector::Zero(f->get_parameters().size());
+    RowVector g2 = RowVector::Zero(f->get_parameters().size());
+    System    sub1(2, system.cols());
+    System    sub2(2, system.cols());
+    Real      d1 = 0;
+    Real      d2 = 0;
     for (int i = 0; i < N; ++i)
     {
-        sub.row(0) = system.row(i);
-        for (int j = 0; j < N; ++j)
+        sub1.row(0) = system.row(i);
+        sub2.row(0) = system.row(i);
+#pragma omp parallel sections
         {
-            if (i != j)
+#pragma omp section
             {
-                sub.row(1) = system.row(j);
-                Real eval  = (*f)(sub);
-                grad += eval * f->gradient(sub);
-                divisor += eval;
+                for (int j = 0; j < i; ++j)
+                {
+                    sub1.row(1) = system.row(j);
+                    Real eval   = (*f)(sub1);
+                    g1 += eval * f->gradient(sub1);
+                    d1 += eval;
+                }
+            }
+#pragma omp section
+            {
+                for (int j = i + 1; j < N; ++j)
+                {
+                    sub2.row(1) = system.row(j);
+                    Real eval   = (*f)(sub2);
+                    g2 += eval * f->gradient(sub2);
+                    d2 += eval;
+                }
             }
         }
     }
-    return grad / divisor;
+    return (g1 + g2) / (d1 + d2);
 }
 
 Real SumPooling::drift_force(const System& system, int k, int dim_index)
 {
-    const int N     = system.rows();
-    Real      drift = 0;
-    System    sub(2, system.cols());
-
-    sub.row(0) = system.row(k);
-    for (int j = 0; j < N; ++j)
+    const int N  = system.rows();
+    Real      d1 = 0;
+    Real      d2 = 0;
+    System    sub1(2, system.cols());
+    System    sub2(2, system.cols());
+#pragma omp parallel sections
     {
-        if (j != k)
+#pragma omp section
         {
-            sub.row(1) = system.row(j);
-            drift += (*f)(sub) *f->drift_force(sub, 0, dim_index);
+            sub1.row(0) = system.row(k);
+            for (int j = 0; j < N; ++j)
+            {
+                if (j != k)
+                {
+                    sub1.row(1) = system.row(j);
+                    d1 += (*f)(sub1) *f->drift_force(sub1, 0, dim_index);
+                }
+            }
+        }
+#pragma omp section
+        {
+            sub2.row(1) = system.row(k);
+            for (int j = 0; j < N; ++j)
+            {
+                if (j != k)
+                {
+                    sub2.row(0) = system.row(j);
+                    d2 += (*f)(sub2) *f->drift_force(sub2, 1, dim_index);
+                }
+            }
         }
     }
-
-    sub.row(1) = system.row(k);
-    for (int j = 0; j < N; ++j)
-    {
-        if (j != k)
-        {
-            sub.row(0) = system.row(j);
-            drift += (*f)(sub) *f->drift_force(sub, 1, dim_index);
-        }
-    }
-    return drift / (*this)(system);
+    return (d1 + d2) / (*this)(system);
 }
 
 Real SumPooling::laplacian(const System& system)
 {
-    const int N       = system.rows();
-    Real      res     = 0;
-    Real      divisor = 0;
-    System    sub(2, system.cols());
+    const int N  = system.rows();
+    Real      l1 = 0;
+    Real      l2 = 0;
+    Real      d1 = 0;
+    Real      d2 = 0;
+    System    sub1(2, system.cols());
+    System    sub2(2, system.cols());
     for (int i = 0; i < N; ++i)
     {
-        sub.row(0) = system.row(i);
-        for (int j = 0; j < N; ++j)
+#pragma omp parallel sections
         {
-            if (i != j)
+#pragma omp section
             {
-                sub.row(1) = system.row(j);
-                Real eval  = (*f)(sub);
-                res += eval * f->laplacian(sub);
-                divisor += eval;
+                sub1.row(0) = system.row(i);
+                for (int j = 0; j < i; ++j)
+                {
+                    sub1.row(1) = system.row(j);
+                    Real eval   = (*f)(sub1);
+                    l1 += eval * f->laplacian(sub1);
+                    d1 += eval;
+                }
+            }
+#pragma omp section
+            {
+                sub2.row(0) = system.row(i);
+                for (int j = i + 1; j < N; ++j)
+                {
+                    sub2.row(1) = system.row(j);
+                    Real eval   = (*f)(sub2);
+                    l2 += eval * f->laplacian(sub2);
+                    d2 += eval;
+                }
             }
         }
     }
-    return res / divisor;
+    return (l1 + l2) / (d1 + d2);
 }
