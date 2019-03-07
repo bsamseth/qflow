@@ -14,13 +14,9 @@ Real HarmonicOscillator::external_potential(const System& system) const
 {
     if (omega_z_ != omega_ho_ && system.cols() == 3)
     {
-        Real pot = 0;
-        for (int i = 0; i < system.rows(); ++i)
-        {
-            pot += square(omega_ho_) * (square(system(i, 0)) + square(system(i, 1)))
-                   + square(omega_z_ * system(i, 2));
-        }
-        return 0.5 * pot;
+        static Vector coeffs(3);
+        coeffs << square(omega_ho_), square(omega_ho_), square(omega_z_);
+        return 0.5 * (system.array().square().matrix() * coeffs).sum();
     }
     else
     {

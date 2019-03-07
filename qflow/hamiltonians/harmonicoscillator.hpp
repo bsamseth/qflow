@@ -11,8 +11,8 @@
 class HarmonicOscillator : public Hamiltonian
 {
 protected:
-    Real omega_ho_;
-    Real omega_z_;
+    const Real omega_ho_;
+    const Real omega_z_;
 
 public:
     explicit HarmonicOscillator(Real omega_ho = 1);
