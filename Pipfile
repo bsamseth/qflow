@@ -7,7 +7,6 @@ verify_ssl = true
 pre-commit = "*"
 black = "*"
 v = {editable = true,version = "*"}
-mpi4py = "*"
 numpy = "*"
 autograd = "*"
 matplotlib = "*"
@@ -20,6 +19,7 @@ sympy = "*"
 pytest = "*"
 
 [packages]
+mpi4py = "*"
 
 [requires]
 python_version = "3.7"
