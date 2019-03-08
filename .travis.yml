@@ -66,6 +66,7 @@ script:
   - set -e
   - cd docs
   - pipenv run make html
+  - pipenv run make doctest
   - cd ..
   - pipenv run pip install doctr
   - pipenv run doctr deploy . --built-docs docs/_build/html
