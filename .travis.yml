@@ -23,6 +23,12 @@ matrix:
       env:
         - C_COMPILER="gcc-7", CXX_COMPILER="g++-7"
 
+env:
+  global:
+    # Doctr deploy key for bsamseth/thesis
+    - secure: "rZ20yek1WOQZbB/80QwN/CHppIsYi0AqlI2dA53uybejFjIsxg02NiyU8fmy+XHy6MEbR3TklltweijJhuF623wJloIpH1sUSfsJ1KXbccFyeQrbLGGnT8APkSozNWsEKUZqKWQ25zbbIKQKRJRmToO/lCI0ZqrUKVDiYmxGaA+SuGx3EZdjYFv0L1rwugs0YcaVMuzpG0RR1AcY4nmg+2Aqi/qecaGl5PEAjBu03Ph+1+lS0b4LVXIoLawoqKMieSOKqNzsrIlcCFVr3SAz1ir9T/Y34eMxRG9U5P1c2NkpJ917vKK3WDpsccuwT0a1UmoDgKHUU870A6bjtf0mqooJGgFrzj1IQauIyfOEPxNBDF2ard9Si24GICSRvuzyp7Q6rGsFdBhTkZzeyKQl1LXyLF9UH6DVOfIaU3VvXGJ86wyRIWyfFUdZOHIIlB9SoKKa5hNmtW0vn+CiQFd+CVFmkq4hwbmly3wd1WUnIqYForgxqCNi7EbYpwvTZAyX4PgODW+euadK9YdmBd10SWUTe/azoXFMaUFNzX3zGz3P8K4aVtiQDPeXjXg4ivkdMFo8coS0wtB0m5becoJHkZrBGb9B+PxV8ybH3BW623cOzdadUzniUzxDtMqJofW3JPMpABKq1MdYXghv/3ZxmdPYCprifJX+GWXDzVVfWq0="
+
+
 before_install:
   - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-7 90
   # Setup Python environemnt
@@ -53,8 +59,20 @@ install:
   - cd -
 
 script:
+  # Install package
   - pipenv run python setup.py develop
+
+  # Build docs
+  - set -e
+  - cd docs
+  - pipenv run make html
+  - cd ..
+  - pipenv run pip install doctr
+  - pipenv run doctr deploy --built-docs _build/html
+
+  # Run tests
   - pipenv run python setup.py test
+
   # Check that the tests can run with MPI (if Travis has more than one CPU available).
   - $MPI_EXEC -n 2 build-py/unit_tests.x || $MPI_EXEC -n 1 build-py/unit_tests.x
 
