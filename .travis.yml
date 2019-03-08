@@ -91,5 +91,5 @@ after_success:
   - pipenv run make -j3
   - cd -
   - pipenv run python setup.py develop
-  - tavis_wait 30 $MPI_EXEC -n 2 pipenv run python scripts/benchmark.py || travis wait 30 $MPI_EXEC -n 1 pipenv run python scripts/benchmark.py
+  - travis wait 30 $MPI_EXEC -n 2 pipenv run python scripts/benchmark.py || travis wait 30 $MPI_EXEC -n 1 pipenv run python scripts/benchmark.py
 
