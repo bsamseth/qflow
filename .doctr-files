@@ -1,5 +1,7 @@
+./_modules/index.html
 ./_sources/index.rst.txt
 ./_sources/qflow.rst.txt
+./_sources/samplers.rst.txt
 ./_static/ajax-loader.gif
 ./_static/basic.css
 ./_static/comment-bright.png
@@ -67,5 +69,6 @@
 ./objects.inv
 ./py-modindex.html
 ./qflow.html
+./samplers.html
 ./search.html
 ./searchindex.js
