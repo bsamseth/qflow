@@ -57,7 +57,7 @@ script:
   # Check that the tests can run with MPI (if Travis has more than one CPU available).
   - $MPI_EXEC -n 2 build-py/unit_tests.x || $MPI_EXEC -n 1 build-py/unit_tests.x
 
-  - $MPI_EXEC -n 2 python scripts/benchmark.py || $MPI_EXEC -n 1 python scripts/benchmark.py 
+  - $MPI_EXEC -n 2 pipenv run python scripts/benchmark.py || $MPI_EXEC -n 1 pipenv run python scripts/benchmark.py
 
 after_success:
   - lcov --capture --directory . --output-file coverage.info
