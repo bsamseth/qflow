@@ -53,6 +53,7 @@ install:
   - cd -
 
 script:
+  - pipenv run python setup.py develop
   - pipenv run python setup.py test
   # Check that the tests can run with MPI (if Travis has more than one CPU available).
   - $MPI_EXEC -n 2 build-py/unit_tests.x || $MPI_EXEC -n 1 build-py/unit_tests.x
