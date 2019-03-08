@@ -17,6 +17,7 @@ blackcellmagic = "*"
 hypothesis = {extras = ["numpy"],version = "*"}
 sympy = "*"
 pytest = "*"
+pytest-benchmark = "*"
 
 [packages]
 mpi4py = "*"
