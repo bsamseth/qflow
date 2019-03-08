@@ -20,22 +20,27 @@ Real SumPooling::operator()(const System& system)
     Real      s2 = 0;
     System    sub1(2, system.cols());
     System    sub2(2, system.cols());
-    for (int i = 0; i < N; ++i)
-    {
-        sub1.row(0) = system.row(i);
-        sub2.row(0) = system.row(i);
 #pragma omp parallel sections
-        {
+    {
+// i > j
 #pragma omp section
+        {
+            for (int i = 0; i < N; ++i)
             {
+                sub1.row(0) = system.row(i);
                 for (int j = 0; j < i; ++j)
                 {
                     sub1.row(1) = system.row(j);
                     s1 += (*f)(sub1);
                 }
             }
+        }
+// i < j
 #pragma omp section
+        {
+            for (int i = 0; i < N; ++i)
             {
+                sub2.row(0) = system.row(i);
                 for (int j = i + 1; j < N; ++j)
                 {
                     sub2.row(1) = system.row(j);
@@ -56,14 +61,14 @@ RowVector SumPooling::gradient(const System& system)
     System    sub2(2, system.cols());
     Real      d1 = 0;
     Real      d2 = 0;
-    for (int i = 0; i < N; ++i)
-    {
-        sub1.row(0) = system.row(i);
-        sub2.row(0) = system.row(i);
 #pragma omp parallel sections
-        {
+    {
+// i > j
 #pragma omp section
+        {
+            for (int i = 0; i < N; ++i)
             {
+                sub1.row(0) = system.row(i);
                 for (int j = 0; j < i; ++j)
                 {
                     sub1.row(1) = system.row(j);
@@ -72,8 +77,13 @@ RowVector SumPooling::gradient(const System& system)
                     d1 += eval;
                 }
             }
+        }
+// i < j
 #pragma omp section
+        {
+            for (int i = 0; i < N; ++i)
             {
+                sub2.row(0) = system.row(i);
                 for (int j = i + 1; j < N; ++j)
                 {
                     sub2.row(1) = system.row(j);
@@ -96,6 +106,7 @@ Real SumPooling::drift_force(const System& system, int k, int dim_index)
     System    sub2(2, system.cols());
 #pragma omp parallel sections
     {
+// i > j
 #pragma omp section
         {
             sub1.row(0) = system.row(k);
@@ -108,6 +119,7 @@ Real SumPooling::drift_force(const System& system, int k, int dim_index)
                 }
             }
         }
+// i < j
 #pragma omp section
         {
             sub2.row(1) = system.row(k);
@@ -133,11 +145,12 @@ Real SumPooling::laplacian(const System& system)
     Real      d2 = 0;
     System    sub1(2, system.cols());
     System    sub2(2, system.cols());
-    for (int i = 0; i < N; ++i)
-    {
 #pragma omp parallel sections
-        {
+    {
+// i > j
 #pragma omp section
+        {
+            for (int i = 0; i < N; ++i)
             {
                 sub1.row(0) = system.row(i);
                 for (int j = 0; j < i; ++j)
@@ -148,7 +161,11 @@ Real SumPooling::laplacian(const System& system)
                     d1 += eval;
                 }
             }
+        }
+// i < j
 #pragma omp section
+        {
+            for (int i = 0; i < N; ++i)
             {
                 sub2.row(0) = system.row(i);
                 for (int j = i + 1; j < N; ++j)
