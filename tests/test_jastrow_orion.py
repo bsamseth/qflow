@@ -47,7 +47,7 @@ def test_gradient(X, beta, gamma):
         assert np.isclose(np_grad_gamma, actual[1])
 
 
-@given(X=array_strat(min_dims=2), beta=float_strat(), gamma=float_strat())
+@given(X=array_strat(min_dims=2, max_size=10), beta=float_strat(), gamma=float_strat())
 @settings(deadline=None)
 def test_drift_force(X, beta, gamma):
     with warnings.catch_warnings():
