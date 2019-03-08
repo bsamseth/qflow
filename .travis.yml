@@ -68,7 +68,7 @@ script:
   - pipenv run make html
   - cd ..
   - pipenv run pip install doctr
-  - pipenv run doctr deploy --built-docs _build/html
+  - pipenv run doctr deploy . --built-docs docs/_build/html
 
   # Run tests
   - pipenv run python setup.py test
