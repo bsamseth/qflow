@@ -11,6 +11,7 @@ Welcome to QFlow's documentation!
    :caption: Contents:
 
    qflow
+   samplers
 
 
 
