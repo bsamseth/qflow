@@ -67,6 +67,7 @@ script:
   - cd docs
   - pipenv run make html
   - pipenv run make doctest
+  - find _build -type f -exec sed -i 's/_qflow_backend/qflow/' {} +
   - cd ..
   - pipenv run pip install doctr
   - pipenv run doctr deploy . --built-docs docs/_build/html
