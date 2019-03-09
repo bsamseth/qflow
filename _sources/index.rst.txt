@@ -51,6 +51,8 @@ of quantum numbers.
 
    wavefunctions
    samplers
+   hamiltonians
+   optimizers
 
 
 Indices and tables

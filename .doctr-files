@@ -1,5 +1,7 @@
 ./_modules/index.html
+./_sources/hamiltonians.rst.txt
 ./_sources/index.rst.txt
+./_sources/optimizers.rst.txt
 ./_sources/samplers.rst.txt
 ./_sources/wavefunctions.rst.txt
 ./_static/ajax-loader.gif
@@ -65,8 +67,10 @@
 ./_static/up.png
 ./_static/websupport.js
 ./genindex.html
+./hamiltonians.html
 ./index.html
 ./objects.inv
+./optimizers.html
 ./py-modindex.html
 ./samplers.html
 ./search.html

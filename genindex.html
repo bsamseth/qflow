@@ -84,6 +84,8 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="wavefunctions.html">Wavefunctions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="samplers.html">Samplers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hamiltonians.html">Hamiltonians</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimizers.html">Optimizers</a></li>
 </ul>
 
             
@@ -153,11 +155,15 @@
  <a href="#_"><strong>_</strong></a>
  | <a href="#A"><strong>A</strong></a>
  | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
+ | <a href="#O"><strong>O</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#W"><strong>W</strong></a>
@@ -166,9 +172,15 @@
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="samplers.html#qflow.samplers.GibbsSampler.__init__">__init__() (_qflow_backend.samplers.GibbsSampler method)</a>
+      <li><a href="hamiltonians.html#qflow.hamiltonians.HarmonicOscillator.__init__">__init__() (_qflow_backend.hamiltonians.HarmonicOscillator method)</a>
 
       <ul>
+        <li><a href="optimizers.html#qflow.optimizers.AdamOptimizer.__init__">(_qflow_backend.optimizers.AdamOptimizer method)</a>
+</li>
+        <li><a href="optimizers.html#qflow.optimizers.SgdOptimizer.__init__">(_qflow_backend.optimizers.SgdOptimizer method)</a>
+</li>
+        <li><a href="samplers.html#qflow.samplers.GibbsSampler.__init__">(_qflow_backend.samplers.GibbsSampler method)</a>
+</li>
         <li><a href="samplers.html#qflow.samplers.ImportanceSampler.__init__">(_qflow_backend.samplers.ImportanceSampler method)</a>
 </li>
         <li><a href="samplers.html#qflow.samplers.MetropolisSampler.__init__">(_qflow_backend.samplers.MetropolisSampler method)</a>
@@ -178,6 +190,10 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hamiltonians.html#module-qflow.hamiltonians">_qflow_backend.hamiltonians (module)</a>
+</li>
+      <li><a href="optimizers.html#module-qflow.optimizers">_qflow_backend.optimizers (module)</a>
+</li>
       <li><a href="samplers.html#module-qflow.samplers">_qflow_backend.samplers (module)</a>
 </li>
       <li><a href="wavefunctions.html#module-qflow.wavefunctions">_qflow_backend.wavefunctions (module)</a>
@@ -191,12 +207,24 @@
       <li><a href="samplers.html#qflow.samplers.Sampler.acceptance_rate">acceptance_rate (_qflow_backend.samplers.Sampler attribute)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="optimizers.html#qflow.optimizers.AdamOptimizer">AdamOptimizer (class in _qflow_backend.optimizers)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="wavefunctions.html#qflow.wavefunctions.Wavefunction.drift_force">drift_force() (_qflow_backend.wavefunctions.Wavefunction method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hamiltonians.html#qflow.hamiltonians.Hamiltonian.external_potential">external_potential() (_qflow_backend.hamiltonians.Hamiltonian method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -210,6 +238,20 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="wavefunctions.html#qflow.wavefunctions.Wavefunction.gradient">gradient() (_qflow_backend.wavefunctions.Wavefunction method)</a>
 </li>
+      <li><a href="hamiltonians.html#qflow.hamiltonians.HarmonicOscillator.gross_pitaevskii_energy">gross_pitaevskii_energy() (_qflow_backend.hamiltonians.HarmonicOscillator method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hamiltonians.html#qflow.hamiltonians.Hamiltonian">Hamiltonian (class in _qflow_backend.hamiltonians)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hamiltonians.html#qflow.hamiltonians.HarmonicOscillator">HarmonicOscillator (class in _qflow_backend.hamiltonians)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -219,6 +261,22 @@
       <li><a href="samplers.html#qflow.samplers.ImportanceSampler">ImportanceSampler (class in _qflow_backend.samplers)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hamiltonians.html#qflow.hamiltonians.Hamiltonian.internal_potential">internal_potential() (_qflow_backend.hamiltonians.Hamiltonian method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hamiltonians.html#qflow.hamiltonians.Hamiltonian.kinetic_energy">kinetic_energy() (_qflow_backend.hamiltonians.Hamiltonian method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hamiltonians.html#qflow.hamiltonians.Hamiltonian.kinetic_energy_numeric">kinetic_energy_numeric() (_qflow_backend.hamiltonians.Hamiltonian method)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="L">L</h2>
@@ -226,11 +284,23 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="wavefunctions.html#qflow.wavefunctions.Wavefunction.laplacian">laplacian() (_qflow_backend.wavefunctions.Wavefunction method)</a>
 </li>
+      <li><a href="hamiltonians.html#qflow.hamiltonians.Hamiltonian.local_energy">local_energy() (_qflow_backend.hamiltonians.Hamiltonian method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hamiltonians.html#qflow.hamiltonians.Hamiltonian.local_energy_gradient">local_energy_gradient() (_qflow_backend.hamiltonians.Hamiltonian method)</a>
+</li>
+      <li><a href="hamiltonians.html#qflow.hamiltonians.Hamiltonian.local_energy_numeric">local_energy_numeric() (_qflow_backend.hamiltonians.Hamiltonian method)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hamiltonians.html#qflow.hamiltonians.Hamiltonian.mean_distance">mean_distance() (_qflow_backend.hamiltonians.Hamiltonian method)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="samplers.html#qflow.samplers.MetropolisSampler">MetropolisSampler (class in _qflow_backend.samplers)</a>
 </li>
@@ -245,10 +315,24 @@
   </ul></td>
 </tr></table>
 
+<h2 id="O">O</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hamiltonians.html#qflow.hamiltonians.Hamiltonian.onebodydensity">onebodydensity() (_qflow_backend.hamiltonians.Hamiltonian method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="hamiltonians.html#qflow.hamiltonians.Hamiltonian.optimize_wavefunction">optimize_wavefunction() (_qflow_backend.hamiltonians.Hamiltonian method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="samplers.html#qflow.samplers.Sampler">Sampler (class in _qflow_backend.samplers)</a>
+</li>
+      <li><a href="optimizers.html#qflow.optimizers.SgdOptimizer">SgdOptimizer (class in _qflow_backend.optimizers)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>

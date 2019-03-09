@@ -1,0 +1,9 @@
+.. automodule:: qflow.hamiltonians
+
+.. autoclass:: qflow.hamiltonians.Hamiltonian
+   :members:
+
+.. autoclass:: qflow.hamiltonians.HarmonicOscillator
+   :members:
+   :special-members:
+
