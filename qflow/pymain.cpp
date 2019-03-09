@@ -12,9 +12,11 @@ void init_optimizer(py::module&);
 PYBIND11_MODULE(_qflow_backend, m)
 {
     m.doc() = R"pbdoc(
-        QFlow - Quantum Variational Monte Carlo Framework
-        -------------------------------------------------
-    )pbdoc";
+QFlow - Quantum Variational Monte Carlo Framework
+-------------------------------------------------
+
+
+)pbdoc";
 
     m.def("_init_mpi", &mpiutil::initialize_mpi);
 
