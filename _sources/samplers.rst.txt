@@ -1,13 +1,16 @@
-.. automodule:: _qflow_backend.samplers
+.. automodule:: qflow.samplers
 
-.. autoclass:: _qflow_backend.samplers.Sampler
+.. autoclass:: qflow.samplers.Sampler
    :members:
 
-.. autoclass:: _qflow_backend.samplers.MetropolisSampler
+.. autoclass:: qflow.samplers.MetropolisSampler
    :members:
+   :special-members:
 
-.. autoclass:: _qflow_backend.samplers.ImportanceSampler
+.. autoclass:: qflow.samplers.ImportanceSampler
    :members:
+   :special-members:
 
-.. autoclass:: _qflow_backend.samplers.GibbsSampler
+.. autoclass:: qflow.samplers.GibbsSampler
    :members:
+   :special-members:

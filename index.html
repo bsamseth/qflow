@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to QFlow’s documentation! &mdash; QFlow  documentation</title>
+  <title>QFlow - Quantum Variational Monte Carlo Framework &mdash; QFlow  documentation</title>
   
 
   
@@ -36,7 +36,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="QFlow - Quantum Variational Monte Carlo Framework" href="qflow.html" /> 
+    <link rel="next" title="Wavefunctions" href="wavefunctions.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -82,7 +82,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="qflow.html">QFlow - Quantum Variational Monte Carlo Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavefunctions.html">Wavefunctions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="samplers.html">Samplers</a></li>
 </ul>
 
@@ -129,7 +129,7 @@
     
       <li><a href="#">Docs</a> &raquo;</li>
         
-      <li>Welcome to QFlow’s documentation!</li>
+      <li>QFlow - Quantum Variational Monte Carlo Framework</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -148,23 +148,58 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="welcome-to-qflow-s-documentation">
-<h1>Welcome to QFlow’s documentation!<a class="headerlink" href="#welcome-to-qflow-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="qflow-quantum-variational-monte-carlo-framework">
+<h1>QFlow - Quantum Variational Monte Carlo Framework<a class="headerlink" href="#qflow-quantum-variational-monte-carlo-framework" title="Permalink to this headline">¶</a></h1>
+<p>This package provides convenient functionality to solve quantum mechanical
+many-body systems using the Variational Monte Carlo technique. It provides a
+modular interface which allows any combination of trial wavefunctions,
+Hamiltonians, sampling strategies and optimization algorithm.</p>
+<p><code class="docutils literal notranslate"><span class="pre">qflow</span></code> provides a kind Python API to an efficient C++ backend. The Python API
+is simply a near-zero cost abstraction layer to the underlying machinery, and
+performance can be just as good as using the C++ sources directly.</p>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>Convenient and consistent Python API</li>
+<li>Optimized C++ backend</li>
+<li>Support for near perfect parallelization with MPI</li>
+<li>A generic Feed-Forward Neural Network implementation which allows to
+include arbitrary deep networks as part of trail wavefunctions</li>
+</ul>
+</div></blockquote>
+<p>The main selling point of <code class="docutils literal notranslate"><span class="pre">qflow</span></code>, as opposed to the _many_ VMC implementations
+that exist, is the support for arbitrary Feed-Forward Neural Networks. To our
+knowledge, no other package allows you to introduce such networks into the
+trail wavefunctions for real-valued quantum systems.</p>
+<p>The recent project <a class="reference external" href="https://netket.org">NetKet</a> is a more mature package,
+with far more contributors working on it. They similarly provide facilities to
+do VMC with neural networks, although they seem to be dependent on a _graph_ of
+possible sites. This seems to discard systems of freely moving particles, where
+particles are to be described by their spacial coordinates, rather than a set
+of quantum numbers.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is entirely based on the understanding of the author of this package,
+and might be incorrect. Please consider <a class="reference external" href="https://netket.org">NetKet</a> for
+yourself, as it very well might be a better fit for your application.</p>
+</div>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="qflow.html">QFlow - Quantum Variational Monte Carlo Framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavefunctions.html">Wavefunctions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="samplers.html">Samplers</a></li>
 </ul>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
 <li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
 <li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
 </ul>
+</div>
 </div>
 
 
@@ -175,7 +210,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="qflow.html" class="btn btn-neutral float-right" title="QFlow - Quantum Variational Monte Carlo Framework" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="wavefunctions.html" class="btn btn-neutral float-right" title="Wavefunctions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>

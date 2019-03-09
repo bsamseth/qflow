@@ -1,0 +1,9 @@
+.. automodule:: qflow.wavefunctions
+
+.. autoclass:: qflow.wavefunctions.Wavefunction
+   :members:
+
+.. autoclass:: qflow.wavefunctions.SimpleGaussian
+   :members:
+   :special-members:
+
