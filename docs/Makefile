@@ -17,3 +17,4 @@ help:
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	LC_ALL=C find ${BUILDDIR} -type f -exec sed -i '' 's/_qflow_backend/qflow/' {} +
