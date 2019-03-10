@@ -6,6 +6,15 @@
 QFlow - Quantum Variational Monte Carlo Framework
 =================================================
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   wavefunctions
+   samplers
+   hamiltonians
+   optimizers
+
 This package provides convenient functionality to solve quantum mechanical
 many-body systems using the Variational Monte Carlo technique. It provides a
 modular interface which allows any combination of trial wavefunctions,
@@ -45,14 +54,6 @@ of quantum numbers.
 .. |netket| replace:: NetKet
 .. _netket: https://netket.org
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   wavefunctions
-   samplers
-   hamiltonians
-   optimizers
 
 
 Indices and tables
