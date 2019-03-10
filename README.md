@@ -8,6 +8,10 @@
 
 # Projects
 
-## [Project 1](project1.md)
+See the [documentation pages](https://bsamseth.github.io/thesis) for details regarding the `qflow` package.
 
-## [Project 2](project2.md)
+Outdated information about initial projects:
+
+- [Project 1](project1.md)
+
+- [Project 2](project2.md)
