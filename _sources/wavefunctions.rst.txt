@@ -1,9 +1,32 @@
 .. automodule:: qflow.wavefunctions
 
 .. autoclass:: qflow.wavefunctions.Wavefunction
-   :members:
+   :members: __call__, gradient, drift_force, laplacian, symmetry_metric
 
+   .. autoattribute:: qflow.wavefunctions.Wavefunction.parameters
+
+Standalone Wavefunctions
+^^^^^^^^^^^^^^^^^^^^^^^^
 .. autoclass:: qflow.wavefunctions.SimpleGaussian
-   :members:
-   :special-members:
+   :members: __init__
 
+.. autoclass:: qflow.wavefunctions.HardSphereWavefunction
+   :members: __init__
+
+.. autoclass:: qflow.wavefunctions.JastrowOrion
+   :members: __init__
+
+.. autoclass:: qflow.wavefunctions.RBMWavefunction
+   :members: __init__
+
+Composite Wavfunctions
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. autoclass:: qflow.wavefunctions.FixedWavefunction
+   :members: __init__
+
+.. autoclass:: qflow.wavefunctions.WavefunctionProduct
+   :members: __init__
+
+.. autoclass:: qflow.wavefunctions.SumPooling
+   :members: __init__
