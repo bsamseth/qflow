@@ -6,6 +6,11 @@
 QFlow - Quantum Variational Monte Carlo Framework
 =================================================
 
+.. warning::
+   This package, including these documentation pages, are under acive
+   development. If you somehow stumbled across this now, you should make a
+   reminder to check back in in a month or two.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
