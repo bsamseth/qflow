@@ -1,3 +1,4 @@
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 from mpi4py import MPI
@@ -25,7 +26,7 @@ from qflow.wavefunctions.nn.activations import (
 from qflow.wavefunctions.nn.layers import DenseLayer
 
 H1 = CoulombHarmonicOscillator()
-P, D = 2, 2  # Particles, dimensions
+P, D = 8, 3  # Particles, dimensions
 N = 4  # Hidden nodes
 system = np.empty((P, D))
 
@@ -52,11 +53,15 @@ train(
     psi,
     H1,
     psi_sampler,
-    iters=20000,
+    iters=50,
     samples=1000,
     gamma=0,
     optimizer=AdamOptimizer(len(psi.parameters)),
-    call_backs=(psi_energies, psi_symmetries, psi_parameters),
+    # call_backs=(psi_energies, psi_symmetries, psi_parameters),
 )
 
-plot_training(psi_energies, psi_symmetries, psi_parameters[:20])
+if MPI.COMM_WORLD.rank == 0:
+    os.makedirs("logfiles", exist_ok=True)
+    np.savetxt("logfiles/QD-run-energies.npz", psi_energies)
+    np.savetxt("logfiles/QD-run-symmetries.npz", psi_symmetries)
+    np.savetxt("logfiles/QD-run-parameters.npz", psi_energies)
