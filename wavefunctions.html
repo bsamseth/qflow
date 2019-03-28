@@ -165,32 +165,32 @@ set up a variety of different trial wavefunctions.</p>
 <p>All other code expecting a wavefunction instance will take a <a class="reference internal" href="#qflow.wavefunctions.Wavefunction" title="_qflow_backend.wavefunctions.Wavefunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Wavefunction</span></code></a> reference.</p>
 <p>In this context, a trial wavefunction is defied to be a class that can:</p>
 <ul class="simple">
-<li>Have zero or more parameters, <span class="math notranslate nohighlight">\(\vec\alpha\)</span></li>
-<li>Evaluate given some system configuraiton <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>:</li>
+<li><p>Have zero or more parameters, <span class="math notranslate nohighlight">\(\vec\alpha\)</span></p></li>
+<li><p>Evaluate given some system configuraiton <span class="math notranslate nohighlight">\(\mathbf{X}\)</span>:</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\text{Evaluation}_\Psi(\mathbf{X} = \Psi(\mathbf{X})\]</div>
 <ul class="simple">
-<li>Compute the gradient w.r.t. each variational parameter, <span class="math notranslate nohighlight">\(\vec{\alpha}\)</span>:</li>
+<li><p>Compute the gradient w.r.t. each variational parameter, <span class="math notranslate nohighlight">\(\vec{\alpha}\)</span>:</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\text{Gradient}_\Psi(\mathbf{X}) = \frac{1}{\Psi(\mathbf{X})}
     \frac{\partial \Psi(\mathbf{X})}{\partial\vec\alpha}\]</div>
 <ul class="simple">
-<li>Compute the drift force w.r.t. particle <span class="math notranslate nohighlight">\(k\)</span>’s dimensions ional coordinate <span class="math notranslate nohighlight">\(l\)</span>:</li>
+<li><p>Compute the drift force w.r.t. particle <span class="math notranslate nohighlight">\(k\)</span>’s dimensions ional coordinate <span class="math notranslate nohighlight">\(l\)</span>:</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\text{Drift}_{\Psi(\mathbf{X}), k,l} = \frac{2}{\Psi(\mathbf{X})}
     \frac{\partial \Psi(\mathbf{X})}{\partial X_{kl}}\]</div>
 <ul class="simple">
-<li>Compute the laplacian of a system of <span class="math notranslate nohighlight">\(N\)</span> particles in <span class="math notranslate nohighlight">\(D\)</span> dimensions:</li>
+<li><p>Compute the laplacian of a system of <span class="math notranslate nohighlight">\(N\)</span> particles in <span class="math notranslate nohighlight">\(D\)</span> dimensions:</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[\text{Laplacian}_\Psi(\mathbf{X}) = \sum_{k=1}^N\sum_{l=1}^D
     \frac{1}{\Psi(\mathbf{X})}\frac{\partial^2 \Psi(\mathbf{X})}{\partial X_{kl}^2}\]</div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Wavefunctions are limited to real-valued functions only - there is no
+<p class="admonition-title">Note</p>
+<p>Wavefunctions are limited to real-valued functions only - there is no
 support for complex valued wavefunctions at this time.</p>
 </div>
 <dl class="attribute">
@@ -212,14 +212,14 @@ support for complex valued wavefunctions at this time.</p>
 <code class="descname">drift_force</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#qflow.wavefunctions.Wavefunction.drift_force" title="Permalink to this definition">¶</a></dt>
 <dd><p>Overloaded function.</p>
 <ol class="arabic simple">
-<li>drift_force(self: qflow.wavefunctions.Wavefunction, system: numpy.ndarray[float64[m, n]], k: int, l: int) -&gt; float</li>
+<li><p>drift_force(self: qflow.wavefunctions.Wavefunction, system: numpy.ndarray[float64[m, n]], k: int, l: int) -&gt; float</p></li>
 </ol>
 <p>Return the drift force w.r.t. particle <span class="math notranslate nohighlight">\(k\)</span>’s dimensions ional coordinate <span class="math notranslate nohighlight">\(l\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[\text{Drift}_{\Psi(\mathbf{X}), k, l} = \frac{2}{\Psi(\mathbf{X})}
     \frac{\partial \Psi(\mathbf{X})}{\partial X_{kl}}\]</div>
 <ol class="arabic simple" start="2">
-<li>drift_force(self: qflow.wavefunctions.Wavefunction, system: numpy.ndarray[float64[m, n]]) -&gt; numpy.ndarray[float64[1, n]]</li>
+<li><p>drift_force(self: qflow.wavefunctions.Wavefunction, system: numpy.ndarray[float64[m, n]]) -&gt; numpy.ndarray[float64[1, n]]</p></li>
 </ol>
 <p>Return a list of drift forces for all particles and all dimensions.</p>
 <p>The list will be one-dimensional, such that
@@ -258,10 +258,10 @@ and <span class="math notranslate nohighlight">\(\mathcal{P}_n\)</span> is the s
 <p>Properties of this metric:</p>
 <blockquote>
 <div><ul class="simple">
-<li>It takes values in <span class="math notranslate nohighlight">\([0, 1]\)</span></li>
-<li>For symmetric wavefunctions, it equals exactly 1</li>
-<li>For anti-symmetric wavefunctions, it equals exactly 0</li>
-<li>Any other function evaluates in <span class="math notranslate nohighlight">\((0, 1)\)</span></li>
+<li><p>It takes values in <span class="math notranslate nohighlight">\([0, 1]\)</span></p></li>
+<li><p>For symmetric wavefunctions, it equals exactly 1</p></li>
+<li><p>For anti-symmetric wavefunctions, it equals exactly 0</p></li>
+<li><p>Any other function evaluates in <span class="math notranslate nohighlight">\((0, 1)\)</span></p></li>
 </ul>
 </div></blockquote>
 <p>This integral will be approximated with Monte Carlo integration using samples from the provided
