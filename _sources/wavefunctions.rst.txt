@@ -13,6 +13,9 @@ Standalone Wavefunctions
 .. autoclass:: qflow.wavefunctions.HardSphereWavefunction
    :members: __init__
 
+.. autoclass:: qflow.wavefunctions.JastrowPade
+   :members: __init__
+
 .. autoclass:: qflow.wavefunctions.JastrowOrion
    :members: __init__
 
