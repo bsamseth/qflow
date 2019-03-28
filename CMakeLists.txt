@@ -60,6 +60,7 @@ set(SOURCES
     qflow/samplers/metropolissampler.cpp
     qflow/samplers/sampler.cpp
     qflow/wavefunctions/hardspherewavefunction.cpp
+    qflow/wavefunctions/jastrowpade.cpp
     qflow/wavefunctions/jastroworion.cpp
     qflow/wavefunctions/nn/activations/activation.cpp
     qflow/wavefunctions/nn/dnn.cpp

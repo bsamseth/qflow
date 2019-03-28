@@ -2,6 +2,7 @@
 #include "fixedwavefunction.hpp"
 #include "hardspherewavefunction.hpp"
 #include "jastroworion.hpp"
+#include "jastrowpade.hpp"
 #include "rbmsymmetricwavefunction.hpp"
 #include "rbmwavefunction.hpp"
 #include "simplegaussian.hpp"
@@ -225,6 +226,17 @@ assumed constant.
              py::arg("alpha") = 0.5,
              py::arg("beta")  = 1,
              py::arg("a")     = 0);
+
+    py::class_<JastrowPade, Wavefunction>(m, "JastrowPade", R"doc(
+A correlation term meant to be suitable for particles in a harmonic oscillator potential with
+a repulsive Coulomb force causing interactions:
+
+.. math::
+
+    \Psi(\mathbf{X}) = \prod_{i < j}^N e^{\frac{\alpha r_ij}{1 + \beta r_ij}}
+
+)doc")
+        .def(py::init<Real, Real>(), py::arg("alpha") = 0.5, py::arg("beta") = 1);
 
     py::class_<JastrowOrion, Wavefunction>(m, "JastrowOrion", R"doc(
 A correlation term meant to be suitable for particles in a harmonic oscillator potential with
