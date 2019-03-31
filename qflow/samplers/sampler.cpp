@@ -24,11 +24,6 @@ Sampler::Sampler(const System& system, Wavefunction& wavefunction, Real step)
     {
         _psi_new = _psi_old = 1e-15;
     }
-
-    // Initialize distance caches.
-    // NOTE: Interleaving usage of different samplers of __different dimensions__ is not
-    // supported, and will likely lead to wrong calculations and/or segmentation faults.
-    Distance::init(system);
 }
 
 System& Sampler::next_configuration()

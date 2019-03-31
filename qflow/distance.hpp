@@ -9,7 +9,7 @@ namespace Distance
 {
 void start_tracking(const System&);
 void stop_tracking();
+void invalidate_cache(int i);
 Real probe(const System&, int i, int j);
-Real invalidate_cache(int i);
 
 }  // namespace Distance

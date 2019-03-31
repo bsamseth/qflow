@@ -26,6 +26,15 @@ void stop_tracking()
     tracking_ = false;
 }
 
+void invalidate_cache(int i)
+{
+    if (tracking_)
+    {
+        dirty_.row(i) = true;
+        dirty_.col(i) = true;
+    }
+}
+
 Real probe(const System& system, int i, int j)
 {
     if (tracking_)
@@ -41,14 +50,4 @@ Real probe(const System& system, int i, int j)
     // Not tracking distances, fall back to just compute on demand.
     return norm(system.row(i) - system.row(j));
 }
-
-void invalidate_cache(int i)
-{
-    if (tracking_)
-    {
-        dirty_.row(i) = true;
-        dirty_.col(i) = true;
-    }
-}
-
 }  // namespace Distance
