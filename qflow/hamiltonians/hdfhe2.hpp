@@ -31,6 +31,10 @@
  *             alpha =  13.353384            C_6          =  1.37732412
  *             D     =  1.241314             C_8          =  0.4253785
  *             r_m   =  2.9673 Å             C_10         =  0.178100
+ *
+ *
+ * Ref: Aziz et al, Chem. Phys 70, 4330 (1979).
+ * Condensed ref: Ruggeri et al, doi: 10.1103/physrevlett.120.205302
  */
 class HDFHE2 : public Hamiltonian
 {
