@@ -1,3 +1,4 @@
+#include "boxsampler.hpp"
 #include "gibbssampler.hpp"
 #include "importancesampler.hpp"
 #include "metropolissampler.hpp"
@@ -180,8 +181,23 @@ meaning of the `step_size`.
              py::arg("system"),
              py::arg("wavefunction"),
              py::arg("step_size") = 0.1);
+
     py::class_<GibbsSampler, Sampler>(m, "GibbsSampler")
         .def(py::init<const System&, RBMWavefunction&>(),
              py::arg("system"),
              py::arg("rbm_wavefunction"));
+
+    py::class_<BoxMetropolisSampler, MetropolisSampler>(m, "BoxMetropolisSampler")
+        .def(py::init<const System&, Wavefunction&, Real, Real>(),
+             py::arg("system"),
+             py::arg("wavefunction"),
+             py::arg("box_size"),
+             py::arg("step_size") = 1);
+
+    py::class_<BoxImportanceSampler, ImportanceSampler>(m, "BoxImportanceSampler")
+        .def(py::init<const System&, Wavefunction&, Real, Real>(),
+             py::arg("system"),
+             py::arg("wavefunction"),
+             py::arg("box_size"),
+             py::arg("step_size") = 0.1);
 }
