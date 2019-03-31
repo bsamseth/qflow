@@ -2,6 +2,7 @@
 #include "hamiltonian.hpp"
 #include "hardsphereharmonicoscillator.hpp"
 #include "harmonicoscillator.hpp"
+#include "hdfhe2.hpp"
 
 #include <Eigen/Dense>
 #include <pybind11/eigen.h>
@@ -55,4 +56,7 @@ void init_hamiltonian(py::module& main)
              py::arg("omega_ho") = 1,
              py::arg("omega_z")  = 1,
              py::arg("h")        = NUMMERIC_DIFF_STEP);
+
+    py::class_<HDFHE2, Hamiltonian>(m, "HDFHE2")
+        .def(py::init<Real>(), py::arg("h") = NUMMERIC_DIFF_STEP);
 }
