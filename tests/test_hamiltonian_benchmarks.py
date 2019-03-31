@@ -4,6 +4,7 @@ import pytest
 from qflow.hamiltonians import HarmonicOscillator
 from qflow.samplers import ImportanceSampler
 from qflow.wavefunctions import SimpleGaussian
+from qflow import DistanceCache
 
 H0 = HarmonicOscillator()
 psi0 = SimpleGaussian(0.5)
@@ -59,3 +60,12 @@ def test_E_L_grad_large(benchmark):
 def test_mean_dist_large(benchmark):
     result = benchmark(H0.mean_distance, ImportanceSampler(large_system, psi0), samples)
     assert np.isfinite(result).all()
+
+
+@pytest.mark.benchmark(group="Large system", warmup=True)
+def test_mean_dist_large_cached(benchmark):
+    with DistanceCache(large_system):
+        result = benchmark(
+            H0.mean_distance, ImportanceSampler(large_system, psi0), samples
+        )
+        assert np.isfinite(result).all()
