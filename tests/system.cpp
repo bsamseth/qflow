@@ -2,7 +2,6 @@
 
 #include "distance.hpp"
 
-#include <chrono>
 #include <gtest/gtest.h>
 
 TEST(System, basics)
@@ -54,12 +53,13 @@ TEST(System, distances)
          0.0000000000000000},
     };
 
+    Distance::start_tracking(s);
     for (int i = 0; i < (int) expected.size(); i++)
     {
         for (int j = 0; j < (int) expected.size(); j++)
         {
             ASSERT_DOUBLE_EQ(expected[i][j], Distance::probe(s, i, j));
-            ;
         }
     }
+    Distance::stop_tracking();
 }
