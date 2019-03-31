@@ -12,8 +12,6 @@ include(Colors)
 # --------------------------------------------------------------------------------
 #                          Compile flags (change as needed).
 # --------------------------------------------------------------------------------
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-
 # Things to always include as flags. Change as needed.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -fopenmp")
 
@@ -113,6 +111,13 @@ if(MPI_LINK_FLAGS)
   set_target_properties(_qflow_backend PROPERTIES
     LINK_FLAGS "${MPI_LINK_FLAGS}")
 endif()
+
+set_target_properties(engine _qflow_backend PROPERTIES
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED YES
+    CXX_EXTENSIONS NO
+)
+
 # --------------------------------------------------------------------------------
 #                         Make Tests (no change needed).
 # --------------------------------------------------------------------------------
