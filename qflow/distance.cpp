@@ -11,11 +11,14 @@ Eigen::Array<Real, Eigen::Dynamic, Eigen::Dynamic> dist_;
 
 void start_tracking(const System& system)
 {
-    dirty_    = Eigen::Array<bool, Eigen::Dynamic, Eigen::Dynamic>::Ones(system.rows(),
-                                                                      system.rows());
-    dist_     = Eigen::Array<Real, Eigen::Dynamic, Eigen::Dynamic>::Zero(system.rows(),
-                                                                     system.rows());
-    tracking_ = true;
+    if (!tracking_ || (system.rows() != dist_.rows()))
+    {
+        dirty_ = Eigen::Array<bool, Eigen::Dynamic, Eigen::Dynamic>::Ones(
+            system.rows(), system.rows());
+        dist_ = Eigen::Array<Real, Eigen::Dynamic, Eigen::Dynamic>::Zero(system.rows(),
+                                                                         system.rows());
+        tracking_ = true;
+    }
 }
 
 void stop_tracking()
@@ -35,13 +38,17 @@ Real probe(const System& system, int i, int j)
         }
         return dist_(i, j);
     }
+    // Not tracking distances, fall back to just compute on demand.
     return norm(system.row(i) - system.row(j));
 }
 
 void invalidate_cache(int i)
 {
-    dirty_.row(i) = true;
-    dirty_.col(i) = true;
+    if (tracking_)
+    {
+        dirty_.row(i) = true;
+        dirty_.col(i) = true;
+    }
 }
 
 }  // namespace Distance

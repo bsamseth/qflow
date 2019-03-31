@@ -11,3 +11,14 @@ __all__ = [
 ]
 
 _init_mpi()
+
+
+class DistanceCache(object):
+    def __init__(self, system):
+        self.system = system
+
+    def __enter__(self):
+        _start_distance_tracking(self.system)
+
+    def __exit__(self):
+        _stop_distance_tracking()
