@@ -1,5 +1,7 @@
 #include "system.hpp"
 
+#include "distance.hpp"
+
 #include <chrono>
 #include <gtest/gtest.h>
 
@@ -56,7 +58,7 @@ TEST(System, distances)
     {
         for (int j = 0; j < (int) expected.size(); j++)
         {
-            ASSERT_DOUBLE_EQ(expected[i][j], distance(s, i, j));
+            ASSERT_DOUBLE_EQ(expected[i][j], Distance::probe(s, i, j));
             ;
         }
     }
