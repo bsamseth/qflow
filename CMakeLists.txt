@@ -47,6 +47,7 @@ include_directories(
 
 set(SOURCES
     qflow/definitions.cpp
+    qflow/distance.cpp
     qflow/hamiltonians/coulombharmonicoscillator.cpp
     qflow/hamiltonians/hamiltonian.cpp
     qflow/hamiltonians/hardsphereharmonicoscillator.cpp
