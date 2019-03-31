@@ -8,6 +8,7 @@ void init_wavefunction(py::module&);
 void init_sampler(py::module&);
 void init_hamiltonian(py::module&);
 void init_optimizer(py::module&);
+void init_distance(py::module&);
 
 PYBIND11_MODULE(_qflow_backend, m)
 {
@@ -20,6 +21,7 @@ QFlow - Quantum Variational Monte Carlo Framework
 
     m.def("_init_mpi", &mpiutil::initialize_mpi);
 
+    init_distance(m);
     init_wavefunction(m);
     init_sampler(m);
     init_hamiltonian(m);
@@ -30,4 +32,10 @@ QFlow - Quantum Variational Monte Carlo Framework
 #else
     m.attr("__version__") = "dev";
 #endif
+}
+
+void init_distance(py::module& m)
+{
+    m.def("_start_distance_tracking", &Distance::start_tracking);
+    m.def("_stop_distance_tracking", &Distance::stop_tracking);
 }

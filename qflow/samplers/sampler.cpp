@@ -1,6 +1,7 @@
 #include "sampler.hpp"
 
 #include "definitions.hpp"
+#include "distance.hpp"
 #include "hamiltonian.hpp"
 #include "system.hpp"
 #include "wavefunction.hpp"
@@ -23,6 +24,11 @@ Sampler::Sampler(const System& system, Wavefunction& wavefunction, Real step)
     {
         _psi_new = _psi_old = 1e-15;
     }
+
+    // Initialize distance caches.
+    // NOTE: Interleaving usage of different samplers of __different dimensions__ is not
+    // supported, and will likely lead to wrong calculations and/or segmentation faults.
+    Distance::init(system);
 }
 
 System& Sampler::next_configuration()
@@ -34,6 +40,7 @@ System& Sampler::next_configuration()
         _accepted_steps++;
         _system_old.row(_particle_to_move) = _system_new.row(_particle_to_move);
         _psi_old                           = _psi_new;
+        Distance::invalidate_cache(_particle_to_move);
     }
     else
     {

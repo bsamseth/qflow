@@ -1,6 +1,7 @@
 #include "hardspherewavefunction.hpp"
 
 #include "definitions.hpp"
+#include "distance.hpp"
 #include "system.hpp"
 #include "vector.hpp"
 
@@ -20,7 +21,7 @@ Real HardSphereWavefunction::correlation(const System& system) const
     {
         for (int j = i + 1; j < system.rows(); ++j)
         {
-            Real r_ij = distance(system, i, j);
+            Real r_ij = Distance::probe(system, i, j);
 
             if (r_ij <= a)
                 return 0.0;
@@ -66,7 +67,7 @@ Real HardSphereWavefunction::laplacian(const System& system)
             if (j == k)
                 continue;
             const RowVector r_kj      = r_k - system.row(j);
-            const Real      r_kj_norm = distance(system, k, j);
+            const Real      r_kj_norm = Distance::probe(system, k, j);
 
             term1 += r_kj * (a / (square(r_kj_norm) * (r_kj_norm - a)));
 
@@ -79,7 +80,7 @@ Real HardSphereWavefunction::laplacian(const System& system)
                 if (i == k)
                     continue;
                 const RowVector r_ki      = r_k - system.row(i);
-                const Real      r_ki_norm = distance(system, k, i);
+                const Real      r_ki_norm = Distance::probe(system, k, i);
 
                 term2 += (r_ki.dot(r_kj)) * square(a)
                          / (square(r_ki_norm * r_kj_norm) * (r_ki_norm - a)

@@ -1,6 +1,7 @@
 #include "coulombharmonicoscillator.hpp"
 
 #include "definitions.hpp"
+#include "distance.hpp"
 #include "system.hpp"
 
 Real CoulombHarmonicOscillator::internal_potential(const System& system) const
@@ -11,7 +12,7 @@ Real CoulombHarmonicOscillator::internal_potential(const System& system) const
     {
         for (int j = i + 1; j < P; ++j)
         {
-            pot += 1.0 / distance(system, i, j);
+            pot += 1.0 / Distance::probe(system, i, j);
         }
     }
     return pot;

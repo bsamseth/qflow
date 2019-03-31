@@ -1,5 +1,7 @@
 #include "jastroworion.hpp"
 
+#include "distance.hpp"
+
 #include <cmath>
 
 JastrowOrion::JastrowOrion(Real beta, Real gamma)
@@ -16,7 +18,7 @@ Real JastrowOrion::operator()(const System& system)
     {
         for (int j = i + 1; j < N; ++j)
         {
-            const Real r_ij = distance(system, i, j);
+            const Real r_ij = Distance::probe(system, i, j);
             res += -0.5 * square(beta * r_ij) + std::abs(beta * gamma) * r_ij;
         }
     }
@@ -32,7 +34,7 @@ RowVector JastrowOrion::gradient(const System& system)
     {
         for (int j = i + 1; j < N; ++j)
         {
-            const Real r_ij = distance(system, i, j);
+            const Real r_ij = Distance::probe(system, i, j);
             grad[0] += r_ij * (-beta * r_ij + gamma * sign(gamma * beta));
             grad[1] += r_ij;
         }
@@ -48,13 +50,13 @@ Real JastrowOrion::drift_force(const System& system, int k, int d)
     Real       res = 0;
     for (int i = 0; i < k; ++i)
     {
-        const Real r_ik = distance(system, i, k);
+        const Real r_ik = Distance::probe(system, i, k);
         res += (-square(beta) + std::abs(beta * gamma) / r_ik)
                * (system(k, d) - system(i, d));
     }
     for (int j = k + 1; j < N; ++j)
     {
-        const Real r_kj = distance(system, k, j);
+        const Real r_kj = Distance::probe(system, k, j);
         res += (-square(beta) + std::abs(beta * gamma) / r_kj)
                * (system(k, d) - system(j, d));
     }
@@ -75,7 +77,7 @@ Real JastrowOrion::laplacian(const System& system)
 
         for (int i = 0; i < k; ++i)
         {
-            const Real r_ik = distance(system, i, k);
+            const Real r_ik = Distance::probe(system, i, k);
             term1 += (-square(beta) + std::abs(beta * gamma) / r_ik)
                      * (system.row(k) - system.row(i));
             term2 += (-square(beta) + std::abs(beta * gamma) / r_ik) * D;
@@ -84,7 +86,7 @@ Real JastrowOrion::laplacian(const System& system)
         }
         for (int j = k + 1; j < N; ++j)
         {
-            const Real r_kj = distance(system, k, j);
+            const Real r_kj = Distance::probe(system, k, j);
             term1 += (-square(beta) + std::abs(beta * gamma) / r_kj)
                      * (system.row(k) - system.row(j));
             term2 += (-square(beta) + std::abs(beta * gamma) / r_kj) * D;

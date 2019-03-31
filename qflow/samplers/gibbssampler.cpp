@@ -1,6 +1,7 @@
 #include "gibbssampler.hpp"
 
 #include "definitions.hpp"
+#include "distance.hpp"
 #include "hamiltonian.hpp"
 #include "system.hpp"
 #include "wavefunction.hpp"
@@ -45,6 +46,9 @@ System& GibbsSampler::next_configuration()
         std::normal_distribution<Real> dist(mean, _stddev);
         _system.data()[i] = dist(rand_gen);
     }
+
+    for (int p = 0; p < _system.rows(); Distance::invalidate_cache(p++))
+        ;
 
     ++_accepted_steps;
     ++_total_steps;

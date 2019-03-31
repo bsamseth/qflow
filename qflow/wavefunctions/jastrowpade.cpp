@@ -1,5 +1,7 @@
 #include "jastrowpade.hpp"
 
+#include "distance.hpp"
+
 #include <cmath>
 
 JastrowPade::JastrowPade(Real alpha, Real beta)
@@ -18,7 +20,7 @@ Real JastrowPade::operator()(const System& system)
     {
         for (int j = i + 1; j < N; ++j)
         {
-            const Real r_ij = distance(system, i, j);
+            const Real r_ij = Distance::probe(system, i, j);
             res += alpha_ * r_ij / (1 + beta * r_ij);
         }
     }
@@ -34,7 +36,7 @@ RowVector JastrowPade::gradient(const System& system)
     {
         for (int j = i + 1; j < N; ++j)
         {
-            const Real r_ij = distance(system, i, j);
+            const Real r_ij = Distance::probe(system, i, j);
             grad[0] -= alpha_ * r_ij * r_ij / square(1 + beta * r_ij);
         }
     }
@@ -50,7 +52,7 @@ Real JastrowPade::drift_force(const System& system, int k, int d)
     {
         if (i != k)
         {
-            const Real r_ik = distance(system, i, k);
+            const Real r_ik = Distance::probe(system, i, k);
             res += alpha_ * (system(k, d) - system(i, d))
                    / (square(1 + beta * r_ik) * r_ik);
         }
@@ -74,7 +76,7 @@ Real JastrowPade::laplacian(const System& system)
         {
             if (i != k)
             {
-                const Real r_ik       = distance(system, i, k);
+                const Real r_ik       = Distance::probe(system, i, k);
                 const Real beta_rik_1 = 1 + beta * r_ik;
                 const auto diff       = system.row(k) - system.row(i);
 

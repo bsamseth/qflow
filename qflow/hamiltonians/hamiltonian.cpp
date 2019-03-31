@@ -1,6 +1,7 @@
 #include "hamiltonian.hpp"
 
 #include "definitions.hpp"
+#include "distance.hpp"
 #include "mpi.h"
 #include "mpiutil.hpp"
 #include "sampler.hpp"
@@ -22,11 +23,14 @@ Real Hamiltonian::kinetic_energy_numeric(const System& system, Wavefunction& psi
         {
             const auto temp = s(i, d);
             s(i, d)         = temp + h_;
+            Distance::invalidate_cache(i);
             E_k += psi(s);
             s(i, d) = temp - h_;
+            Distance::invalidate_cache(i);
             E_k += psi(s);
             s(i, d) = temp;
         }
+        Distance::invalidate_cache(i);
     }
 
     return -0.5 * E_k / (h_ * h_);
@@ -174,7 +178,7 @@ Real Hamiltonian::mean_distance(Sampler& sampler, long samples) const
     Real dist = 0;
     for (long i = 0; i < samples_per_proc; ++i)
     {
-        dist += distance(sampler.next_configuration(), 0, 1);
+        dist += Distance::probe(sampler.next_configuration(), 0, 1);
     }
 
     Real global_dist;

@@ -1,5 +1,7 @@
 #include "hdfhe2.hpp"
 
+#include "distance.hpp"
+
 namespace
 {
 constexpr Real F(const Real r)
@@ -19,7 +21,7 @@ Real HDFHE2::internal_potential(const System& system) const
     {
         for (int j = i + 1; j < N; ++j)
         {
-            const Real r     = distance(system, i, j);
+            const Real r     = Distance::probe(system, i, j);
             const Real rm_r  = HDFHE2::r_m / r;
             const Real rm_r2 = square(rm_r);
             const Real rm_r3 = rm_r2 * rm_r;

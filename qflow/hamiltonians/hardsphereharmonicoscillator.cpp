@@ -1,6 +1,7 @@
 #include "hardsphereharmonicoscillator.hpp"
 
 #include "definitions.hpp"
+#include "distance.hpp"
 #include "system.hpp"
 
 #include <cassert>
@@ -31,7 +32,7 @@ Real HardSphereHarmonicOscillator::internal_potential(const System& system) cons
     {
         for (int j = i + 1; j < system.rows(); ++j)
         {
-            if (distance(system, i, j) <= a_)
+            if (Distance::probe(system, i, j) <= a_)
                 return std::numeric_limits<Real>::max();
         }
     }
