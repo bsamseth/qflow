@@ -1,6 +1,7 @@
 #include "dnn.hpp"
 #include "fixedwavefunction.hpp"
 #include "hardspherewavefunction.hpp"
+#include "jastrowmcmillian.hpp"
 #include "jastroworion.hpp"
 #include "jastrowpade.hpp"
 #include "rbmsymmetricwavefunction.hpp"
@@ -251,6 +252,9 @@ a repulsive Coulomb force causing interactions:
 
 )doc")
         .def(py::init<Real, Real>(), py::arg("beta") = 1.0, py::arg("gamma") = 0);
+
+    py::class_<JastrowMcMillian, Wavefunction>(m, "JastrowMcMillian")
+        .def(py::init<int, Real>(), py::arg("n") = 5, py::arg("beta") = 2.5);
 
     py::class_<RBMWavefunction, Wavefunction>(m, "RBMWavefunction")
         .def(py::init<int, int, Real, Real>(),
