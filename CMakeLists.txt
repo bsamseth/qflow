@@ -53,6 +53,7 @@ set(SOURCES
     qflow/hamiltonians/hardsphereharmonicoscillator.cpp
     qflow/hamiltonians/harmonicoscillator.cpp
     qflow/hamiltonians/hdfhe2.cpp
+    qflow/hamiltonians/lennardjones.cpp
     qflow/mpiutil.cpp
     qflow/optimizers/optimizer.cpp
     qflow/samplers/gibbssampler.cpp
