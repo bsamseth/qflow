@@ -38,6 +38,9 @@ QFlow - Quantum Variational Monte Carlo Framework
 
 void init_distance(py::module& m)
 {
-    m.def("_start_distance_tracking", &Distance::start_tracking);
+    m.def("_start_distance_tracking",
+          py::overload_cast<const System&>(&Distance::start_tracking));
+    m.def("_start_distance_tracking",
+          py::overload_cast<const System&, Real>(&Distance::start_tracking));
     m.def("_stop_distance_tracking", &Distance::stop_tracking);
 }

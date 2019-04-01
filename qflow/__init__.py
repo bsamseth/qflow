@@ -14,11 +14,15 @@ _init_mpi()
 
 
 class DistanceCache(object):
-    def __init__(self, system):
+    def __init__(self, system, pbc_size=None):
         self.system = system
+        self.pbc_size = pbc_size
 
     def __enter__(self):
-        _start_distance_tracking(self.system)
+        if self.pbc_size is not None:
+            _start_distance_tracking(self.system, self.pbc_size)
+        else:
+            _start_distance_tracking(self.system)
 
     def __exit__(self, exc_type, exc_value, traceback):
         _stop_distance_tracking()
