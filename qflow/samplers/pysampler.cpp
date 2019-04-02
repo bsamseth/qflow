@@ -58,7 +58,9 @@ samples are representative of the underlying distribution.
 
         .def_property_readonly("acceptance_rate", &Sampler::get_acceptance_rate, R"doc(
 Rate at which newly proposed samples where accepted by the algorithm.
-)doc");
+)doc")
+
+        .def_property_readonly("current_system", &Sampler::get_current_system);
 
     py::class_<MetropolisSampler, Sampler>(m, "MetropolisSampler", R"doc(
 Implementation of the standard Metropolis-Hastings algorithm, producing a
