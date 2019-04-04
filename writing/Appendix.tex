@@ -24,34 +24,34 @@ time. We blame this on the uncertainty principle. The result is that systems of
 identical particles become systems of \emph{indistinguishable} particles in
 quantum mechanics.
 
-Consider now a system of two indistinguishable particles, labeled $\vb X_1$ and
-$\vb X_2$, where $\vb X_i$ contains all the quantum numbers required to describe
+Consider now a system of two indistinguishable particles, labeled $\vec X_1$ and
+$\vec X_2$, where $\vec X_i$ contains all the quantum numbers required to describe
 particle $i$ (e.g. position coordinates and the $z$ component of spin). The
 systems is then described by a wavefunction
 
 \begin{align}
-    \Psi(\vb X_1, \vb X_2).
+    \Psi(\vec X_1, \vec X_2).
 \end{align}
 
 Because the particles are indistinguishable, this labeling of 1 and 2 is
 arbitrary, and so we should be able to relabel them:
 
 \begin{align}
-    \Psi(\vb X_2, \vb X_1)
+    \Psi(\vec X_2, \vec X_1)
 \end{align}
 
 These two equations, which represents exchanging the two particles, \emph{must}
 describe the same physical system, that is:
 
 \begin{align}
-    \abs{\Psi(\vb X_1, \vb X_2)}^2 &= \abs{\Psi(\vb X_2, \vb X_1)}^2\\
-    \iff \Psi(\vb X_1,\vb X_2) &= e^{i\alpha}\Psi(\vb X_2, \vb X_1),
+    \abs{\Psi(\vec X_1, \vec X_2)}^2 &= \abs{\Psi(\vec X_2, \vec X_1)}^2\\
+    \iff \Psi(\vec X_1,\vec X_2) &= e^{i\alpha}\Psi(\vec X_2, \vec X_1),
 \end{align}
 i.e. they can only differ in their complex phase. Repeating the exchange once
 more yields the original wavefunction, and so
 
 \begin{align}
-    \Psi(\vb X_1,\vb X_2) &= e^{2i\alpha}\Psi(\vb X_1, \vb X_2)\\
+    \Psi(\vec X_1,\vec X_2) &= e^{2i\alpha}\Psi(\vec X_1, \vec X_2)\\
     \iff e^{i\alpha} &= \pm 1.
 \end{align}
 This results states that any wavefunction, upon the exchange of
@@ -94,28 +94,28 @@ metric should have.
 \begin{definition}{Permutation Operator.}
 
      Let $\mathcal{P}_n$ denote the set of all permutations of the first $n$
-     natural numbers, $\{1, 2, \dots, n\}$, and let $\vb\alpha\in \mathcal{P}_n$
-     be one of these. Given a function $\Psi(\vb X_1, \vb X_2,\dots,\vb X_n)$ of
-     $n$ vectors $\vb X_i\in \mathbb{R}^f$, we let $P_{\vb\alpha}$ be an
+     natural numbers, $\{1, 2, \dots, n\}$, and let $\vec\alpha\in \mathcal{P}_n$
+     be one of these. Given a function $\Psi(\vec X_1, \vec X_2,\dots,\vec X_n)$ of
+     $n$ vectors $\vec X_i\in \mathbb{R}^f$, we let $P_{\vec\alpha}$ be an
      operator with the following property:
 
     \begin{align}
-        P_{\vb\alpha}\Psi(\vb X_1,\vb X_2,\dots,\vb X_n)
+        P_{\vec\alpha}\Psi(\vec X_1,\vec X_2,\dots,\vec X_n)
         \defeq
-        \Psi(\vb X_{\alpha_1},\vb X_{\alpha_1},\dots,\vb X_{\alpha_n}).
+        \Psi(\vec X_{\alpha_1},\vec X_{\alpha_1},\dots,\vec X_{\alpha_n}).
     \end{align}
 \end{definition}
 
 \begin{definition}{Symmetry Metric.}
 
-    Given a function $\Psi(\vb X_1, \vb X_2,\dots,\vb X_n)$ of $n$ vectors $\vb
-    X_i\in \mathbb{R}^f$. We use the notation $\dd{\vb X}\defeq \dd{\vb X_1}\dots\dd{\vb X_n}$.
+    Given a function $\Psi(\vec X_1, \vec X_2,\dots,\vec X_n)$ of $n$ vectors $\vec
+    X_i\in \mathbb{R}^f$. We use the notation $\dd{\vec X}\defeq \dd{\vec X_1}\dots\dd{\vec X_n}$.
     The Symmetry Metric of $\Psi$ is then defined as the following:
 
     \begin{align}\label{eq:symmetry-metric-def}
-        S(\Psi) &\defeq  \ddfrac{\intfy \dd{\vb X}\abs{\frac{1}{n!}
-        \sum_{\vb\alpha\in \mathcal{P}_n} P_{\vb\alpha}\Psi}^2}{\intfy\dd{\vb X}
-        \max_{\vb\alpha\in \mathcal{P}} \abs{P_{\vb\alpha}\Psi}^2}
+        S(\Psi) &\defeq  \ddfrac{\intfy \dd{\vec X}\abs{\frac{1}{n!}
+        \sum_{\vec\alpha\in \mathcal{P}_n} P_{\vec\alpha}\Psi}^2}{\intfy\dd{\vec X}
+        \max_{\vec\alpha\in \mathcal{P}} \abs{P_{\vec\alpha}\Psi}^2}
     \end{align}
 \end{definition}
 \begin{corollary}
@@ -128,8 +128,8 @@ metric should have.
     absolute value of the average of a set must be less than or equal to the maximum
     absolute value of the set, and equal iff. all values are equal. That is,
     \begin{align}
-        \abs{\frac{1}{n!} \sum_{\vb\alpha\in \mathcal{P}_n} P_{\vb\alpha}\Psi}^2
-        \leq \max_{\vb\alpha\in \mathcal{P}} \abs{P_{\vb\alpha}\Psi}^2.
+        \abs{\frac{1}{n!} \sum_{\vec\alpha\in \mathcal{P}_n} P_{\vec\alpha}\Psi}^2
+        \leq \max_{\vec\alpha\in \mathcal{P}} \abs{P_{\vec\alpha}\Psi}^2.
     \end{align}
     From this it follows that $S(\Psi) \leq 1$.
 \end{proof}
@@ -151,8 +151,8 @@ metric should have.
     \end{align}
 \end{corollary}
 \begin{proof}
-    For a symmetric function we have $P_{\vb\alpha}\Psi=\Psi$ for all
-    $\vb\alpha\in\mathcal{P}_n$ by definition. The result then follows directly.\end{proof}
+    For a symmetric function we have $P_{\vec\alpha}\Psi=\Psi$ for all
+    $\vec\alpha\in\mathcal{P}_n$ by definition. The result then follows directly.\end{proof}
 \begin{corollary}
     For a anti-symmetric function $\overline\Psi$ we have
     \begin{align}
@@ -163,7 +163,7 @@ metric should have.
    Of the $n!$ possible permutations, half can be written as an even number of
     pairwise exchanges, and half as an odd number. This implies
     \begin{align}
-        \sum_{\vb\alpha\in \mathcal{P}_n} P_{\vb\alpha}\Psi = 0,
+        \sum_{\vec\alpha\in \mathcal{P}_n} P_{\vec\alpha}\Psi = 0,
     \end{align}
     and thus the result following from this.
 \end{proof}
@@ -194,11 +194,11 @@ The standard RBM definition is stated for reference:
 We now define that the RBM has $M$ degrees of freedom, as before, and that each
 particle has $f$ of them related to its coordinates. In this case, for the RBM
 to be symmetric upon the exchange of particles, each group of $f$ entries in
-$\vb X$ should be treated equally within the wavefunction.
+$\vec X$ should be treated equally within the wavefunction.
 
-We define $\vb b\in \mathbb{R}^{N}$ as before, i.e. one bias value per hidden
-node in the RBM. Let $\vb a\in \mathbb{R}^{f}$ be a vector of biases, with one
-value \emph{per coordinate direction}. Further, let $\vb W\in \mathbb{R}^{f
+We define $\vec b\in \mathbb{R}^{N}$ as before, i.e. one bias value per hidden
+node in the RBM. Let $\vec a\in \mathbb{R}^{f}$ be a vector of biases, with one
+value \emph{per coordinate direction}. Further, let $\vec W\in \mathbb{R}^{f
 \times N}$ be a matrix of weights. The weights connect each coordinate to every
 hidden node. For notational breviety, we also denote $c(i) \defeq i \pmod{f} + 1$. We
 define the symmetric version of the RBM then as follows:
