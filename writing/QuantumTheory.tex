@@ -318,7 +318,141 @@ in the literature. We do this so as to be able to benchmark the eventual results
 know exact solutions, our when this does not exist, against the state-of-the-art results
 available.
 
+\subsection{Quantum Dots}
 
+We consider a system of electrically charged particles (e.g. electrons) confined in a pure
+isotropic harmonic oscillator potential, with an idealized total Hamiltonian
+given by:
+
+\begin{align}
+    \begin{split}
+        \hat H &= \sum_{i=1}^N\qty(-\frac{1}{2}\laplacian_i + V_{ext}(\vec r_i)) +
+        \sum_{i < j} V_{int}(\vec r_i, \vec r_j)\\
+        &= \sum_{i=1}^N\qty(-\frac{1}{2}\laplacian_i + \frac{1}{2}\omega^2
+        r_i^2) + \sum_{i < j} \frac{1}{r_{ij}},
+    \end{split}\label{eq:H-QD-def}
+\end{align}
+where natural units ($\hbar=c=m_e=1$) are used with energies in
+atomic units (a.u.), $N$ denotes the number of particles in the system, and
+$\omega$ is the oscillator frequency of the trap. Further, $\vec r_i$
+denotes the position vector of particle $i$, with $r_i \equiv \norm{\vec r}$ and
+$r_{ij}\equiv \norm{\vec r_i - \vec r_j}$ defined for notational brevity.
+
+This system describes particles trapped in a parabolic potential well, being pulled
+towards the bottom of the well at all times, while simultaneously feeling the repulsive
+Coulomb forces from the other particles. This hinders all particles from settling together
+at the bottom. Even for this somewhat idealized system, the interplay between these two
+opposing forces gives rise to a surprisingly complex problem, which will prove remarkably
+hard to solve analytically even for two particles, and utterly impossible for higher $N$.
+
+In our case, we limit ourselves to $N=2$ interacting electrons in two
+dimensions in a trap with a frequency such that $\hbar \omega = 1$. We do this because for
+this case we have exact, analytical solutions for the ground state energy. With the
+interaction term included, the ground state energy is $E_0 = \SI{3}{\au}$~\cite{Taut1993}.
+This limitation is purely one of convenience, as having exact benchmarks makes for better
+verification of results. Furthermore, limiting the size of the problem makes the required
+computation time manageable, which is good when experimenting with various techniques.
+
+\subsubsection{Simple Non-Interacting Case}
+If we omit the interacting terms in \autoref{eq:H-QD-def} we have
+the standard harmonic oscillator Hamiltonian:
+\begin{align}
+    \hat H_0 &= \sum_{i=1}^N\qty(-\frac{1}{2}\laplacian_i +
+    \frac{1}{2}\omega^2 r_i^2).
+\end{align}
+This Hamiltonian lends it self to analytical solutions, and the stationary
+single particle states are:
+\begin{align}
+    \phi_{n_x, n_y}(x, y) &= A H_{n_x}(\sqrt\omega x)H_{n_y}(\sqrt\omega y)
+    e^{-\frac{\omega}{2}\qty(x^2 + y^2)},
+\end{align} 
+for quantum numbers $n_x, n_y = 0, 1,\dots$, and the Hermite polynomials
+$H_n$ (not to be confused with the Hamiltonians, and never to be mentioned again). The
+ground state, $n_x=n_y=0$ is simply
+\begin{align}
+    \phi_{00}(x,y) =
+    \sqrt{\frac{\omega}{\pi}}e^{-\frac{\omega}{2}\qty(x^2+y^2)}.
+\end{align}
+Using this wavefunction we can calculate the ground state
+energy,
+\begin{align}
+    \epsilon_{00} = \frac{\expval{\hat H_0}{\phi_{00}}}{\braket{\phi_{00}}}
+    = \omega = \SI{1}{\au}
+\end{align}
+The ground state wavefunction for the (unperturbed) two-electron case is simply the
+product of the one-electron wavefunctions,
+\begin{align}
+    \begin{split}
+        \Phi(\vec r_1, \vec r_2) &= \phi_{00}(\vec r_1)\phi_{00}(\vec r_2)\\
+        &= \frac{\omega}{\pi} e^{-\frac{\omega}{2}\qty(r_1^2+r_2^2)}.
+    \end{split}\label{eq:Phi-non-inter}
+\end{align}
+The ground state energy can once again be evaluated
+analytically and yields
+\begin{align}
+    E_0 = \frac{\expval{\hat H_0}{\Phi}}{\braket{\Phi}}
+    = 2\omega =\SI{2}{\au}
+\end{align}
+This result is not surprising, as adding one more particle, without any
+interactions, should simply double the energy. Another way to look at it is
+that the simple harmonic oscillator solution gives $\flatfrac{\omega}{2}$
+per degree of freedom, so adding another two yields and extra $\omega$.
+
+
+When the two particles are electrons, we may say something about their total
+spin. As electrons are fermions, their total wavefunction must be
+anti-symmetric upon interchanging the labels $1$ and $2$.
+\autoref{eq:Phi-non-inter} is obviously symmetric, and so the
+spin-wavefunction must necessarily be anti-symmetric. For the combination of
+two spin-1/2 particles, there is only one candidate, namely the spin-0
+singlet:
+
+\begin{align}
+    \chi_0 = \frac{1}{\sqrt 2}\qty(\ket{\uparrow\downarrow} -
+    \ket{\downarrow\uparrow}).
+\end{align}
+A similar argument can be made for particles with different spins.
+
+\subsubsection{Considerations from the Virial Theorem}
+
+The Virial Theorem gives a general relation for the time-averaged kinetic
+energy $\expval{K}$ and the corresponding potential energy
+$\expval{V_{pot}}$ of a stable system of $N$ particles. In general the
+theorem is stated as:
+
+\begin{align}
+    \expval{K} = -\frac{1}{2}\sum_{k=1}^N \expval{\vec F_k \cdot \vec
+    r_k},\label{eq:virial-theorem}
+\end{align}
+where $\vec F_k$ denotes the combined forces acting on particle $k$, located
+at position $\vec r_k$. For a radial potential on the form $V(r)=ar^n$, such
+that the potential between any two particles in the system depends on some
+power of the inter-particle distance, the
+theorem takes the following form:
+\begin{align}
+    \expval{K} = \frac{n}{2}\expval{V_{TOT}}
+\end{align}
+where $V_{TOT}$ denotes the sum of the potential energy $V(r)$ over all
+pairs of particles. 
+
+Although the harmonic oscillator potential does not depend on the
+\emph{inter-particle} distance, but rather on each particles position, it
+works out to the same relation in our case. Computing the full relation for
+our Hamiltonian for two electrons in two dimensions, it even works out so
+that we can use the same relation on the HO potential and the Coulomb
+potential separately, and add the result.\footnote{We can (and have) work(ed) this out
+via \autoref{eq:virial-theorem} directly using the corresponding forces for
+the harmonic oscillator and Coulomb potential. A write-up of the derivation is not given
+though, as this is a well known result.} This means that the Virial Theorem
+predicts the following~\cite{Katriel2012}:
+
+\begin{align}
+    \expval{K} = \expval{V_{ext}} -
+    \frac{1}{2}\expval{V_{int}}.\label{eq:virial-result}
+\end{align}
+Note that this implies that we should consider the \emph{total} kinetic
+energy, and the \emph{total} external and internal potential energies, as opposed to per
+particle. 
 
 
 
