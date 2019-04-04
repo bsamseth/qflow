@@ -1,5 +1,5 @@
 from _qflow_backend import *
-from _qflow_backend import _init_mpi, _start_distance_tracking, _stop_distance_tracking
+from _qflow_backend import _init_mpi, _start_distance_tracking, _stop_distance_tracking, _set_simulation_box_size, _disable_simulation_box, _get_simulation_box_size
 
 __all__ = [
     "wavefunctions",
@@ -12,6 +12,16 @@ __all__ = [
 
 _init_mpi()
 
+class SimulationBox(object):
+    def __init__(self, L):
+        self.L = L
+
+    def __enter__(self):
+        self.old_L = _get_simulation_box_size()
+        _set_simulation_box_size(self.L)
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        _set_simulation_box_size(self.old_L)
 
 class DistanceCache(object):
     def __init__(self, system, pbc_size=None):

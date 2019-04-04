@@ -43,4 +43,7 @@ void init_distance(py::module& m)
     m.def("_start_distance_tracking",
           py::overload_cast<const System&, Real>(&Distance::start_tracking));
     m.def("_stop_distance_tracking", &Distance::stop_tracking);
+    m.def("_set_simulation_box_size", &Distance::set_simulation_box_size);
+    m.def("_disable_simulation_box", &Distance::disable_simulation_box);
+    m.def("_get_simulation_box_size", &Distance::get_simulation_box_size);
 }

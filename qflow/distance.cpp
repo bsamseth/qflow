@@ -52,6 +52,11 @@ void disable_simulation_box()
     pbc_size = -1;
 }
 
+Real get_simulation_box_size()
+{
+    return pbc_size;
+}
+
 void invalidate_cache(int i)
 {
     if (tracking_)
