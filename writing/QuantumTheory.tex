@@ -160,7 +160,8 @@ appropriate sums. The general form of the Many-Body Hamiltonian we will consider
 \begin{align}
     \hat H &= - \sum_{i=1}^N \frac{\hbar^2}{2m_i} \laplacian_i + V(\vb x_1, \vb x_2,\dots,
     \vb x_N)\\
-    &= -\sum_{i=1}^N \frac{\hbar^2}{2m_i} \laplacian_i + V(\vb X)
+    &= -\sum_{i=1}^N \frac{\hbar^2}{2m_i} \laplacian_i + V(\vb
+    X)\label{eq:Hamiltonian-operator-general}
 \end{align}
 were $\mat X \defeq (\vb x_1 \vb x_2\dots\vb x_N)\in \mathbb{R}^{N\times D}$ is the matrix
 of $D$-dimensional column vectors of coordinates for each particle. For further clarity,
@@ -262,5 +263,63 @@ any number of particles, and is summarized in the following theorem.
     when two particles are swapped. Particles with wave functions antisymmetric under
     exchange are called fermions.
 \end{theorem}
+
+\section{Observables - From Wave function to Measurement}
+
+We have previously stated that armed with the correct wave function we can compute any
+measurable quantity of interest. This statement would not be of much use without going
+into exactly how one can go about this.
+
+Assume we want to compute an observable $O$. The first step is to determine the
+corresponding \emph{operator} $\hat O$. This is in general done by taking the classical
+description of the observable and performing a canonical transformation\footnote{There are
+also quantities that do not have a classical analog (e.g. spin) for which we can still
+find operator forms.}. Most notably, we have for the following transformations for
+position and momentum:
+
+\begin{align}
+    \vb x &\rightarrow \vb x\\
+    \vb p &\rightarrow -i\hbar\grad
+\end{align}
+For example, as is often the case, let's say we want to compute the total energy of the
+system. For $N$ particles that would classically be
+\begin{align}
+    H = \sum_{i=1}^N \frac{p_i^2}{2m_i} + V(\vb X)
+\end{align}
+where $\vb p_i$ denotes the momentum of particle $i$, all of which are placed in some
+spacial potential $V$. It is easily verified that if we perform the above mentioned
+substitutions we will recover \autoref{eq:Hamiltonian-operator-general} and recognize
+it as the Hamiltonian operator.
+
+Finally, having both the wave function and the appropriate operator $\hat O$ we can
+compute the expectation of that observable:
+
+\begin{align}
+    \expval{O}=\expval{\hat O}&= \frac{\expval{\hat O}{\Psi}}{\braket{\Psi}} \\
+    &= \frac{\int\dd{\vb X} \Psi^*(\vb X)\hat O(\vb X)\Psi(\vb X)}{\int\dd{\vb X}
+    \abs{\Psi(\vb X)}^2}
+\end{align}
+where $\int\dd{\vb X}\qty(\cdot)$ indicates an integral over all possible configurations of the
+system (e.g. all possible position and spin values for each particle). Often we have
+required the wave function to be normalized in such a way that the denominator is equal to
+unity, and can then be omitted. 
+
+For many-body systems it should be apparent that this integral quickly becomes intractable
+to compute analytically. In practice we employ a numerical strategy to evaluate these
+integrals, where the technique we use depends on the dimensionality of the integral and
+the required level of accuracy.
+
+\section{Example Systems}
+
+So far no particular system description has been presented. In this thesis we focus our
+attention on two particular system for illustration purposes. These systems have been
+chosen largely due to their simplicity and/or the amount of preexisting results available
+in the literature. We do this so as to be able to benchmark the eventual results against
+know exact solutions, our when this does not exist, against the state-of-the-art results
+available.
+
+
+
+
 
 \end{document}
