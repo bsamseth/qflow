@@ -1,0 +1,266 @@
+\documentclass[Thesis.tex]{subfiles}
+\begin{document}
+\chapter{The Quantum Problem}
+
+
+\section{Problem Statement}
+
+Let us assume that we are interested in investigating the properties of some quantum
+mechanical system. The first step is then to firmly establish how we should describe this
+system and the laws that govern its behaviour. For the entirety of this thesis, we shall
+assume that the systems we consider do not show any significant relativistic behaviour, so
+that no such considerations are necessary.
+
+If we were interested in a system consisting of non-quantum entities (e.g. a base ball
+trajectory as its thrown through the air towards a batter), we would likely turn to our
+classical laws, such as Newtons second law of motion
+%
+\begin{align} 
+    \sum_i \vec F_i(t) = \dv{\vec p(t)}{t} 
+\end{align}
+%
+\noindent where the $\vec F_i$ are the forces acting on the ball, and $\vec p$ is its momentum at
+any given point in time. Using the law of motion we can use our knowledge about how the
+environment affects the object to \emph{deterministically} calculate the resulting
+behaviour. The really nice thing is that, if we also know the mass of the object, then we
+can derive the value any other measurable physical quantity of interest. As such,
+\emph{solving} a classical system could be said to consist of the following steps steps:
+
+\begin{enumerate}
+    \item Define the environment, i.e. the forces acting on the object(s)
+    \item Use the Second Law of Motion to obtain momentum $\vec p(t)$ and position $x(t)$
+    \item Compute quantity of interest, $Q(\vec p, \vec x, t)$
+\end{enumerate}
+
+Moving to the quantum world, much of the same procedure remains the same. For the quantum
+case, we have a different law of motion. In our non-relativistic view, this is the
+Time-Dependant Schrödinger Equation:
+
+\begin{align}
+    \hat H\ket{\Psi} &= i\hbar \pdv{}{t}\ket{\Psi}\label{eq:schrodinger-time-dependent-general}
+\end{align}
+%
+Here $i$ is the imaginary unit, $\hbar=\flatfrac{h}{2\pi}$ is the reduced Planck constant.
+The thing we want to solve for in this case is the so called wave function $\ket{\Psi}$
+(explained momentarily), while the description of the system (analogous to the forces in
+classical mechanics) goes into $\hat H$. The latter is referred to as the Hamiltonian
+operator, and should be a complete description of the kinetic and potential energies of
+the particles involved. As an example, the equation for a single particle in a energy
+potential $V$ can be written as follows (where we explicitly use the position basis):
+
+\begin{align}
+    \qty[-\frac{\hbar^2}{2m} \laplacian + V(\vb x; t)]\Psi(\vb x;t) =
+    i\hbar\pdv{\Psi(\vb x; t)}{t}\label{eq:schrodinger-time-dependent-position-basis}
+\end{align}
+%
+where the first term constitutes the kinetic energy of the particle (with mass $m$), and the second term is
+naturally the potential energy. For the systems that we shall consider in this thesis, the
+Hamiltonians will all take this form, only varying the functional form of $V$.
+
+Knowing the wave function $\Psi$ of a system is analogous to knowing position and momentum
+in the classical view, in that we can compute any observable quantity from it. As such,
+obtaining the full expression for the correct wave function is of immense use.
+
+The wave function lacks a clear physical intuition for what exactly it \emph{is},
+like we have for classical mechanics. Perhaps the most helpful way to view $\Psi$ is
+through the fact that is squared absolute value, $\abs{\Psi(\vb r; t)}^2$, is the
+probability to find a particle at position $\vb x$ at time $t$. Thinking of the (squared
+norm of the) wave function as a substitute for the classical position $\vb x$ can
+therefore be a helpful aid, as long as the probabilistic nature of it is kept in mind.
+
+The steps for \emph{solving} a quantum system can then be summarized, analogous to the
+classical approach, as follows:
+\begin{enumerate}
+    \item Define the environment through choosing a form for the Hamiltonian $\hat H$
+    \item Use the Schrödinger equation to obtain the wave function $\Psi$
+    \item Use wave function to compute quantity of interest $Q$
+\end{enumerate}
+
+\section{Stationary States}
+
+\autoref{eq:schrodinger-time-dependent-position-basis} is a partial differential equation,
+as it contains partial derivatives of the wave function with respect to both position and
+time. The standard approach to solving this equation is through the method called
+Separation of Variables. We assume that the full wave function can be factorized as
+follows:
+
+\begin{align}
+    \Psi(\vb x; t) &= \psi(\vb x)\phi(t)\label{eq:separatable-wave-func-def}
+\end{align}
+%
+In addition, we assume that $V(\vb x; t) = V(\vb x)$, i.e. that the potential is
+time-independent\footnote{There are systems for which this assumption does not hold. We
+will, however, restrict ourself to consider only Hamiltonians for which this description
+is valid}. With these assumptions, we can divide through with $\Psi$ in
+\autoref{eq:schrodinger-time-dependent-position-basis} and obtain the
+following\footnote{One could be tempted to simply strike $\Psi$ from the lhs. of
+\autoref{eq:schrodinger-time-dependent-position-basis} when diving by $\Psi$. However, we
+must remember that the Hamiltonian is an operator (specifically seen through the
+$\laplacian$ in this case), and so we must divide only after letting this operate on
+$\Psi$.} 
+
+\begin{align}
+    \qty[- \frac{\hbar^2}{2m} \laplacian \psi + V(\vb x)\psi]\psi^{-1} &=
+    i\hbar\dv{\phi}{t} \phi^{-1}
+\end{align}
+%
+We now make the following subtle observation: Since the lhs., a function of $\vb x$, is
+equal to the rhs, a function of $t$, they must both be equal to a constant. As both sides
+have units of energy, lets denote this energy as $E$, and proceed to solve each equation
+by it self.
+
+The time dependent equation becomes
+
+\begin{align}
+    i\hbar \dv{\phi}{t} &= E\phi(t)
+\end{align}
+which is trivially solvable:
+\begin{align}
+    \phi(t) &= Ae^{-iEt/\hbar}
+\end{align}
+for some normalization constant $A$.
+
+The time-independent equation, known as the Time-Independent Schrödinger Equation, is
+\begin{align}
+    - \frac{\hbar^2}{2m} \laplacian\psi + V(\vb x)\psi =
+    E\psi\label{eq:schrodinger-time-independent-position-basis}
+\end{align}
+The solutions to this equation is known as the \emph{stationary states} of the system. If
+we are able to find these solutions, then we automatically have also the full time
+dependent solution through \autoref{eq:separatable-wave-func-def}.
+
+If we return \autoref{eq:schrodinger-time-independent-position-basis} to the more general
+form,
+\begin{align}
+    \hat H \ket{\psi} &= E\ket{\psi}
+\end{align}
+we can recognize the problem as an eigenvalue problem where we seek the eigenvalues ($E$)
+and eigenvectors ($\ket{\psi}$) of the operator $\hat H$. In this light we might prefer to
+explicitly label the equation to account for the possibility that the equation could have
+many (including infinity) solutions, and write this as
+\begin{align}
+    \hat H\ket{\psi_n} &= E_n\ket{\psi_n}
+\end{align}
+Each of the $\ket{\psi_n}$ represents one possible stationary state, and could for instance be
+different levels of energy excitations within an atom. For our purposes, we will only care
+about the so called \emph{ground state}, i.e. the state $\ket{\psi_n}$ corresponding to the
+lowest possible $E_n$. By convention, we assume the energies to be ordered such that $E_i
+\leq E_j$ if $i < j$, and denote the ground state as $\ket{\psi_0}$ and the corresponding ground
+state energy as $E_0$.
+
+
+\section{Many-Body Systems}
+
+Up until now, for simplicity, we've only considered the description of single-particle
+systems. Changing the number of particles is a change in the system description, and as
+such it entails modifying the Hamiltonian operator accordingly. Everything presented thus
+far generalizes well to the case of more than one particle, simply by introducing the
+appropriate sums. The general form of the Many-Body Hamiltonian we will consider is now
+
+\begin{align}
+    \hat H &= - \sum_{i=1}^N \frac{\hbar^2}{2m_i} \laplacian_i + V(\vb x_1, \vb x_2,\dots,
+    \vb x_N)\\
+    &= -\sum_{i=1}^N \frac{\hbar^2}{2m_i} \laplacian_i + V(\vb X)
+\end{align}
+were $\mat X \defeq (\vb x_1 \vb x_2\dots\vb x_N)\in \mathbb{R}^{N\times D}$ is the matrix
+of $D$-dimensional column vectors of coordinates for each particle. For further clarity,
+$\vb x_i \defeq \sum_{d=1}^D x_{i,d} \vb e_d$ is a $D$-dimensional vector described by
+its coordinates $x_{i,d}$ (with unit vectors $e_d$), and the corresponding Laplacian
+operator is
+\begin{align}
+    \laplacian_i \defeq \sum_{d = 1}^D \pdv[2]{}{x_{i,d}}.
+\end{align}
+
+
+\section{Requirements of Wave Functions}
+
+We have stated earlier that by solving the Schrödinger equation and obtaining the wave
+function, we can compute any desirable quantity of interest. In order for the wave
+function to fulfill this rather impressive encoding of everything about the system, it has
+to satisfy certain criteria. We now devote some special consideration to make these
+requirements explicit.
+
+In order to represent a physically observable system, a wave function $\Psi$ must:
+\begin{enumerate}
+    \item Be a solution to the Schrödinger equation 
+    \item Be normalizable (in order to represent a probability)
+    \item Be a continuous function of space
+    \item Have a continuous first order spacial derivative
+    \item Obey suitable symmetry requirements
+\end{enumerate}
+%
+While the first requirements is quite clear, point 2-4 boils down to $\Psi$ taking a
+functional form that is well behaved, satisfying required boundary conditions and being
+possible to view as a probability distribution. The last point is perhaps less clear, and
+we devote some further attention to this point in particular.  
+
+
+\subsection{Symmetry of wave functions}
+
+Nature has many example of systems made up of several particles of the same
+species. That is, the particles all have the same mass, spin, electromagnetic
+charge etc. such that there is no way to  distinguish one from the other by
+measuring their properties. An example could be the electrons of an atom, all of
+which have the exact same physical properties.
+
+In classical mechanics, we can still distinguish identical particles by other
+means. Imagine for instance a set of perfectly identical planets in orbit. Even
+though they have all of the same physical properties, we can still enumerate
+them and keep track of which is which. This is due to the fact that their
+position in time and space is deterministically defined by their current state,
+which allows us to track them.
+
+In quantum mechanics, however, we no longer have this deterministic view. In
+this world, even if we know where all the individual electron are at a specific
+point in time, we cannot say with certainty where they will be at a later
+time. We blame this on the uncertainty principle. The result is that systems of
+identical particles become systems of \emph{indistinguishable} particles in
+quantum mechanics.
+
+Consider now a system of two indistinguishable particles, labeled $\vec x_1$ and
+$\vec x_2$, where $\vec x_i$ contains all the quantum numbers required to describe
+particle $i$ (e.g. position coordinates and the $z$ component of spin). The
+system is then described by a wave function
+
+\begin{align}
+    \Psi(\vec x_1, \vec x_2).
+\end{align}
+Because the particles are indistinguishable, this labeling of 1 and 2 is
+arbitrary, and so we should be able to relabel them:
+
+\begin{align}
+    \Psi(\vec x_2, \vec x_1)
+\end{align}
+
+These two equations, which represents exchanging the two particles, \emph{must}
+describe the same physical system, that is:
+
+\begin{align}
+    \abs{\Psi(\vec x_1, \vec x_2)}^2 &= \abs{\Psi(\vec x_2, \vec x_1)}^2\\
+    \iff \Psi(\vec x_1,\vec x_2) &= e^{i\alpha}\Psi(\vec x_2, \vec x_1),
+\end{align}
+i.e. they can only differ in their complex phase, which doesn't affect any measurable
+quantity. Repeating the exchange once more yields the original wave function, and so
+
+\begin{align}
+    \Psi(\vec x_1,\vec x_2) &= e^{2i\alpha}\Psi(\vec x_1, \vec x_2)\\
+    \iff e^{i\alpha} &= \pm 1.
+\end{align}
+This results states that any wave function, upon the exchange of
+indistinguishable particles, must be either symmetric (same sign) or
+anti-symmetric (opposite sign) to that of the original. This is generalizable to
+any number of particles, and is summarized in the following theorem.
+
+\begin{theorem}[Spin-Statistic
+    Theorem~\cite{PhysRev-58-716}]\label{theorem:spin-statistic}
+
+    The wave function of a system of identical integer-spin particles has the same value
+    when the positions of any two particles are swapped. Particles with wave functions
+    symmetric under exchange are called bosons.
+
+    The wave function of a system of identical half-integer–spin particles changes sign
+    when two particles are swapped. Particles with wave functions antisymmetric under
+    exchange are called fermions.
+\end{theorem}
+
+\end{document}
