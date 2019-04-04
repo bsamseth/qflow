@@ -455,5 +455,48 @@ energy, and the \emph{total} external and internal potential energies, as oppose
 particle. 
 
 
+\subsection{Liquid $^4$He}
+
+Consider now an infinite collection of $^4$He atoms packed with a given density
+$\rho$\footnote{Is the temperature fixed? Or does that even make sense? TODO.}. As
+infinities are hard to work with, we model this by considering a cubic simulation box with
+side lengths $L$ and periodic boundary conditions. The infinite collection is then
+composed of stacking copies of such simulation boxes together. The Hamiltonian for this
+system is taken as
+
+\begin{align}
+    \hat H &= \sum_{i=1}^N \frac{p_i^2}{2m} + \sum_{i < j} V(r_{ij})
+\end{align}
+i.e. the kinetic energy of all atoms, plus a interaction potential dependent on the
+distance between all pairs of atoms. The form of $V$ is not known analytically, but is
+experimentally probed to great accuracy. Theorists have since fitted specific functional
+forms to the experimental data, and we will do our calculations using one of these
+potentials. The most commonly used is the simple Lennard-Jones
+potential~\cite{Kalos-1981}:
+
+\begin{align}
+    \label{eq:Lennard-Jones-def}
+    V(r)
+     &= 4\epsilon\qty[\qty( \frac{\sigma}{r} )^{12} - \qty( \frac{\sigma}{r} )^6 ]
+\end{align}
+with $\epsilon = \SI{10.22}{\K\per\kappa}$ and $\sigma = \SI{2.556}{Å}$. We'll also use
+the more accurate potential named HDFHE2~\cite{Kalos-1981}:
+
+\begin{align}
+    \label{eq:HDFHE2-def} 
+    V(r) &= \epsilon 
+    \left\{\!\begin{aligned}
+        &A \exp(-\alpha r / r_m)\\
+        &- F(r) \qty[ C_6  (r_m / r)^6 + C_8  (r_m / r)^8 + C_{10} (r_m / r)^{10}]
+    \end{aligned}\right\}
+\end{align}
+with
+
+\begin{align}
+    F(r) &= \begin{cases}
+        \exp( - [D \frac{r_m}{r} -  1]^2 ) & \qfor \frac{r}{r_m} \leq D\\
+        0 & \qotherwise
+    \end{cases}
+\end{align}
 
 \end{document}
