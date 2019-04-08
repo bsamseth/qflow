@@ -2,7 +2,7 @@
 #include "hamiltonian.hpp"
 #include "hardsphereharmonicoscillator.hpp"
 #include "harmonicoscillator.hpp"
-#include "hdfhe2.hpp"
+#include "hfdhe2.hpp"
 #include "lennardjones.hpp"
 
 #include <Eigen/Dense>
@@ -61,6 +61,6 @@ void init_hamiltonian(py::module& main)
     py::class_<LennardJones, Hamiltonian>(m, "LennardJones")
         .def(py::init<Real>(), py::arg("h") = NUMMERIC_DIFF_STEP);
 
-    py::class_<HDFHE2, Hamiltonian>(m, "HDFHE2")
+    py::class_<HFDHE2, Hamiltonian>(m, "HFDHE2")
         .def(py::init<Real>(), py::arg("h") = NUMMERIC_DIFF_STEP);
 }

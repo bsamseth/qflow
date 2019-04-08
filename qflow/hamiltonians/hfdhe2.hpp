@@ -6,7 +6,7 @@
 #include "wavefunction.hpp"
 
 /**
- * Class representing the HDFHE2 effective potential for Helium 4:
+ * Class representing the HFDHE2 effective potential for Helium 4:
  *
  *     V(r) = eps * (
  *                    A * exp(-alpha r / r_m)
@@ -36,7 +36,7 @@
  * Ref: Aziz et al, Chem. Phys 70, 4330 (1979).
  * Condensed ref: Ruggeri et al, doi: 10.1103/physrevlett.120.205302
  */
-class HDFHE2 : public Hamiltonian
+class HFDHE2 : public Hamiltonian
 {
 public:
     static constexpr Real A     = 544850.4;
@@ -56,7 +56,7 @@ public:
     Real internal_potential(const System&) const override;
 };
 
-inline Real HDFHE2::external_potential(const System& system) const
+inline Real HFDHE2::external_potential(const System& system) const
 {
     SUPPRESS_WARNING(system);
     return 0;
