@@ -482,15 +482,20 @@ potential~\cite{Kalos-1981}:
     V(r)
      &= 4\epsilon\qty[\qty( \frac{\sigma}{r} )^{12} - \qty( \frac{\sigma}{r} )^6 ]
 \end{align}
-with $\epsilon = \SI{10.22}{\K\per\kappa}$ and $\sigma = \SI{2.556}{Å}$. We'll also use
-the more accurate potential named HDFHE2~\cite{Kalos-1981}:
+with $\epsilon/\kappa = \SI{10.22}{\K}$ and $\sigma = \SI{2.556}{\angstrom}$. This
+models the competing forces of the atoms' mutual repulsion and attraction. The
+positive term describes the short range Pauli repulsion due to overlapping
+electron orbitals, and the negative terms describes the long range attraction
+due to phenomena such as van der Waals forces.
+
+We'll also use the more accurate potential named HFDHE2~\cite{Kalos-1981}:
 
 \begin{align}
-    \label{eq:HDFHE2-def} 
+    \label{eq:HFDHE2-def} 
     V(r) &= \epsilon 
     \left\{\!\begin{aligned}
-        &A \exp(-\alpha r / r_m)\\
-        &- F(r) \qty[ C_6  (r_m / r)^6 + C_8  (r_m / r)^8 + C_{10} (r_m / r)^{10}]
+        &A \exp(-\alpha \frac{r }{ r_m})\\
+        &- F(r) \qty[ C_6  \qty(\frac{r_m }{ r})^6 + C_8  \qty(\frac{r_m }{ r})^8 + C_{10} \qty(\frac{r_m }{ r})^{10}]
     \end{aligned}\right\}
 \end{align}
 with
@@ -498,8 +503,24 @@ with
 \begin{align}
     F(r) &= \begin{cases}
         \exp( - [D \frac{r_m}{r} -  1]^2 ) & \qfor \frac{r}{r_m} \leq D\\
-        0 & \qotherwise
+        1 & \qotherwise
     \end{cases}
 \end{align}
+with the following parameters: 
+\begin{align}\label{eq:HFDHE2-parameters}
+    \begin{split}
+        &A = \num{0.5448504e6}\\
+        &\alpha = \num{13.353384}\\
+        &D = \num{1.241314}\\
+        &r_m= \SI{2.9673}{\angstrom}
+    \end{split}
+    \begin{split}
+        &\epsilon/\kappa = \SI{10.8}{\K}\\
+        &C_6= \num{1.37732412}\\
+        &C_8= \num{0.4253785}\\
+        &C_{10}= \num{0.178100}\\
+    \end{split}
+\end{align}
+
 
 \end{document}
