@@ -20,10 +20,23 @@
     \sisetup{exponent-product = \cdot}	    % Dot as multiplication symbol (not cross).
  	\sisetup{separate-uncertainty = true} 	% Use pluss-minus form for uncertainty.
 
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}
-\theoremstyle{corollary}
-\newtheorem{corollary}{Corollary}
+% \usepackage[chapter]{algorithm}
+% \usepackage{algpseudocode}
+%% Example code
+% \begin{algorithm}
+%     \caption{Variational Monte Carlo Algorithm}\label{alg:vmc-general-alg} 
+%     \begin{algorithmic}
+%         \Procedure{VMC}{$\hat H, \psi_{\vb\alpha}$}
+%             \State $r\gets a$
+%         \EndProcedure
+%     \end{algorithmic}
+% \end{algorithm}
+
+
+% \newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}{Definition}[section]
 
 
 \renewcommand{\vec}[1]{\bm{#1}}
