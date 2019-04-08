@@ -1,0 +1,221 @@
+
+\documentclass[Thesis.tex]{subfiles}
+\begin{document}
+\chapter{Variational Monte Carlo}
+
+Variational Monte Carlo (VMC) is a method for obtaining the ground state wave function of
+a quantum mechanical system, and is constitutes the framework for all the calculations we
+perform in this thesis. As this method is of great significance to us, this chapter is
+devoted to all relevant definitions, derivations and technical details required for a
+successful study of the systems of interest. 
+
+
+\section{The Variational Principle}
+
+The fundamental principle that enables VMC is the observation that the wave function that
+describes the ground state of a system, is the wave function which produces the lowest
+expectation value of the energy. Read this statement a couple of times and it almost seems
+like a circular definition, because we define the ground state as the state with the
+lowest energy. Still, this simple observation is what allows us a way to go forward. 
+
+Let's formalize the above statement.
+
+\begin{theorem}[Variational Principle]
+    Suppose a time-independent Hamiltonian, $\hat H$, an associated set of eigenvalues,
+    $E_0\leq E_1\leq\dots$ and
+    a set of orthonormal eigenvectors, $\{\ket{\phi_n}\}$ spanning the associated
+    Hilbert space, such that the Time-Independent
+    Schrödinger equation is satisfied,
+
+    \begin{align}
+        \hat H\ket{\phi_n} = E_n\ket\phi_n.
+    \end{align}
+    For any arbitrary $\ket\psi$ in the Hilbert space, the expectation value of $\hat H$
+    for this wave function must satisfy
+    \begin{align}
+        \expval{\hat H}&\defeq \expval{\hat H}{\psi} \geq E_0.
+    \end{align}
+    where $E_0$ is the exact ground state energy, with equality if and only if
+    $\ket\psi=\ket\phi_0$. 
+\end{theorem}
+\begin{proof}
+    Because $\{\ket{\phi_n}\}$ constitutes a complete orthonormal basis of the Hilbert
+    space, we can expand $\ket\psi$ as
+    \begin{align}
+        \ket\psi = \sum_n c_n\ket\phi_n \qq{with} \sum_n \abs{c_n}^2 = 1.
+    \end{align}
+    We then have
+    \begin{align}
+        \expval{\hat H}{\psi} &= \qty(\sum_m c^*_m\bra{\phi_m})\hat H\qty(\sum_n
+        c_n\ket{\phi_n})\\
+        &= \sum_n\sum_m c_m^*c_n\bra{\phi_m}\hat H\ket{\phi_n}\\
+        &= \sum_n\sum_m c_m^*c_nE_n\bra{\phi_m}\ket{\phi_n}\\
+        &= \sum_n\sum_m c_m^*c_nE_n\delta_{mn}\\
+        &= \sum_n \abs{c_n}^2 E_n\\
+        &\geq\sum_n \abs{c_n}^2 E_0 = E_0.
+    \end{align}
+    It is clear that equality only occurs when $c_n = \delta_{0n}$, which implies
+    $\ket\psi=\ket{\phi_0}$.
+\end{proof}
+
+If we require the test wave function $\ket\psi$ to be orthogonal to $\ket{\phi_0}$, then
+the above derivation results in a similar condition for determining the first excited
+state. By applying the same reasoning iteratively, the same can be said about any higher
+energy state. So in principle, we can use the variational principle to first find the
+ground state, then find an orthogonal state that gives the first excited energy, then find
+a state orthogonal to both that gives the second excited energy etc. We will not pursue
+any excited states in this thesis, but it is useful to know that we could in principle
+extend our results if need be. 
+
+\section{The Variational Monte Carlo Algorithm}
+
+Rooted in the Variational Principle, the general approach to finding a good estimate of
+the ground state goes as follows:
+
+\begin{enumerate}
+    \item Define the Hamiltonian of interest, $\hat H$
+    \item Propose a trial wave function $\ket{\vb \alpha}$ dependent on some free parameters
+        $\vb \alpha=\qty(\alpha_1, \alpha_2,\dots, \alpha_m)$
+    \item Return the best possible wave function $\ket{\vb\alpha}$ such that $\expval{\hat
+        H}{\vb\alpha}$ is minimized w.r.t the parameters $\vb \alpha$.
+\end{enumerate}
+The first step is trivial, as we shall assume that the Hamiltonians we want to examine are
+given in advance.\footnote{Clearly, deriving/defining Hamiltonians that accurately describe a given
+system is not a trivial task in general, and might require great levels of theoretical
+work and/or experimental data analysis. But from our perspective, this work has already
+been done.}
+
+The second and third points are where we will spend our efforts, and so we devote extra
+attention to these two points in particular.
+
+
+\section{The Trial Wave Function}
+
+Critical to the outcome of a VMC calculation is the quality of the proposed trail wave
+function. In order to have stable and sensible results we should also take care that the
+wave function obeys the requirements stated in
+\autoref{sec:requirements-of-wave-functions}. Beyond these basic assertions, it is
+imperative that the functional form of the proposed wave function is capable of expressing
+the true underlying ground state, or at least a good approximation of it. As an example,
+take the simple case of the idealized one-dimensional harmonic oscillator presented in
+\autoref{sec:simple-non-inter-HO}, with the ground state expressed as
+\begin{align}
+    \phi_0(x) \propto \exp(- \frac{1}{2} x^2)
+\end{align}
+If we proposed a trial wave function on a form 
+\begin{align}
+    \psi(x; \alpha)\propto \exp(- \alpha x^2),
+\end{align}
+we could expect VMC to produce the exact ground state after optimizing $\alpha$. The above
+is a good trial wave function because its functional form contains the exact state.
+
+Suppose now we proposed something different, maybe because of lacking theoretical
+understanding. For the sake of example, say we chose this visually similar
+function\footnote{Visually similar in the sense that plotting them both yield similar bell
+shaped curves, not in terms of their algebra}:
+\begin{align}
+    \psi(x; \alpha)\propto \frac{1}{1 + \alpha x^2} 
+\end{align}
+Now matter how we tune the $\alpha$ parameter here, we will never achieve the lowest
+ground state energy, simply because ground state is not possible to express within this
+functional form. We can now only hope to get approximations, acting as upper bounds on the
+ground state energy.
+
+\subsection{Slater-Jastrow: Standard Approach}
+
+In order to come up with good trail wave functions we have a standard approach which often
+serves us well. Typically we are considering a system of many interacting particles in
+some external potential (e.g. the quantum dots system). In such cases the typical approach
+is to build a trial wave function as a product of a single-particle part, $S$, and a correlation
+part $J$
+
+\begin{align}
+    \ket\psi = \ket{S} \ket{J}
+\end{align}
+
+\subsubsection*{Slater}
+
+The idea with this structure is that we put all the physical insight we have into these
+two components individually. For the single particle part we include what we can deduce
+about the system if we idealize it in some way. Typically that involves looking at the
+states when there is only one particle, or considering some simplified interaction between
+all of them (e.g. Hartree-Fock approximation). The basis functions we obtain from such an
+analysis are then placed in a determinant/permanent structure so as to fix the symmetry
+requirements of fermions/bosons, respectively. This factor is then called the \emph{Slater
+factor}. 
+
+
+For clarity, we present a couple different Slater forms. We consider the two-dimensional
+quantum dots system from \autoref{sec:quantum-dots-theory} for $N$ particles.  We have
+$\vb x_i=(x_i, y_i)$ being the position of the particle $i$, and $\vb X\defeq (\vb x_1,
+\dots \vb x_N)$ defined as a shorthand. Let $\vb\Phi$ be a matrix defined by $\Phi_{i,j}
+\defeq \phi_{i}(\vb x_j)$, where the $\phi_i$ is part of the set of orbitals
+$\{\phi_{0,0}, \phi_{1,0},\phi_{0,1}, \phi_{1,1},\dots\}$, as defined in
+\autoref{eq:ho-single-particle-orbitals}. Lastly, let $\vb \Phi^{(M)}$ denote the
+resulting matrix with $M$ rows, one for each of the $M$ lowest energy orbitals. Finally,
+if the particles are fermions we define the Slater factor as
+
+\begin{align}
+    S(\vb X)_\text{fermions} \defeq \text{determinant}\qty(\vb\Phi^{(M)}).
+\end{align}
+Due to the properties of the determinant, this has the anti-symmetry required for
+fermions.
+
+In the case of bosons, we could just change the above to
+\begin{align}
+    S(\vb X)_\text{bosons} \defeq \text{permanent}\qty(\vb\Phi^{(M)}).
+\end{align}
+However, there are far less computationally expensive ways to get a \emph{symmetric}
+result, as required for bosons. A simple product of single particle ground states is
+sufficient in this case.
+\begin{align}
+    S(\vb X)_\text{bosons} \defeq \prod_{i}^N \phi_{0,0}(\vb x_i).
+\end{align}
+
+The general structure is constant across different systems, changing only the basis
+functions we use to express the matrix elements. 
+
+In some cases however, we will struggle find basis functions that describe a meaningful
+portion of the systems behaviour in this way. In such challenging cases, the Slater factor
+could be reduced to only being responsible for supplying the correct symmetry. In the case
+of bosons, that would mean the complete removal of the Slater factor from the trial wave
+function.
+
+
+
+\subsubsection*{Jastrow}
+
+Anything not covered by this analysis is meant to be accounted for in the correlation
+term, $J$. This is typically a function on the following generalized form, commonly called a Jastrow
+factor:
+\begin{align}
+    J(\vb X) &= \exp(\sum_{i < j} U(r_{ij}))
+\end{align}
+where $U(r)$ is some function dependent on the inter-particle distance only. Note that by
+convention the Slater factor has the correct symmetry, so the correlation factor should
+always be symmetrical in order to maintain the same total symmetry.
+
+Any variational parameters $\vb \alpha$ are typically introduced as part of the Jastrow
+factor. The Slater factor represents everything we are sure should be included
+from a theoretical approach, while the Jastrow term should ideally account for all our ignorance.
+It is therefore typically expressed with a few free parameters.
+
+Again, for the sake of clarity, we state an example Jastrow factor. One of the most
+commonly used is the Pade-Jastrow factor~\cite{Drummond-Towler-Needs-2008}:
+\begin{align}
+    J(\vb X) = \prod_{i < j} \exp(\frac{\alpha r_{ij}}{1 + \beta r_{ij} } )
+\end{align}
+Here $\beta$ is the only variational parameter, and $\alpha$ is fixed depending on the
+dimensionality and spin of the particles. More complicated versions exist, containing
+higher order polynomials of $r_{ij}$ exponential.
+
+
+
+
+\section{Optimization}
+
+
+
+
+
+\end{document}
