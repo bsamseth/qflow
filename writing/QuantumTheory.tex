@@ -173,7 +173,7 @@ operator is
 \end{align}
 
 
-\section{Requirements of Wave Functions}
+\section{Requirements of Wave Functions}\label{sec:requirements-of-wave-functions}
 
 We have stated earlier that by solving the Schrödinger equation and obtaining the wave
 function, we can compute any desirable quantity of interest. In order for the wave
@@ -307,7 +307,9 @@ unity, and can then be omitted.
 For many-body systems it should be apparent that this integral quickly becomes intractable
 to compute analytically. In practice we employ a numerical strategy to evaluate these
 integrals, where the technique we use depends on the dimensionality of the integral and
-the required level of accuracy.
+the required level of accuracy. In our case, due to the relatively large number
+of degrees of freedom in the systems we shall investigate, we will use Monte
+Carlo integration. This will be discussed in more detail in \autoref{sec:monte-carlo-integration}.
 
 \section{Example Systems}
 
@@ -319,6 +321,7 @@ know exact solutions, our when this does not exist, against the state-of-the-art
 available.
 
 \subsection{Quantum Dots}
+\label{sec:quantum-dots-theory}
 
 We consider a system of electrically charged particles (e.g. electrons) confined in a pure
 isotropic harmonic oscillator potential, with an idealized total Hamiltonian
@@ -353,7 +356,7 @@ This limitation is purely one of convenience, as having exact benchmarks makes f
 verification of results. Furthermore, limiting the size of the problem makes the required
 computation time manageable, which is good when experimenting with various techniques.
 
-\subsubsection{Simple Non-Interacting Case}
+\subsubsection{Simple Non-Interacting Case}\label{sec:simple-non-inter-HO}
 If we omit the interacting terms in \autoref{eq:H-QD-def} we have
 the standard harmonic oscillator Hamiltonian:
 \begin{align}
@@ -362,7 +365,7 @@ the standard harmonic oscillator Hamiltonian:
 \end{align}
 This Hamiltonian lends it self to analytical solutions, and the stationary
 single particle states are:
-\begin{align}
+\begin{align}\label{eq:ho-single-particle-orbitals}
     \phi_{n_x, n_y}(x, y) &= A H_{n_x}(\sqrt\omega x)H_{n_y}(\sqrt\omega y)
     e^{-\frac{\omega}{2}\qty(x^2 + y^2)},
 \end{align} 
@@ -471,7 +474,7 @@ i.e. the kinetic energy of all atoms, plus a interaction potential dependent on 
 distance between all pairs of atoms. The form of $V$ is not known analytically, but is
 experimentally probed to great accuracy. Theorists have since fitted specific functional
 forms to the experimental data, and we will do our calculations using one of these
-potentials. The most commonly used is the simple Lennard-Jones
+potentials. The most commonly used is the simple Lennard-Jones (LJ)
 potential~\cite{Kalos-1981}:
 
 \begin{align}
