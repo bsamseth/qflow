@@ -216,8 +216,85 @@ will prove to be a very good choice for the quantum dots system.
 
 \section{Optimization}
 
+At this point, we have a Hamiltonian $\hat H$ defining our system of interest,
+and we have proposed a trial wave function $\ket{\vb\alpha}$ based on the
+theoretical intuition we have. The wave function has by design some free
+parameters $\vb\alpha$ which we now want to pin down to their optimal values.
 
+From the Variational Principle (\autoref{thm:variational-principle}), we know
+that the best set of parameters are those that minimizes the expected energy,
+$\expval{\hat H}{\vb\alpha}$. As such, a natural place to start would be to
+determine an efficient way to evaluate said energy.
 
+\subsection{Local Energy}
 
+Denote the trial wave function as $\psi_{\vb\alpha}(\vb X)$, where $\vb\alpha$
+are the variational parameters and $\vX=(\vx_1, \vx_2,\dots,\vx_n)$ is the
+matrix of all the degrees of freedom for each particle (e.g. position
+coordinates). The expectation value for the energy of the system is
+
+\begin{align}
+    \expval{\hat H} &= \frac{\expval{\hat H}{\vb\alpha}}{\braket{\vb\alpha}}\\
+    &= \frac{\int \dd{\vb X} \psialpha^*\hat H\psialpha}{\int\dd{\vX}\abs{\psialpha}^2}.
+    % &= \int\dd{\vX} P(\vX,\valpha)E_L(\vX,\valpha),
+\end{align}
+%
+We now restructure this integral a bit. Remembering the interpretation of
+the wave function as a probability distribution, we can write the \emph{probability
+density} for a given system configuration $\vX$ as
+
+\begin{align}
+    P_{\psi_{\vb{\alpha}}}(\vX) \defeq \frac{\abs{\psialpha}^2}{\int\dd{\vX}\abs{\psialpha}^2}\label{eq:wavefunc-probability-density-def}
+\end{align}
+where we account for the possibility of $\psialpha$ not being normalized to unity. Further, we define a quantity we will call the \emph{local energy},
+\begin{align}
+    E_L &\defeq \frac{1}{\psialpha} \hat H\psialpha.\label{eq:local-energy-def}
+\end{align}
+The reason for these definitions is that now we can write the energy expectation as follows:
+
+\begin{align}
+    \expval{\hat H} &= \int\dd{\vX} P_{\psi_{\valpha}} (\vX) E_L(\vX).
+\end{align}
+Why is this better? Because this is simply the weighted average of the local
+energy, something which has a straightforward discrete formulation:
+\begin{align}
+    \expval{\hat H} &= \lim_{N\rightarrow \infty} \frac{1}{N} \sum_{i = 1}^N E_L(\vX_i)
+    \qq{where} \vb X_i\sim P_{\psi_{\valpha}}
+\end{align}
+So, if we can sample $\vX$ from the distribution described by our trial wave
+function, we simply need to evaluate the local energy at a sufficiently large
+number of configurations  to obtain a good estimate of the expectation value of
+the Hamiltonian. How exactly to do the sampling is a rather large topic, and
+will be handled in \autoref{chp:monte-carlo}.
+
+\subsection{Updating Parameters}
+
+Now that we can evaluate the energy, the function to minimize, we could in
+principle start optimizing our parameters. If the parameters are few and
+discrete we could simply evaluate the energy for all of them and pick the one
+which gives the best result. However, this approach will quickly become
+intractable for even a modest number of parameters, and more intelligent
+methods should be pursued.
+
+Perhaps the most common optimization strategy relies on computing the gradient
+of the energy w.r.t. $\valpha$, and then change $\valpha$ in the opposite
+direction of this. After all, a gradient by definition points in the direction
+of steepest ascent, so going the other way will be the direction of steepest
+decent. How exactly to make these changes are a topic of its own, and discussed in depth in \autoref{chp:machine-learning}, but the simplest implementation is as follows:
+
+\begin{align}
+    \valpha^{(i+1)} = \valpha^{(i)} - \eta \grad_{\valpha}{\expval{\hat H}}
+\end{align}
+for a suitably chosen hyperparameter $\eta\in\mathbb{R}$, typically $\eta\ll 1$. After a sufficient number of iterations, we hope that the parameters converge to their optimal values.
+
+This raises another question, namely how to compute $\grad_{\valpha}{\expval{\hat H}}$. Using the chain rule and the hermiticity of the Hamiltonian\footnote{TODO: Give full derivation.}, we can obtain the following expression:
+
+\begin{align}
+    \grad_{\valpha}{\expval{\hat H}} &=
+    2\qty[\expval{\frac{E_L}{\Psi_T}\pdv{\Psi_T}{\alpha}} -
+    \expval{E_L}\expval{\frac{1}{\Psi_T}\pdv{\Psi_T}{\alpha}}]\label{eq:local-energy-gradient-alpha}
+\end{align}
+
+With this final piece of the puzzle we have everything we need in order to perform a VMC calculation for the ground state of a system.
 
 \end{document}
