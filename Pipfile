@@ -20,6 +20,7 @@ pytest = "*"
 pytest-benchmark = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
+Jinja2 = ">=2.10.1"
 
 [packages]
 mpi4py = "*"
