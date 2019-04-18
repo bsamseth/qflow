@@ -1,6 +1,7 @@
 \documentclass[Thesis.tex]{subfiles}
 \begin{document}
 \chapter{The Quantum Problem}
+\label{chp:the-quantum-problem}
 
 
 \section{Problem Statement}
@@ -15,8 +16,8 @@ If we were interested in a system consisting of non-quantum entities (e.g. a bas
 trajectory as its thrown through the air towards a batter), we would likely turn to our
 classical laws, such as Newtons second law of motion
 %
-\begin{align} 
-    \sum_i \vec F_i(t) = \dv{\vec p(t)}{t} 
+\begin{align}
+    \sum_i \vec F_i(t) = \dv{\vec p(t)}{t}
 \end{align}
 %
 \noindent where the $\vec F_i$ are the forces acting on the ball, and $\vec p$ is its momentum at
@@ -97,7 +98,7 @@ following\footnote{One could be tempted to simply strike $\Psi$ from the lhs. of
 \autoref{eq:schrodinger-time-dependent-position-basis} when diving by $\Psi$. However, we
 must remember that the Hamiltonian is an operator (specifically seen through the
 $\laplacian$ in this case), and so we must divide only after letting this operate on
-$\Psi$.} 
+$\Psi$.}
 
 \begin{align}
     \qty[- \frac{\hbar^2}{2m} \laplacian \psi + V(\vb x)\psi]\psi^{-1} &=
@@ -183,7 +184,7 @@ requirements explicit.
 
 In order to represent a physically observable system, a wave function $\Psi$ must:
 \begin{enumerate}
-    \item Be a solution to the Schrödinger equation 
+    \item Be a solution to the Schrödinger equation
     \item Be normalizable (in order to represent a probability)
     \item Be a continuous function of space
     \item Have a continuous first order spacial derivative
@@ -193,7 +194,7 @@ In order to represent a physically observable system, a wave function $\Psi$ mus
 While the first requirements is quite clear, point 2-4 boils down to $\Psi$ taking a
 functional form that is well behaved, satisfying required boundary conditions and being
 possible to view as a probability distribution. The last point is perhaps less clear, and
-we devote some further attention to this point in particular.  
+we devote some further attention to this point in particular.
 
 
 \subsection{Symmetry of wave functions}
@@ -302,7 +303,7 @@ compute the expectation of that observable:
 where $\int\dd{\vb X}\qty(\cdot)$ indicates an integral over all possible configurations of the
 system (e.g. all possible position and spin values for each particle). Often we have
 required the wave function to be normalized in such a way that the denominator is equal to
-unity, and can then be omitted. 
+unity, and can then be omitted.
 
 For many-body systems it should be apparent that this integral quickly becomes intractable
 to compute analytically. In practice we employ a numerical strategy to evaluate these
@@ -368,7 +369,7 @@ single particle states are:
 \begin{align}\label{eq:ho-single-particle-orbitals}
     \phi_{n_x, n_y}(x, y) &= A H_{n_x}(\sqrt\omega x)H_{n_y}(\sqrt\omega y)
     e^{-\frac{\omega}{2}\qty(x^2 + y^2)},
-\end{align} 
+\end{align}
 for quantum numbers $n_x, n_y = 0, 1,\dots$, and the Hermite polynomials
 $H_n$ (not to be confused with the Hamiltonians, and never to be mentioned again). The
 ground state, $n_x=n_y=0$ is simply
@@ -436,7 +437,7 @@ theorem takes the following form:
     \expval{K} = \frac{n}{2}\expval{V_{TOT}}
 \end{align}
 where $V_{TOT}$ denotes the sum of the potential energy $V(r)$ over all
-pairs of particles. 
+pairs of particles.
 
 Although the harmonic oscillator potential does not depend on the
 \emph{inter-particle} distance, but rather on each particles position, it
@@ -455,7 +456,7 @@ predicts the following~\cite{Katriel2012}:
 \end{align}
 Note that this implies that we should consider the \emph{total} kinetic
 energy, and the \emph{total} external and internal potential energies, as opposed to per
-particle. 
+particle.
 
 
 \subsection{Liquid $^4$He}
@@ -491,8 +492,8 @@ due to phenomena such as van der Waals forces.
 We'll also use the more accurate potential named HFDHE2~\cite{Kalos-1981}:
 
 \begin{align}
-    \label{eq:HFDHE2-def} 
-    V(r) &= \epsilon 
+    \label{eq:HFDHE2-def}
+    V(r) &= \epsilon
     \left\{\!\begin{aligned}
         &A \exp(-\alpha \frac{r }{ r_m})\\
         &- F(r) \qty[ C_6  \qty(\frac{r_m }{ r})^6 + C_8  \qty(\frac{r_m }{ r})^8 + C_{10} \qty(\frac{r_m }{ r})^{10}]
@@ -506,7 +507,7 @@ with
         1 & \qotherwise
     \end{cases}
 \end{align}
-with the following parameters: 
+with the following parameters:
 \begin{align}\label{eq:HFDHE2-parameters}
     \begin{split}
         &A = \num{0.5448504e6}\\
