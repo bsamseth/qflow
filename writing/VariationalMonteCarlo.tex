@@ -287,14 +287,42 @@ decent. How exactly to make these changes are a topic of its own, and discussed 
 \end{align}
 for a suitably chosen hyperparameter $\eta\in\mathbb{R}$, typically $\eta\ll 1$. After a sufficient number of iterations, we hope that the parameters converge to their optimal values.
 
-This raises another question, namely how to compute $\grad_{\valpha}{\expval{\hat H}}$. Using the chain rule and the hermiticity of the Hamiltonian\footnote{TODO: Give full derivation.}, we can obtain the following expression:
+This raises another question, namely how to compute
+$\grad_{\valpha}{\expval{\hat H}}$. Using the basic properties of derivatives we get (temporarily omitting the subscript on $\psialpha$):
+\begin{align}
+    \grad_{\valpha}\expval{\hat H} &= \grad_{\valpha}\qty( \frac{\int\dd{\vX}\psi^*\hat H\psi}{\int\dd{\vX}\abs{\psi}^2})\\
+    &= \frac{\int\dd{\vX} \abs{\psi}^2 \qty[ \int\dd{\vX}
+    \grad_{\valpha}(\psi^*)\hat H\psi +
+    \psi^*\hat H\grad_{\valpha}(\psi)
+    ]}{\qty(\int\dd{\vX}\abs{\psi}^2)^2}\\
+    &\quad{ }\ -
+    \frac{\qty(\int\dd{\vX}\psi^*\hat
+    H\psi)\qty(\int\dd{\vX}\grad_{\valpha}(\abs{\psi}^2))}{\qty(\int\dd{\vX}\abs{\psi}^2)^2} \\
+    &= \expval{\frac{\grad_{\valpha}(\psi^*)\hat H\psi + \psi^*\hat H\grad_{\valpha}(\psi)}{\abs{\psi}^2}}
+    - \expval{\hat H}\expval{\frac{\grad_{\valpha}\abs{\psi}^2}{\abs{\psi}^2}}
+\end{align}
+where we have used the fact that $\hat H$ does not depend on $\valpha$ in any way.
+
+To further simplify this, we use the trick $\flatfrac{\grad(f)}{f}=\grad(\ln
+f)$, and the hermiticity of $\hat H$:
+\begin{align}
+    \grad_{\valpha}\expval{\hat H}
+    &= \expval{\frac{\grad_{\valpha}(\psi^*)\hat H\psi + \grad_{\valpha}(\psi)(\hat H\psi)^*}{\abs{\psi}^2}}
+    - \expval{\hat H}\expval{\frac{\grad_{\valpha}\abs{\psi}^2}{\abs{\psi}^2}}\\
+    &= \expval{\grad_{\valpha}(\ln \psi^*) E_L + \grad_{\valpha}(\ln\psi)E_L^*}
+    - 2\expval{\hat H}\expval{\grad_{\valpha}{\ln\abs{\psi}}}.
+\end{align}
+At this point, we are going to explicitly assume that the wave function is
+real. We are not going to propose any complex trial wave functions in this
+thesis, so this assumption will be valid for our purposes. The final expression then becomes (using $\expval{\hat H}=\expval{E_L}$):
 
 \begin{align}
-    \grad_{\valpha}{\expval{\hat H}} &=
-    2\qty[\expval{\frac{E_L}{\Psi_T}\pdv{\Psi_T}{\alpha}} -
-    \expval{E_L}\expval{\frac{1}{\Psi_T}\pdv{\Psi_T}{\alpha}}]\label{eq:local-energy-gradient-alpha}
+    \grad_{\valpha}\expval{\hat H}
+    &= 2\qty[\expval{\grad_{\valpha}(\ln \psi) E_L}
+    - \expval{E_L}\expval{\grad_{\valpha}{\ln\abs{\psi}}}].
+    \label{eq:local-energy-gradient-alpha}
 \end{align}
-
+Computationally we already know how to evaluate $\expval{E_L}$, and we employ a completely analogous approach for the two other expectation values.
 With this final piece of the puzzle we have everything we need in order to perform a VMC calculation for the ground state of a system.
 
 \end{document}
