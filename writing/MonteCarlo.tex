@@ -3,6 +3,149 @@
 \chapter{Monte Carlo}
 \label{chp:monte-carlo}
 
-All things about Monte Carlo Sampling here.
+In \autoref{chp:variational-monte-carlo} we found that we needed a way to
+sample system configurations $\vX$ from the probability distribution  described
+by the wave function. We needed this as a means to evaluate integrals. Specifically, we needed to evaluate the expectation value of the Hamiltonian w.r.t. a given wave function $\psialpha$:
+
+\begin{align}
+    \expval{\hat H} &= \frac{\expval{\hat H}{\psialpha}}{\braket{\psialpha}} = \int\dd{\vX} P_{\psi_{\valpha}} (\vX) E_L(\vX)\label{eq:chp-mc-anon-1}\\
+    &\approx \frac{1}{N} \sum_{i = 1}^N E_L(\vX_i)
+    \qq{where} \vb X_i\sim P_{\psi_{\valpha}}
+\end{align}
+where $N$ is set sufficiently large to satisfy the required accuracy. In the
+next sections we will give some more context to this approach, as well as
+dive into the details of how to obtain the samples we need.
+
+\section{Monte Carlo Integration}
+
+Monte Carlo Integration (MCI) is a general technique for numeric evaluation of any arbitrary integral. In general it concerns evaluating any multidimensional definite integral, written as
+
+\begin{align}
+    I = \idotsint_\sigma\dd{\vx} f(\vx)
+\end{align}
+where $\sigma$ denotes a subset of $\mathbb{R}^m$, with a $m$-dimensional volume given by
+\begin{align}
+    V = \idotsint_\sigma\dd{\vx}
+\end{align}
+In its simplest form, MCI samples $N$ \emph{uniformly} distributed points
+$\vx_1,\dots,\vx_N$ from $\sigma$, and uses a Riemann sum formulation of the integral $I$:
+\begin{align}
+    I = \lim_{N\to\infty} M_N \defeq \lim_{N\to\infty}\sum_{i=1}^N f(\vx_i) \frac{V}{N} = V\expval{f(\vx)}_\sigma
+\end{align}
+where $\expval{\cdot}_\sigma$ denotes the expectation value over all points in $\sigma$. For finite $N$ we may obtain estimates of the error we make in approximating the integral. First, we estimate the variance of the integrand:
+\begin{align}
+    \Var[f(\vx)] = \sigma^2_N = \frac{1}{N-1} \sum_{i=1}^Nf(\vx_i)
+\end{align}
+It then follows, by the properties of variance,
+\begin{align}
+    \Var[M_N] = \Var\qty[ \frac{V}{N} \sum_{i=1}^Nf(\vx_i)] = \frac{V^2}{N^2}\sum_{i=1}^N\Var[f(\vx_i)] = \frac{V^2\sigma^2_N}{N}
+\end{align}
+\begin{align}
+    \implies \Std[M_N] = \sqrt{\Var[M_N]} = \frac{V\sigma_N}{\sqrt N}
+\end{align}
+This tells us that the expected statistical error we make goes like
+$\mathcal{O}(1 / \sqrt N)$, and depends linearly on the size of the volume.
+This illustrates both the advantage, and disadvantage of Monte Carlo
+integration compared to other, deterministic integration methods. Its advantage
+is its simple dependency on the volume, and its independence from the
+particular number of dimensions in the integral. Other methods tend to depend
+exponentially on the dimensionality, and as such MCI is often the best choice
+for multidimensional integrals. Its disadvantage is the relatively slow
+convergence rate, which is asymptotically much worse than other
+approaches~\cite{Numerical-Recipes-Press-et-al}.
+
+\subsection{Importance Sampling}
+
+In some suitable cases we can improve quite dramatically on the simple,
+straightforward approach presented above. To illustrate this, say we
+would like to evaluate the following integral:
+
+\begin{align}
+    \label{eq:mci-importance-example-func}
+    I = \intfy\dd{x}f(x)=\intfy\dd{x} \frac{\exp{-\flatfrac{x^2}{2} }}{\sqrt{2\pi \qty(1 +x^2)}}  = \num{0.78964}.
+\end{align}
+
+\begin{figure}
+    \centering
+    \resizebox{0.8\linewidth}{!}{%
+    \begin{tikzpicture}
+        \begin{axis}[every axis plot post/.append style={
+                mark=none,domain=-5:5,samples=50,smooth}, % All plots: from -2:2, 50 samples, smooth, no marks
+            axis x line=bottom, % no box around the plot, only x and y axis
+            axis y line=left,
+            enlargelimits=upper] % extend the axes a bit to the right and top
+            \addplot[semithick, color0] {1/(sqrt(2*pi))*exp(-(x^2)/2)*(1+x^2)^(-0.5)};
+            \addplot[semithick, color1] {1/(sqrt(2*pi))*exp(-(x^2)/2)};
+            \addlegendentry{$f(x)$}
+            \addlegendentry{$\mathcal{N}(0, 1)$}
+        \end{axis}
+    \end{tikzpicture}
+    }
+    \caption{\label{fig:mci-importance-example-func-plot}Plot of the function in \autoref{eq:mci-importance-example-func}}
+\end{figure}
+The integrand is plotted in \autoref{fig:mci-importance-example-func-plot}, and
+the observant reader might recognise this as the product of a normal
+distribution and a Student-t distribution. The correct value for the integral
+is also given, so we have a reference for the results.
+
+For comparison, lets start with the straightforward approach from before.
+Because the integral goes to infinity the "volume" $V$ would not be well
+defined, and we are forced to truncate the region manually. From looking at the
+graph in \autoref{fig:mci-importance-example-func-plot} we may say that $x\in
+[-5, 5]$ should account for the vast majority of the total integral. That means
+we use the following estimate:
+
+\begin{align}
+    \label{eq:chp-mc-anon-2}
+    I\approx \frac{10}{N}\sum_{i=1}^Nf(x_i)\qq{where} x_i\sim\text{Uniform}(-5, 5)
+\end{align}
+
+The main issue with this approach is that 1) we need to truncate the integral
+manually and 2) now matter where we place the box boundaries we will tend to
+sample a lot of $x_i$'s in areas where $f$ gives very small contributions to
+the integral. Ideally we would like our sample points to be distributed as
+closely as possible to $f$, in order to capture as much information as we can.
+This is the idea of importance sampling. Instead of using the uniform
+distribution for sampling, we use some probability distribution which more
+closely resembles the integrand, call it $g(x)$. Formally we then restate the integral as follows:
+
+\begin{align}
+    I = \intfy\dd{x}f(x) = \intfy\dd{x} \frac{f(x)}{g(x)} g(x)
+\end{align}
+This can be interpreted as the expectation of $z(x)=\flatfrac{f(x)}{g(x)}$ for $x$'s drawn from $g$, and so the corresponding estimation is then:
+
+\begin{align}
+    I \approx \frac{1}{N} \sum_{i=1}^N \frac{f(x_i)}{g(x_i)} \qq{where} x_i\sim g
+\end{align}
+Setting $g = \text{Uniform}(-5, 5)$ recovers \autoref{eq:chp-mc-anon-2}, so this is simply the natural generalization of the standard approach for an arbitrary distribution function $g$.
+
+
+Going back to the example, we should now chose a distribution function that
+closely resembles the integrand, while still being simple to sample from. In
+this (contrived) example, a natural choice is to use the standard normal
+distribution, $g = \mathcal{N}(0, 1)$. In
+\autoref{fig:mci-importance-example-func-plot} we can see how $g(x)$ is
+enclosing $f(x)$ much more tightly than any rectangular box might hope to.
+
+\begin{figure}
+   \centering
+    \resizebox{\linewidth}{!}{%
+        \input{scripts/monte_carlo_int_example.py.tex}
+    }
+    \caption{\label{fig:mci-importance-example-func-convergence}Convergence of the integral in
+    \autoref{eq:mci-importance-example-func}, using regular Monte Carlo
+    integration and Importance Sampling. We see the latter displaying both
+    greater accuracy and tighter confidence intervals.}
+\end{figure}
+
+\autoref{fig:mci-importance-example-func-convergence} show the convergence of
+the Monte Carlo approximations towards the correct value for an increasing
+number of sampled points. The drawn line is the mean value at each run, while
+the shaded areas show the corresponding $\SI{95}{\percent}$ confidence
+intervals. Because of the more suited sampling distribution, we obtain results
+which are more accurate, and perhaps most importantly, tighter confidence
+bounds. In general, using better sampling distributions will tend to give us
+lower variance results.
+
 
 \end{document}
