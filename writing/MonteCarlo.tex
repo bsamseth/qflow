@@ -1,6 +1,6 @@
 \documentclass[Thesis.tex]{subfiles}
 \begin{document}
-\chapter{Monte Carlo}
+\chapter{Monte Carlo Methods}
 \label{chp:monte-carlo}
 
 In \autoref{chp:variational-monte-carlo} we found that we needed a way to
@@ -12,9 +12,10 @@ by the wave function. We needed this as a means to evaluate integrals. Specifica
     &\approx \frac{1}{N} \sum_{i = 1}^N E_L(\vX_i)
     \qq{where} \vb X_i\sim P_{\psi_{\valpha}}
 \end{align}
-where $N$ is set sufficiently large to satisfy the required accuracy. In the
-next sections we will give some more context to this approach, as well as
-dive into the details of how to obtain the samples we need.
+where $N$ is set sufficiently large to satisfy the required accuracy. Due to
+the central nature of this method, we will start by a proper presentation of
+Monte Carlo Integration as it is used here, followed the details of how to
+obtain the samples we need.
 
 \section{Monte Carlo Integration}
 
@@ -146,6 +147,11 @@ intervals. Because of the more suited sampling distribution, we obtain results
 which are more accurate, and perhaps most importantly, tighter confidence
 bounds. In general, using better sampling distributions will tend to give us
 lower variance results.
+
+\section{Sampling from Arbitrary Probability Distribution Functions}
+
+So far we have taken for granted the ability to sample numbers from various
+probability distribution functions
 
 
 \end{document}
