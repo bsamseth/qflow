@@ -21,6 +21,7 @@ pytest-benchmark = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
 Jinja2 = ">=2.10.1"
+matplotlib2tikz = "*"
 
 [packages]
 mpi4py = "*"
