@@ -157,7 +157,102 @@ lower variance results.
 \section{Sampling from Arbitrary Probability Distribution Functions}
 
 So far we have taken for granted the ability to sample numbers from various
-probability distribution functions
+probability distribution functions. We dedicate this section to discuss sampling from the bottom up, culminating in a detailed presentation of the most central algorithm in this thesis, the Metropolis-Hastings algorithm.
+
+\subsection{The Uniform Distribution}
+
+The basic building block upon which we shall build all other random sampling
+techniques is the ability to sample random numbers from the uniform
+distribution, $\text{Uniform}(a, b)$. This is the simplest distribution
+possible, where all numbers in the range $[a, b]$ have the same probability
+density. The definition of its PDF is simply
+
+\begin{align}\label{eq:uniform-pdf-definition}
+    p_U(x\,|\, a, b) \defeq  \begin{cases}
+        \frac{1}{b - a} &\qfor x\in [a, b]\\
+        0&\qotherwise
+    \end{cases}.
+\end{align}
+Most commonly we operate only with the \emph{standard uniform distribution}, $\text{Uniform}(0, 1)$. Any other range can be simply related via the trivially verifiable identity
+\begin{align}
+    p_U(x\,|\, a,b) = p_U\qty(\left. \frac{x-a}{b-a} \,\right|\, 0, 1).
+\end{align}
+
+But how exactly do we obtain random realizations from this PDF? Firstly we need
+to depart from the typical notion of random, and realize that we are unable to
+write an algorithm which produces a truly random result. While we could in
+principle rely on nature to provide sources of complete, true randomness (so as
+the exact behaviour of a quantum mechanical obserable), this is impractical
+when we need fast, on-demand samples. Instead we settle for
+\emph{pseudo-random} samples. A pseudo-random sequence $x_1, x_2,\dots x_n$
+implies that one cannot\footnote{In any practical way, barring exhaustive trial
+and error of every conceivable underlying algorithm.} predict $x_{n+1}$ without
+insight into how the sequence is generated. In other words, the (ideal)
+pseudo-random sequence is indistinguishable from a truly random sequence for
+anyone observing the numbers $x_i$ alone.
+
+There are a multitude of algorithms that can generate a sequence of
+pseudo-random \emph{integers}, with a varying properties\footnote{Such properties
+could include range of possible numbers, period, level of bias and how
+cryptographically secure they are.}. One of oldest and most common family of
+such algorithms is a linear congruential generator (LCG)~\cite{Knuth-1997-ACP-270146}. It defines a pseudo-random sequence by the simple recurrence relation
+\begin{align}
+    \label{eq:linear-congruential-generator-relation}
+    x_{n+1} = (ax_n + c)\mod m,
+\end{align}
+where $a, c$ and $m$ are constants which determine the behaviour of the
+algorithm, and $x_0$ needs to be specified manually. For instance,
+\textcite{Numerical-Recipes-Press-et-al} use $a = 1664525$, $c=1013904223$ and
+$m=2^{32}$.
+
+This produces uniformly distributed integers in the range $[0, m)$. Numbers
+from the standard uniform distribution can then simply be obtained by dividing
+the integers by $m$. The complete algorithm is shown in \autoref{alg:uniform-LCG-sampling}.
+
+\begin{algorithm}[h]
+    \caption{Sampling from $\text{Uniform}(l, u)$}
+    \label{alg:uniform-LCG-sampling}
+    \begin{algorithmic}
+        \Require $a, c, m$ and $x_0$
+        \Function{unif}{lower bound $l$, upper bound $u$}
+            \State $x\gets x_0$
+            \Repeat
+                \State $x\gets (ax + c)\mod m$
+                \State \Yield $(\flatfrac{x}{m}) \times (u - l) + l$
+            \Until{done}
+        \EndFunction
+    \end{algorithmic}
+\end{algorithm}
+
+\subsection{Inverse Transform Sampling}
+
+Armed with uniformly distributed random numbers, we now turn towards generating
+numbers from other PDFs. Let $U\sim\text{Uniform}(0,1)$ be a uniformly
+distributed stochastic variable, and let $X$ be a stochastic variable
+associated with a PDF, $p$, and a corresponding cumulative distribution
+function (CDF), $F$, i.e.
+
+\begin{align}
+    F(x) = \text{Pr}\qty(X\leq x) = \int_{-\infty}^x \dd{t}p(t).
+\end{align}
+We would like to define a transformation $T:[0, 1]\mapsto\mathbb{R}$ that can map from uniform numbers to numbers that follow the given CDF, i.e. define $T$ such that $T(U)\disteq X$. We have:
+\begin{align}
+    F(x) = \text{Pr}\qty(X\leq x) = \text{Pr}\qty(T(U)\leq x) = \text{Pr}\qty(U \leq T^{-1}(x)) = T^{-1}(x),
+\end{align}
+because $T^{-1}(x)\in[0, 1]$ by definition, and assuming that $T^{-1}(x)$ is strictly monotone. It follows then that $F^{-1}(U)\disteq X$, i.e. if the CDF is strictly monotone (as CDFs should be) then we can get realizations of $X$ by applying $F^{-1}$ to realizations of $U$.
+
+The algorithm to sample from any PDF with a tractable inverse cumulative distribution function is then extremely simple, and for completeness it is listed in \autoref{alg:inverse-transform-sampling}.
+
+\begin{algorithm}[h]
+    \caption{Inverse Transform Sampling}
+    \label{alg:inverse-transform-sampling}
+    \begin{algorithmic}
+        \Require Cumulative distribution function $F$
+        \Ensure Random $x$ with CDF equal to $F$
+        \State $u\gets \text{Uniform}(0, 1)$
+        \State $x\gets F^{-1}(u)$
+    \end{algorithmic}
+\end{algorithm}
 
 
 \end{document}
