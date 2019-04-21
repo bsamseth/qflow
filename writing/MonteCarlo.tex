@@ -133,10 +133,16 @@ enclosing $f(x)$ much more tightly than any rectangular box might hope to.
     \resizebox{\linewidth}{!}{%
         \input{scripts/monte_carlo_int_example.py.tex}
     }
-    \caption{\label{fig:mci-importance-example-func-convergence}Convergence of the integral in
-    \autoref{eq:mci-importance-example-func}, using regular Monte Carlo
-    integration and Importance Sampling. We see the latter displaying both
-    greater accuracy and tighter confidence intervals.}
+    \caption{\label{fig:mci-importance-example-func-convergence}Convergence of
+    the integral in \autoref{eq:mci-importance-example-func}, using regular
+    Monte Carlo integration and Importance Sampling with $g = \mathcal{N}(0,
+    1)$. The points indicate the approximated value of the integral for each
+    particular experiment, and the shaded areas indicate the corresponding
+    $\SI{95}{\percent}$ confidence intervals for the expected value. We see the
+    latter displaying both greater accuracy and tighter confidence intervals.
+    The source code for this graphic can be found~\cite[TODO: Add
+    path]{MS-thesis-repository}, and \LaTeX{} output generated
+    by~\cite{nico_schlomer_2018_1173090}.}
 \end{figure}
 
 \autoref{fig:mci-importance-example-func-convergence} show the convergence of
