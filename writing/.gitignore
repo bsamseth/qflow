@@ -259,3 +259,6 @@ TSWLatexianTemp*
 *.sta
 Thesis.pdf
 betterbib_cache.sqlite
+_region_.prv
+_region_.tex
+*.pdf
