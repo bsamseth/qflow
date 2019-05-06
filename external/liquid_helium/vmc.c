@@ -10,9 +10,9 @@
 const int    npmax = 500;
 const int    nest  = 5;
 const double KB    = 1.; /* Energies in degrees Kelvin, lenghts in Angstrom */
-// const double hbo2m=6.0599278;
+const double hbo2m=6.0599278;
 //  hbar^2/2m (depends on mass)
-const double hbo2m = 0.92756799;  //<- This value good if lengths in LJ-sigma units
+/* const double hbo2m = 0.92756799;  //<- This value good if lengths in LJ-sigma units */
 
 double delta, rho, sigma_lj, eps_lj, l, li, l2;
 double Pi, acc, vbox, b, tpb, tjf;
@@ -82,7 +82,8 @@ int main()
     /* Parameters of the LJ potential. These values are for atomic 4He,
        but they could be set = 1 for a generic system
     */
-    sigma_lj = 1.000;
+    /* sigma_lj = 1.000; */
+    sigma_lj = 2.556;
     eps_lj   = 10.22;
     /*******************/
     printf("Input particle number: ");
@@ -117,7 +118,7 @@ int main()
     l22   = l2 * l2 - 1.e-10;
     vbox  = vlj(l22);
     vout  = vtail(l);
-    vout  = 0.;
+    /* vout  = 0.; */
     vbulk = 0.5 * vbox * (Pi * npart / 6. - 1);
     printf("TAIL CORRECTION: %10.5e\n", vout);
     printf("POTENTIAL AT L/2: %10.5e %10.5e\n", vbox, vlj(l2 * l2));
