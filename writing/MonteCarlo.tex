@@ -207,12 +207,12 @@ $m=2^{32}$.
 
 This produces uniformly distributed integers in the range $[0, m)$. Numbers
 from the standard uniform distribution can then simply be obtained by dividing
-the integers by $m$. The complete algorithm is shown in \autoref{alg:uniform-LCG-sampling}.
+the integers by $m$. The complete algorithm is shown in Algorithm \autoref{alg:uniform-LCG-sampling}.
 
 \begin{algorithm}[h]
     \caption{Sampling from $\text{Uniform}(l, u)$}
     \label{alg:uniform-LCG-sampling}
-    \begin{algorithmic}
+    \begin{algorithmic}[1]
         \Require $a, c, m$ and $x_0$
         \Function{unif}{lower bound $l$, upper bound $u$}
             \State $x\gets x_0$
@@ -241,18 +241,91 @@ We would like to define a transformation $T:[0, 1]\mapsto\mathbb{R}$ that can ma
 \end{align}
 because $T^{-1}(x)\in[0, 1]$ by definition, and assuming that $T^{-1}(x)$ is strictly monotone. It follows then that $F^{-1}(U)\disteq X$, i.e. if the CDF is strictly monotone (as CDFs should be) then we can get realizations of $X$ by applying $F^{-1}$ to realizations of $U$.
 
-The algorithm to sample from any PDF with a tractable inverse cumulative distribution function is then extremely simple, and for completeness it is listed in \autoref{alg:inverse-transform-sampling}.
+The algorithm to sample from any PDF with a tractable inverse cumulative
+distribution function is then extremely simple, and for completeness it is
+listed in Algorithm \autoref{alg:inverse-transform-sampling}.
 
 \begin{algorithm}[h]
     \caption{Inverse Transform Sampling}
     \label{alg:inverse-transform-sampling}
-    \begin{algorithmic}
+    \begin{algorithmic}[1]
         \Require Cumulative distribution function $F$
         \Ensure Random $x$ with CDF equal to $F$
-        \State $u\gets \text{Uniform}(0, 1)$
-        \State $x\gets F^{-1}(u)$
+        \Repeat
+          \State \Yield $F^{-1}(\text{unif}(0, 1))$
+        \Until{done}
     \end{algorithmic}
 \end{algorithm}
+
+\subsection{The Metropolis-Hastings Algorithm}
+
+Algorithm \autoref{alg:inverse-transform-sampling} works great for a number of standard
+PDFs. For many cases, however, we do not have a tractable form for the inverse
+CDF, which renders the algorithm useless. So what about the wave functions we
+are interested in? The PDF in question is, as defined in \autoref{eq:wavefunc-probability-density-def},
+
+\begin{align}
+    P_{\psi}(\vX) \defeq \frac{\abs{\psi}^2}{\int\dd{\vX}\abs{\psi}^2}.
+\end{align}
+Sadly, computing $F^{-1}$ for this PDF, if even possible, would be a very costly
+operation. In fact, the normalization integral in the denominator is enough to
+make practical sampling from $P_\psi$ impossible. Even worse, considering that
+$\psi$ is updated continuously throughout a VMC calculation, we could not even
+cache the result of the integral after computing it once.
+
+Luckily, we have a solution: The Metropolis-Hastings Algorithm. While the
+algorithm it self is quite simple, the argument for \emph{why} it works is a
+little more involved. The following sections will be dedicated to the mathematical
+underpinnings. In the mean time, the full algorithm is shown in~\Cref{alg:metropolis-hastings-general}.
+
+\begin{algorithm}[h]
+    \caption{Metropolis-Hastings Algorithm}
+    \label{alg:metropolis-hastings-general}
+    \begin{algorithmic}[1]
+        \Require Probability density $P(\vx)$, proposal distribution $q(\vx'|\vx)$
+        \Ensure Random $\vx$ drawn from $P$
+        \State Initialize $\vx$, randomly or otherwise
+        \Repeat
+          \State Sample $\vx'\sim q(\vx'|\vx)$
+          \State $u\gets\text{unif}(0, 1)$
+          \State $A\gets P(\vx')q(\vx|\vx')\qty[P(\vx)q(\vx'|\vx)]^{-1}$
+          \If{$u \leq A$}
+            \State $\vx \gets \vx'$
+          \EndIf
+          \State \Yield $\vx$
+        \Until{done}
+    \end{algorithmic}
+\end{algorithm}
+
+The most important thing about~\Cref{alg:metropolis-hastings-general} is the
+fact that we only need to know the ratios of probabilities. This means that we
+don't need the probabilities to be normalized to unity\footnote{We do need the
+probabilities to be \emph{normalizable} though. In our case, where $P\propto
+\abs{\Psi}^2$, we have already assumed this requirement
+in~\cref{sec:requirements-of-wave-functions}.}, meaning we don't have to compute
+the costly integral in~\cref{eq:wavefunc-probability-density-def}. For our
+purposes this is essential, and~\cref{alg:metropolis-hastings-general} is the
+reason why VMC is possible.
+
+\subsubsection{Markov Chains}
+
+The Metropolis-Hastings algorithm builds what is called a \emph{Markov Chain}. A
+Markov Chain is a type of stochastic model that describes a sequence of possible
+states. We imagine some finite space of possible states\footnote{The states can
+either be enumerable in space and continuous in time, continuous in space and
+enumerable in time (our most common case), or enumerable in both.
+Generalizations to continuous space and time are possible, but beyond the scope
+of this thesis.} and a set of probabilities describing the likelihood of moving
+from one to the other. The defining property of a Markov Chain, as opposed to
+other stochastic processes is that the transition probabilities $q(x'|x)$ from a
+state $x$ to a state $x'$ depends only on the current state and not on any
+previous states.
+
+For well behaved Markov Chains, as the number of steps in the chain increases,
+the distribution of the states will asymptotically approach a stationary
+distribution, call it $\pi(x)$. By well behaved we mean that the Markov Chain
+described by $q(x'|x)$ must have a \emph{unique}
+
 
 
 \end{document}
