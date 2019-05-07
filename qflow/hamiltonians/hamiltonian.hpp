@@ -14,13 +14,14 @@ class Hamiltonian
 {
 protected:
     Real h_;
+    Real kinetic_scale_factor_;
 
 public:
     /**
      * Instantiate a Hamiltonian with the given parameters.
      * @param h Step to use in numerical differentiation.
      */
-    explicit Hamiltonian(Real h = NUMMERIC_DIFF_STEP);
+    explicit Hamiltonian(Real h = NUMMERIC_DIFF_STEP, Real kinetic_scale_factor = 1);
 
     /**
      * Compute the oscillator trap potential for a given system.

@@ -10,7 +10,7 @@
 #include <iostream>
 #include <limits>
 
-Hamiltonian::Hamiltonian(Real h) : h_(h) {}
+Hamiltonian::Hamiltonian(Real h, Real kinetic_scale_factor) : h_(h), kinetic_scale_factor_(kinetic_scale_factor) {}
 
 Real Hamiltonian::kinetic_energy_numeric(const System& system, Wavefunction& psi) const
 {
@@ -33,12 +33,12 @@ Real Hamiltonian::kinetic_energy_numeric(const System& system, Wavefunction& psi
         Distance::invalidate_cache(i);
     }
 
-    return -0.5 * E_k / (h_ * h_);
+    return -0.5 * kinetic_scale_factor_ * E_k / (h_ * h_);
 }
 
 Real Hamiltonian::kinetic_energy(const System& system, Wavefunction& psi) const
 {
-    return -0.5 * psi.laplacian(system);
+    return -0.5 * kinetic_scale_factor_ *psi.laplacian(system);
 }
 
 Real Hamiltonian::local_energy_numeric(const System& system, Wavefunction& psi) const
