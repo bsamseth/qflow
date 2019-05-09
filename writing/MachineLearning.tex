@@ -64,7 +64,7 @@ dimensionality reduction, clustering analysis and more.
 
 Often we need to introduce another sub-domain for the cases that fall in
 between; Reinforcement Learning. This is the domain of problems where we do not
-have explicit knowledge of what outputs should be, but where we can still say
+have explicit knowledge of what outputs should be, but where we can still infer
 something about whether or not an output was good. An example of this is the
 problem of playing chess. While we can't label all board states with a
 corresponding ``correct move'', we can say that moves that lead to
@@ -82,21 +82,41 @@ depth into how all this connects to VMC in~\cref{chp:machine-learning}.
 
 Even though our particular interest in machine learning is for its use in VMC, a
 lot of the ideas and techniques we need come from the supervised learning
-domain. Because of that, we will introduce all the relevant components in the
+domain. Because of that, we will quickly introduce all the relevant components in the
 following sections. For simplicity and clarity, we will do this through the
 simplest example we have; Linear Regression.
 
-In general for a supervised learning task, we assume we are given some data,
-$\mathcal{D} = \{\vx_i, \vy\}_{i=1}^n$, of $n$ inputs $\vx_i$ and expected
-outputs $\vy_i$. Our task is to fit a model, $\hat f_{\hat\valpha}(\vx)$, so as to
-best learn the underlying mapping that this data is generated from.
+In general for a supervised learning task, we have the following ingredients:
+
+\begin{itemize}
+\item A data set, $\mathcal{D} = \{\vx_i, \vy_i\}_{i=1}^n$, of $n$ inputs $\vx_i$
+  and corresponding expected outputs $\vy_i$
+\item A proposed model $\hat\vy = \hat f_{\hat\valpha}(\vx)$ that we want to
+    fit to the data
+\item A cost function $\matcal{C}(\hat f_{\hat\valpha}; \mathcal{D})$ which
+  to minimize with respect to the model parameters $\hat \valpha$. Note that for
+  supervised learning, the cost function is dependent on the data set, allowing
+  us to define metrics of how well the model reproduces the data.
+\item An optimization strategy for how we should approach the minimization
+\end{itemize}
 
 
+\subsection{Example: Linear Regression}
 
-\subsection{Linear Regression}
+\begin{figure}[h]
+  \centering
+  %\resizebox{\linewidth}{!}{%
+      %\input{scripts/linear_regression_example.py.tex}
+  %}
+  \caption{Example of linear regression applied to a simple data set of a single
+    input variable. The regression tries to filter away the noise and find the
+    most likely actual trend line.}
+  \label{fig:linear-regression-example}
+\end{figure}
+
 
 We assume that the true underlying process, $f_{\valpha}(\vx)$, that generated
-$\mathcal{D}$ was linear in the inputs $\vx$. For simplicity, we will also
+$\mathcal{D}$ is linear in the inputs $\vx$. For simplicity, we will also
 assume that the outputs are scalar, $\vy \defeq y$. That is, we assume the data
 was generated in the following way:
 \begin{align}
@@ -142,23 +162,15 @@ The ``learning'' task is now expressed simply as the following optimization prob
 \subsubsection{Optimization}
 
 With data, model and cost function defined, the last step is to
-solve~\cref{eq:mse-optimization-problem-example}. In this simple case, we can
-actually do this analytically with some rather simple linear algebra. Skipping
+solve~\cref{eq:mse-optimization-problem-example}. While this can in general be a
+hard task (more on this in \cref{sec:ml-optimization}), we can
+actually do this particular exercise analytically with some rather simple linear algebra. Skipping
 the derivation, we get the following solution:
 \begin{align}
   \hat\valpha = \qty(\vX^T\vX)^{-1}\vX\vy,
 \end{align}
 where $\vX = (\vx_1, \vx_2\,\dots\vx_n)^T$ is the matrix with inputs laid out in
 rows, and $\vy$ is the column vector of all outputs.
-
-\begin{figure}[h]
-  \centering
-  \resizebox{\linewidth}{!}{%
-      \input{scripts/linear_regression_example.py.tex}
-  }
-  \caption{Example of linear regression applied to a simple data set.}
-  \label{fig:linear-regression-example}
-\end{figure}
 
 \subsubsection{Regularization}
 
@@ -197,6 +209,57 @@ problem called \emph{underfitting} refers to the case where the model is too
 constrained, e.g. trying to fit a first order polynomial to
 quadratic data.
 
+\section{Gradient Based Optimization}
+\label{sec:ml-optimization}
+
+Most supervised learning tasks rely on a gradient based optimization strategy,
+with the umbrella name \emph{Gradient Decent} (GD).
+These methods can be summarized as follows: We want to find $\vx^*$ such that\footnote{For maximization, simply minimize $-f(\vx)$. }
+
+\begin{align}
+  \vx^* = \argmin_{\vx} g(\vx),
+\end{align}
+for some function $g$ that should be minimized.
+Solve this by starting at some initial guess $\vx^{(0)}$ and improving it by
+iterating the following recurrence relation:
+
+\begin{align}
+  \label{eq:gradient-decent-definition}
+  \vx^{(n+1)} &= \vx^{(n)} + \Delta \vx^{(n)} = \vx^{(n)} - \gamma \grad{f}(\vx^{(n)})
+\end{align}
+where $\gamma$ is a suitably chosen number, typically $\gamma \ll 1$. In the
+limit $n\to\infty$ (if $\gamma$ is small enough), this will converge to a minimum
+for $f$.
+
+When $f=\mathcal{C}(\hat f_{\hat\valpha}; \mathcal{D})$ we have some choice in
+exactly how we should compute $\grad{\mathcal{C}}$. We could compute the cost
+for the entire data set, or just a single data point. These
+two options are referred to as Gradient Decent (GD) and Stochastic Gradient
+Decent (SGD), respectively. The latter is most often used because it is less
+computationally expensive for large data sets.
+
+We have various ways of extending the basic algorithm in
+\cref{eq:gradient-decent-definition}, some of which we will mention here.
+
+\subsection{Fixed Learning Rate}
+
+This is the version presented in \cref{eq:gradient-decent-definition}, in where
+$\gamma$ is chosen in advance and remains fixed throughout all iterations.
+
+\begin{itemize}
+\item Pros:
+  \begin{itemize}
+  \item Easy to implement
+  \end{itemize}
+\item Cons:
+  \begin{itemize}
+  \item If $\gamma$ is to large it can lead to divergence or inaccurate results
+  \item If $\gamma$ is to small we have a higher chance of getting stuck in small, local minima.
+  \item If $\gamma$ is small we will need many iterations before convergence
+  \end{itemize}
+\end{itemize}
+
+\subsection{Momentum}
 
 \section{Neural Networks}
 
