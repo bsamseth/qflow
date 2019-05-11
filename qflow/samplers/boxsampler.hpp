@@ -1,11 +1,12 @@
 #pragma once
 
-#include <limits>
-#include <iostream>
+#include "distance.hpp"
 #include "gibbssampler.hpp"
 #include "importancesampler.hpp"
 #include "metropolissampler.hpp"
-#include "distance.hpp"
+
+#include <iostream>
+#include <limits>
 
 template <class Base>
 class BoxSampler : public Base
@@ -27,6 +28,13 @@ public:
         return s;
     }
 
+    void initialize_from_system(const System& system)
+    {
+        Base::_system_old = system;
+        Base::_system_new = Base::_system_old;
+        Base::_psi_old    = (*Base::_wavefunction)(Base::_system_old);
+    }
+
     void initialize_system() override
     {
         Distance::stop_tracking();
@@ -36,7 +44,7 @@ public:
         for (int i = 0; i < Base::_system_old.rows(); ++i)
         {
             RowVector best_point = RowVector::Zero(Base::_system_old.cols());
-            Real best_dist = std::numeric_limits<Real>::min();
+            Real      best_dist  = std::numeric_limits<Real>::min();
             for (int run = 0; run < 10000; run++)
             {
                 // Pick a new point at random
@@ -64,12 +72,13 @@ public:
                 /* std::cout << " with min dist = " << min_dist <<std::endl; */
                 if (min_dist > best_dist)
                 {
-                    best_dist = min_dist;
+                    best_dist  = min_dist;
                     best_point = Base::_system_old.row(i);
                 }
             }
             Base::_system_old.row(i) = best_point;
-            /* std::cout << "Placed point at " << Base::_system_old.row(i) << " with min dist " << best_dist << std::endl; */
+            /* std::cout << "Placed point at " << Base::_system_old.row(i) << " with min
+             * dist " << best_dist << std::endl; */
         }
         Base::_system_new = Base::_system_old;
         Base::_psi_old    = (*Base::_wavefunction)(Base::_system_old);

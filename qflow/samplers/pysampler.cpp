@@ -194,7 +194,8 @@ meaning of the `step_size`.
              py::arg("system"),
              py::arg("wavefunction"),
              py::arg("box_size"),
-             py::arg("step_size") = 1);
+             py::arg("step_size") = 1)
+        .def("initialize_from_system", &BoxMetropolisSampler::initialize_from_system);
 
     py::class_<BoxImportanceSampler, ImportanceSampler>(m, "BoxImportanceSampler")
         .def(py::init<const System&, Wavefunction&, Real, Real>(),
