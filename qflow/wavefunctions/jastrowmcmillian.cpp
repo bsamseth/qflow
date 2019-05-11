@@ -40,7 +40,7 @@ Real JastrowMcMillian::operator()(const System& system)
             res += 0.5 * std::pow(ri, n_);
         }
     }
-    return std::exp(-0.5 * res);
+    return std::exp(-res);
 }
 
 RowVector JastrowMcMillian::gradient(const System& system)
