@@ -26,7 +26,7 @@ void HeliumSampler::initialize_system()
 
     side = std::pow(4. / rho, 1. / 3.);
 
-    printf("elementary cell side: %10.5f\n", side);
+    // printf("elementary cell side: %10.5f\n", side);
 
     index = 0;
     for (i = 0; i < ncx; i++)
@@ -54,10 +54,10 @@ void HeliumSampler::initialize_system()
         _system_old(j, 1) = yd - L * std::rint(yd / L);
         zd                = _system_old(j, 2);
         _system_old(j, 2) = zd - L * std::rint(zd / L);
-        printf("%10.5f  %10.5f   %10.5f\n",
-               _system_old(j, 0),
-               _system_old(j, 1),
-               _system_old(j, 2));
+        // printf("%10.5f  %10.5f   %10.5f\n",
+        //        _system_old(j, 0),
+        //        _system_old(j, 1),
+        //        _system_old(j, 2));
     }
     _system_new = _system_old;
     _psi_old    = (*_wavefunction)(_system_old);
