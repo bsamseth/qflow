@@ -18,10 +18,11 @@
 class JastrowMcMillian : public Wavefunction
 {
 private:
-    int n_;
+    const int  n_;
+    const Real L;
 
 public:
-    JastrowMcMillian(int n = 5, Real beta = 2.5);
+    JastrowMcMillian(int n, Real beta, Real L);
 
     Real operator()(const System&) override;
 
@@ -29,5 +30,5 @@ public:
 
     Real laplacian(const System& system) override;
 
-    Real drift_force(const System& system, int k, int dim_index) override;
+    // Real drift_force(const System& system, int k, int dim_index) override;
 };
