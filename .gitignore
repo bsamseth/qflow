@@ -383,3 +383,6 @@ compile_commands.json
 results/
 *.cpython*
 *.egg*
+GPATH
+GRTAGS
+GTAGS
