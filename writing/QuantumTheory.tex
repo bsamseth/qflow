@@ -340,7 +340,7 @@ where natural units ($\hbar=c=m_e=1$) are used with energies in
 atomic units (a.u.), $N$ denotes the number of particles in the system, and
 $\omega$ is the oscillator frequency of the trap. Further, $\vec r_i$
 denotes the position vector of particle $i$, with $r_i \equiv \norm{\vec r}$ and
-$r_{ij}\equiv \norm{\vec r_i - \vec r_j}$ defined for notational brevity.
+$r_{ij}\equiv \norm{\vec r_i - \vec r_j}$ defined for notational brevity. 
 
 This system describes particles trapped in a parabolic potential well, being pulled
 towards the bottom of the well at all times, while simultaneously feeling the repulsive
@@ -349,8 +349,19 @@ at the bottom. Even for this somewhat idealized system, the interplay between th
 opposing forces gives rise to a surprisingly complex problem, which will prove remarkably
 hard to solve analytically even for two particles, and utterly impossible for higher $N$.
 
+With the natural units in place, the only involved quantity that has not been
+given a unit is length, i.e. what unit does the $\vb r_i$ have. A convenient
+choice is to consider the mean square vibrational amplitude, $\expval{r^2}$, for
+a single particle at $T = \SI{0}{\kelvin}$ placed in the oscillator trap.
+Computing the expectation value we get
+$\expval{r^2}=\flatfrac{\hbar}{2m\omega}$, and we define the unit of length as the
+characteristic length of the trap, $a_{ho}=\qty(2\expval{r^2})^{\flatfrac{1}{2}}=\qty(\flatfrac{\hbar}{m\omega})^{\flatfrac{1}{2}}$.
+
 In our case, we limit ourselves to $N=2$ interacting electrons in two
-dimensions in a trap with a frequency such that $\hbar \omega = 1$. We do this because for
+dimensions in a trap with a frequency such that $\hbar \omega =
+1$.\footnote{Note that, due to the natural units, this implies that $\omega =
+  1$, which further means that $a_{ho} = 1$. It should be apparent why these
+  definitions are used, as it simplifies both units and expression quite a bit.} We do this because for
 this case we have exact, analytical solutions for the ground state energy. With the
 interaction term included, the ground state energy is $E_0 = \SI{3}{\au}$~\cite{Taut1993}.
 This limitation is purely one of convenience, as having exact benchmarks makes for better
@@ -384,7 +395,7 @@ energy,
     = \omega = \SI{1}{\au}
 \end{align}
 The ground state wavefunction for the (unperturbed) two-electron case is simply the
-product of the one-electron wavefunctions,
+product of the one-electron wave functions,
 \begin{align}
     \begin{split}
         \Phi(\vec r_1, \vec r_2) &= \phi_{00}(\vec r_1)\phi_{00}(\vec r_2)\\
@@ -461,20 +472,20 @@ particle.
 
 \subsection{Liquid $^4$He}
 
-Consider now an infinite collection of $^4$He atoms packed with a given density
-$\rho$\footnote{Is the temperature fixed? Or does that even make sense? TODO.}. As
-infinities are hard to work with, we model this by considering a cubic simulation box with
-side lengths $L$ and periodic boundary conditions. The infinite collection is then
-composed of stacking copies of such simulation boxes together. The Hamiltonian for this
-system is taken as
+Consider now an infinite collection of $^4$He atoms packed with a given density.
+As infinities are hard to work with, we model this by considering a cubic
+simulation box with side lengths $L$ and periodic boundary conditions. The
+infinite collection is then composed of stacking copies of such simulation boxes
+together. The Hamiltonian for this system is taken as
 
 \begin{align}
-    \hat H &= \sum_{i=1}^N \frac{p_i^2}{2m} + \sum_{i < j} V(r_{ij})
+    \hat H &= -\sum_{i=1}^N \frac{\hbar^2}{2m}\laplacian_i + \sum_{i < j} V(r_{ij})
 \end{align}
-i.e. the kinetic energy of all atoms, plus a interaction potential dependent on the
-distance between all pairs of atoms. The form of $V$ is not known analytically, but is
-experimentally probed to great accuracy. Theorists have since fitted specific functional
-forms to the experimental data, and we will do our calculations using one of these
+i.e. the kinetic energy of all atoms, plus a interaction potential dependent on
+the distance between all pairs of atoms. The mass $m$ is the mass of one $^4He$
+atom. The form of $V$ is not known analytically, but is experimentally probed to
+great accuracy. Theorists have since fitted specific functional forms to the
+experimental data, and we will do our calculations using one of these
 potentials. The most commonly used is the simple Lennard-Jones (LJ)
 potential~\cite{Kalos-1981}:
 
@@ -483,10 +494,10 @@ potential~\cite{Kalos-1981}:
     V(r)
      &= 4\epsilon\qty[\qty( \frac{\sigma}{r} )^{12} - \qty( \frac{\sigma}{r} )^6 ]
 \end{align}
-with $\epsilon/\kappa = \SI{10.22}{\K}$ and $\sigma = \SI{2.556}{\angstrom}$. This
+with $\epsilon/\kappa = \SI{10.22}{\K}$\footnote{$\kappa$ is the Boltzmann constant.} and $\sigma = \SI{2.556}{\angstrom}$. This
 models the competing forces of the atoms' mutual repulsion and attraction. The
 positive term describes the short range Pauli repulsion due to overlapping
-electron orbitals, and the negative terms describes the long range attraction
+electron orbitals, and the negative term describes the long range attraction
 due to phenomena such as van der Waals forces.
 
 We'll also use the more accurate potential named HFDHE2~\cite{Kalos-1981}:
@@ -522,6 +533,28 @@ with the following parameters:
         &C_{10}= \num{0.178100}\\
     \end{split}
 \end{align}
+
+\subsubsection{A Note About Units}
+
+In the literature it is common to express the energies in Kelvin per particle,
+and lengths in angstrom~\cite{Kalos-1981, Aziz-hfdhe2, ruggeri2018}. In order to convert energies to temperatures we
+divide by the Boltzmann constant, $\kappa$, because it has the unit of Joules per
+Kelvin. The Hamiltonian becomes:
+\begin{align}
+  \hat H &= -\sum_{i=1}^N \frac{\hbar^2}{2m\kappa}\laplacian_i + \sum_{i<j}\frac{1}{\kappa}V(r_{ij}).
+\end{align}
+
+If we use SI units for the constants involved we get:
+\begin{align}
+  \frac{\hbar^2}{2m\kappa} = \SI{6.059651974e-20}{\metre^2\kelvin} = \SI{6.059651974}{\angstrom^2\kelvin},
+\end{align}
+which turns out to be a reasonably sized number when we use angstrom for
+lengths.\footnote{Note that $\laplacian$ has units of $\text{length}^{-2}$, so
+  the units work out to Kelvin.}We will use these values in the implementation,
+and simply refer to energies in kelvin when we study this system. However, if
+the reader ever wants to convert the units, for comparison with other works
+perhaps, simply multiplying with the value of $\kappa$ in the unit system of
+choice should yield the corresponding energy.
 
 
 \end{document}

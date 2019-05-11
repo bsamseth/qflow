@@ -44,10 +44,10 @@ For our purposes, we will define the steps involved in developing a machine
 learning model as follows:
 
 \begin{enumerate}
-  \item Define a model, $f_{\valpha}(\vx)$ dependent on some parameters $\valpha$
-  \item Define a cost function $C(f)$ - a metric of how far away from the
-      ideal model $f$ is
-  \item Minimize $C(f)$ with respect to $\valpha$
+  \item Define a model, $\hat f_{\hat\valpha}(\vx)$ dependent on some parameters $\hat\valpha$
+  \item Define a cost function $C(\hat f_{\hat\valpha})$ - a metric of how far away from the
+      ideal model $\hat f_{\hat\valpha}$ is
+  \item Minimize $C(\hat f_{\hat\valpha})$ with respect to $\valpha$
 \end{enumerate}
 
 It is common to divide ML into two main sub-domains: Supervised and Unsupervised
@@ -55,7 +55,6 @@ Learning. Supervised Learning is characterized by us having access to a data set
 where both inputs \emph{and} desired outputs are specified. This is possibly the
 most common case, or at least the case where most \emph{want} to work with.
 Examples are many, and include most regression and classification tasks.
-
 
 Unsupervised Learning is (naturally) the other case, where we do not have
 information about any output responses. In these cases we don't focus on
@@ -65,14 +64,202 @@ dimensionality reduction, clustering analysis and more.
 
 Often we need to introduce another sub-domain for the cases that fall in
 between; Reinforcement Learning. This is the domain of problems where we do not
-have explicit knowledge of what outputs should be, but where we can still say
+have explicit knowledge of what outputs should be, but where we can still infer
 something about whether or not an output was good. An example of this is the
 problem of playing chess. While we can't label all board states with a
-corresponding ``correct move'', we can say that moves that turn out to lead to
+corresponding ``correct move'', we can say that moves that lead to
 checkmate are probably good. Reinforcement learning tries to adapt a model so as
 to maximize/minimize the reward/punishment that follows as a consequence of its
-actions. Variational Monte Carlo is a type of reinforcement learning.
+actions.
 
+Variational Monte Carlo is a type of reinforcement learning. This is because we
+do not have information about exactly what the value of the wave function should
+be for every configuration, but we still have a way to evaluate the correctness
+of the wave function by calculating the energy it predicts. We'll go more in
+depth into how all this connects to VMC in~\cref{chp:machine-learning}.
+
+\section{Supervised Learning}
+
+Even though our particular interest in machine learning is for its use in VMC, a
+lot of the ideas and techniques we need come from the supervised learning
+domain. Because of that, we will quickly introduce all the relevant components in the
+following sections. For simplicity and clarity, we will do this through the
+simplest example we have; Linear Regression.
+
+In general for a supervised learning task, we have the following ingredients:
+
+\begin{itemize}
+\item A data set, $\mathcal{D} = \{\vx_i, \vy_i\}_{i=1}^n$, of $n$ inputs $\vx_i$
+  and corresponding expected outputs $\vy_i$
+\item A proposed model $\hat\vy = \hat f_{\hat\valpha}(\vx)$ that we want to
+    fit to the data
+\item A cost function $\matcal{C}(\hat f_{\hat\valpha}; \mathcal{D})$ which
+  to minimize with respect to the model parameters $\hat \valpha$. Note that for
+  supervised learning, the cost function is dependent on the data set, allowing
+  us to define metrics of how well the model reproduces the data.
+\item An optimization strategy for how we should approach the minimization
+\end{itemize}
+
+
+\subsection{Example: Linear Regression}
+
+\begin{figure}[h]
+  \centering
+  %\resizebox{\linewidth}{!}{%
+      %\input{scripts/linear_regression_example.py.tex}
+  %}
+  \caption{Example of linear regression applied to a simple data set of a single
+    input variable. The regression tries to filter away the noise and find the
+    most likely actual trend line.}
+  \label{fig:linear-regression-example}
+\end{figure}
+
+
+We assume that the true underlying process, $f_{\valpha}(\vx)$, that generated
+$\mathcal{D}$ is linear in the inputs $\vx$. For simplicity, we will also
+assume that the outputs are scalar, $\vy \defeq y$. That is, we assume the data
+was generated in the following way:
+\begin{align}
+  y_i = f_{\valpha}(\vx_i) + \epsilon = \vx^T\valpha + \epsilon
+\end{align}
+where $\valpha$ is a column vector of coefficients, and
+$\epsilon\sim\mathcal{N}(0, \sigma^2)$ is normally distributed noise with zero
+mean and variance $\sigma^2$, introduced via measurement inaccuracy
+etc.\footnote{Note that this definition implies that $f_{\valpha}$
+  has zero intercept, i.e. $f_{\valpha}(\vb{0}) = 0$. We can easily work around
+  that, however, by adding a constant element to every input vector, i.e. let
+  $\vx' \defeq (1\ \ \vx)$ be the new inputs. The second option is to simply
+  center the data beforehand, by subtracting the mean $\overline y =
+  \flatfrac{1}{n}\sum_{i=1}^n y_i$ from every $y_i$, and then optionally revert
+  back whenever needed.}
+
+\subsubsection{Model}
+
+Based on the above assumption, we propose the following model:
+
+\begin{align}
+\hat f_{\hat\valpha}(\vx) &= \vx^T\hat\valpha.
+\end{align}
+Ideally we want to learn $\hat\valpha$ from the data such that
+$\hat\valpha\simeq\valpha$.
+
+\subsubsection{Cost Function}
+
+In order to quantify which $\hat\valpha$ is optimal, we need metric to compare
+by. There are several conceivable choices here, many of which might lead us to
+the correct $\valpha$. Most common, at least in this case, is to use the
+so-called Mean Square Error (MSE):
+
+\begin{align}
+  \mathcal{C}_\text{MSE}(\hat f_{\hat\valpha}; \mathcal{D}) &= \frac{1}{n}\sum_{i=1}^n \abs{\hat f_{\hat\valpha}(\vx_i) - y_i}^2.
+\end{align}
+The ``learning'' task is now expressed simply as the following optimization problem:
+\begin{align}
+  \label{eq:mse-optimization-problem-example}
+  \hat\valpha = \argmin_{\valpha'}\,\mathcal{C}_\text{MSE}(\hat f_{\valpha'}; \mathcal{D})
+\end{align}
+
+\subsubsection{Optimization}
+
+With data, model and cost function defined, the last step is to
+solve~\cref{eq:mse-optimization-problem-example}. While this can in general be a
+hard task (more on this in \cref{sec:ml-optimization}), we can
+actually do this particular exercise analytically with some rather simple linear algebra. Skipping
+the derivation, we get the following solution:
+\begin{align}
+  \hat\valpha = \qty(\vX^T\vX)^{-1}\vX\vy,
+\end{align}
+where $\vX = (\vx_1, \vx_2\,\dots\vx_n)^T$ is the matrix with inputs laid out in
+rows, and $\vy$ is the column vector of all outputs.
+
+\subsubsection{Regularization}
+
+Often times it turns out to be useful to add an extra term to the cost function
+that depends on the size of the parameters $\hat\valpha$. This typically takes
+the following form:
+
+\begin{align}
+  \mathcal{C}(\hat f_{\hat\valpha};\mathcal{D}) &=   \mathcal{C}_\text{MSE}(\hat f_{\hat\valpha};\mathcal{D}) + \gamma\norm{\hat\valpha}_p^p,
+\end{align}
+where $\norm{\cdot}_p$ is the $L^p$ norm, and $\gamma$ is a parameter
+we set to control the degree of regularization (typically $\gamma\ll 1$). Most
+used are $p=1$ (called the LASSO loss) and $p=2$ (called the Ridge loss).
+
+The motivation for why we might want to do this is as follows: Imagine we have
+data set with $\vx_i = (x_i, 2x_i)$, that is to say we have two variables per
+data point, but the two variables are directly correlated. Lastly, assume that
+$y_i = 3x_i$ is the underlying function. Without any regularization, all of the
+following models are equally good:
+
+\begin{align}
+  \hat\valpha^{(1)} = (3, 0),\ \hat\valpha^{(2)} = (1, 1),\ \hat\valpha^{(3)} = (-997, 500)
+\end{align}
+The problem is that without regularization, this particular
+optimization problem ill-formed, and does not have a unique solution. While all
+of the above give perfect reconstruction of the data, solutions like
+$\valpha^{(3)}$ yield strange interpretations. According to this model, the
+output is strongly negatively correlated with $x_1$, in complete contradiction
+with the underlying truth.
+
+While this particular example is very contrived, the point should be clear: In
+some cases, depending on both the data and what model we choose, the model might
+be too flexible for the task at hand. This is generally referred to as the
+problem of \emph{overfitting}, and can lead to strange behavior. The opposite
+problem called \emph{underfitting} refers to the case where the model is too
+constrained, e.g. trying to fit a first order polynomial to
+quadratic data.
+
+\section{Gradient Based Optimization}
+\label{sec:ml-optimization}
+
+Most supervised learning tasks rely on a gradient based optimization strategy,
+with the umbrella name \emph{Gradient Decent} (GD).
+These methods can be summarized as follows: We want to find $\vx^*$ such that\footnote{For maximization, simply minimize $-f(\vx)$. }
+
+\begin{align}
+  \vx^* = \argmin_{\vx} g(\vx),
+\end{align}
+for some function $g$ that should be minimized.
+Solve this by starting at some initial guess $\vx^{(0)}$ and improving it by
+iterating the following recurrence relation:
+
+\begin{align}
+  \label{eq:gradient-decent-definition}
+  \vx^{(n+1)} &= \vx^{(n)} + \Delta \vx^{(n)} = \vx^{(n)} - \gamma \grad{f}(\vx^{(n)})
+\end{align}
+where $\gamma$ is a suitably chosen number, typically $\gamma \ll 1$. In the
+limit $n\to\infty$ (if $\gamma$ is small enough), this will converge to a minimum
+for $f$.
+
+When $f=\mathcal{C}(\hat f_{\hat\valpha}; \mathcal{D})$ we have some choice in
+exactly how we should compute $\grad{\mathcal{C}}$. We could compute the cost
+for the entire data set, or just a single data point. These
+two options are referred to as Gradient Decent (GD) and Stochastic Gradient
+Decent (SGD), respectively. The latter is most often used because it is less
+computationally expensive for large data sets.
+
+We have various ways of extending the basic algorithm in
+\cref{eq:gradient-decent-definition}, some of which we will mention here.
+
+\subsection{Fixed Learning Rate}
+
+This is the version presented in \cref{eq:gradient-decent-definition}, in where
+$\gamma$ is chosen in advance and remains fixed throughout all iterations.
+
+\begin{itemize}
+\item Pros:
+  \begin{itemize}
+  \item Easy to implement
+  \end{itemize}
+\item Cons:
+  \begin{itemize}
+  \item If $\gamma$ is to large it can lead to divergence or inaccurate results
+  \item If $\gamma$ is to small we have a higher chance of getting stuck in small, local minima.
+  \item If $\gamma$ is small we will need many iterations before convergence
+  \end{itemize}
+\end{itemize}
+
+\subsection{Momentum}
 
 \section{Neural Networks}
 

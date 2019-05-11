@@ -16,14 +16,19 @@
  *
  *             eps / kappa  =  10.22 K
  *             sigma        =  2.556 Å
+ *
+ * Also using the following value:
+ *             hbar^2 / m_helium k_B = 12.1193048 Å^2 K
  */
 class LennardJones : public Hamiltonian
 {
 public:
+    static constexpr Real hbar2_per_m = 12.1193048;
     static constexpr Real eps   = 10.22;  // K
     static constexpr Real sigma = 2.556;  // Å
+    static constexpr Real r_core = 0.3 * sigma;
 
-    using Hamiltonian::Hamiltonian;
+    explicit LennardJones(Real h = NUMMERIC_DIFF_STEP);
 
     /// No external potential defined in general, only internal.
     Real external_potential(const System&) const override;
