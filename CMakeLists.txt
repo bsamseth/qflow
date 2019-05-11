@@ -60,6 +60,7 @@ set(SOURCES
     qflow/samplers/importancesampler.cpp
     qflow/samplers/metropolissampler.cpp
     qflow/samplers/sampler.cpp
+    qflow/samplers/heliumsampler.cpp
     qflow/wavefunctions/hardspherewavefunction.cpp
     qflow/wavefunctions/jastrowmcmillian.cpp
     qflow/wavefunctions/jastrowpade.cpp
