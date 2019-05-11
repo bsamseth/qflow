@@ -14,17 +14,21 @@ JastrowMcMillian::JastrowMcMillian(int n, Real beta)
 Real JastrowMcMillian::operator()(const System& system)
 {
     const Real beta = _parameters[0];
-    const int  N    = system.rows();
-    Real       res  = 0;
+    const Real L    = Distance::get_simulation_box_size();
+    if (L < 14)
+        throw 123;
+
+    const int N   = system.rows();
+    Real      res = 0;
     for (int i = 0; i < N - 1; ++i)
     {
         for (int j = i + 1; j < N; ++j)
         {
             const Real r_ij = Distance::probe(system, i, j);
-            res += std::pow(beta / r_ij, n_);
+            res += 2 * r_ij < L ? std::pow(beta / r_ij, n_) : 0;
         }
     }
-    return std::exp(-res);
+    return std::exp(-0.5 * res);
 }
 
 RowVector JastrowMcMillian::gradient(const System& system)
@@ -40,7 +44,7 @@ RowVector JastrowMcMillian::gradient(const System& system)
             grad[0] += std::pow(1 / r_ij, n_);
         }
     }
-    grad[0] *= -n_ * std::pow(beta, n_ - 1);
+    grad[0] *= -0.5 * n_ * std::pow(beta, n_ - 1);
     return grad;
 }
 
@@ -58,7 +62,7 @@ Real JastrowMcMillian::drift_force(const System& system, int k, int d)
                    / (r_ik * r_ik);
         }
     }
-    return 2 * n_ * res;
+    return 2 * 0.5 * n_ * res;
 }
 
 Real JastrowMcMillian::laplacian(const System& system)
@@ -87,7 +91,7 @@ Real JastrowMcMillian::laplacian(const System& system)
                          / (r_ik * r_ik);
             }
         }
-        res += n_ * n_ * term1.squaredNorm() + n_ * term2;
+        res += 0.25 * n_ * n_ * term1.squaredNorm() + n_ * 0.5 * term2;
     }
 
     return res;

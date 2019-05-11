@@ -20,7 +20,7 @@ def jastrow_np(X, n, beta):
         for j in range(i + 1, X.shape[0]):
             r_ij = np.dot(X[i] - X[j], X[i] - X[j]) ** 0.5
             exponent += (beta / r_ij) ** n
-    return np.exp(-exponent)
+    return np.exp(-0.5 * exponent)
 
 
 @given(X=array_strat(min_dims=2), n=n_strat(), beta=float_strat())
