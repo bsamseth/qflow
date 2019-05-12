@@ -82,7 +82,6 @@ Real JastrowMcMillian::laplacian(const System& system)
     const Real beta = _parameters[0];
     const int  N    = system.rows();
     const int  D    = system.cols();
-    const Real l22  = square(0.5 * L);
 
     Real   d2psi = 0;
     System dpsi  = System::Zero(N, D);
@@ -91,48 +90,27 @@ Real JastrowMcMillian::laplacian(const System& system)
     {
         for (int j = 0; j < i; ++j)
         {
-            Real dx = system(i, 0) - system(j, 0);
-            dx -= L * std::rint(dx / L);
-            Real dy = system(i, 1) - system(j, 1);
-            dy -= L * std::rint(dy / L);
-            Real dz = system(i, 2) - system(j, 2);
-            dz -= L * std::rint(dz / L);
+            auto diff           = (system.row(i) - system.row(j)).array();
+            auto diff_corrected = diff - Eigen::round(diff / L) * L;
+            Real r              = norm(diff_corrected);
 
-            Real r2 = dx * dx + dy * dy + dz * dz;
-
-            if (r2 < l22)
+            if (r < 0.5 * L)
             {
-                if (r2 < square(0.3 * 2.556))
-                    r2 = square(0.3 * 2.556);
-
-                Real r2i = beta * beta / r2;
-                Real ri  = 1. / (beta * std::sqrt(r2));
+                r        = std::max(LennardJones::r_core, r);
+                Real r2i = beta * beta / square(r);
+                Real ri  = 1. / (beta * r);
                 Real r6i = r2i * r2i * r2i;
 
                 Real v = -5 * r6i * ri;
 
-                Real dux = v * dx;
-                Real duy = v * dy;
-                Real duz = v * dz;
-
-                dpsi(i, 0) += dux;
-                dpsi(i, 1) += duy;
-                dpsi(i, 2) += duz;
-                dpsi(j, 0) -= dux;
-                dpsi(j, 1) -= duy;
-                dpsi(j, 2) -= duz;
+                RowVector du = v * diff_corrected;
+                dpsi.row(i) += du;
+                dpsi.row(j) -= du;
 
                 d2psi += 20. * r6i * ri;
             }
         }
     }
-    Real tpb = 0;
-    for (int i = 0; i < N; ++i)
-    {
-        tpb += 0.25 * square(dpsi(i, 0));
-        tpb += 0.25 * square(dpsi(i, 1));
-        tpb += 0.25 * square(dpsi(i, 2));
-    }
 
-    return tpb - d2psi;
+    return 0.25 * dpsi.squaredNorm() - d2psi;
 }
