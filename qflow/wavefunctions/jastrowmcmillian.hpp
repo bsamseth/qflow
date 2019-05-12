@@ -18,10 +18,11 @@
 class JastrowMcMillian : public Wavefunction
 {
 private:
-    const int  n_;
-    const Real L;
+    const int n_;
 
 public:
+    const Real L;
+
     JastrowMcMillian(int n, Real beta, Real L);
 
     Real operator()(const System&) override;

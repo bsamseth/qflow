@@ -1,6 +1,7 @@
 #include "jastrowmcmillian.hpp"
 
 #include "distance.hpp"
+#include "lennardjones.hpp"
 
 #include <cmath>
 
@@ -16,31 +17,25 @@ Real JastrowMcMillian::operator()(const System& system)
     const Real beta = _parameters[0];
     const int  N    = system.rows();
     Real       res  = 0;
-    Real       l22  = square(0.5 * L);
     for (int i = 0; i < N - 1; ++i)
     {
         for (int j = i + 1; j < N; ++j)
         {
-            Real dx = system(i, 0) - system(j, 0);
-            dx -= L * std::rint(dx / L);
-            Real dy = system(i, 1) - system(j, 1);
-            dy -= L * std::rint(dy / L);
-            Real dz = system(i, 2) - system(j, 2);
-            dz -= L * std::rint(dz / L);
+            auto diff = (system.row(i) - system.row(j)).array();
+            Real r    = norm(diff - Eigen::round(diff / L) * L);
 
-            Real rr = dx * dx + dy * dy + dz * dz;
-
-            if (rr > l22)
+            if (r > 0.5 * L)
                 continue;
 
-            if (rr < square(0.3 * 2.556))
-                rr = square(0.3 * 2.556);
+            // Avoid overflow by fixing a lower bound for the distance. The
+            // likelihood of being here is very small, so the effect should be
+            // minimal.
+            r = std::max(LennardJones::r_core, r);
 
-            Real ri = beta / std::sqrt(rr);
-            res += 0.5 * std::pow(ri, n_);
+            res += std::pow(beta / r, n_);
         }
     }
-    return std::exp(-res);
+    return std::exp(-0.5 * res);
 }
 
 RowVector JastrowMcMillian::gradient(const System& system)
