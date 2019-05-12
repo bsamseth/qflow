@@ -27,13 +27,18 @@ public:
     static constexpr Real eps         = 10.22;  // K
     static constexpr Real sigma       = 2.556;  // Å
     static constexpr Real r_core      = 0.3 * sigma;
+    const Real            L;
+    Real                  truncation_potential;
 
-    explicit LennardJones(Real h = NUMMERIC_DIFF_STEP);
+    explicit LennardJones(Real L, Real h = NUMMERIC_DIFF_STEP);
 
     /// No external potential defined in general, only internal.
     Real external_potential(const System&) const override;
 
     Real internal_potential(const System&) const override;
+
+private:
+    Real vlj_core(Real r2) const;
 };
 
 inline Real LennardJones::external_potential(const System& system) const
