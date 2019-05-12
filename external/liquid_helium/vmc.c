@@ -118,9 +118,9 @@ int main()
     printf("SIMULATION CELL SIDE: %10.8f \n", l);
     vbox = 0.;
     l22  = l2 * l2 - 1.e-10;
-    vbox = vlj(l22);
-    vout = vtail(l);
-    /* vout  = 0.; */
+
+    vbox  = vlj(l22);
+    vout  = vtail(l);
     vbulk = 0.5 * vbox * (Pi * npart / 6. - 1);
     printf("TAIL CORRECTION: %10.5e\n", vout);
     printf("POTENTIAL AT L/2: %10.5e %10.5e\n", vbox, vlj(l2 * l2));
@@ -138,6 +138,8 @@ int main()
     printf("tpb / n after setup: %5.10f\n", tpb / npart);
     printf("psi_value after setup: ");
     psi_value(walker);
+    printf("potential after setup: %5.10f\n",
+           total_potential(walker) / (double) npart + vout + vbulk);
     /* Zero out the estimates cumulants */
     accum = 0.;
     /************************************************/
