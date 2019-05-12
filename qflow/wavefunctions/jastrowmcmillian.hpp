@@ -31,5 +31,5 @@ public:
 
     Real laplacian(const System& system) override;
 
-    // Real drift_force(const System& system, int k, int dim_index) override;
+    Real drift_force(const System& system, int k, int dim_index) override;
 };

@@ -40,25 +40,28 @@ Real JastrowMcMillian::operator()(const System& system)
 
 RowVector JastrowMcMillian::gradient(const System& system)
 {
-    /*
-      const Real beta = _parameters[0];
-      RowVector  grad = RowVector::Zero(1);
-      const int  N    = system.rows();
-      for (int i = 0; i < N - 1; ++i)
-      {
-          for (int j = i + 1; j < N; ++j)
-          {
-              const Real r_ij = Distance::probe(system, i, j);
-              grad[0] += std::pow(1 / r_ij, n_);
-          }
-      }
-      grad[0] *= -0.5 * n_ * std::pow(beta, n_ - 1);
-      return grad;
-    */
-    return RowVector::Zero(1);
+    const Real beta = _parameters[0];
+    RowVector  grad = RowVector::Zero(1);
+    const int  N    = system.rows();
+    for (int i = 0; i < N - 1; ++i)
+    {
+        for (int j = i + 1; j < N; ++j)
+        {
+            auto diff           = (system.row(i) - system.row(j)).array();
+            auto diff_corrected = diff - Eigen::round(diff / L) * L;
+            Real r              = norm(diff_corrected);
+
+            if (r < 0.5 * L)
+            {
+                r = std::max(LennardJones::r_core, r);
+                grad[0] += std::pow(1 / r, n_);
+            }
+        }
+    }
+    grad[0] *= -0.5 * n_ * std::pow(beta, n_ - 1);
+    return grad;
 }
 
-/*
 Real JastrowMcMillian::drift_force(const System& system, int k, int d)
 {
     const Real beta = _parameters[0];
@@ -68,14 +71,18 @@ Real JastrowMcMillian::drift_force(const System& system, int k, int d)
     {
         if (i != k)
         {
-            const Real r_ik = Distance::probe(system, i, k);
-            res += std::pow(beta / r_ik, n_) * (system(k, d) - system(i, d))
-                   / (r_ik * r_ik);
+            auto diff           = (system.row(i) - system.row(k)).array();
+            auto diff_corrected = diff - Eigen::round(diff / L) * L;
+            Real r              = norm(diff_corrected);
+            if (r < 0.5 * L)
+            {
+                r = std::max(LennardJones::r_core, r);
+                res += std::pow(beta / r, n_) * diff_corrected[d] / (r * r);
+            }
         }
     }
     return 2 * 0.5 * n_ * res;
 }
-*/
 
 Real JastrowMcMillian::laplacian(const System& system)
 {
