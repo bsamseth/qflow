@@ -163,8 +163,7 @@ void Hamiltonian::optimize_wavefunction(Wavefunction& psi,
         {
             Real E_mean = local_energy(sampler, psi, sample_points);
             if (mpiutil::get_rank() == 0)
-                std::cout << "Iteration " << iteration << ": <E> = " << E_mean
-                          << ": parameters = " << psi.get_parameters() << '\n';
+                std::cout << "Iteration " << iteration << ": <E> = " << E_mean << '\n';
         }
     }
 }
