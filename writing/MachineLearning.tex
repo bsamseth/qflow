@@ -249,22 +249,91 @@ determining $\Delta \vx^{(n)}$, some of which we will mention here.
 \subsection{Fixed Learning Rate}
 
 This is the version presented in \cref{eq:gradient-decent-definition}, in where
-$\gamma$ is chosen in advance and remains fixed throughout all iterations.
+$\eta$ is chosen in advance and remains fixed throughout all iterations:
+\begin{align}
+  \label{eq:fixed-learning-rate-update-rule}
+  \Delta \vx^{(n)} = -\eta \grad{g(\vx^{n})}.
+\end{align}
 
 \begin{itemize}
 \item Pros:
   \begin{itemize}
-  \item Easy to implement
+    \item Easy to implement
+    \item Intuitive and easy to adapt based on results
   \end{itemize}
 \item Cons:
   \begin{itemize}
-  \item If $\gamma$ is to large it can lead to divergence or inaccurate results
-  \item If $\gamma$ is to small we have a higher chance of getting stuck in small, local minima.
-  \item If $\gamma$ is small we will need many iterations before convergence
+    \item If $\eta$ is to large it can lead to divergence or inaccurate results
+    \item If $\eta$ is to small we have a higher chance of getting stuck in small, local minima.
+    \item If $\eta$ is small we will need many iterations before convergence
   \end{itemize}
 \end{itemize}
 
 \subsection{Momentum}
+
+Two common problems arise when using the update rule
+in~\cref{eq:fixed-learning-rate-update-rule}, namely that we tend to get stuck
+in local minima and that unstable gradients can throw us off the right track.
+The idea of momentum, first introduced by \textcite{Rumelhart-1986}, aims to
+combat this by letting the update be a linear combination of the previous step
+and the current one:
+
+\begin{align}
+  \label{eq:momentum-update-rule-def}
+  \Delta\vx^{(n)} &= \alpha \Delta \vx^{(n-1)} - \eta \grad{g(\vx^{(n)})}.
+\end{align}
+This introduces another hyper-parameter $\alpha$, which again should be set to
+an appropriate value. Letting $\alpha=0$
+recovers~\cref{eq:fixed-learning-rate-update-rule}, and increasing values
+increases the update terms' inertia.
+
+\subsection{Averaging}
+
+Another idea useful to overcome unstable gradients or poorly converging updates
+is that of \emph{averaging}, invented by \textcite{Polyak-1992}. We keep the
+simple update rule from~\cref{eq:fixed-learning-rate-update-rule}, but the final
+$\vx^*$ we use is set to the average of all the intermediate steps:
+
+\begin{align}
+  \label{eq:averaging-update-rule-def}
+  \vx^* = \frac{1}{n}\sum_{i=0}^{n-1} \vx^{(i)}.
+\end{align}
+
+\subsection{ADAM: Adaptive Moment Estimation}
+
+Among the state-of-the-art algorithms available, employing both momentum,
+averaging and several other ideas, is the ADAM algorithm, invented by
+\textcite{KingmaB14}. It is slightly more involved, and the reader is encouraged
+to read the aforementioned paper for an excellent presentation. The short story
+has the algorithm defined as follows:
+
+\begin{align}
+  m^{(n+1)} &= \beta_1 m^{(n)} + (1 - \beta_1)\grad{g(\vx^{(n)})}\\
+  v^{(n+1)} &= \beta_2 v^{(n)} + (1 - \beta_2)\qty(\grad{g(\vx^{(n)})})^2\\
+  \hat m &= \frac{m^{n+1}}{1 - \beta_1^{n+1}}\\
+  \hat v &= \frac{v^{n+1}}{1 - \beta_2^{n+1}}\\
+  \Delta \vx^{(n)}&= -\eta \frac{\hat m}{\sqrt{\hat v} + \epsilon},
+  \label{eq:adam-update-rule-def}
+\end{align}
+where $\eta$ is as before, $\beta_1$ and $\beta_2$ are decay rates for moment
+estimates, and $\epsilon$ is a small number used to avoid division by zero
+issues. \textcite{KingmaB14} provide default values for all the parameters, and
+in many cases these work excellently right out of the box.
+\begin{align}
+  \label{eq:adam-default-parameters}
+  \begin{split}
+    \eta &= 0.001\\
+    \epsilon &= 10^{-8}
+  \end{split}
+  \begin{split}
+    \beta_1 &= 0.9\\
+    \beta_2 &= 0.999
+  \end{split}
+\end{align}
+
+We will make extensive use of ADAM in our VMC calculations, and as we will later
+see in \cref{chp:results}, it will prove to outperform vanilla SGD in all cases.
+
 
 \section{Neural Networks}
 
