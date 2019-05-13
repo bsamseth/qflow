@@ -305,15 +305,17 @@ Among the state-of-the-art algorithms available, employing both momentum,
 averaging and several other ideas, is the ADAM algorithm, invented by
 \textcite{KingmaB14}. It is slightly more involved, and the reader is encouraged
 to read the aforementioned paper for an excellent presentation. The short story
-has the algorithm defined as follows:
+has the algorithm defined as follows\footnote{All operations on vectors are
+  element-wise. Exponentiation is expressed by superscripts \emph{not}
+  surrounded in parenthesis.}:
 
 \begin{align}
-  m^{(n+1)} &= \beta_1 m^{(n)} + (1 - \beta_1)\grad{g(\vx^{(n)})}\\
-  v^{(n+1)} &= \beta_2 v^{(n)} + (1 - \beta_2)\qty(\grad{g(\vx^{(n)})})^2\\
-  \hat m &= \frac{m^{n+1}}{1 - \beta_1^{n+1}}\\
-  \hat v &= \frac{v^{n+1}}{1 - \beta_2^{n+1}}\\
-  \Delta \vx^{(n)}&= -\eta \frac{\hat m}{\sqrt{\hat v} + \epsilon},
-  \label{eq:adam-update-rule-def}
+  \vb {m}^{(n+1)} &= \beta_1 \vb {m}^{(n)} + (1 - \beta_1)\grad{g(\vx^{(n)})}\\
+  \vb {v}^{(n+1)} &= \beta_2 \vb {v}^{(n)} + (1 - \beta_2)\qty(\grad{g(\vx^{(n)})})^2\\
+  \vb{\hat m} &= \frac{\vb{m}^{(n+1)}}{1 - \beta_1^{n+1}}\\
+  \vb{\hat v} &= \frac{\vb{v}^{(n+1)}}{1 - \beta_2^{n+1}}\\
+  \Delta \vx^{(n)}&= -\eta \frac{\vb {\hat m}}{\sqrt{\vb {\hat v}} + \epsilon},
+  % \label{eq:adam-update-rule-def}
 \end{align}
 where $\eta$ is as before, $\beta_1$ and $\beta_2$ are decay rates for moment
 estimates, and $\epsilon$ is a small number used to avoid division by zero
