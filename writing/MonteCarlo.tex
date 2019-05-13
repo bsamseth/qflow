@@ -35,7 +35,7 @@ $\vx_1,\dots,\vx_N$ from $\sigma$, and uses a Riemann sum formulation of the int
 \end{align}
 where $\expval{\cdot}_\sigma$ denotes the expectation value over all points in $\sigma$. For finite $N$ we may obtain estimates of the error we make in approximating the integral. First, we estimate the variance of the integrand:
 \begin{align}
-    \Var[f(\vx)] = \sigma^2_N = \frac{1}{N-1} \sum_{i=1}^Nf(\vx_i)
+    \Var[f(\vx)] \defeq \sigma^2_N = \frac{1}{N-1} \sum_{i=1}^N\qty(f(\vx_i) - \frac{1}{N}\sum_{i=j}^N f(\vx_j))^2
 \end{align}
 It then follows, by the properties of variance,
 \begin{align}
