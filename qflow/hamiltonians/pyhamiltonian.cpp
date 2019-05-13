@@ -59,7 +59,9 @@ void init_hamiltonian(py::module& main)
              py::arg("h")        = NUMMERIC_DIFF_STEP);
 
     py::class_<LennardJones, Hamiltonian>(m, "LennardJones")
-        .def(py::init<Real>(), py::arg("h") = NUMMERIC_DIFF_STEP);
+        .def(py::init<Real, Real>(),
+             py::arg("box_size"),
+             py::arg("h") = NUMMERIC_DIFF_STEP);
 
     py::class_<HFDHE2, Hamiltonian>(m, "HFDHE2")
         .def(py::init<Real>(), py::arg("h") = NUMMERIC_DIFF_STEP);

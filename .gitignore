@@ -386,3 +386,4 @@ results/
 GPATH
 GRTAGS
 GTAGS
+*.#*

@@ -10,9 +10,10 @@
 const int    npmax = 500;
 const int    nest  = 5;
 const double KB    = 1.; /* Energies in degrees Kelvin, lenghts in Angstrom */
-const double hbo2m=6.0599278;
+const double hbo2m = 6.0599278;
 //  hbar^2/2m (depends on mass)
-/* const double hbo2m = 0.92756799;  //<- This value good if lengths in LJ-sigma units */
+/* const double hbo2m = 0.92756799;  //<- This value good if lengths in LJ-sigma units
+ */
 
 double delta, rho, sigma_lj, eps_lj, l, li, l2;
 double Pi, acc, vbox, b, tpb, tjf;
@@ -34,6 +35,7 @@ struct table grnow(), addtable();
 void         get_initial_positions(struct particle walker[npmax]);
 void         advance(struct particle walker[npmax]);
 void         tpsi(struct particle walker[npmax]);
+void         psi_value(struct particle walker[npmax]);
 
 struct table addtable(struct table table1, struct table table2)
 {
@@ -114,11 +116,11 @@ int main()
     l2 = 0.5 * l;
 
     printf("SIMULATION CELL SIDE: %10.8f \n", l);
-    vbox  = 0.;
-    l22   = l2 * l2 - 1.e-10;
+    vbox = 0.;
+    l22  = l2 * l2 - 1.e-10;
+
     vbox  = vlj(l22);
     vout  = vtail(l);
-    /* vout  = 0.; */
     vbulk = 0.5 * vbox * (Pi * npart / 6. - 1);
     printf("TAIL CORRECTION: %10.5e\n", vout);
     printf("POTENTIAL AT L/2: %10.5e %10.5e\n", vbox, vlj(l2 * l2));
@@ -132,6 +134,12 @@ int main()
 
     get_initial_positions(walker);
 
+    tpsi(walker);
+    printf("tpb / n after setup: %5.10f\n", tpb / npart);
+    printf("psi_value after setup: ");
+    psi_value(walker);
+    printf("potential after setup: %5.10f\n",
+           total_potential(walker) / (double) npart + vout + vbulk);
     /* Zero out the estimates cumulants */
     accum = 0.;
     /************************************************/
@@ -301,6 +309,29 @@ void get_initial_positions(struct particle walker[npmax])
 }
 
 /* SUBROUTINE PERFORMING THE METROPOLIS STEP */
+
+void psi_value(struct particle walker[npmax])
+{
+    double dx, dy, dz, rr, v;
+    v = 0;
+    for (int i = 1; i < npart; ++i)
+    {
+        for (int j = 0; j < i; ++j)
+        {
+            dx = walker[i].x - walker[j].x;
+            dx = dx - l * rint(dx * li); /* periodic boundary conditions (see above) */
+            dy = walker[i].y - walker[j].y;
+            dy = dy - l * rint(dy * li);
+            dz = walker[i].z - walker[j].z;
+            dz = dz - l * rint(dz * li);
+            rr = dx * dx + dy * dy + dz * dz;
+            v  = v + 0.5 * u(rr); /* The function u computes the value of the
+                               wavefunction  square*/
+        }
+    }
+    printf("Value of the wave function: %5.10f\n", exp(-v));
+    printf("Value of the -log wave function: %5.10f\n", v);
+}
 
 void advance(struct particle walker[npmax])
 

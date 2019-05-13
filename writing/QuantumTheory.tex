@@ -23,9 +23,9 @@ classical laws, such as Newtons second law of motion
 \noindent where the $\vec F_i$ are the forces acting on the ball, and $\vec p$ is its momentum at
 any given point in time. Using the law of motion we can use our knowledge about how the
 environment affects the object to \emph{deterministically} calculate the resulting
-behaviour. The really nice thing is that, if we also know the mass of the object, then we
-can derive the value any other measurable physical quantity of interest. As such,
-\emph{solving} a classical system could be said to consist of the following steps steps:
+behaviour. The really nice thing is that, if we also know the mass of the object, we
+can derive the value of any other measurable physical quantity of interest. As such,
+\emph{solving} a classical system could be said to consist of the following steps:
 
 \begin{enumerate}
     \item Define the environment, i.e. the forces acting on the object(s)
@@ -35,13 +35,13 @@ can derive the value any other measurable physical quantity of interest. As such
 
 Moving to the quantum world, much of the same procedure remains the same. For the quantum
 case, we have a different law of motion. In our non-relativistic view, this is the
-Time-Dependant Schrödinger Equation:
+Time-Dependent Schrödinger Equation:
 
 \begin{align}
     \hat H\ket{\Psi} &= i\hbar \pdv{}{t}\ket{\Psi}\label{eq:schrodinger-time-dependent-general}
 \end{align}
 %
-Here $i$ is the imaginary unit, $\hbar=\flatfrac{h}{2\pi}$ is the reduced Planck constant.
+where $i=\sqrt{-1}$ is the imaginary unit and $\hbar=\flatfrac{h}{2\pi}$ is the reduced Planck constant.
 The thing we want to solve for in this case is the so called wave function $\ket{\Psi}$
 (explained momentarily), while the description of the system (analogous to the forces in
 classical mechanics) goes into $\hat H$. The latter is referred to as the Hamiltonian
@@ -59,12 +59,12 @@ naturally the potential energy. For the systems that we shall consider in this t
 Hamiltonians will all take this form, only varying the functional form of $V$.
 
 Knowing the wave function $\Psi$ of a system is analogous to knowing position and momentum
-in the classical view, in that we can compute any observable quantity from it. As such,
+in the classical view in that we can compute any observable quantity from it. As such,
 obtaining the full expression for the correct wave function is of immense use.
 
 The wave function lacks a clear physical intuition for what exactly it \emph{is},
 like we have for classical mechanics. Perhaps the most helpful way to view $\Psi$ is
-through the fact that is squared absolute value, $\abs{\Psi(\vb r; t)}^2$, is the
+through the fact that its squared absolute value, $\abs{\Psi(\vb x; t)}^2$, is the
 probability to find a particle at position $\vb x$ at time $t$. Thinking of the (squared
 norm of the) wave function as a substitute for the classical position $\vb x$ can
 therefore be a helpful aid, as long as the probabilistic nature of it is kept in mind.
@@ -81,9 +81,8 @@ classical approach, as follows:
 
 \autoref{eq:schrodinger-time-dependent-position-basis} is a partial differential equation,
 as it contains partial derivatives of the wave function with respect to both position and
-time. The standard approach to solving this equation is through the method called
-Separation of Variables. We assume that the full wave function can be factorized as
-follows:
+time. The standard approach to solving this equation is through Separation of
+Variables. We assume that the full wave function can be factorized as follows:
 
 \begin{align}
     \Psi(\vb x; t) &= \psi(\vb x)\phi(t)\label{eq:separatable-wave-func-def}
@@ -126,7 +125,7 @@ The time-independent equation, known as the Time-Independent Schrödinger Equati
     - \frac{\hbar^2}{2m} \laplacian\psi + V(\vb x)\psi =
     E\psi\label{eq:schrodinger-time-independent-position-basis}
 \end{align}
-The solutions to this equation is known as the \emph{stationary states} of the system. If
+The solutions to this equation are known as the \emph{stationary states} of the system. If
 we are able to find these solutions, then we automatically have also the full time
 dependent solution through \autoref{eq:separatable-wave-func-def}.
 
@@ -164,8 +163,8 @@ appropriate sums. The general form of the Many-Body Hamiltonian we will consider
     &= -\sum_{i=1}^N \frac{\hbar^2}{2m_i} \laplacian_i + V(\vb
     X)\label{eq:Hamiltonian-operator-general}
 \end{align}
-were $\mat X \defeq (\vb x_1 \vb x_2\dots\vb x_N)\in \mathbb{R}^{N\times D}$ is the matrix
-of $D$-dimensional column vectors of coordinates for each particle. For further clarity,
+were $\mat X \defeq (\vb x_1\ \vb x_2\ \dots\ \vb x_N)^T\in \mathbb{R}^{N\times D}$ is the matrix
+of $D$-dimensional row vectors of coordinates for each particle. For further clarity,
 $\vb x_i \defeq \sum_{d=1}^D x_{i,d} \vb e_d$ is a $D$-dimensional vector described by
 its coordinates $x_{i,d}$ (with unit vectors $e_d$), and the corresponding Laplacian
 operator is
@@ -235,7 +234,7 @@ arbitrary, and so we should be able to relabel them:
 \end{align}
 
 These two equations, which represents exchanging the two particles, \emph{must}
-describe the same physical system, that is:
+describe the same physical system. That is:
 
 \begin{align}
     \abs{\Psi(\vec x_1, \vec x_2)}^2 &= \abs{\Psi(\vec x_2, \vec x_1)}^2\\
@@ -279,7 +278,7 @@ find operator forms.}. Most notably, we have for the following transformations f
 position and momentum:
 
 \begin{align}
-    \vb x &\rightarrow \vb x\\
+    \vb x &\rightarrow \hat\vx\\
     \vb p &\rightarrow -i\hbar\grad
 \end{align}
 For example, as is often the case, let's say we want to compute the total energy of the
@@ -290,7 +289,7 @@ system. For $N$ particles that would classically be
 where $\vb p_i$ denotes the momentum of particle $i$, all of which are placed in some
 spacial potential $V$. It is easily verified that if we perform the above mentioned
 substitutions we will recover \autoref{eq:Hamiltonian-operator-general} and recognize
-it as the Hamiltonian operator.
+it as the Hamiltonian operator, $\hat H$.
 
 Finally, having both the wave function and the appropriate operator $\hat O$ we can
 compute the expectation of that observable:
@@ -303,14 +302,14 @@ compute the expectation of that observable:
 where $\int\dd{\vb X}\qty(\cdot)$ indicates an integral over all possible configurations of the
 system (e.g. all possible position and spin values for each particle). Often we have
 required the wave function to be normalized in such a way that the denominator is equal to
-unity, and can then be omitted.
+unity, and it can then be omitted.
 
 For many-body systems it should be apparent that this integral quickly becomes intractable
 to compute analytically. In practice we employ a numerical strategy to evaluate these
 integrals, where the technique we use depends on the dimensionality of the integral and
 the required level of accuracy. In our case, due to the relatively large number
 of degrees of freedom in the systems we shall investigate, we will use Monte
-Carlo integration. This will be discussed in more detail in \autoref{sec:monte-carlo-integration}.
+Carlo integration. This will be discussed in more detail in \cref{chp:monte-carlo}.
 
 \section{Example Systems}
 
@@ -318,7 +317,7 @@ So far no particular system description has been presented. In this thesis we fo
 attention on two particular system for illustration purposes. These systems have been
 chosen largely due to their simplicity and/or the amount of preexisting results available
 in the literature. We do this so as to be able to benchmark the eventual results against
-know exact solutions, our when this does not exist, against the state-of-the-art results
+know exact solutions, or when this does not exist, against the state-of-the-art results
 available.
 
 \subsection{Quantum Dots}
@@ -339,8 +338,8 @@ given by:
 where natural units ($\hbar=c=m_e=1$) are used with energies in
 atomic units (a.u.), $N$ denotes the number of particles in the system, and
 $\omega$ is the oscillator frequency of the trap. Further, $\vec r_i$
-denotes the position vector of particle $i$, with $r_i \equiv \norm{\vec r}$ and
-$r_{ij}\equiv \norm{\vec r_i - \vec r_j}$ defined for notational brevity. 
+denotes the position vector of particle $i$, with $r_i \defeq \norm{\vec r}$ and
+$r_{ij}\defeq \norm{\vec r_i - \vec r_j}$ defined for notational brevity.
 
 This system describes particles trapped in a parabolic potential well, being pulled
 towards the bottom of the well at all times, while simultaneously feeling the repulsive
@@ -353,7 +352,7 @@ With the natural units in place, the only involved quantity that has not been
 given a unit is length, i.e. what unit does the $\vb r_i$ have. A convenient
 choice is to consider the mean square vibrational amplitude, $\expval{r^2}$, for
 a single particle at $T = \SI{0}{\kelvin}$ placed in the oscillator trap.
-Computing the expectation value we get
+Computing the expectation value we get~\cite{citation-needed}
 $\expval{r^2}=\flatfrac{\hbar}{2m\omega}$, and we define the unit of length as the
 characteristic length of the trap, $a_{ho}=\qty(2\expval{r^2})^{\flatfrac{1}{2}}=\qty(\flatfrac{\hbar}{m\omega})^{\flatfrac{1}{2}}$.
 
@@ -376,7 +375,7 @@ the standard harmonic oscillator Hamiltonian:
     \frac{1}{2}\omega^2 r_i^2).
 \end{align}
 This Hamiltonian lends it self to analytical solutions, and the stationary
-single particle states are:
+single particle states are (in 2D)~\cite{citation-needed-for-all-this}:
 \begin{align}\label{eq:ho-single-particle-orbitals}
     \phi_{n_x, n_y}(x, y) &= A H_{n_x}(\sqrt\omega x)H_{n_y}(\sqrt\omega y)
     e^{-\frac{\omega}{2}\qty(x^2 + y^2)},
@@ -550,7 +549,7 @@ If we use SI units for the constants involved we get:
 \end{align}
 which turns out to be a reasonably sized number when we use angstrom for
 lengths.\footnote{Note that $\laplacian$ has units of $\text{length}^{-2}$, so
-  the units work out to Kelvin.}We will use these values in the implementation,
+  the units work out to Kelvin.} We will use these values in the implementation,
 and simply refer to energies in kelvin when we study this system. However, if
 the reader ever wants to convert the units, for comparison with other works
 perhaps, simply multiplying with the value of $\kappa$ in the unit system of

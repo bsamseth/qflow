@@ -1,5 +1,6 @@
 #include "boxsampler.hpp"
 #include "gibbssampler.hpp"
+#include "heliumsampler.hpp"
 #include "importancesampler.hpp"
 #include "metropolissampler.hpp"
 #include "sampler.hpp"
@@ -203,4 +204,11 @@ meaning of the `step_size`.
              py::arg("wavefunction"),
              py::arg("box_size"),
              py::arg("step_size") = 0.1);
+
+    py::class_<HeliumSampler, Sampler>(m, "HeliumSampler")
+        .def(py::init<const System&, Wavefunction&, Real, Real>(),
+             py::arg("system"),
+             py::arg("wavefunction"),
+             py::arg("step_size"),
+             py::arg("box_size"));
 }
