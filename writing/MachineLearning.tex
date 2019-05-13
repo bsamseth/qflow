@@ -105,12 +105,15 @@ In general for a supervised learning task, we have the following ingredients:
 
 \begin{figure}[h]
   \centering
-  %\resizebox{\linewidth}{!}{%
-      %\input{scripts/linear_regression_example.py.tex}
-  %}
+  \resizebox{\linewidth}{!}{%
+      \input{scripts/linear_regression_example.py.tex}
+  }
   \caption{Example of linear regression applied to a simple data set of a single
     input variable. The regression tries to filter away the noise and find the
-    most likely actual trend line.}
+    most likely actual trend line. The source code for this graphic can be found
+    at ~\cite[TODO: Add
+    path]{MS-thesis-repository}, and \LaTeX{} output generated
+    by~\cite{nico_schlomer_2018_1173090}}
   \label{fig:linear-regression-example}
 \end{figure}
 
@@ -220,26 +223,28 @@ These methods can be summarized as follows: We want to find $\vx^*$ such that\fo
   \vx^* = \argmin_{\vx} g(\vx),
 \end{align}
 for some function $g$ that should be minimized.
-Solve this by starting at some initial guess $\vx^{(0)}$ and improving it by
+We solve this by starting at some initial guess $\vx^{(0)}$ and improve it by
 iterating the following recurrence relation:
 
 \begin{align}
   \label{eq:gradient-decent-definition}
-  \vx^{(n+1)} &= \vx^{(n)} + \Delta \vx^{(n)} = \vx^{(n)} - \gamma \grad{f}(\vx^{(n)})
+  \vx^{(n+1)} &= \vx^{(n)} + \Delta \vx^{(n)} \\
+  \Delta\vx^{(n)} &= -\eta \grad{g}(\vx^{(n)})
 \end{align}
-where $\gamma$ is a suitably chosen number, typically $\gamma \ll 1$. In the
-limit $n\to\infty$ (if $\gamma$ is small enough), this will converge to a minimum
-for $f$.
+where $\eta$ is a suitably chosen number, typically $\eta \ll 1$. In the
+limit $n\to\infty$ (if $\eta$ is small enough), this will converge to a minimum
+for $g$.
 
-When $f=\mathcal{C}(\hat f_{\hat\valpha}; \mathcal{D})$ we have some choice in
+When $g=\mathcal{C}(\hat f_{\hat\valpha}; \mathcal{D})$ we have some choice in
 exactly how we should compute $\grad{\mathcal{C}}$. We could compute the cost
 for the entire data set, or just a single data point. These
 two options are referred to as Gradient Decent (GD) and Stochastic Gradient
 Decent (SGD), respectively. The latter is most often used because it is less
 computationally expensive for large data sets.
 
-We have various ways of extending the basic algorithm in
-\cref{eq:gradient-decent-definition}, some of which we will mention here.
+Lastly we have various ways of extending the basic algorithm in
+\cref{eq:gradient-decent-definition}, with more sophisticated ways of
+determining $\Delta \vx^{(n)}$, some of which we will mention here.
 
 \subsection{Fixed Learning Rate}
 
