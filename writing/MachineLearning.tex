@@ -340,24 +340,122 @@ see in \cref{chp:results}, it will prove to outperform vanilla SGD in all cases.
 \section{Artificial Neural Networks}
 
 Artificial Neural Networks (ANN, or just NN) is a broad category of
-computational models. Their name and origin stems from an attempt to model how
-neurons in animal brains react to inputs, and how they adapt to learn new
-skills. As humans, or really animals in general, are quite effective at learning
-based on the inputs we get from our surroundings, it seemed promising to attempt
-to emulate this process when attempting to learn a computer new tricks. ANNs
-have since been the target of extensive research, and has branched out in
-numerous variations that have little to no analog in animal brains.
+computational models, a representation of some general function $f:
+\mathbb{C}^m\to\mathbb{C}^n$. Their name and origin stems from an attempt to
+model how neurons in animal brains react to inputs, and how they adapt to learn
+new skills. As animals are quite effective at learning based on the inputs from
+their surroundings, it seemed promising to emulate this
+process when attempting to teach a computer new tricks. ANNs have since been the
+target of extensive research, and has branched out in numerous variations that
+have little to no analog in animal brains.
 
 While the original idea to use ANNs first appeared around the middle of the 20th
 century, they where initially limited, in large part due to the lacking
-computational capacity of that time, and saw little to no use for long time. As
-computing power has increased exponentially since then, most state-of-the-art
+computational capacity of that time, and saw little use for long time. As
+computing power increased exponentially since then, most state-of-the-art
 machine learning models today are some variation on a neural network. This
 includes tasks such as natural language processing~\cite{bert-2018}, image classification and
-segmentation~\cite{gpipe-2018}, playing games such as Go~\cite{deepmind-alpha-go-zero},
+segmentation~\cite{gpipe-2018}, and playing games such as Go~\cite{deepmind-alpha-go-zero},
 Chess~\cite{deepmind-alpha-zero} and Starcraft II~\cite{vinyals_babuschkin_chung_mathieu_2019}.
 
+The following sections are devoted to presenting the type of artificial neural
+networks that we will employ in this work, including mathematical underpinnings,
+architecture choices and training strategies.
+
 \subsection{Nodes and Connections}
+
+\begin{figure}[h]
+  \centering
+  \def\layersep{2.5cm}
+  \begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
+    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
+    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+    \tikzstyle{input neuron}=[neuron, fill={rgb:red,0.12156862745098;green,0.466666666666667;blue,0.705882352941177}];
+    \tikzstyle{output neuron}=[neuron, fill={rgb:red,1;green,0.498039215686275;blue,0.0549019607843137}];
+    \tikzstyle{hidden neuron}=[neuron, fill={rgb:red,0.172549019607843;green,0.627450980392157;blue,0.172549019607843}];
+    \tikzstyle{bias neuron}=[neuron, fill={rgb:red,0.580392156862745;green,0.403921568627451;blue,0.741176470588235}];
+    \tikzstyle{annot} = [text width=4em, text centered]
+
+    % Draw the input layer nodes
+    \foreach \name / \y in {1,...,4}
+    % This is the same as writing \foreach \name / \y in {1/1,2/2,3/3,4/4}
+    \node[input neuron, pin=left:$x_\y$] (I-\name) at (0,-\y) {};
+
+    \node[bias neuron, pin=left:$b^{(0)}$] (I-5) at (0, -5) {};
+
+    % Draw the hidden layer nodes
+    \foreach \name / \y in {1,...,5}
+    \path[yshift=0.5cm]
+    node[hidden neuron] (H-\name) at (\layersep,-\y cm) {};
+
+    \path[yshift=0.5cm] node[bias neuron, pin=left:$b^{(1)}$] (H-6) at (\layersep,-6 cm) {};
+
+    % Draw the output layer node
+    \node[output neuron,pin={[pin edge={->}]right:Output}, right of=H-3] (O) {};
+
+    % Connect every node in the input layer with every node in the
+    % hidden layer.
+    \foreach \source in {1,...,5}
+    \foreach \dest in {1,...,5}
+    \path (I-\source) edge (H-\dest);
+
+    % Connect every node in the hidden layer with the output layer
+    \foreach \source in {1,...,6}
+    \path (H-\source) edge (O);
+
+    % Annotate the layers
+    \node[annot,above of=H-1, node distance=1cm] (hl) {Hidden layer};
+    \node[annot,left of=hl] {Input layer};
+    \node[annot,right of=hl] {Output layer};
+  \end{tikzpicture}
+  \caption{Illustration of a general Feed-Forward Neural Network architecture,
+    here shown with four inputs nodes, one hidden layer of 5 nodes and a
+    single output node.}
+  \label{fig:neural-network-example-diagram}
+\end{figure}
+
+First things first; What is a neural network? A neural
+network\footnote{Specifically feed forward neural networks.} is a sequence of
+\emph{layers}, with each layer consisting of \emph{nodes}, and some connections
+between the nodes in each layer. By convention, we call the first layer the
+\emph{input} layer, the last layer is called the \emph{output} layer, and layers
+in between are generally referred to as \emph{hidden} layers.
+\cref{fig:neural-network-example-diagram} shows a graphical depiction of this
+general structure, exemplified for a certain number of layers/nodes.
+
+Each node can hold a scalar value, and this value is propagated forward thorough
+the connections. Each connection has an associated weight (scalar) which is
+multiplied to the nodes value before it is passed along. Nodes with multiple
+incoming connections take the sum as its value. Finally we might also include
+bias nodes, which are nodes with a fixed value. These serve the same role as the
+intercept in a linear model. If we initialize the input layer with some values,
+we can think of the network as a computation flow graph - visually representing
+the way information is manipulated as it moves towards a final output.
+
+For many readers, this might be too many words. Fear not, as we shall now
+describe the network by a simple recurrence relation. We denote $x_i^{(l)}$ as the
+value of the $i$th node in the $l$th layer, with the column vector $\vx^{(0)}$ representing the
+input layer. The weight matrix $\mat{W}^{l}$ is defied such that $W^{l}_{ij}$ is
+the weight of the connection between node $i$ in layer $l$ and node $j$ in
+layer $l+1$. The bias $\vb b_j^{(l)}$ is the column vector of bias values in
+layer $l$, going to node $x_j^{(l+1)}$.\footnote{Note that
+  in~\cref{fig:neural-network-example-diagram} the bias is illustrated as a
+  single node with multiple connections, while in the mathematical notation we
+  express the bias as a vector of values. These two are equivalent, and the
+  vector values can be seen as a constant node value of 1 multiplied by the
+  corresponding weight. We could have drawn $n$ bias nodes with a single
+  connection, but this way is bit less verbose. In all equations and code, bias
+  is represented by as vector.} The values of all subsequent layers are then given by the
+following:
+
+\begin{align}
+  \vx^{(l+1)} &= \vx^{(l)}\mat{W}^{(l+1)} + \vb{b}^{(l+1)}.
+\end{align}
+
+Note that while the example diagram only has a single output (and in fact every
+use case we shall see), there is nothing stopping us from having
+multidimensional outputs.
+
 
 \subsection{Activation Functions}
 
