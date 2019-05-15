@@ -329,15 +329,15 @@ has the algorithm defined as follows\footnote{All operations on vectors are
 
 \begin{align}
   \vb {m}^{(n+1)} &= \beta_1 \vb {m}^{(n)} + (1 - \beta_1)\grad{g(\vx^{(n)})}\\
-  \vb {v}^{(n+1)} &= \beta_2 \vb {v}^{(n)} + (1 - \beta_2)\qty(\grad{g(\vx^{(n)})})^2\\
+  \vb {v}^{(n+1)} &= \beta_2 \vb {v}^{(n)} + (1 - \beta_2)\grad{g(\vx^{(n)})}\circ\grad{g(\vx^{(n)})}\\
   \vb{\hat m} &= \frac{\vb{m}^{(n+1)}}{1 - \beta_1^{n+1}}\\
   \vb{\hat v} &= \frac{\vb{v}^{(n+1)}}{1 - \beta_2^{n+1}}\\
-  \Delta \vx^{(n)}&= -\eta \frac{\vb {\hat m}}{\sqrt{\vb {\hat v}} + \epsilon},
+  \Delta \vx^{(n)}&= -\eta\, \vb {\hat m}\oslash\sqrt{\vb {\hat v} + \epsilon},
   % \label{eq:adam-update-rule-def}
 \end{align}
 where $\eta$ is as before, $\beta_1$ and $\beta_2$ are decay rates for moment
 estimates, and $\epsilon$ is a small number used to avoid division by zero
-issues. \textcite{KingmaB14} provide default values for all the parameters, and
+issues ($\oslash$ denotes Hadamard division, element-wise division). \textcite{KingmaB14} provide default values for all the parameters, and
 in many cases these work excellently right out of the box.
 \begin{align}
   \label{eq:adam-default-parameters}
