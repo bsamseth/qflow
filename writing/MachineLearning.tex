@@ -266,6 +266,8 @@ $\eta$ is chosen in advance and remains fixed throughout all iterations:
     \item If $\eta$ is to large it can lead to divergence or inaccurate results
     \item If $\eta$ is to small we have a higher chance of getting stuck in small, local minima.
     \item If $\eta$ is small we will need many iterations before convergence
+    \item All elements of $\vx$ get the same $\eta$, even though the gradient
+        elements can have significantly different magnitude and/or stability.
   \end{itemize}
 \end{itemize}
 
@@ -286,6 +288,22 @@ This introduces another hyper-parameter $\alpha$, which again should be set to
 an appropriate value. Letting $\alpha=0$
 recovers~\cref{eq:fixed-learning-rate-update-rule}, and increasing values
 increases the update terms' inertia.
+
+\subsection{Individual Learning Rates per Element}
+
+The magnitude and/or stability of the elements of $\grad{g}$ can be
+significantly different from each other. A optimal single learning rate $\eta$ might
+therefore not be optimal for an single element, but rather the best compromise
+available. A simple fix to this is to use a separate learning rate for each
+dimension:
+
+\begin{align}
+  \Delta\vx^{(n)} = -\vb{\eta}\circ\grad{g}(\vx^{(n)})
+\end{align}
+where $\circ$ denotes the Hadamard product (element-wise multiplication). This
+allows us more flexibility and will improve results, while the obvious downside
+is the increased need for hyper-parameter tuning.
+
 
 \subsection{Averaging}
 
