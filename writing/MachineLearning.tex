@@ -449,25 +449,28 @@ the connections. Each connection has an associated weight (scalar) which is
 multiplied to the node's value before it is passed along. Nodes with multiple
 incoming connections take the sum as its value. Finally we might also include
 bias nodes, which are nodes with a fixed value. These serve the same role as the
-intercept in a linear model. If we initialize the input layer with some values,
-we can think of the network as a computation flow graph - visually representing
-the way information is manipulated as it moves towards a final output.
+intercept in a linear model, and enable us to - well, bias the output in some
+direction. If we initialize the input layer with some values, we can think of
+the network as a computation flow graph - visually representing the way
+information is manipulated as it moves towards a final output.
 
 For many readers, this might be too many words. Fear not, as we shall now
-describe the network by a simple recurrence relation. We denote $x_i^{(l)}$ as the
-value of the $i$th node in the $l$th layer, with the column vector $\vx^{(0)}$ representing the
-input layer. The weight matrix $\mat{W}^{l}$ is defied such that $W^{l}_{ij}$ is
-the weight of the connection between node $i$ in layer $l$ and node $j$ in
-layer $l+1$. The bias $\vb b_j^{(l)}$ is the column vector of bias values in
-layer $l$, going to node $x_j^{(l+1)}$.\footnote{Note that
-  in~\cref{fig:neural-network-example-diagram} the bias is illustrated as a
-  single node with multiple connections, while in the mathematical notation we
-  express the bias as a vector of values. These two are equivalent, and the
-  vector values can be seen as a constant node value of 1 multiplied by the
-  corresponding weight. We could have drawn $n$ bias nodes with a single
-  connection, but this way is bit less verbose. In all equations and code, bias
-  is represented by as vector.} The values of all subsequent layers are then given by the
-following:
+describe the network by a simple recurrence relation. We denote $x_i^{(l)}$ as
+the value of the $i$th node in the $l$th layer, with the column vector
+$\vx^{(0)}$ representing the input layer. The weight matrix $\mat{W}^{l}$ is
+defied such that $W^{l}_{ij}$ is the weight of the connection between
+$x_i^{(l)}$ and $x_j^{(l+1)}$. The bias $\vb b_j^{(l)}$ is the column vector of
+bias values in layer $l$, going to node
+$x_j^{(l+1)}$.\footnote{In~\cref{fig:neural-network-example-diagram} the bias is
+illustrated as a single node with multiple connections, while in the
+mathematical notation we express the bias as a vector of values. These two are
+equivalent, and the vector values can be seen as a constant node value of 1
+multiplied by the corresponding weight. We could have drawn $n$ bias nodes with
+a single connection, but this way is bit less verbose. In all equations and
+code, bias is represented by as vector.} The values of all subsequent layers are
+then given by the following: \footnote{While the example diagram only has a
+single output (and in fact every use case we shall see), there is nothing
+stopping us from having multidimensional outputs.}
 
 \begin{align}
   \vx^{(l+1)} &= \vx^{(l)}\mat{W}^{(l+1)} + \vb{b}^{(l+1)}.
