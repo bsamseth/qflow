@@ -657,11 +657,29 @@ exponential function as the output transformation on our networks.
     Exponential & \(\sigma(x) = \exp(x)\)\\
     \textbf{Re}ctified \textbf{L}inear \textbf{U}nit (ReLU) & \(\sigma(x) = \max(0, x)\)\\
     \textbf{L}eaky ReLU (LReLU) & \(\sigma(x) = \max(ax, x)\qq{where} 0 < a < 1\)\\
-    \textbf{E}xponential \textbf{Linear} \textbf{Unit} (ELU) & \(\sigma(x) = \begin{cases}x &\qq{where} x \geq 0\\ a\qty(\exp(x) - 1) &\qotherwise\end{cases}\)
+    \textbf{E}xponential \textbf{L}inear \textbf{U}nit (ELU) & \(\sigma(x) = \begin{cases}x &\qq{where} x \geq 0\\ a\qty(\exp(x) - 1) &\qotherwise\end{cases}\)
   \end{tabular}
 \end{table}
 
-With this addition, our neural networks can now express very complex
+
+\subsection{Computational Flexibility}
+
+Part of the reason why neural networks are such a great tool is their
+flexibility. By simply changing the design of the network, or changing the type
+of activation function in a layer, we can adapt and change the model as we need.
+Even two identical networks can be tuned to model completely different data.
+Neural networks merely define a loose framework for how layers and nodes come
+together, and free us up to experiment.
+
+The expressiveness of neural networks turns out to be just about as powerful as
+anything could be. That is because \emph{any} (reasonable) function can be
+arbitrarily well approximated by a neural network with a single hidden
+layer~\cite{Cybenko-1989}. With just a single hidden layer it turns out we might
+need exponentially many nodes, but if allowed to be deeper, we can have
+reasonable number of nodes as well~\cite{Hanin-2017}. A formal theorem for this
+is not reproduced here, as to main point here is to stress the expressive
+power of neural networks.
+
 
 \subsection{Backpropagation}
 
