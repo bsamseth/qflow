@@ -282,4 +282,6 @@ literate=*%
   }
 \makeatother
 
-\DeclareUnicodeCharacter{2212}{-}
+\ifcsname DeclareUnicodeCharacter\endcsname%
+    \DeclareUnicodeCharacter{2212}{-}
+\fi%
