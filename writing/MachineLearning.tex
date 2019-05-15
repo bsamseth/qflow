@@ -501,7 +501,31 @@ relation becomes:
 The functions $\sigma^{(l)}$ can really be any function we choose, and what to
 pick largely depends on what computation we are trying to model. Some often used
 options, with varying input/output domains, are listed in
-\cref{tab:activation-functions-table}, and their plots are shown in \cref{fig:activation-function-gallery}.
+\cref{tab:activation-functions-table}, and their plots are shown in
+\cref{fig:activation-function-gallery}.
+
+\subsubsection{Which Activation Functions to Choose}
+
+While there is a great deal to possible discuss about the pros and cons of various
+activation functions, a deep dive into this is beyond the scope of this
+thesis. In practice, choosing an activation function comes down to trial
+and error. Much of the neural network theory we have today is really more a set
+of best practices and experiences documented by others. Seldom do we have a
+rigorous backing for the choices we make, and most often a simple ``this worked
+best'' is as good as we get.\footnote{This might be slight exaggeration in some
+cases. But consider the state-of-the-art, massive networks of today -
+understanding every aspect of their behavior seems a daunting, if at all
+possible task. Sometimes the reasonable thing is simply to make some guesses and
+see what happens.}
+
+That said there are some things we \emph{can} consider, especially for the
+output layer. If we want to interpret the output as a probability, something
+like the Sigmoid function could be useful because it outputs numbers in $[0,
+1]$. Similarly, if we want to do regression, perhaps the output layer should
+have the identity function (i.e. no activation) so that the full spectrum
+$(-\infty, \infty)$ is possible. Finally, in our case, wave
+functions tend to involve exponentials and so we shall make heavy use of the
+exponential function as the output transformation on our networks.
 
 \begin{figure}[h]
   \centering
