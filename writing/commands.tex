@@ -1,0 +1,69 @@
+\renewcommand{\vec}[1]{\boldsymbol{\mathbf{#1}}}
+% BEGIN COMMANDS FROM LATEX FOR PHYSICISTS
+% http://www.dfcd.net/articles/latex/latex.html
+\newcommand{\ket}[1]{| #1 \rangle} % for Dirac bras
+\newcommand{\bra}[1]{\langle #1 |} % for Dirac kets
+\newcommand{\bket}[1]{\right| #1 \right\rangle} % for Dirac bras
+\newcommand{\bbra}[1]{\left\langle #1 \left|} % for Dirac kets
+
+\newcommand{\braket}[2]{\langle #1 | #2 \rangle}
+
+%\newcommand{\ccr}[1]{c^{\dagger}_{#1}}
+%\newcommand{\can}[1]{c_{#1}}
+
+\DeclareMathOperator{\tr}{Tr}
+\newcommand{\expv}[1]{\left\langle #1 \right\rangle}
+\newcommand{\densitymatrix}{\hat{\rho}}
+
+\newcommand{\ccr}[1]{\hat{#1}^{\dagger}}
+\newcommand{\can}[1]{\hat{#1}}
+
+\newcommand{\com}[2]{\left[#1, #2\right]}
+\newcommand{\acom}[2]{\left\{#1, #2\right\}}
+
+\newcommand{\para}[1]{\left( #1 \right)}
+\newcommand{\brak}[1]{\left[ #1 \right]}
+\newcommand{\brac}[1]{\left\{ #1 \right\}}
+
+\newcommand{\half}{\frac{1}{2}}
+
+% Commands for the coupled cluster method
+\newcommand{\cc}{\Psi_{\text{CC}}}
+\newcommand{\ketcc}{\ket{\cc}}
+\newcommand{\bicc}{\bra{\tilde{\Psi}}}
+
+\newcommand{\clust}{\hat{T}}
+\newcommand{\clustamp}{\tau}
+
+\newcommand{\clustl}{\hat{\Lambda}}
+\newcommand{\clustlamp}{\lambda}
+
+\newcommand{\energyref}{E_{0}}
+\newcommand{\energyccd}{E_{\text{CCD}}}
+\newcommand{\energyccsd}{E_{\text{CCSD}}}
+\newcommand{\energyccdt}{E_{\text{CCDT}}}
+
+\newcommand{\HN}{H_N}
+
+% Commands for the reference Slater
+\newcommand{\slat}{\Phi}
+\newcommand{\bislat}{\tilde{\slat}}
+\newcommand{\ketslat}{\ket{\slat}}
+\newcommand{\braslat}{\bra{\slat}}
+\newcommand{\brabislat}{\bra{\bislat}}
+
+\newcommand{\ketslate}[2]{\ket{\slat^{#1}_{#2}}}
+\newcommand{\braslate}[2]{\bra{\slat^{#1}_{#2}}}
+
+% Commands for the configuration interaction method
+\newcommand{\ci}{\Psi_{\text{CI}}}
+\newcommand{\ketci}{\ket{\ci}}
+
+% Commands for many operators
+\newcommand{\hamil}{\hat{H}} % Hamiltonian
+\newcommand{\onehamil}{\hat{h}} % One-body Hamiltonian
+\newcommand{\twohamil}{\hat{u}} % Two-body Hamiltonian
+
+% Commands for Hartree-Fock
+\newcommand{\ao}[1]{\chi_{#1}} % Atomic orbital functions
+\newcommand{\mo}[1]{\phi_{#1}} % Molecular orbital functions
