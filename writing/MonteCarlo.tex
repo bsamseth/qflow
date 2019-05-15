@@ -68,7 +68,7 @@ would like to evaluate the following integral:
 
 \begin{figure}
     \centering
-    \resizebox{0.8\linewidth}{!}{%
+    \resizebox{0.7\linewidth}{!}{%
     \begin{tikzpicture}
         \begin{axis}[every axis plot post/.append style={
                 mark=none,domain=-5:5,samples=50,smooth}, % All plots: from -2:2, 50 samples, smooth, no marks
@@ -82,7 +82,8 @@ would like to evaluate the following integral:
         \end{axis}
     \end{tikzpicture}
     }
-    \caption{\label{fig:mci-importance-example-func-plot}Plot of the function in \autoref{eq:mci-importance-example-func}}
+    \caption{\label{fig:mci-importance-example-func-plot}Plot of the function in
+      \cref{eq:mci-importance-example-func}, enveloped by a standard normal distribution.}
 \end{figure}
 The integrand is plotted in \autoref{fig:mci-importance-example-func-plot}, and
 the observant reader might recognise this as the product of a normal
@@ -130,7 +131,7 @@ enclosing $f(x)$ much more tightly than any rectangular box might hope to.
 
 \begin{figure}
    \centering
-    \resizebox{\linewidth}{!}{%
+    \resizebox{0.7\linewidth}{!}{%
         \input{scripts/monte_carlo_int_example.py.tex}
     }
     \caption{\label{fig:mci-importance-example-func-convergence}Convergence of
