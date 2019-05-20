@@ -482,7 +482,9 @@ multidimensional outputs.}
    a_k^{(l)} &= \sigma^{(l)}(z_k^{(l)})\\
    z_k^{(l)} &= W^{(l)}_{ki}a_i^{(l-1)} + b^{(l)}_k
  \end{align}
-
+This recursively defined result is calculated by starting at $l=0$ with
+$\vb{a}^{(0)}\defeq \vx$ and calculating $\vb{a}^{(l+1)}$ iteratively. The
+process of doing this is sometimes referred to as a \emph{forward propagation}.
 
 
 \subsection{Activation Functions}
@@ -494,11 +496,11 @@ transformation). Then the above definition would be reduced to the following:
   f(\vx) = \vb{z}^{(L)}\qq{with}
    z_k^{(l)} &= W^{(l)}_{ki}z_i^{(l-1)} + b^{(l)}_k
 \end{align}
-If you have had your morning coffee you might already see the issue here.
-This is simply a series of affine transformations, and as such could be
-replaced with one single, compound transformation: $\vb{z}^{L} =
-\mat{W}\vx + \vb{b}$. Turns out, without an activation function, no matter how many layers we
-place in between the input and output, we have just defined a convoluted way of
+If you have had your morning coffee you might already see the issue here. This
+is simply a series of affine transformations, and as such could be replaced with
+one single, compound transformation: $\vb{z}^{L} = \mat{W}\vx + \vb{b}$. Turns
+out, without an activation function, no matter how many layers we place in
+between the input and output, we have just defined a convoluted way of
 performing a simple affine transformation.
 
 That is why we pump the value of each
@@ -528,9 +530,9 @@ output layer. If we want to interpret the output as a probability, something
 like the Sigmoid function could be useful because it outputs numbers in $[0,
 1]$. Similarly, if we want to do regression, perhaps the output layer should
 have the identity function (i.e. no activation) so that the full spectrum
-$(-\infty, \infty)$ is possible. Finally, in our case, wave
-functions tend to involve exponentials and so we shall make heavy use of the
-exponential function as the output transformation on our networks.
+$(-\infty, \infty)$ is possible. Finally, in our case, wave functions tend to
+involve exponentials and so we shall make heavy use of the exponential function
+as the output transformation on our networks.
 
 \begin{figure}[h]
   \centering
@@ -680,10 +682,12 @@ The expressiveness of neural networks turns out to be just about as powerful as
 anything could be. That is because \emph{any} (reasonable) function can be
 arbitrarily well approximated by a neural network with a single hidden
 layer~\cite{Cybenko-1989}. With just a single hidden layer it turns out we might
-need exponentially many nodes, but if allowed to be deeper, we can have
-reasonable number of nodes as well~\cite{Hanin-2017}. A formal theorem for this
-is not reproduced here, as to main point here is to stress the expressive
-power of neural networks.
+need exponentially many nodes, but if allowed to be deeper (more layers), we can
+have reasonable number of nodes as well and still achieve arbitrarily good
+results~\cite{Hanin-2017}. This result is known as the Universal Approximation
+Theorem~\cite{Cybenko-1989, Hanin-2017}. A formal description for this is not
+reproduced here, as to main point is to stress the expressive power of
+neural networks.
 
 
 \subsection{Backpropagation}
@@ -696,9 +700,17 @@ to optimize the weights and biases involved.
 
 We will be employing the Gradient Decent strategy from \cref{sec:ml-optimization},
 which requires us to compute the gradient of a cost function,
-$\grad_{\valpha}\mathcal{C}(f(\vx))$, w.r.t. all model parameters $\valpha$.
+$\grad_{\valpha}\mathcal{C}(f(\vx))$, w.r.t. all model parameters $\valpha$. In
+our case, the parameters are all the weights, $\mat{W}^{(l)}$, and biases $\vb{b}^{(l)}$.
 
-Starting with the derivatives for the biases of the final layer:
+While the following derivation might appear to have a daunting amount of indices
+and partial derivatives, it is really just a chain rule bonanza, applying the
+same trick over and over until the problem gives up and yields a neat
+solution.
+
+Starting with the derivatives for the biases of the final layer:\footnote{For
+  clarity: Repeated indices within a factor (still) imply a sum over said
+  indices, but this is \emph{not} implied for superscripts in parenthesis.}
 
 \begin{align}
   \pdv{\mathcal{C}}{b_k^{(L)}} &=
@@ -708,7 +720,10 @@ b_i^{(L)}) = \pdv{\mathcal{C}}{z_k^{(L)}}\defeq \delta_k^{(L)}
 \end{align}
 where
 \begin{align}
-  \delta_k^{(L)}\defeq \pdv{\mathcal{C}}{z_k^{(L)}} = \pdv{\mathcal{C}}{a^{(L)}_{i}}\pdv{a_i^{(L)}}{z_k^{(L)}} = \pdv{\mathcal{C}}{a^{(L)}_{i}}\pdv{\sigma^{(L)}(z_k^{(L)})}{z_k^{(L)}}.
+  \delta_k^{(L)}\defeq \pdv{\mathcal{C}}{z_k^{(L)}} =
+\pdv{\mathcal{C}}{a^{(L)}_{i}}\pdv{a_i^{(L)}}{z_k^{(L)}} =
+\pdv{\mathal{C}}{a^{(L)}_{i}}\pdv{\sigma^{(L)}(z_k^{(L)})}{z_k^{(L)}} \defeq 
+\pdv{\mathal{C}}{a^{(L)}_{i}}\dot\sigma^{(L)}(z_k^{(L)}).
 \end{align}
 This last expression we can calculate easily as the product of the derivative of
 the cost function w.r.t. the network output (which should be doable for any
@@ -720,12 +735,47 @@ For the weights of the last layer we get the following:
 
 \begin{align}
   \pdv{\mathcal{C}}{W_{jk}^{(L)}} =
-\pdv{\mathcal{C}}{z_i^{(L)}}\pdv{z_i^{L}}{W_{jk}^{(L)}} =
-\delta_i^{(L)}\pdv{}{W_{jk}^{(L)}}\qty(W_{im}a_m^{(L-1)} + b_i^{L}) = \delta_j^{(L)}a_k^{(L-1)}.
+\pdv{\mathcal{C}}{z_i^{(L)}}\pdv{z_i^{(L)}}{W_{jk}^{(L)}} =
+\delta_i^{(L)}\pdv{}{W_{jk}^{(L)}}\qty(W_{im}a_m^{(L-1)} + b_i^{(L)}) = \delta_j^{(L)}a_k^{(L-1)}.
 \end{align}
-This way we can express the derivatives we need through $\vb{a}^{l}$ and
+This way we can express all the derivatives we need through $\vb{a}^{l}$ and
 $\vb{\delta}^{(l)}$. We already know how to compute $\vb{a}^{l}$ for all layers,
-so we just need $\vb{\delta^{l}}$ for $l < L$.
+so we just need $\vb{\delta^{l}}$ for $l < L$. We get this, of course, using the
+chain rule some more:\footnote{While this derivation ``just'' entails the chain
+  rule and some bookkeeping, exactly how to apply the chain rule is not that
+  obvious at all times. It is ``easy'' once presented, but not necessarily
+  trivial to reproduce from scratch.}
+
+\begin{align}
+  \delta_k^{(l)} &\defeq \pdv{\mathcal{C}}{z_k^{(l)}}\\
+                 &= \pdv{\mathcal{C}}{z_i^{(l+1)}}\pdv{z_i^{(l+1)}}{z_k^{(l)}}\\
+                 &= \delta_i^{(l+1)} \pdv{z_i^{(l+1)}}{a_j^{(l)}}\pdv{a_j^{(l)}}{z_k^{(l)}} \\
+                 &= \delta_i^{(l+1)}\pdv{}{a_j^{(l)}}\qty(W_{im}^{(l+1)}a_m^{(l)} + b_i^{(l+1)})\pdv{\sigma^{(l)}(z_j^{(l)})}{z_k^{(l)}}\\
+                 &= \delta_i^{(l+1)}W_{ik}^{(l+1)}\dot\sigma^{(l)}(z_k^{(l)}).
+\end{align}
+These results can be summarized more succinctly in matrix form. We have:
+
+\begin{align}
+  \label{eq:backprop-delta-recursive}
+  \vb{\delta}^{(l)} =
+                      \begin{cases}
+                        \grad_{\vb{a}^{L}}{\mathcal{C}}\circ
+                        \dot\sigma^{(L)}(\vb{z}^{(L)}) &\qfor l = L\\[20pt]
+                        \qty[\qty(\mat{W}^{(l+1)})^T \vb{\delta}^{(l+1)}]\circ
+                            \dot\sigma^{(l)}(\vb{z}^{(l)})&\qfor l < L
+                      \end{cases}
+\end{align}
+and the final gradients as:
+\begin{align}
+  \label{eq:backprop-grads-recursive}
+  \grad_{\vb{b}^{(l)}}{\mathcal{C}} = \vb{\delta}^{(l)}
+  \qand \grad_{\mat{W}^{(l)}}{\mathcal{C}} = \vb{\delta}^{(l)}\vb{a}^{(l-1)}
+\end{align}
+The process of calculating these gradients involve starting at the output layer,
+working our way backwards, and is therefore referred to as
+\emph{backpropagation}, with
+\cref{eq:backprop-delta-recursive,eq:backprop-grads-recursive} referred to as
+the \emph{backpropagation algorithm}.
 
 
 \end{document}
