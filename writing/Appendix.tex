@@ -1,7 +1,8 @@
 \documentclass[Thesis.tex]{subfiles}
 \begin{document}
-\chapter{Appendix}
-
+\chapter{Appendices}
+\renewcommand{\thesection}{\Alph{section}}
+\renewcommand{\thesubsection}{\Alph{section}.\Roman{subsection}}
 \section{Symmetry Metric}
 
 In the context of our Variational Monte Carlo framework, we should in general
@@ -206,5 +207,4 @@ same result, s.t. the same transformation. We obtain
         \frac{w_{{c(k)}j}}{1+e^{-v_j'}})^2
     \end{split}\label{eq:rbm-sym-second-deriv}
 \end{align}
-
 \end{document}
