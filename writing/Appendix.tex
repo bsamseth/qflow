@@ -3,6 +3,97 @@
 \chapter{Appendices}
 \renewcommand{\thesection}{\Alph{section}}
 \renewcommand{\thesubsection}{\Alph{section}.\Roman{subsection}}
+
+\section{Notation Reference}
+
+This thesis strives to use a consistent set of rules for notation throughout.
+Where possible, standard notation choices have been made so as to be easily
+comparable to other works. Sometimes, however, we cannot all agree on how things
+should be written, and this thesis inevitably diverges from some part of the
+readers preferences. In an attempt to soften the inevitable rage of notation
+disagreements, this section serves as a reference for all standard
+notation used in this thesis, such that the meaning of every expression should
+be unambiguous and clear.
+
+\subsection{Scalars, Vectors and Matrices}
+
+\begin{description}
+\item[Scalars:] $x$\hfill\\
+  Use lowercase symbols.
+\item[Vectors:] $\vx$ \hfill\\
+  All vectors are column vectors, and use lowercase, bold-face symbols.
+\item[Matrices:] $\mat X$ \hfill \\
+  Use uppercase, bold-face symbols.
+\end{description}
+
+Example: The matrix $\mat X\in\mathbb{R}^{m\times n}$ is defined by its column
+vectors $\{\vx_i\}_{i=1}^n$ (with $\vx_i\in\mathbb{R}^{m}$) such that $ \mat X =
+(\vx_1\ \vx_2\ \dots\ \vx_n)$ column vectors, such that the scalar $X_{ij}$ is
+the $i$'th component of $\vx_j$.
+
+\subsection{Indices}
+
+Some indices are meant to be summed over, while others remain fixed throughout a
+calculation. To help making the distinction between the two, the following
+sequences of indices is used for each class, in decreasing order of
+precedence:
+
+\begin{description}
+\item[Summation indices:] $i, j, a, b, c, d, e, f$
+\item[Fixed indices:] $k, l$
+\end{description}
+
+\subsection{Summation}
+
+\subsubsection{Scope}
+
+The summation symbol, $\sum$, effects only the term imediately after it. That
+is,
+\begin{align}
+  \sum_{i=1}^3 i + 1 = \qty(\sum_{i=1}^3 i) + 1 = 7, \qq{not} \cancel{\sum_{i=1}^3i + 1 = \sum_{i=1}^3(i + 1) = 9}
+\end{align}
+
+\subsubsection{Implied Summations}
+
+For notational brevity (and to avoid visual clutter), summations are not always
+stated explicitly as in the above example. In these cases the limits of the
+summation are determined by their context.
+
+\begin{description}
+\item[Explicit limits:] \hfill\\
+  In $\sum_{i=1}^n$, the sum goes from 1 to n, inclusively.
+\item[Implicit limits:]\hfill\\
+  When limits are clearly defied by their context, the following is equivalent:
+  $\sum_{i=1}^n \equiv \sum_{i}^n\equiv \sum_i$.
+\item[Implicit summation symbols:]\hfill\\
+  We make heavy use of the Einstein summation convention when this is
+  appropriate. Any summation index (see above) which appears more than once with
+  \emph{a single term} is implicitly summed over all its possible values.
+  Superscripts in parenthesis are excluded from this rule, i.e. $a^{(k)}b^{(k)}$
+  does not have an implied sum.
+\end{description}
+
+Example: Consider the matrix equation $\vb{x} = \mat{A}\vb{b}$, for
+$\mat{A}\in\mathbb{R}^{m\times n}$ and $\vx, \vb{b} \in \mathbb{R}^n$. Written
+explicitly, all of the following statements about the elements of $\vx$ are equivalent:
+\begin{align}
+  \begin{split}
+  x_k &= \sum_{i=1}^n A_{ki}b_i,\qq{ } x_k = \sum_{i}^n A_{ki}b_i,\\
+  x_k &= \sum_{i} A_{ki}b_i,\qq{ } x_k = A_{ki}b_i
+  \end{split}
+\end{align}
+\section{Symbols}
+\begin{center}
+\begin{tabular}{cl}
+  Symbol & Reads as\\
+  \hline\\
+  $=$ & is equal to\\
+  $\defeq$ & is defied as\\
+  $\equiv$ & is equivalent to\\
+  $\disteq$ & is distributed equal to
+\end{tabular}
+\end{center}
+
 \section{Symmetry Metric}
 
 In the context of our Variational Monte Carlo framework, we should in general
