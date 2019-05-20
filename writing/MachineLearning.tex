@@ -357,9 +357,12 @@ see in \cref{chp:results}, it will prove to outperform vanilla SGD in all cases.
 
 \section{Artificial Neural Networks}
 
-Artificial Neural Networks (ANN, or just NN) is a broad category of
+Artificial Neural Networks (ANN, or just NN) are a broad category of
 computational models, a representation of some general function $f:
-\mathbb{C}^m\to\mathbb{C}^n$. Their name and origin stems from an attempt to
+\mathbb{R}^m\to\mathbb{R}^n$.\footnote{While there is nothing inherent about
+  ANNs that limit us to only real values, we will not use
+  complex valued networks in this work and therefore skip to mental burden of
+  thinking about the complex numbers.} Their name and origin stems from an attempt to
 model how neurons in animal brains react to inputs, and how they adapt to learn
 new skills. As animals are quite effective at learning based on the inputs from
 their surroundings, it seemed promising to emulate this
@@ -369,8 +372,8 @@ have little to no analog in animal brains.
 
 While the original idea to use ANNs first appeared around the middle of the 20th
 century, they where initially limited, in large part due to the lacking
-computational capacity of that time, and saw little use for long time. As
-computing power increased exponentially since then, most state-of-the-art
+computational capacity of that time, and saw little use for a long time. As
+computing power increased exponentially, most state-of-the-art
 machine learning models today are some variation on a neural network. This
 includes tasks such as natural language processing~\cite{bert-2018}, image classification and
 segmentation~\cite{gpipe-2018}, and playing games such as Go~\cite{deepmind-alpha-go-zero},
@@ -435,12 +438,12 @@ architecture choices and training strategies.
 First things first; What is a neural network? A neural
 network\footnote{Specifically feed forward neural networks. There are some types
 of exotic networks that does not fit well into this description, but they are
-beyond the scope of this discussion.} a way to express a complex computation. We
-model a computation as a sequence of
-\emph{layers}, with each layer consisting of \emph{nodes}, and some connections
-between the nodes in each layer. By convention, we call the first layer the
-\emph{input} layer, the last layer is called the \emph{output} layer, and layers
-in between are generally referred to as \emph{hidden} layers.
+beyond the scope of this discussion.} is a way to express a certain type of
+complex computation. We model a computation as a sequence of \emph{layers}, with
+each layer consisting of \emph{nodes}, and some connections between the nodes in
+each layer. By convention, we call the first layer the \emph{input} layer, the
+last layer is called the \emph{output} layer, and layers in between are
+generally referred to as \emph{hidden} layers.
 \cref{fig:neural-network-example-diagram} shows a graphical depiction of this
 general structure, exemplified for a certain number of layers/nodes.
 
@@ -454,50 +457,52 @@ direction. If we initialize the input layer with some values, we can think of
 the network as a computation flow graph - visually representing the way
 information is manipulated as it moves towards a final output.
 
-For many readers, this might be too many words. Fear not, as we shall now
-describe the network by a simple recurrence relation. We denote $x_i^{(l)}$ as
-the value of the $i$th node in the $l$th layer, with the column vector
-$\vx^{(0)}$ representing the input layer. The weight matrix $\mat{W}^{l}$ is
-defied such that $W^{l}_{ij}$ is the weight of the connection between
-$x_i^{(l)}$ and $x_j^{(l+1)}$. The bias $\vb b_j^{(l)}$ is the column vector of
-bias values in layer $l$, going to node
-$x_j^{(l+1)}$.\footnote{In~\cref{fig:neural-network-example-diagram} the bias is
+\subsubsection{Definition}
+
+ Let $a_i^{l}$ be the value of the $i$'th node in the $l$'th layer, with
+$a_i^{(0)}=x_i$ being the inputs to the network. Each layer $l$ in the network
+consists of a weight matrix $\mat W^{(l)}$, such that $W_{ij}^{l}$ is the
+connection between $a_i^{(l-1)}$ and $a_j^{(l)}$. We also have a set of biases
+$b_i^{(l)}$\footnote{In~\cref{fig:neural-network-example-diagram} the bias is
 illustrated as a single node with multiple connections, while in the
 mathematical notation we express the bias as a vector of values. These two are
-equivalent, and the vector values can be seen as a constant node value of 1
-multiplied by the corresponding weight. We could have drawn $n$ bias nodes with
-a single connection, but this way is bit less verbose. In all equations and
-code, bias is represented by as vector.} The values of all subsequent layers are
-then given by the following: \footnote{While the example diagram only has a
-single output (and in fact every use case we shall see), there is nothing
-stopping us from having multidimensional outputs.}
+equivalent, and the figure is drawn as is for clarity. In all equations and
+code, bias is represented by as vector.}for each $a_i^{(l)}$, and finally a set
+of activation functions $\sigma^{(l)}: \mathbb{R}\to\mathbb{R}$ (to be
+explained). All this comes together to define the network output $f(\vx)$ as
+follows:\footnote{Repeated indices within a term imply a summation. Note however
+that this is not implied for superscripts. That is, $A_{ij}^{(l)}B_{jk}^{(l)}
+\defeq \sum_{j} A_{ij}^{(l)}B_{jk}^{(l)}$}\footnote{While the example diagram
+only has a single output, there is nothing stopping us from having
+multidimensional outputs.}
 
-\begin{align}
-  \label{eq:nn-recurrance-relation-without-activation}
-  \vx^{(l+1)} &= \qty(\vx^{(l)})^T\mat{W}^{(l)} + \vb{b}^{(l)}.
-\end{align}
-If you have had your morning coffee you might at this point wonder why we bother
-with the successive layers. Because
-\cref{eq:nn-recurrance-relation-without-activation} is simply a series of linear
-transformations, and as such could be replaced with one single, compound
-transformation: $\vx^{L} = \qty(\vx^{(0)})^T\mat{W} + \vb{b}$. Turns out, no
-matter how many layers we place in between the input and output we get no extra
-computational expressiveness. This leads us into the next section,
-\emph{activation functions}.
+
+ \begin{align}
+   f(\vx) &= \vb{a}^{(L)}\\
+   a_k^{(l)} &= \sigma^{(l)}(z_k^{(l)})\\
+   z_k^{(l)} &= W^{(l)}_{ki}a_i^{(l-1)} + b^{(l)}_k
+ \end{align}
+
 
 
 \subsection{Activation Functions}
 
-To overcome the pure linear transformations of
-\cref{eq:nn-recurrance-relation-without-activation}, we pump the value of each
-node through a non-linear function, $\sigma^{(l)}: \mathbb{C}\to\mathbb{C}$.
-Each layer now also has an associated non-linearity, and the improved recurrence
-relation becomes:
+Say we set all $\sigma^{(l)}$ to the identity transformation (i.e. no
+transformation). Then the above definition would be reduced to the following:
 
 \begin{align}
-  \label{eq:nn-recurrance-relation}
-  \vx^{(l+1)} &= \sigma^{(l)}\qty(\qty(\vx^{(l)})^T\mat{W}^{(l)} + \vb{b}^{(l)}).
+  f(\vx) = \vb{z}^{(L)}\qq{with}
+   z_k^{(l)} &= W^{(l)}_{ki}z_i^{(l-1)} + b^{(l)}_k
 \end{align}
+If you have had your morning coffee you might already see the issue here.
+This is simply a series of affine transformations, and as such could be
+replaced with one single, compound transformation: $\vb{z}^{L} =
+\mat{W}\vx + \vb{b}$. Turns out, without an activation function, no matter how many layers we
+place in between the input and output, we have just defined a convoluted way of
+performing a simple affine transformation.
+
+That is why we pump the value of each
+node through a \emph{non-linear} function, $\sigma^{(l)}: \mathbb{R}\to\mathbb{R}$.
 The functions $\sigma^{(l)}$ can really be any function we choose, and what to
 pick largely depends on what computation we are trying to model. Some often used
 options, with varying input/output domains, are listed in
@@ -682,6 +687,45 @@ power of neural networks.
 
 
 \subsection{Backpropagation}
+
+Now suitably enthusiastic about the power of neural networks, we must put our
+feet back on the ground for a bit and do some working out. After all, defining a
+complex model does not help us much if we cannot efficiently train it. With all
+these layers and connections, a legitimate concerns is how we can determine how
+to optimize the weights and biases involved.
+
+We will be employing the Gradient Decent strategy from \cref{sec:ml-optimization},
+which requires us to compute the gradient of a cost function,
+$\grad_{\valpha}\mathcal{C}(f(\vx))$, w.r.t. all model parameters $\valpha$.
+
+Starting with the derivatives for the biases of the final layer:
+
+\begin{align}
+  \pdv{\mathcal{C}}{b_k^{(L)}} &=
+\pdv{\mathcal{C}}{z_i^{(L)}}\pdv{z_i^{(L)}}{b_k^{(L)}}
+=\pdv{\mathcal{C}}{z_i^{(L)}}\pdv{}{b_k^{(L)}}\qty(W_{ij}^{(L)}a_j^{(L-1)} +
+b_i^{(L)}) = \pdv{\mathcal{C}}{z_k^{(L)}}\defeq \delta_k^{(L)}
+\end{align}
+where
+\begin{align}
+  \delta_k^{(L)}\defeq \pdv{\mathcal{C}}{z_k^{(L)}} = \pdv{\mathcal{C}}{a^{(L)}_{i}}\pdv{a_i^{(L)}}{z_k^{(L)}} = \pdv{\mathcal{C}}{a^{(L)}_{i}}\pdv{\sigma^{(L)}(z_k^{(L)})}{z_k^{(L)}}.
+\end{align}
+This last expression we can calculate easily as the product of the derivative of
+the cost function w.r.t. the network output (which should be doable for any
+sensible cost function), and the derivative of the output layer activation
+function evaluated at $z_k^{(L)}$ (which again is easy for any reasonable choice
+of $\sigma^{(L)}$).
+
+For the weights of the last layer we get the following:
+
+\begin{align}
+  \pdv{\mathcal{C}}{W_{jk}^{(L)}} =
+\pdv{\mathcal{C}}{z_i^{(L)}}\pdv{z_i^{L}}{W_{jk}^{(L)}} =
+\delta_i^{(L)}\pdv{}{W_{jk}^{(L)}}\qty(W_{im}a_m^{(L-1)} + b_i^{L}) = \delta_j^{(L)}a_k^{(L-1)}.
+\end{align}
+This way we can express the derivatives we need through $\vb{a}^{l}$ and
+$\vb{\delta}^{(l)}$. We already know how to compute $\vb{a}^{l}$ for all layers,
+so we just need $\vb{\delta^{l}}$ for $l < L$.
 
 
 \end{document}
