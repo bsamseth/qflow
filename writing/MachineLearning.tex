@@ -31,7 +31,7 @@ want it done.
 This chapter is dedicated to presenting the relevant bits of ML that will be
 relevant to the work in this thesis. As the field is vast, only a very minimal
 selection of topics will be covered, and the reader is encouraged to dive deeper
-into topics where interest is sparked. We start with a overview introduction of
+into topics where interest is sparked. We start with an overview introduction of
 the general process, exemplified by Linear Regression for simplicity. From there
 we shall introduce Neural Networks, along with a more in depth discussion of
 optimization strategies.
@@ -722,7 +722,7 @@ where
 \begin{align}
   \delta_k^{(L)}\defeq \pdv{\mathcal{C}}{z_k^{(L)}} =
 \pdv{\mathcal{C}}{a^{(L)}_{i}}\pdv{a_i^{(L)}}{z_k^{(L)}} =
-\pdv{\mathcal{C}}{a^{(L)}_{i}}\pdv{\sigma^{(L)}(z_k^{(L)})}{z_k^{(L)}} \defeq 
+\pdv{\mathcal{C}}{a^{(L)}_{i}}\pdv{\sigma^{(L)}(z_k^{(L)})}{z_k^{(L)}} \defeq
 \pdv{\mathcal{C}}{a^{(L)}_{i}}\dot\sigma^{(L)}(z_k^{(L)}).
 \end{align}
 This last expression we can calculate easily as the product of the derivative of
