@@ -459,6 +459,7 @@ the network as a computation flow graph - visually representing the way
 information is manipulated as it moves towards a final output.
 
 \subsubsection{Definition}
+\label{sec:ml-ann-forward-def}
 
  Let $a_i^{l}$ be the value of the $i$'th node in the $l$'th layer, with
 $a_i^{(0)}=x_i$ being the inputs to the network. Each layer $l$ in the network
@@ -489,6 +490,7 @@ process of doing this is sometimes referred to as a \emph{forward propagation}.
 
 
 \subsection{Activation Functions}
+\label{sec:ml-activation-functions}
 
 Say we set all $\sigma^{(l)}$ to the identity transformation (i.e. no
 transformation). Then the above definition would be reduced to the following:
@@ -692,6 +694,7 @@ neural networks.
 
 
 \subsection{Backpropagation}
+\label{sec:ml-backprop}
 
 Now suitably enthusiastic about the power of neural networks, we must put our
 feet back on the ground for a bit and do some working out. After all, defining a
@@ -723,8 +726,8 @@ where
 \begin{align}
   \delta_k^{(L)}\defeq \pdv{\mathcal{C}}{z_k^{(L)}} =
 \pdv{\mathcal{C}}{a^{(L)}_{i}}\pdv{a_i^{(L)}}{z_k^{(L)}} =
-\pdv{\mathcal{C}}{a^{(L)}_{i}}\pdv{\sigma^{(L)}(z_k^{(L)})}{z_k^{(L)}} \defeq
-\pdv{\mathcal{C}}{a^{(L)}_{i}}\dot\sigma^{(L)}(z_k^{(L)}).
+\pdv{\mathcal{C}}{a^{(L)}_{i}}\pdv{\sigma^{(L)}(z_i^{(L)})}{z_k^{(L)}} =
+\pdv{\mathcal{C}}{a^{(L)}_{k}}\dot\sigma^{(L)}(z_k^{(L)}).
 \end{align}
 This last expression we can calculate easily as the product of the derivative of
 the cost function w.r.t. the network output (which should be doable for any
