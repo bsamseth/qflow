@@ -111,6 +111,7 @@ VMC optimization. The complete list of required operations is as follows:
   For use with Importance Sampling, we need to compute the drift force
   associated with the wave function (for particle $k$):
   \begin{align}
+    \label{eq:ml-vmc-operation-drfit-force}
     \frac{2}{\psialpha(\vX)}\grad_k{\psialpha(\vX)} = 2 \grad_k{\ln\psialpha(\vX)}
   \end{align}
   Note that this is only strictly needed when Importance Sampling is used, and
@@ -119,6 +120,7 @@ VMC optimization. The complete list of required operations is as follows:
   For use with any Hamiltonian which includes kinetic energy, we need to compute
   the Laplacian of the wave function with respect to the configuration $\vX$.
   \begin{align}
+    \label{eq:ml-vmc-operation-laplacian}
     \sum_k\frac{1}{\psialpha(\vX)}\laplacian_k\psialpha(\vX)
   \end{align}
 \end{description}
@@ -171,9 +173,31 @@ by $\psi(\vx)$ to get the quantity in \cref{eq:ml-vmc-operation-gradient}:
 
 \subsubsection{First Order Partial Derivative w.r.t. inputs}
 
+\cref{eq:ml-vmc-operation-drfit-force} requires us to compute the first order
+derivatives of the networks output w.r.t. its individual inputs. With reference
+to the notation used in \cref{sec:artificial-neural-networks}, we get:
 
+\begin{align}
+  \pdv{a_k^{(l)}}{x_j} &= \pdv{\sigma^{(l)}\qty(z_k^{(l)})}{z_i^{(l)}}\pdv{z_i^{(l)}}{x_j}\\
+  &= \dot\sigma^{(l)}\qty(z_k^{(l)})\pdv{z_k^{(l)}}{x_j}\\
+  &= \dot\sigma^{(l)}\qty(z_k^{(l)})\pdv{}{x_j}\qty(W_{ki}^{(l)}a_i^{(l-1)} + b^{(l)}_k)\\
+  &= \dot\sigma^{(l)}\qty(z_k^{(l)})\qty(W^{(l)}_{ki}\pdv{a_i^{(l-1)}}{x_j})\label{eq:first-order-partial-nn},\\
+  \pdv{a_k^{(0)}}{x_j} &= \pdv{x_k}{x_j} = \delta_{kj}.
+\end{align}
+Once again we divide by $\psi$ (and multiply by 2) to get the values needed in
+\cref{eq:ml-vmc-operation-drfit-force}.
 
 \subsubsection{Second Order Partial Derivatives w.r.t. inputs}
 
+For \cref{eq:ml-vmc-operation-laplacian} we also need the second order
+derivatives. Continuing from \cref{eq:first-order-partial-nn} we get:
+
+\begin{align}
+  \pdv[2]{a_k^{(l)}}{x_j} &= \dot\sigma^{(l)}\qty(z_k^{(l)})W_{ki}^{(l)}\pdv[2]{a_i^{(l-1)}}{x_j} + \pdv{\dot\sigma^{(l)}\qty(z_k^{(l)})}{x_j}W_{ki}^{(l)}\pdv{a_i^{(l-1)}}{x_j}\\
+  &= \dot\sigma^{(l)}\qty(z_k^{(l)})W_{ki}^{(l)}\pdv[2]{a_i^{(l-1)}}{x_j} + \ddot\sigma^{(l)}\qty(z_k^{(l)})\pdv{z_k^{(l)}}{x_j}W_{ki}^{(l)}\pdv{a_i^{(l-1)}}{x_j}\\
+                          &= \dot\sigma^{(l)}\qty(z_k^{(l)})W_{ki}^{(l)}\pdv[2]{a_i^{(l-1)}}{x_j} + \ddot\sigma^{(l)}\qty(z_k^{(l)})\qty(W_{ki}^{(l)}\pdv{a_i^{(l-1)}}{x_j})^2,\\
+                            \pdv[2]{a_k^{(0)}}{x_j} &= \pdv[2]{x_k}{x_j} = 0.
+\end{align}
+Dividing by $\psi$ yields the desired result.
 
 \end{document}
