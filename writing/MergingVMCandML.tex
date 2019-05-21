@@ -104,6 +104,7 @@ VMC optimization. The complete list of required operations is as follows:
   In order to compute the cost function gradient, we need the following
   quantity:
   \begin{align}
+    \label{eq:ml-vmc-operation-gradient}
     \frac{1}{\psialpha(\vX)}\grad_{\valpha}{\psialpha(\vX)} = \grad_{\valpha}{\ln\psialpha(\vX)}
   \end{align}
 \item[Gradient w.r.t. inputs:](optional)\hfill\\
@@ -141,12 +142,36 @@ increase the accuracy of the resulting simulations.
 
 Convinced this is a great idea, we have some more working out to do. While
 evaluating the output of the network is easy enough (see last chapter), we need
-to derive the general expression for the other quantities we need.
+to derive the general expression for the other quantities we need.\\
 
+In the following, let $\psi(\vx)$ be a artificial neural network which has the
+quantum numbers of every particle as its inputs. $\vx$ is the concatenation of
+all $\{\vx_i\}_{i=1}^N$ for $N$ particles. For our case, that means each
+particle coordinate is one input to the network, and the output is the value of
+wave function.
 
 \subsubsection{Gradient w.r.t. Parameters}
 
+Back in \cref{sec:ml-backprop} we derived the formulas for the gradient of a
+general cost function, with respect to the weights and biases of any network. In
+the case of VMC, we need the quantity given in
+\cref{eq:ml-vmc-operation-gradient}. We can get this trivially through the
+backpropagation algorithm by defining the cost function to be the output of the
+network:
+
+\begin{align}
+  \mathcal{C}(\psi(\vx)) = \psi(\vx).
+\end{align}
+Computing the ``cost function'' gradient using backpropagation, we simply divide
+by $\psi(\vx)$ to get the quantity in \cref{eq:ml-vmc-operation-gradient}:
+
+\begin{align}
+    \frac{1}{\psi(\vX)}\grad_{\valpha}{\psi(\vX)} = \frac{1}{\psi(\vx)}\qty[\grad_{\valpha}{\mathcal{C}(f(\vx))}]
+\end{align}
+
 \subsubsection{First Order Partial Derivative w.r.t. inputs}
+
+
 
 \subsubsection{Second Order Partial Derivatives w.r.t. inputs}
 
