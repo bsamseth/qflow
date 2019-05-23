@@ -6,7 +6,10 @@ project(VMC VERSION 0.1.0.0 LANGUAGES C CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 include(ConfigSafeGuards)
 include(Colors)
+include(LTO)
 
+find_lto(C)
+find_lto(CXX)
 
 
 # --------------------------------------------------------------------------------
