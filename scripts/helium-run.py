@@ -66,7 +66,7 @@ for _ in range(steps):
     E_training.append(H.local_energy(sampler, psi, 1000) / P)
     eta = timedelta(seconds=round(t_average * (steps - _)))
     mpiprint(
-        f"Step {_+1:5d}/{steps:d} - {1 / t1:5.3f} it/s - ETA {eta} - AR = {sampler.acceptance_rate:.4f} - E = {np.mean(E_training):3.5f} - params[0] = {psi.parameters[0]:3.5f}"
+            f"Step {_+1:5d}/{steps:d} - {1 / t1:5.3f} it/s - ETA {eta} - AR = {sampler.acceptance_rate:.4f} - <E> = {np.mean(E_training):3.5f} ({E_training[-1]:3.5f}) - params[0] = {psi.parameters[0]:3.5f}"
     )
     if MPI.COMM_WORLD.rank == 0:
         np.savetxt(
