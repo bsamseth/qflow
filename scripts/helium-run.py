@@ -31,53 +31,56 @@ from qflow.wavefunctions.nn.layers import DenseLayer
 os.makedirs("logfiles", exist_ok=True)
 
 rho = 0.365 / (2.556) ** 3  # Å^-3
-P, D = 32, 3  # Particles, dimensions
+P, D = 4, 3  # Particles, dimensions
 L = (P / rho) ** (1 / 3)
 system = np.empty((P, D))
 
 mpiprint(f"P = {P}, D = {D}, rho = {rho}, L = {L}")
 
 H = LennardJones(L)
-mcmillian = JastrowMcMillian(5, 2.9, L)
+mcmillian = JastrowMcMillian(5, 2.952, L)
 layers = [
-    DenseLayer(P * D, 128, activation=tanh, scale_factor=0.0005),
-    DenseLayer(128, 64, activation=tanh),
-    DenseLayer(64, 1, activation=exponential),
+    DenseLayer(2 * D, 32, activation=tanh, scale_factor=0.001),
+    DenseLayer(32, 1, activation=exponential),
 ]
 dnn = Dnn()
 for l in layers:
     dnn.add_layer(l)
-psi = WavefunctionProduct(mcmillian, dnn)
+pooled_dnn = SumPooling(dnn)
+mcmillian_fixed = FixedWavefunction(mcmillian)
+psi = WavefunctionProduct(mcmillian_fixed, pooled_dnn)
 # psi = mcmillian
-sampler = HeliumSampler(system, psi, 1, L)
+sampler = HeliumSampler(system, psi, 0.5, L)
 sampler.thermalize(5000)
 
-optimizer = AdamOptimizer(len(psi.parameters), 0.01)
+optimizer = AdamOptimizer(len(psi.parameters), 0.001)
 
 
-steps = 10000
+steps = 1500
 t_average = 0
 E_training = []
+b_training = []
 for _ in range(steps):
     t0 = time.time()
-    H.optimize_wavefunction(psi, sampler, 5, 1000, optimizer, 0, False)
+    H.optimize_wavefunction(psi, sampler, 50, 1000, optimizer, 0, False)
     t1 = time.time() - t0
     t_average = (t_average * _ + t1) / (_ + 1)
     E_training.append(H.local_energy(sampler, psi, 1000) / P)
+    b_training.append(psi.parameters[0])
     eta = timedelta(seconds=round(t_average * (steps - _)))
     mpiprint(
-            f"Step {_+1:5d}/{steps:d} - {1 / t1:5.3f} it/s - ETA {eta} - AR = {sampler.acceptance_rate:.4f} - <E> = {np.mean(E_training):3.5f} ({E_training[-1]:3.5f}) - params[0] = {psi.parameters[0]:3.5f}"
+        f"Step {_+1:5d}/{steps:d} - {1 / t1:5.3f} it/s - ETA {eta} - AR = {sampler.acceptance_rate:.4f} - <E> = {np.mean(E_training):3.5f} ({E_training[-1]:3.5f}) - params[0] = {np.mean(b_training):3.5f} ({b_training[-1]:3.5f})"
     )
     if MPI.COMM_WORLD.rank == 0:
         np.savetxt(
-            f"logfiles/helium-P{P}-D{D}-{_:06d}-parameters.csv",
+            f"logfiles/helium-Pooled-P{P}-D{D}-{_:06d}-parameters.csv",
             psi.parameters,
             delimiter=",",
         )
 
 if MPI.COMM_WORLD.rank == 0:
     np.savetxt(
-        f"logfiles/helium-P{P}-D{D}-training-energies.csv",
+        f"logfiles/helium-Pooled-P{P}-D{D}-training-energies.csv",
         E_training,
         delimiter=",",
     )
@@ -94,5 +97,7 @@ energies = [
     H.local_energy(sampler.next_configuration(), psi) / P for _ in range(points)
 ]
 if MPI.COMM_WORLD.rank == 0:
-    np.savetxt(f"logfiles/helium-P{P}-D{D}-energies.csv", energies, delimiter=",")
+    np.savetxt(
+        f"logfiles/helium-Pooled-P{P}-D{D}-energies.csv", energies, delimiter=","
+    )
     pprint.pprint(compute_statistics_for_series(energies, method="blocking"))
