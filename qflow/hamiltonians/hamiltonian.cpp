@@ -81,6 +81,41 @@ Real Hamiltonian::local_energy(Sampler& sampler, Wavefunction& psi, long samples
     return global_E_L / samples;
 }
 
+RowVector Hamiltonian::local_energy_array(Sampler&      sampler,
+                                          Wavefunction& psi,
+                                          long          samples) const
+{
+    const int n_procs = mpiutil::proc_count();
+    const int rank    = mpiutil::get_rank();
+
+    std::vector<int> counts(n_procs, 0);
+    std::vector<int> disps(n_procs, 0);
+    for (int i = 0; i < n_procs; ++i)
+    {
+        const long samples_per_proc
+            = samples / n_procs + (i < samples % n_procs ? 1 : 0);
+        counts[i] = samples_per_proc;
+        disps[i]  = i == 0 ? 0 : disps[i - 1] + samples_per_proc;
+    }
+
+    RowVector E_L(counts[rank]);
+    RowVector E_L_all(samples);
+
+    for (long i = 0; i < counts[rank]; ++i)
+        E_L[i] = local_energy(sampler.next_configuration(), psi);
+
+    MPI_Allgatherv(E_L.data(),
+                   counts[rank],
+                   mpiutil::MPI_REAL_TYPE,
+                   E_L_all.data(),
+                   counts.data(),
+                   disps.data(),
+                   mpiutil::MPI_REAL_TYPE,
+                   MPI_COMM_WORLD);
+
+    return E_L_all;
+}
+
 RowVector Hamiltonian::local_energy_gradient(Sampler&      sampler,
                                              Wavefunction& psi,
                                              long          samples) const

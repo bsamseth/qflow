@@ -74,6 +74,9 @@ public:
 
     Real local_energy(Sampler& sampler, Wavefunction& psi, long samples) const;
 
+    RowVector
+        local_energy_array(Sampler& sampler, Wavefunction& psi, long samples) const;
+
     Real mean_distance(Sampler&, long samples) const;
 
     RowVector onebodydensity(Sampler& sampler,

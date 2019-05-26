@@ -28,6 +28,8 @@ void init_hamiltonian(py::module& main)
         .def("local_energy",
              py::overload_cast<Sampler&, Wavefunction&, long>(
                  &Hamiltonian::local_energy, py::const_))
+        .def("local_energy_array", &Hamiltonian::local_energy_array)
+        .def("local_energy_numeric", &Hamiltonian::local_energy_numeric)
         .def("local_energy_numeric", &Hamiltonian::local_energy_numeric)
         .def("kinetic_energy", &Hamiltonian::kinetic_energy)
         .def("kinetic_energy_numeric", &Hamiltonian::kinetic_energy_numeric)

@@ -110,3 +110,18 @@ TEST_F(HarmonicOscillatorTest, local_energy_simple)
         ASSERT_NEAR(expected, H_1.local_energy_numeric(s, psi), expected * 1e-6);
     }
 }
+
+TEST(HamiltonianBase, local_energy_array)
+{
+    const HarmonicOscillator H;
+    SimpleGaussian           psi(0.5001);
+    System                   system(1, 1);
+    ImportanceSampler        sampler(system, psi, 0.1);
+    std::vector<int>         sizes {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 1000};
+
+    for (int size : sizes)
+    {
+        auto E_L = H.local_energy_array(sampler, psi, size);
+        ASSERT_EQ(size, E_L.size());
+    }
+}
