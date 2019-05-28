@@ -111,21 +111,36 @@ Real Dnn::laplacian(const System& system)
     return res / layers[layers.size() - 1]->getOutputs()(0, 0);
 }
 
+std::size_t hash_matrix(const MatrixRef& x)
+{
+    std::hash<Real> hasher;
+    std::size_t     result = 144451;  // Seed.
+    for (std::size_t i = 0; i < x.size(); ++i)
+        result = result * 31 + hasher(x.data()[i]);  // A semi-random hashing alg.
+    return result;
+}
+
 void Dnn::forward(const MatrixRef& x)
 {
     assert(layers.size() > 0);
 
-    auto   layerIterator = layers.begin();
-    Matrix y             = (*layerIterator)->forward(x);
-    for (++layerIterator; layerIterator != layers.end(); ++layerIterator)
+    if (auto h = hash_matrix(x); h != forward_hash)
     {
-        y = (*layerIterator)->forward(y);
+        auto   layerIterator = layers.begin();
+        Matrix y             = (*layerIterator)->forward(x);
+        for (++layerIterator; layerIterator != layers.end(); ++layerIterator)
+        {
+            y = (*layerIterator)->forward(y);
+        }
+
+        forward_hash = h;
     }
 }
 
 void Dnn::backward()
 {
     assert(layers.size() > 0);
+
     const auto& output = layers[layers.size() - 1]->getOutputs();
     Matrix      y      = Matrix::Ones(output.rows(), output.cols());
     for (auto it = layers.rbegin(); it != layers.rend(); ++it)

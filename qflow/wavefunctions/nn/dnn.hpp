@@ -14,6 +14,8 @@ protected:
     RowVector                       paramGradient;
     RowVector                       inputGradient;
 
+    std::size_t forward_hash;
+
     /**
      * Forward propagation of input (evaluation of network).
      */
