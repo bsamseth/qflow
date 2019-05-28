@@ -8,6 +8,7 @@ from qflow.wavefunctions import Dnn, InputSorter
 
 
 @given(P=st.integers(1, 20), D=st.integers(1, 3))
+@settings(deadline=None)
 def test_symmetry(P, D):
     dnn = Dnn()
     layer = DenseLayer(P * D, 1)
