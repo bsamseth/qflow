@@ -1,0 +1,41 @@
+
+* Sort positions [0/2]
+   
+  Sort in some arbitrary, but /definitive/ manner. 
+
+  - Sort as positions as tuples, e.g =(1, 2, 3) < (2, 0, 0) < (2, 1, 0)=
+  - Sort by distance to origin
+  
+  The former makes sense when the data is discrete, but for real values we will most likely 
+  end up sorting purely by x-coordinate. This should probably not matter, but unclear. 
+
+** TODO Implement sorting by distance to origin.
+
+*** Drift Force
+
+    The Laplacian (the other user of derivatives w.r.t. positions) sums over all
+    the derivatives, so the shifted order should not matter. The only quantity
+    affected by sorting should be the drift force \(\frac{2\nabla_k\Psi}{\Psi}\).
+
+    In order to compute this correctly, we'll need to keep track of the sorting
+    permutations, so that $k$ can be mapped to the corresponding index in the
+    sorted list. Otherwise there should be no problem.
+
+*** Implementation Notes
+
+    Will implement this as a wave function wrapper, similarly to
+    =WavefunctionProduct=. Doing this here, as apposed to on the sampler because
+    a wave function might be composed of parts which does not need/cannot handle
+    this extra complexity.
+
+** TODO Periodic Systems
+  
+   Idea here to help inform the wave function about the periodicity by somehow imposing it in the inputs. 
+
+   1. Sort by distance to origin, /with respect to minimum image/.
+      - If L = 5 is the box dimension, then x = 4 has a distance of 1 to the origin, not 4.
+   2. Replace particle coordinates $x_k$ with $z_k = x_{k+1} - x_k$, again with respect to minimum image.
+      - As this constitutes a transformation of the inputs, the derivatives will change.
+      - Affected is drift force and Laplacian.
+  
+  

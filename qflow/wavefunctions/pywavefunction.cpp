@@ -1,6 +1,7 @@
 #include "dnn.hpp"
 #include "fixedwavefunction.hpp"
 #include "hardspherewavefunction.hpp"
+#include "inputsorter.hpp"
 #include "jastrowmcmillian.hpp"
 #include "jastroworion.hpp"
 #include "jastrowpade.hpp"
@@ -189,6 +190,9 @@ expression:
 This is guaranteed to produce a permutation symmetric wavefunction, given any suitable
 inner wavefunction :math:`f`.
 )doc")
+        .def(py::init<Wavefunction&>());
+
+    py::class_<InputSorter, Wavefunction>(m, "InputSorter")
         .def(py::init<Wavefunction&>());
 
     py::class_<SimpleGaussian, Wavefunction>(m, "SimpleGaussian", R"doc(

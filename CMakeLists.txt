@@ -77,6 +77,7 @@ set(SOURCES
     qflow/wavefunctions/wavefunction.cpp
     qflow/wavefunctions/wavefunctionpooling.cpp
     qflow/wavefunctions/wavefunctionproduct.cpp
+    qflow/wavefunctions/inputsorter.cpp
 )
 set(PYSOURCES
     qflow/hamiltonians/pyhamiltonian.cpp
