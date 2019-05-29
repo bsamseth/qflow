@@ -13,9 +13,9 @@ HeliumSampler::HeliumSampler(const System& system,
 
 void HeliumSampler::initialize_system()
 {
-    int  ncx       = 1;
-    int  ncy       = 1;
-    int  ncz       = 1;
+    int  ncx       = 2;
+    int  ncy       = 2;
+    int  ncz       = 2;
     Real basisx[4] = {0., 0.5, 0.0, 0.5};
     Real basisy[4] = {0., 0.5, 0.5, 0.0};
     Real basisz[4] = {0., 0.0, 0.5, 0.5};
