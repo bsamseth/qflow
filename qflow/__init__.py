@@ -1,3 +1,4 @@
+import mpi4py  # Explicitly load mpi4py, which initializes the MPI environment properly.
 from _qflow_backend import *
 from _qflow_backend import (
     _init_mpi,
@@ -17,7 +18,9 @@ __all__ = [
     "training",
 ]
 
-_init_mpi()
+_init_mpi()  # Initializing from Python is not necessary for MPI it self,
+             # but rather to seed the random number generators differently
+             # for each process.
 
 
 class SimulationBox(object):
