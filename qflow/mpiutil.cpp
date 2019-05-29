@@ -3,7 +3,6 @@
 #include "definitions.hpp"
 
 #include <cstdlib>
-#include <iostream>
 
 namespace mpiutil
 {
@@ -19,7 +18,6 @@ void initialize_mpi()
     }
 
     // Seed random number generator differently for each proc.
-    std::cout << "seeding rank " << get_rank() << std::endl;
     rand_gen.seed(12345 + get_rank());
 
 }  // namespace mpiutil
