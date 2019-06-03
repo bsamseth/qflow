@@ -3,8 +3,8 @@
 \chapter{Merging Variational Monte Carlo and Machine Learning}
 \label{chp:mergin-vmc-with-ml}
 
-The purpose of Variational Monte Carlo is to find a functions which minimizes
-the expected energy of the system. States as such, VMC clearly fits under the
+The purpose of Variational Monte Carlo is to find a (wave) function which minimizes
+the expected energy of the system. Stated like this, VMC clearly fits under the
 Machine Learning umbrella. Still, it is not a standard Supervised Learning
 problem such as linear regression, because we don't have a data set of expected
 outputs for every input. Additionally there are some extra challenges introduced
@@ -41,7 +41,7 @@ doing this:
 \item[$p(\vy | \vx)$]\hfill\\
   The conditional probability of $\vy$ given $\vx$.
 \item[$p(\vx, \vy)$] \hfill\\
-  The joint probability distribution of inputs as outputs.
+  The joint probability distribution of inputs and outputs.
 \end{description}
 The most familiar option is the first one. Linear regression is an example of
 such a case where we have an input and want to get the corresponding output.
@@ -85,8 +85,8 @@ significant.
 Second, and arguably more importantly, limiting ourselves to generative models
 is - well, limiting. A vast pool of potential models are discriminative,
 including the neural networks from \cref{sec:artificial-neural-networks}. Given
-that we have the Metropolis-Hastings algorithm which works excellently is any
-most situations, it seems unnecessary to completely disregard some many options.
+that we have the Metropolis-Hastings algorithm which works excellently in 
+most situations, it seems unnecessary to completely disregard so many options.
 
 
 \section{Arbitrary Models as Trial Wave Functions}
@@ -200,4 +200,74 @@ derivatives. Continuing from \cref{eq:first-order-partial-nn} we get:
 \end{align}
 Dividing by $\psi$ yields the desired result.
 
+
+\subsection{Imposing Symmetry Requirements}
+
+We know from \cref{sec:requirements-of-wave-functions} that we have certain
+requirements which need to be met in order for the wave function to be sensible.
+Assuming we pick a model that is suitably smooth and continuous, the most
+challenging requirement is that of particle exchange symmetry. As discussed in
+\cref{sec:slater-jastrow}, we typically want to design our wave function
+candidates to be symmetric, and add a Slater determinant for fermions if need
+be. Trouble is that arbitrary functions are not likely to be symmetric to the
+interchange of its inputs. Neural networks are intrinsically not symmetric.
+
+We present some different strategies of imposing such a symmetry, all of which
+will be evaluated later on:
+
+\subsubsection{Learn the Symmetry}
+
+The simplest strategy is perhaps the most appealing, as we simply let the model
+realize on its own that  it is best to be symmetric. After all we know the ideal
+wave function is, so an ideally trained model \emph{should} be able to learn
+this.
+
+In practice this might be to much to ask, and the model might settle on a
+non-symmetric local minimum. Additionally, one might argue that the symmetry
+requirement \emph{must} be satisfied at all times during training, depending on
+the system we are investigating.
+
+
+\subsubsection{Pool the Output}
+
+We can draw inspiration from the world of Convolutional Neural Networks (CNN),
+and obtain the symmetry by way of a pooling operation. Let $F(\vX)$ be the final
+model output and let $f(\vX)$ be the originally proposed model.
+
+The simplest version is to let $F$ be the sum of $f$ applied to every
+permutation of $\vX$. We could use the product instead of the sum, or any other
+commutative binary operator. While this would fix the symmetry, it would have a
+complexity of $\mathcal{O}(N!)$ for $N$ particles.
+
+A computationally better idea is to let $f$ be a function of only two particles,
+$f(\vx_i, \vx_j)$, and then let $F$ be the sum of all possible permutations of
+two particles out of the $N$ available:
+
+\begin{align}
+  \label{eq:sum-pooling}
+  F(\vX) &= \sum_{i=1}^N\sum_{j\neq i}^N f(\vx_i, \vx_j)\qq{(Sum Pooled)}
+\end{align}
+This has complexity $\mathcal{O}(N^2)$, but limits us to learn
+two-body interactions. Three-body interactions could be included with another
+sum, but increase the complexity accordingly. For problems which require higher
+order correlations this approach might not be suitable.
+
+\subsubsection{Sort the Inputs}
+
+Perhaps the most computationally efficient way to impose the symmetry is to
+simply transform the inputs in a symmetric manner before passing them on to the
+model. An intuitive choice is to sort the inputs in ascending order of ``size''.
+Importantly we should sort by particle, and not sort all coordinates
+independently. One way to do this is to sort the particles by their absolute
+distance from the origin. This approach has the benefit of a much improved
+complexity of $\mathcal{O}(N\log N)$. Additionally, we might
+imagine that ordering the particles by some extrinsic metric might help the
+model extract useful information more easily.\footnote{Consider a Hamiltonian
+  that depends strongly on the closest/furthest distance of any particle to the
+  origin. Any model will quickly be able to pick up on the fact that the
+  first/last input is highly correlated with the energy. If these particles
+  could be at any input, understanding this connection could be more challenging.}
+
+
 \end{document}
+
