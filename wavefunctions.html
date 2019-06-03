@@ -160,7 +160,7 @@ set up a variety of different trial wavefunctions.</p>
 </div>
 <dl class="class">
 <dt id="qflow.wavefunctions.Wavefunction">
-<em class="property">class </em><code class="descclassname">qflow.wavefunctions.</code><code class="descname">Wavefunction</code><a class="headerlink" href="#_qflow_backend.wavefunctions.Wavefunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">qflow.wavefunctions.</code><code class="sig-name descname">Wavefunction</code><a class="headerlink" href="#_qflow_backend.wavefunctions.Wavefunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference internal" href="#qflow.wavefunctions.Wavefunction" title="_qflow_backend.wavefunctions.Wavefunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Wavefunction</span></code></a> class provides a unified abstraction for all wavefunctions.</p>
 <p>All other code expecting a wavefunction instance will take a <a class="reference internal" href="#qflow.wavefunctions.Wavefunction" title="_qflow_backend.wavefunctions.Wavefunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Wavefunction</span></code></a> reference.</p>
 <p>In this context, a trial wavefunction is defied to be a class that can:</p>
@@ -195,13 +195,13 @@ support for complex valued wavefunctions at this time.</p>
 </div>
 <dl class="attribute">
 <dt id="qflow.wavefunctions.Wavefunction.parameters">
-<code class="descname">parameters</code><a class="headerlink" href="#qflow.wavefunctions.Wavefunction.parameters" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">parameters</code><a class="headerlink" href="#qflow.wavefunctions.Wavefunction.parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all variational parameters. Supports both read and write.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="qflow.wavefunctions.Wavefunction.__call__">
-<code class="descname">__call__</code><span class="sig-paren">(</span><em>self: qflow.wavefunctions.Wavefunction, system: numpy.ndarray[float64[m, n]]</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#_qflow_backend.wavefunctions.Wavefunction.__call__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">self: qflow.wavefunctions.Wavefunction, system: numpy.ndarray[float64[m, n]]</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#_qflow_backend.wavefunctions.Wavefunction.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the evaluation of the wavefunction for the given system</p>
 <div class="math notranslate nohighlight">
 \[\text{Evaluation}_\Psi(\mathbf{X} = \Psi(\mathbf{X})\]</div>
@@ -209,7 +209,7 @@ support for complex valued wavefunctions at this time.</p>
 
 <dl class="method">
 <dt id="qflow.wavefunctions.Wavefunction.drift_force">
-<code class="descname">drift_force</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#qflow.wavefunctions.Wavefunction.drift_force" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">drift_force</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#qflow.wavefunctions.Wavefunction.drift_force" title="Permalink to this definition">¶</a></dt>
 <dd><p>Overloaded function.</p>
 <ol class="arabic simple">
 <li><p>drift_force(self: qflow.wavefunctions.Wavefunction, system: numpy.ndarray[float64[m, n]], k: int, l: int) -&gt; float</p></li>
@@ -228,7 +228,7 @@ support for complex valued wavefunctions at this time.</p>
 
 <dl class="method">
 <dt id="qflow.wavefunctions.Wavefunction.gradient">
-<code class="descname">gradient</code><span class="sig-paren">(</span><em>self: qflow.wavefunctions.Wavefunction, system: numpy.ndarray[float64[m, n]]</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[float64[1, n]]<a class="headerlink" href="#_qflow_backend.wavefunctions.Wavefunction.gradient" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">gradient</code><span class="sig-paren">(</span><em class="sig-param">self: qflow.wavefunctions.Wavefunction, system: numpy.ndarray[float64[m, n]]</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray[float64[1, n]]<a class="headerlink" href="#_qflow_backend.wavefunctions.Wavefunction.gradient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the gradient w.r.t. each variational parameter, divided by the evaluation:</p>
 <div class="math notranslate nohighlight">
 \[\text{Gradient}_\Psi(\mathbf{X}) = \frac{1}{\Psi(\mathbf{X})}
@@ -237,7 +237,7 @@ support for complex valued wavefunctions at this time.</p>
 
 <dl class="method">
 <dt id="qflow.wavefunctions.Wavefunction.laplacian">
-<code class="descname">laplacian</code><span class="sig-paren">(</span><em>self: qflow.wavefunctions.Wavefunction, system: numpy.ndarray[float64[m, n]]</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#_qflow_backend.wavefunctions.Wavefunction.laplacian" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">laplacian</code><span class="sig-paren">(</span><em class="sig-param">self: qflow.wavefunctions.Wavefunction, system: numpy.ndarray[float64[m, n]]</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#_qflow_backend.wavefunctions.Wavefunction.laplacian" title="Permalink to this definition">¶</a></dt>
 <dd><div class="math notranslate nohighlight">
 \[\text{Laplacian}_\Psi(\mathbf{X}) = \sum_{k=1}^N\sum_{l=1}^D
     \frac{1}{\Psi(\mathbf{X})}\frac{\partial^2 \Psi(\mathbf{X})}{\partial X_{kl}^2}\]</div>
@@ -245,7 +245,7 @@ support for complex valued wavefunctions at this time.</p>
 
 <dl class="method">
 <dt id="qflow.wavefunctions.Wavefunction.symmetry_metric">
-<code class="descname">symmetry_metric</code><span class="sig-paren">(</span><em>self: qflow.wavefunctions.Wavefunction</em>, <em>sampler: Sampler</em>, <em>samples: int</em>, <em>max_permutations: int = 100</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#_qflow_backend.wavefunctions.Wavefunction.symmetry_metric" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">symmetry_metric</code><span class="sig-paren">(</span><em class="sig-param">self: qflow.wavefunctions.Wavefunction</em>, <em class="sig-param">sampler: Sampler</em>, <em class="sig-param">samples: int</em>, <em class="sig-param">max_permutations: int = 100</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#_qflow_backend.wavefunctions.Wavefunction.symmetry_metric" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an estimate of the symmetry of the wavefunction.</p>
 <p>This is defined as follows:</p>
 <div class="math notranslate nohighlight">
@@ -275,7 +275,7 @@ permutations, a maximum of <code class="docutils literal notranslate"><span clas
 <h1>Standalone Wavefunctions<a class="headerlink" href="#standalone-wavefunctions" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="qflow.wavefunctions.SimpleGaussian">
-<em class="property">class </em><code class="descclassname">qflow.wavefunctions.</code><code class="descname">SimpleGaussian</code><a class="headerlink" href="#_qflow_backend.wavefunctions.SimpleGaussian" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">qflow.wavefunctions.</code><code class="sig-name descname">SimpleGaussian</code><a class="headerlink" href="#_qflow_backend.wavefunctions.SimpleGaussian" title="Permalink to this definition">¶</a></dt>
 <dd><p>A product of gaussians:</p>
 <div class="math notranslate nohighlight">
 \[\Psi(\mathbf{X}) = \prod_{i=1}^N e^{-\alpha ||\mathbf{X}_i||^2}\]</div>
@@ -285,14 +285,14 @@ permutations, a maximum of <code class="docutils literal notranslate"><span clas
 \[\Psi(\mathbf{X}) = \prod_{i=1}^N e^{-\alpha\left(X_{i,1}^2 + X_{i,2}^2 + \beta X_{i,3}^2\right)}\]</div>
 <dl class="method">
 <dt id="qflow.wavefunctions.SimpleGaussian.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>self: qflow.wavefunctions.SimpleGaussian</em>, <em>alpha: float = 0.5</em>, <em>beta: float = 1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.SimpleGaussian.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: qflow.wavefunctions.SimpleGaussian</em>, <em class="sig-param">alpha: float = 0.5</em>, <em class="sig-param">beta: float = 1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.SimpleGaussian.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="qflow.wavefunctions.HardSphereWavefunction">
-<em class="property">class </em><code class="descclassname">qflow.wavefunctions.</code><code class="descname">HardSphereWavefunction</code><a class="headerlink" href="#_qflow_backend.wavefunctions.HardSphereWavefunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">qflow.wavefunctions.</code><code class="sig-name descname">HardSphereWavefunction</code><a class="headerlink" href="#_qflow_backend.wavefunctions.HardSphereWavefunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>A product of gaussians and pairwise correlation factors:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\Psi(\mathbf{X}) = \prod_{i=1}^N e^{-\alpha\left(X_{i,1}^2 + X_{i,2}^2 + \beta X_{i,3}^2\right)}
@@ -304,28 +304,28 @@ permutations, a maximum of <code class="docutils literal notranslate"><span clas
 assumed constant.</p>
 <dl class="method">
 <dt id="qflow.wavefunctions.HardSphereWavefunction.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>self: qflow.wavefunctions.HardSphereWavefunction</em>, <em>alpha: float = 0.5</em>, <em>beta: float = 1</em>, <em>a: float = 0</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.HardSphereWavefunction.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: qflow.wavefunctions.HardSphereWavefunction</em>, <em class="sig-param">alpha: float = 0.5</em>, <em class="sig-param">beta: float = 1</em>, <em class="sig-param">a: float = 0</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.HardSphereWavefunction.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="qflow.wavefunctions.JastrowPade">
-<em class="property">class </em><code class="descclassname">qflow.wavefunctions.</code><code class="descname">JastrowPade</code><a class="headerlink" href="#_qflow_backend.wavefunctions.JastrowPade" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">qflow.wavefunctions.</code><code class="sig-name descname">JastrowPade</code><a class="headerlink" href="#_qflow_backend.wavefunctions.JastrowPade" title="Permalink to this definition">¶</a></dt>
 <dd><p>A correlation term meant to be suitable for particles in a harmonic oscillator potential with
 a repulsive Coulomb force causing interactions:</p>
 <div class="math notranslate nohighlight">
 \[\Psi(\mathbf{X}) = \prod_{i &lt; j}^N e^{\frac{\alpha r_ij}{1 + \beta r_ij}}\]</div>
 <dl class="method">
 <dt id="qflow.wavefunctions.JastrowPade.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>self: qflow.wavefunctions.JastrowPade</em>, <em>alpha: float = 0.5</em>, <em>beta: float = 1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.JastrowPade.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: qflow.wavefunctions.JastrowPade</em>, <em class="sig-param">alpha: float = 0.5</em>, <em class="sig-param">beta: float = 1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.JastrowPade.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="qflow.wavefunctions.JastrowOrion">
-<em class="property">class </em><code class="descclassname">qflow.wavefunctions.</code><code class="descname">JastrowOrion</code><a class="headerlink" href="#_qflow_backend.wavefunctions.JastrowOrion" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">qflow.wavefunctions.</code><code class="sig-name descname">JastrowOrion</code><a class="headerlink" href="#_qflow_backend.wavefunctions.JastrowOrion" title="Permalink to this definition">¶</a></dt>
 <dd><p>A correlation term meant to be suitable for particles in a harmonic oscillator potential with
 a repulsive Coulomb force causing interactions:</p>
 <div class="math notranslate nohighlight">
@@ -334,17 +334,17 @@ a repulsive Coulomb force causing interactions:</p>
         |\beta\gamma|||\mathbf{X_i}-\mathbf{X_j}||}\]</div>
 <dl class="method">
 <dt id="qflow.wavefunctions.JastrowOrion.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>self: qflow.wavefunctions.JastrowOrion</em>, <em>beta: float = 1.0</em>, <em>gamma: float = 0</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.JastrowOrion.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: qflow.wavefunctions.JastrowOrion</em>, <em class="sig-param">beta: float = 1.0</em>, <em class="sig-param">gamma: float = 0</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.JastrowOrion.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="qflow.wavefunctions.RBMWavefunction">
-<em class="property">class </em><code class="descclassname">qflow.wavefunctions.</code><code class="descname">RBMWavefunction</code><a class="headerlink" href="#_qflow_backend.wavefunctions.RBMWavefunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">qflow.wavefunctions.</code><code class="sig-name descname">RBMWavefunction</code><a class="headerlink" href="#_qflow_backend.wavefunctions.RBMWavefunction" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="qflow.wavefunctions.RBMWavefunction.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>self: qflow.wavefunctions.RBMWavefunction</em>, <em>M: int</em>, <em>N: int</em>, <em>sigma2: float = 1</em>, <em>root_factor: float = 1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.RBMWavefunction.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: qflow.wavefunctions.RBMWavefunction</em>, <em class="sig-param">M: int</em>, <em class="sig-param">N: int</em>, <em class="sig-param">sigma2: float = 1</em>, <em class="sig-param">root_factor: float = 1</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.RBMWavefunction.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -354,34 +354,34 @@ a repulsive Coulomb force causing interactions:</p>
 <h1>Composite Wavfunctions<a class="headerlink" href="#composite-wavfunctions" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="qflow.wavefunctions.FixedWavefunction">
-<em class="property">class </em><code class="descclassname">qflow.wavefunctions.</code><code class="descname">FixedWavefunction</code><a class="headerlink" href="#_qflow_backend.wavefunctions.FixedWavefunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">qflow.wavefunctions.</code><code class="sig-name descname">FixedWavefunction</code><a class="headerlink" href="#_qflow_backend.wavefunctions.FixedWavefunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper for any wavefunction that fixes the variational parameters.</p>
 <p>This means that if this wavefunction is used in a optimization call, its
 parameters will not change. This is useful if parts of a wavefunction should be
 held constant, while another is allowed to be optimized.</p>
 <dl class="method">
 <dt id="qflow.wavefunctions.FixedWavefunction.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>self: qflow.wavefunctions.FixedWavefunction</em>, <em>wavefunction: _qflow_backend.wavefunctions.Wavefunction</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.FixedWavefunction.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: qflow.wavefunctions.FixedWavefunction</em>, <em class="sig-param">wavefunction: _qflow_backend.wavefunctions.Wavefunction</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.FixedWavefunction.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="qflow.wavefunctions.WavefunctionProduct">
-<em class="property">class </em><code class="descclassname">qflow.wavefunctions.</code><code class="descname">WavefunctionProduct</code><a class="headerlink" href="#_qflow_backend.wavefunctions.WavefunctionProduct" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">qflow.wavefunctions.</code><code class="sig-name descname">WavefunctionProduct</code><a class="headerlink" href="#_qflow_backend.wavefunctions.WavefunctionProduct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines a wavefunction that acts like the product of two others.</p>
 <p>All derivatives will be suitably derived, so this is a simple way to produce
 compound expressions.</p>
 <dl class="method">
 <dt id="qflow.wavefunctions.WavefunctionProduct.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>self: qflow.wavefunctions.WavefunctionProduct</em>, <em>Psi_1: _qflow_backend.wavefunctions.Wavefunction</em>, <em>Psi_2: _qflow_backend.wavefunctions.Wavefunction</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.WavefunctionProduct.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: qflow.wavefunctions.WavefunctionProduct</em>, <em class="sig-param">Psi_1: _qflow_backend.wavefunctions.Wavefunction</em>, <em class="sig-param">Psi_2: _qflow_backend.wavefunctions.Wavefunction</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.WavefunctionProduct.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="qflow.wavefunctions.SumPooling">
-<em class="property">class </em><code class="descclassname">qflow.wavefunctions.</code><code class="descname">SumPooling</code><a class="headerlink" href="#_qflow_backend.wavefunctions.SumPooling" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">qflow.wavefunctions.</code><code class="sig-name descname">SumPooling</code><a class="headerlink" href="#_qflow_backend.wavefunctions.SumPooling" title="Permalink to this definition">¶</a></dt>
 <dd><p>This wavefunction expects a wavefunction of two particles,
 <span class="math notranslate nohighlight">\(f(\mathbf{x}_1, \mathbf{x}_2)\)</span>, and represents the following compound
 expression:</p>
@@ -391,7 +391,7 @@ expression:</p>
 inner wavefunction <span class="math notranslate nohighlight">\(f\)</span>.</p>
 <dl class="method">
 <dt id="qflow.wavefunctions.SumPooling.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>self: qflow.wavefunctions.SumPooling</em>, <em>arg0: _qflow_backend.wavefunctions.Wavefunction</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.SumPooling.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self: qflow.wavefunctions.SumPooling</em>, <em class="sig-param">arg0: _qflow_backend.wavefunctions.Wavefunction</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#_qflow_backend.wavefunctions.SumPooling.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
