@@ -6,7 +6,11 @@
 [![Lines of Code](https://tokei.rs/b1/github/bsamseth/thesis)](https://github.com/Aaronepower/tokei)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-# Quantum Variational Monte Carlo with Neural Networks - QFlow
+<p align="center">
+  <img src="docs/logo.png" height="200px">
+</p>
+                                          
+# QFLOW - Quantum Variational Monte Carlo with Neural Networks
 
 See the [documentation pages](https://bsamseth.github.io/thesis) for details regarding the `qflow` package.
 
