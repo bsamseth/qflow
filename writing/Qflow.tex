@@ -36,13 +36,14 @@ a few readable lines of Python:\\
 \lstinputlisting[language=Python, lastline=42, basicstyle=\scriptsize]{scripts/quickstart.py}
 
 \begin{lstlisting}[basicstyle=\scriptsize]
-  {'CI':  (3.0005518930024406, 3.000882266251301),
-   'max':  3.0203576916357706,
-   'mean': 3.0007170796268707,
-   'min':  2.9820746671373106,
-   'sem':  8.425552793020659e-05,
-   'std':  0.005391695501040196,
-   'var':  2.9070380375937085e-05}
+  OUTPUT:
+      {'CI':  (3.0005518930024406, 3.000882266251301),
+      'max':  3.0203576916357706,
+      'mean': 3.0007170796268707,
+      'min':  2.9820746671373106,
+      'sem':  8.425552793020659e-05,
+      'std':  0.005391695501040196,
+      'var':  2.9070380375937085e-05}
 \end{lstlisting}
 
 \begin{figure}[h]
@@ -58,6 +59,8 @@ a few readable lines of Python:\\
   \label{fig:quickstart-example}
 \end{figure}
 
+\noindent The script can be run under MPI (\texttt{mpiexec -n X python script.py}) with any number of processes, which
+results in almost completely linear speedup.
 
 
 \end{document}
