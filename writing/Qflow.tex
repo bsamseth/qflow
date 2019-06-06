@@ -1,0 +1,63 @@
+\documentclass[Thesis.tex]{subfiles}
+\begin{document}
+\chapter{QFLOW: Software Package for VMC with Neural Networks}
+\label{chp:qflow}
+
+Everything discussed so far has culminated into the development of a self
+contained package available to the public under the permissive MIT license. All
+original results presented in the next part are produced with this package, and
+the source code to reproduce them are also presented in all cases.
+
+This chapter is dedicated to the presentation of the package, explanations of
+design decisions and comparison with other tools. A more complete technical
+documentation is published online~\cite{qflow}, and it is recommended to consult this
+resource for practical usage.
+
+\section{Installation}
+
+Refer to~\cite{qflow} for up to date instructions. Here we only mention the
+required components for using QFLOW:
+
+\begin{itemize}
+  \item Python 3.7 or greater
+  \item A C++17 compliant compiler
+  \item OpenMPI 3.1.3 or greater (or equivalent MPI implementations)
+\end{itemize}
+Every other dependency should be automatically resolved during installation.
+
+\section{Quickstart}
+
+In this example, we want run a VMC optimization of two electrons in two
+dimensions confined in a harmonic oscillator trap, i.e. the quantum dot system
+described in \cref{sec:quantum-dots-theory}. The following complete code runs an
+optimization using a Pade-Jastrow wave function and evaluates the result. All in
+a few readable lines of Python:\\
+
+\lstinputlisting[language=Python, lastline=42, basicstyle=\scriptsize]{scripts/quickstart.py}
+
+\begin{lstlisting}[basicstyle=\scriptsize]
+  {'CI':  (3.0005518930024406, 3.000882266251301),
+   'max':  3.0203576916357706,
+   'mean': 3.0007170796268707,
+   'min':  2.9820746671373106,
+   'sem':  8.425552793020659e-05,
+   'std':  0.005391695501040196,
+   'var':  2.9070380375937085e-05}
+\end{lstlisting}
+
+\begin{figure}[h]
+  \centering
+  % \resizebox{0.7\linewidth}{!}{%
+      \input{scripts/quickstart.py_.tex}
+  % }
+  \caption{Learning progression in terms of energy (left) and variational
+    parameters (right). The source code for this graphic can be found
+    at ~\cite[TODO: Add
+    path]{MS-thesis-repository}, and \LaTeX{} output generated
+    by~\cite{nico_schlomer_2018_1173090}}
+  \label{fig:quickstart-example}
+\end{figure}
+
+
+
+\end{document}
