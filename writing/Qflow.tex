@@ -27,7 +27,9 @@ Every other dependency should be automatically resolved during installation.
 
 \section{Quickstart}
 
-In this example, we want run a VMC optimization of two electrons in two
+The following example aims to showcase the basic usage pattern of QFLOW.
+
+Say we want run a VMC optimization of two electrons in two
 dimensions confined in a harmonic oscillator trap, i.e. the quantum dot system
 described in \cref{sec:quantum-dots-theory}. The following complete code runs an
 optimization using a Pade-Jastrow wave function and evaluates the result. All in
@@ -62,5 +64,85 @@ a few readable lines of Python:\\
 \noindent The script can be run under MPI (\texttt{mpiexec -n X python script.py}) with any number of processes, which
 results in almost completely linear speedup.
 
+\section{Structure}
+
+The package has been structured around four basic building blocks of a VMC
+calculation, each of which is represented by a base class:
+
+\begin{itemize}
+\item Hamiltonians
+\item Wave functions
+\item Samplers
+\item Optimizers
+\end{itemize}
+
+Due to this object oriented design approach, each part needs only consider how
+to interact with the base classes of the other three, as opposed to duplicating
+code per combination. As well as aiding development, this makes it easy the
+prototype various combinations of wave functions, sampling strategies etc., as
+well as trivial to exchange the Hamiltonian in question.
+
+\subsection{Inheritance vs. Templates}
+
+C++ has a powerful templating feature which allows us to generate code for
+particular types on demand. We could have used this instead of inheritance in
+order to compose Hamiltonians, wave functions etc., without the extra overhead
+and bloat often associated with inheritance. While we acknowledge that a pure
+template implementation would potentially give a speed increase, the inheritance
+method was chosen for the following reasons:
+
+\begin{itemize}
+\item The speed increase would likely be small.
+\item Compilation time would increase significantly, as unique template
+  instantiations would be required for each combination
+\item Selecting a different set of Hamiltonians, wave functions, samplers and
+  optimizers would require another compilation run
+\item A Python interface would not be possible. In order to generate the
+  Python bindings we need a pre-built C++ library.
+\end{itemize}
+
+
+\subsection{Hamiltonians}
+
+The \texttt{qflow.\-hamiltonians.\-Hamiltonian} class in QFLOW is responsible for defining the energy
+(kinetic, external potentials and interaction potentials) of the system. This
+class is queried for local energy evaluations/gradients as well other system
+related quantities of interest. Each particular Hamiltonian is implemented as a
+subclass of \texttt{qflow.\-hamiltonians.\-Hamiltonian}, and at a minimum it needs to define the
+external and internal potentials (can be set equal to zero).
+
+\subsection{Wave functions}
+
+In a similar way, the \texttt{qflow.\-wavefunctions.\-Wavefunction} class in QFLOW defines the basic
+operations required for arbitrary wave functions, and each particular trial wave
+function is implemented as a subclass to this.
+
+\subsubsection{Neural Networks}
+
+The neural networks are used to define wave functions, and as such their
+relevant definitions are structured under the \texttt{qflow.\-wavefunction} module. The
+class \texttt{qflow.\-wavefunctions.\-Dnn} (Deep Neural Network) is a subclass of \texttt{qflow.\-wavefunctions.\-Wavefunction}.
+Setting up the network it self is done by iteratively adding layer objects (see
+later examples).
+
+\subsection{Samplers}
+
+Monte Carlo sampling is done through one of the implemented methods in the
+\texttt{qflow.samplers} module. Again the code is structured around the base
+class \texttt{qflow.samplers.Sampler}, which defines the basic interface to the
+sampler, including querying for samples (system configurations) and obtaining
+the acceptance rate. Specific algorithms are subclasses, such as
+\texttt{qflow.\-samplers.\-MetropolisSampler} and
+\texttt{qflow.\-samplers.\-ImportanceSampler}.
+
+
+\subsection{Optimizers}
+
+The last major piece is the \texttt{qflow.optimizers} module. The base class
+here is \texttt{qflow.\-optimizers.\-SgdOptimzier} (Stochastic Gradient Decent),
+which is the vanilla implementation from
+\cref{eq:fixed-learning-rate-update-rule}. Similarly we have
+\texttt{qflow.\-optimizers.\-AdamOptimizer} as a subclass of the former, which
+unsurprisingly implements \cref{eq:adam-default-parameters}.
 
 \end{document}
