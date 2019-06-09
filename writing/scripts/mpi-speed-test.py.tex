@@ -1,0 +1,41 @@
+% This file was created by matplotlib2tikz v0.7.4.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+
+\begin{axis}[
+legend cell align={left},
+legend style={at={(0.03,0.97)}, anchor=north west, draw=white!80.0!black},
+tick align=outside,
+tick pos=left,
+x grid style={white!69.01960784313725!black},
+xlabel={Cores},
+xmin=0.8, xmax=5.2,
+xtick style={color=black},
+y grid style={white!69.01960784313725!black},
+ylabel={Iterations per second},
+ymin=0.8, ymax=5.2,
+ytick style={color=black}
+]
+\addplot [semithick, color0]
+table {%
+1 1
+2 1.87047656855767
+3 2.65476945884948
+4 3.50184341933712
+5 4.09273731615231
+};
+\addlegendentry{Actual}
+\addplot [semithick, color1, dashed]
+table {%
+1 1
+2 2
+3 3
+4 4
+5 5
+};
+\addlegendentry{Ideal speedup}
+\end{axis}
+
+\end{tikzpicture}
