@@ -3,25 +3,28 @@
 \chapter{Merging Variational Monte Carlo and Machine Learning}
 \label{chp:mergin-vmc-with-ml}
 
-The purpose of Variational Monte Carlo is to find a (wave) function which minimizes
-the expected energy of the system. Stated like this, VMC clearly fits under the
-Machine Learning umbrella. Still, it is not a standard Supervised Learning
-problem such as linear regression, because we don't have a data set of expected
-outputs for every input. Additionally there are some extra challenges introduced
-from the quantum problems themselves, such as symmetry requirements and cusp
+The purpose of Variational Monte Carlo is to find a (wave) function which
+minimizes the expected energy of the system. Stated like this, VMC clearly fits
+under the Machine Learning umbrella as a problem of optimizing a function with
+respect to some metric. Still, it is not a standard Supervised Learning problem
+such as linear regression, because we don't have a data set of expected outputs
+for every input. Additionally there are some extra challenges introduced from
+the quantum problems themselves, such as symmetry requirements and cusp
 conditions. I believe these extra challenges are the reason why VMC
 optimizations seem to have been done entirely independently of the rest of the
 ML research advancements seen in the last few decades.
 
-In more recent years, more and more research seems to go into applying various
-techniques from the more general field of ML into VMC. A notable example
-is~\textcite{Carleo602}, who demonstrated that a Restricted Boltzmann Machine
-(RBM) was capable of representing the wave function for some notable systems to
-great effect. I would argue that there still exists a great deal of hesitancy
-towards using general models from Machine Learning for VMC. This chapter aims to
-enable the use of \emph{any} arbitrary machine learning
-model, and in so doing open the door for many new applications and advancements
-in the field of VMC.
+In the last few years, more and more research seems to go into applying various
+techniques from the more general field of ML into the natural sciences,
+including VMC. A notable example is~\textcite{Carleo602}, who demonstrated that
+a Restricted Boltzmann Machine (RBM) was capable of representing the wave
+function for some notable systems to great effect.
+
+Despite of these recent advancements, I would argue that there
+still exists a great deal of hesitancy towards using general models from Machine
+Learning for VMC. This chapter aims to enable the use of \emph{any} arbitrary
+machine learning model, and in so doing open the door for many new applications
+and advancements in the field of VMC.
 
 
 \section{Discriminative vs. Generative Models}
@@ -35,7 +38,7 @@ a more in-depth discussion of the topic.} To understand their differences,
 imagine we have a data set $\mathcal{D} = \{\vx_i, \vy_i\}_{i=1}^n$ of $n$
 inputs $\vx_i$ and outputs $\vy_i$. In general we want to uncover the
 relationship between $\vx$ and $\vy$, and we can imagine two different ways of
-doing this:
+doing this. We could learn:
 
 \begin{description}
 \item[$p(\vy | \vx)$]\hfill\\
@@ -87,6 +90,8 @@ is - well, limiting. A vast pool of potential models are discriminative,
 including the neural networks from \cref{sec:artificial-neural-networks}. Given
 that we have the Metropolis-Hastings algorithm which works excellently in 
 most situations, it seems unnecessary to completely disregard so many options.
+Part of the intent of this entire thesis is to illustrate how discriminative
+models can be used effectively for VMC purposes.
 
 
 \section{Arbitrary Models as Trial Wave Functions}
@@ -95,7 +100,13 @@ Suppose we propose some arbitrary wave function $\psialpha(\vX)$, parameterized
 by an arbitrary number of parameters $\valpha$. Subject to the
 requirements on wave functions from \cref{sec:requirements-of-wave-functions},
 there are a few things we need from this function in order to successfully run a
-VMC optimization. The complete list of required operations is as follows:
+VMC optimization. The complete list of required operations is as
+follows:\footnote{These operations are rooted in the assumption that we are
+  working with coordinates as the system configuration specification, and where
+  the kinetic energy is part of the energy. We acknowledge that there are a
+  whole class of Hamiltonians for which this is not suitable. In these cases,
+  the required operations will likely need some changes, however, the overarching
+  procedure and techniques discussed should be agnostic to such changes.}
 
 \begin{description}
 \item[Evaluation:]\hfill\\
