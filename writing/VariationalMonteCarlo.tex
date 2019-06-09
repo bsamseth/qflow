@@ -258,7 +258,7 @@ The reason for these definitions is that now we can write the energy expectation
 \end{align}
 Why is this better? Because this is simply the weighted average of the local
 energy, something which has a straightforward discrete formulation:
-\begin{align}
+\begin{align}\label{eq:vmc-local-energy-formulation}
     \expval{\hat H} &= \lim_{N\rightarrow \infty} \frac{1}{N} \sum_{i = 1}^N E_L(\vX_i)
     \qq{where} \vb X_i\sim P_{\psi_{\valpha}}
 \end{align}
