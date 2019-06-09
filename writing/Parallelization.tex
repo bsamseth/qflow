@@ -5,6 +5,202 @@
 
 Distributed memory, shared memory and GPU acceleration.
 
+Running VMC calculations are intrinsically heavy computational tasks. As such we
+need to consider all available resources to be efficient. This chapter is
+dedicated to the various ways of speeding up calculations by means of
+parallelization.
+
+Firstly we should make a few important notes. Parallelization is an effective
+tool \emph{only} if we have more than one processing unit available. On a
+single-core machine you may have the experience of multiple things
+happening at once, but this is simply due to the single core switching back and
+fourth faster than we can observe. This is \emph{concurrency}, or multitasking
+as it is more often called when applied to humans. As we know, you are never
+twice as productive when you attempt to do two things at once - often the
+opposite is closer to the truth. The same is true for computers. So when we now
+discuss ways of speed up calculations by means of \emph{parallelization}, we are
+at all times limited by the number of processing units available.
+
+Lastly, we are going to make a distinction between two types of parallelization.
+For any task that is not trivially parallel (i.e. two completely independent
+tasks), we expect to need some sort of \emph{synchronization}, or communication
+between the workers. We have two options for how to achieve this:
+
+\begin{description}
+\item[Shared memory:] Workers communicate through a shared section of memory, by
+  reading/writing to it
+  \item[Distributed memory:] Workers have independent memory sections, and
+    communicate explicitly through sending/receiving messages (chunks of data)
+\end{description}
+
+\section{Distributed Memory - MPI}
+
+The main bottle neck in VMC computations is the evaluation of expectation
+values, such as \cref{eq:vmc-local-energy-formulation} and
+\cref{eq:local-energy-gradient-alpha}. These calculations boil down to the
+following basic algorithm:
+
+\begin{enumerate}
+\item Initialize sum $y = 0$
+\item Sample new configuration, $\vX$\label{temp:1}
+\item Add the output of some function, $y = y + f(\vX)$
+\item Repeat from \ref{temp:1} for $n$ total steps
+\item Let the result be $y_\text{final} = \flatfrac{y}{n}$
+\end{enumerate}
+The important note about this computation is that addition is commutative, and
+so the order of the samples (obviously) does not matter. As such we could run
+$p$ parallel processes, each of which computes $n / p$ terms before aggregating
+the partials sums together and taking the mean.
+
+This is a so called embarrassingly parallel problem, in the sense that it is
+trivial to divide the workload up into smaller tasks. It has as close to linear
+speedup potential\footnote{Linear speedup implies that if a task takes time $T$
+to finish with one process, then it takes $T/n$ time with $n$ processes.} as one
+can hope for, and is an ideal candidate for parallelization through distributed
+memory multi processing. We want to run $p$ independent instances of the
+algorithm, and pause momentarily to communicate the results. In the simple
+example above, we just send the final partial sum acquired by each process. The
+cost of sending the message is negligible compared to the main loop.
+The main benefit of distributed memory is that it is easy to scale up to any
+arbitrary number of machines, as long as they are connected in some way. These
+machines could in principle be placed all around the world and still work well
+for our purposes (some extra latency would be introduced by the distance).
+
+\subsection{MPI - Message Passing Interface}
+
+For the actual communication between distributed memory processes, we have the
+standardized Message Passing Interface (MPI). This is typically implemented as a
+set of C/C++ library functions with which we define the communication we want,
+along with a special compiler (\texttt{mpicc/mpic++}) and a utility to start
+multiple instances of a program (\texttt{mpiexec}\footnote{Quite common is the
+  use of \texttt{mpirun}, however, this is not part of the MPI standard. The
+  more stable and portable command is \texttt{mpiexec}.}).
+
+\subsection{Example: Expectation Value of the Local Energy}
+
+The following example is taken from the source code of QFLOW (\cref{chp:qflow}),
+and illustrates a simply parallelized task: Computing the expected local energy.
+While some details are specific to QFLOW's implementation, the general concept
+should be clear.
+
+\begin{center}
+\begin{lstlisting}[language=C++, caption={Example excerpt
+from the source code of QFLOW~\cite{qflow}, showing an MPI parallelized
+computation of the expected local energy.}, label={lst:mpi-example}]
+double Hamiltonian::local_energy(Sampler& sampler, Wavefunction& psi, long samples) const
+{
+    const int  n_procs = mpiutil::proc_count();
+    const int  rank    = mpiutil::get_rank();
+    const long samples_per_proc     // n / p + remainder.
+      = samples/n_procs + (rank<samples % n_procs ? 1 : 0);
+
+    double E_L = 0;
+
+    for (long i = 0; i < samples_per_proc; ++i)
+        E_L += local_energy(sampler.next_configuration(), psi);
+
+    double global_E_L;
+    MPI_Allreduce(
+        &E_L, &global_E_L, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+
+    return global_E_L / samples;
+}
+\end{lstlisting}
+\end{center}
+Running \cref{lst:mpi-example} with a varying number of processors shows how the
+actual speedup obtained quite closely follows the linear ideal, as shown in \cref{fig:mpi-exmple}
+
+
+\begin{figure}[h]
+  \centering
+    \resizebox{0.7\linewidth}{!}{%
+        \input{scripts/mpi-speed-test.py.tex}
+    }
+  \caption{Iterations per second when running \cref{lst:mpi-example} with
+    varying number of processors. These results where obtained by running a test
+    on the Abel computing cluster. The test used ran a relatively small job,
+    which introduces a higher potential discrepancy to the ideal than what one
+    can expect for heavier tasks. Exact results will vary greatly depending on
+    the availability of the cores along with several other factors.}
+  \label{fig:mpi-example}
+\end{figure}
+
+
+\section{Shared Memory - OpenMP}
+
+As mentioned, the other possible way to allow for communication between workers
+is through shared memory. This typically means running multiple threads within
+the same process memory space. This is a faster type of communication compared
+with message passing, but comes at the cost of having to consider data races. A
+data race occurs when multiple workers tries to write to the same location in
+memory at the same time. The result of such behavior is undefined and must be
+avoided.
+
+Similarly to how distributed memory parallelization has the MPI standard, we
+have the OpenMP standard for describing shared memory parallelization. The use
+of this type of parallelization is made entirely through compiler instructions
+embedded in the code. The number of threads to use is decided at runtime, and
+can even change during the course of the program. Importantly there is now only
+one process running the code, with potential threads as sub-workers.
+
+The following example shows a task equivalent in nature to
+the one used in the last section, now parallelized using OpenMP.
+
+\begin{center}
+\begin{lstlisting}[language=C++, caption={Example of parallel estimation of $\pi$ using OpenMP.}, label={lst:openmp-example}]
+#include <iostream>
+#include <omp.h>
+int main ()
+{
+    constexpr long steps = 1000000000;
+    constexpr double step = 1.0 / (double) steps;
+
+    int i, j;
+    double x;
+    double pi = 0;
+#pragma omp parallel for reduction(+:pi) private(x)
+    for (i=0; i < steps; i++)
+    {
+        x = (i+0.5)*step;
+        pi += 4.0 / (1.0+x*x);
+    }
+    pi *= step;
+
+    std::cout << "Pi = " << pi << std::endl;
+}
+\end{lstlisting}
+\end{center}
+Running \cref{lst:openmp-example} with a varying number of threads shows how the
+speed up is about linear until we run out of processing units (16 cores on the
+machine used), after which it flattens out.
+
+\begin{figure}[h]
+  \centering
+    \resizebox{0.7\linewidth}{!}{%
+        \input{scripts/openmp_test.py.tex}
+    }
+  \caption{Iterations per second when running \cref{lst:openmp-example} with
+    varying number of processors. These results where obtained by running a test
+    on the Abel computing cluster, on a node with 16 cores. We see a clear
+    speedup until we run out of cores, at which point using more threads hurts
+    performance.}
+  \label{fig:mpi-example}
+\end{figure}
+
+This showcases how shared memory has excellent potential for speedup, but also
+its major drawback: Scalability. It is considerably harder to scale a shared
+memory architecture to an arbitrary number of processors because the ``shared''
+part forces the processing units to be in relative close proximity to each
+other.\footnote{You could in principle emulate shared memory for separate
+  machines, but the emulation it self would have to use a message passing
+  interface, which would defeat the purpose.} For this reason, we have focused
+our parallelization efforts to MPI, because we anticipate the need for a large
+number of parallel jobs.
+
+
+\section{GPU Acceleration - Cuda}
+
+
 
 
 \end{document}
