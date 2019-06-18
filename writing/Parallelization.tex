@@ -200,6 +200,46 @@ number of parallel jobs.
 
 \section{GPU Acceleration - Cuda}
 
+The final form of hardware acceleration we will mention is one that is
+particularly central for ML in particular. While the two prior techniques boil
+down to having multiple CPUs work together, certain tasks are particularly well
+suited to acceleration by using a Graphics Processing Unit, or GPU. These are
+pieces of hardware typically designed to enable fast rendering of graphics for
+computers, hence the name. They have a highly parallel structure optimized for
+algorithms that need to process large blocks of data in parallel. A typical
+example that relates to ML is matrix-matrix multiplication. Say we compute $\mat
+C = \mat A \mat B$, the algorithm is then
+
+\begin{align}
+  C_{kl} = A_{ki}B_{il}
+\end{align}
+The order of which we do any of the above $\mathcal{O}(n^3)$ operations really
+doesn't matter, and so one can see how this can be an extremely parallel
+process. A high-end GPU will have a number of cores in the four digit range,
+facilitating speedups of several orders of magnitude compared to a CPU. 
+
+The recent (last decade) advancements in GPU technology has been an integral
+part of the enormous amount of success in recent ML applications. Their use has
+facilitated building models far beyond the capacity of an ordinary CPU.
+
+\subsection{CUDA}
+
+One popular way to program for a GPU is through CUDA, which programming
+interface developed by NVIDIA. Similarly to MPI programming, its use is (for
+C/C++) through a specialized compiler and some library functions. The typical
+flow is to implement the parallel computation (say matrix-matrix multiplication
+as above) in a dedicated CUDA function, and then call to this function from
+regular code running on the CPU.
+
+Many ML frameworks such as TensorFlow and PyTorch have built in support for GPU,
+and offloading work to them is \say{trivial}. Unfortunately, we where unable to
+use such frameworks in this work (mainly due to the reasons described in
+\cref{chp:auto-diff}). Further, we have not actually implemented GPU support in
+the current codes, despite this having large potential benefits. This is simply
+a matter of time and realizing that it would require a considerable amount of effort
+to get right. With the introduction of neural networks as wave functions, we see
+no apparent reason why using GPUs would not cause significant speed ups also in
+our application of ML. We leave this a potential point of future work.
 
 
 
