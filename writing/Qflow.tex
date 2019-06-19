@@ -82,25 +82,6 @@ code per combination. As well as aiding development, this makes it easy the
 prototype various combinations of wave functions, sampling strategies etc., as
 well as trivial to exchange the Hamiltonian in question.
 
-\subsection{Inheritance vs. Templates}
-
-C++ has a powerful templating feature which allows us to generate code for
-particular types on demand. We could have used this instead of inheritance in
-order to compose Hamiltonians, wave functions etc., without the extra overhead
-and bloat often associated with inheritance. While we acknowledge that a pure
-template implementation would potentially give a speed increase, the inheritance
-method was chosen for the following reasons:
-
-\begin{itemize}
-\item The speed increase would likely be small.
-\item Compilation time would increase significantly, as unique template
-  instantiations would be required for each combination
-\item Selecting a different set of Hamiltonians, wave functions, samplers and
-  optimizers would require another compilation run
-\item A Python interface would not be possible. In order to generate the
-  Python bindings we need a pre-built C++ library.
-\end{itemize}
-
 
 \subsection{Hamiltonians}
 
@@ -144,5 +125,26 @@ which is the vanilla implementation from
 \cref{eq:fixed-learning-rate-update-rule}. Similarly we have
 \texttt{qflow.\-optimizers.\-AdamOptimizer} as a subclass of the former, which
 unsurprisingly implements \cref{eq:adam-default-parameters}.
+
+
+\section{Inheritance vs. Templates}
+
+C++ has a powerful templating feature which allows us to generate code for
+particular types on demand. We could have used this instead of inheritance in
+order to compose Hamiltonians, wave functions etc., without the extra overhead
+and bloat often associated with inheritance. While we acknowledge that a pure
+template implementation would potentially give a speed increase, the inheritance
+method was chosen for the following reasons:
+
+\begin{itemize}
+\item The speed increase would likely be small.
+\item Compilation time would increase significantly, as unique template
+  instantiations would be required for each combination
+\item Selecting a different set of Hamiltonians, wave functions, samplers and
+  optimizers would require another compilation run
+\item A Python interface would not be possible. In order to generate the
+  Python bindings we need a pre-built C++ library.
+\end{itemize}
+
 
 \end{document}
