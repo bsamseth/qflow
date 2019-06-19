@@ -32,24 +32,23 @@ def jastrow_np(X, n, beta):
     return np.exp(-0.5 * exponent)
 
 
-@given(X=array_strat(min_dims=2), n=n_strat(), beta=float_strat())
-def test_eval(X, n, beta):
+@given(X=array_strat(min_dims=2), beta=float_strat())
+def test_eval(X, beta):
 
-    psi = JastrowMcMillian(n, beta, L)
+    psi = JastrowMcMillian(5, beta, L)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        assert np.isclose(jastrow_np(X, n, beta), psi(X), equal_nan=True)
+        assert np.isclose(jastrow_np(X, 5, beta), psi(X), equal_nan=True)
 
 
 @given(X=array_strat(min_dims=2), beta=float_strat())
 @settings(deadline=None)
 def test_gradient(X, beta):
-    n=5
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        np_grad_beta = grad(jastrow_np, 2)(X, n, beta) / jastrow_np(X, n, beta)
+        np_grad_beta = grad(jastrow_np, 2)(X, 5, beta) / jastrow_np(X, 5, beta)
 
-    psi = JastrowMcMillian(n, beta, L)
+    psi = JastrowMcMillian(5, beta, L)
     actual = psi.gradient(X)
     assert 1 == len(actual)
 
@@ -57,29 +56,29 @@ def test_gradient(X, beta):
         assert np.isclose(np_grad_beta, actual[0], equal_nan=True)
 
 
-@given(X=array_strat(min_dims=2, max_size=10), n=n_strat(), beta=float_strat())
+@given(X=array_strat(min_dims=2, max_size=10), beta=float_strat())
 @settings(deadline=None)
-def test_drift_force(X, n, beta):
+def test_drift_force(X, beta):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        np_drift = 2 * grad(jastrow_np, 0)(X, n, beta) / jastrow_np(X, n, beta)
+        np_drift = 2 * grad(jastrow_np, 0)(X, 5, beta) / jastrow_np(X, 5, beta)
 
-    psi = JastrowMcMillian(n, beta, L)
+    psi = JastrowMcMillian(5, beta, L)
     for expect, actual in zip(np_drift.ravel(), psi.drift_force(X)):
         if math.isfinite(expect):
             assert np.isclose(expect, actual, equal_nan=True)
 
 
 # Hessian calculation is super slow, limit size of inputs.
-@given(X=array_strat(min_dims=2, max_size=5), n=n_strat(), beta=float_strat())
+@given(X=array_strat(min_dims=2, max_size=5), beta=float_strat())
 @settings(deadline=None)
-def test_laplace(X, n, beta):
+def test_laplace(X, beta):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         np_expect = np.trace(
-            hessian(jastrow_np)(X, n, beta).reshape(X.size, X.size)
-        ) / jastrow_np(X, n, beta)
+            hessian(jastrow_np)(X, 5, beta).reshape(X.size, X.size)
+        ) / jastrow_np(X, 5, beta)
 
-    psi = JastrowMcMillian(n, beta, L)
+    psi = JastrowMcMillian(5, beta, L)
     if math.isfinite(np_expect):
         assert numpy.isclose(np_expect, psi.laplacian(X), equal_nan=True)
