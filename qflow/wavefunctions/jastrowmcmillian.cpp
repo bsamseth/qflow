@@ -71,7 +71,7 @@ Real JastrowMcMillian::drift_force(const System& system, int k, int d)
     {
         if (i != k)
         {
-            auto diff           = (system.row(i) - system.row(k)).array();
+            auto diff           = (system.row(k) - system.row(i)).array();
             auto diff_corrected = diff - Eigen::round(diff / L) * L;
             Real r              = norm(diff_corrected);
 
