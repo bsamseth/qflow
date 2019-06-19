@@ -33,7 +33,7 @@ between the workers. We have two options for how to achieve this:
     communicate explicitly through sending/receiving messages (chunks of data)
 \end{description}
 
-\section{Distributed Memory - MPI}
+\section{Distributed Memory}
 
 The main bottle neck in VMC computations is the evaluation of expectation
 values, such as \cref{eq:vmc-local-energy-formulation} and
@@ -66,7 +66,7 @@ arbitrary number of machines, as long as they are connected in some way. These
 machines could in principle be placed all around the world and still work well
 for our purposes (some extra latency would be introduced by the distance).
 
-\subsection{MPI - Message Passing Interface}
+\subsection{Implementation API: Message Passing Interface}
 
 For the actual communication between distributed memory processes, we have the
 standardized Message Passing Interface (MPI). This is typically implemented as a
@@ -126,23 +126,29 @@ actual speedup obtained quite closely follows the linear ideal, as shown in \cre
 \end{figure}
 
 
-\section{Shared Memory - OpenMP}
+\section{Shared Memory}
 
 As mentioned, the other possible way to allow for communication between workers
 is through shared memory. This typically means running multiple threads within
-the same process memory space. This is a faster type of communication compared
-with message passing, but comes at the cost of having to consider data races. A
-data race occurs when multiple workers tries to write to the same location in
-memory at the same time. The result of such behavior is undefined and must be
-avoided.
+the same process memory space, so that each thread has access to the same
+memory. This is a faster type of communication compared with message passing,
+but comes at the cost of having to consider data races. A data race occurs when
+multiple workers tries to access (with at least one write operation) the same
+location in memory at the same time. The result of such behavior is undefined
+and must be avoided.
+
+\subsection{Implementation API: OpenMP}
 
 Similarly to how distributed memory parallelization has the MPI standard, we
 have the OpenMP standard for describing shared memory parallelization. The use
-of this type of parallelization is made entirely through compiler instructions
-embedded in the code. The number of threads to use is decided at runtime, and
-can even change during the course of the program. Importantly there is now only
-one process running the code, with potential threads as sub-workers.
+of this type of parallelization is typically made entirely through compiler
+instructions embedded in the code, with some library functions also available.
+The number of threads to use is decided at runtime, and can even change during
+the course of the program. Importantly there is only one process running the
+code, which lives for the duration of the program, and threads get
+created and destroyed throughout the course of the computation.
 
+\subsection{Example: Monte Carlo Estimation of $\pi$}
 The following example shows a task equivalent in nature to
 the one used in the last section, now parallelized using OpenMP.
 
@@ -195,7 +201,9 @@ other.\footnote{You could in principle emulate shared memory for separate
   machines, but the emulation it self would have to use a message passing
   interface, which would defeat the purpose.} For this reason, we have focused
 our parallelization efforts to MPI, because we anticipate the need for a large
-number of parallel jobs.
+number of parallel jobs. To some extent, a happy marriage of the two is
+sometimes possible, but in general we expect that dedicating as many cores to
+MPI processes as possible to be the most beneficial strategy.
 
 
 \section{GPU Acceleration - Cuda}
@@ -203,12 +211,12 @@ number of parallel jobs.
 The final form of hardware acceleration we will mention is one that is
 particularly central for ML in particular. While the two prior techniques boil
 down to having multiple CPUs work together, certain tasks are particularly well
-suited to acceleration by using a Graphics Processing Unit, or GPU. These are
+suited to acceleration by using a Graphics Processing Unit (GPU). These are
 pieces of hardware typically designed to enable fast rendering of graphics for
 computers, hence the name. They have a highly parallel structure optimized for
 algorithms that need to process large blocks of data in parallel. A typical
 example that relates to ML is matrix-matrix multiplication. Say we compute $\mat
-C = \mat A \mat B$, the algorithm is then
+C = \mat A \mat B$,
 
 \begin{align}
   C_{kl} = A_{ki}B_{il}
@@ -216,15 +224,15 @@ C = \mat A \mat B$, the algorithm is then
 The order of which we do any of the above $\mathcal{O}(n^3)$ operations really
 doesn't matter, and so one can see how this can be an extremely parallel
 process. A high-end GPU will have a number of cores in the four digit range,
-facilitating speedups of several orders of magnitude compared to a CPU. 
+facilitating speedups of several orders of magnitude compared to a CPU.
 
 The recent (last decade) advancements in GPU technology has been an integral
 part of the enormous amount of success in recent ML applications. Their use has
 facilitated building models far beyond the capacity of an ordinary CPU.
 
-\subsection{CUDA}
+\subsection{Implementation API: CUDA}
 
-One popular way to program for a GPU is through CUDA, which programming
+One popular way to program for a GPU is through CUDA, a programming
 interface developed by NVIDIA. Similarly to MPI programming, its use is (for
 C/C++) through a specialized compiler and some library functions. The typical
 flow is to implement the parallel computation (say matrix-matrix multiplication
@@ -239,7 +247,8 @@ the current codes, despite this having large potential benefits. This is simply
 a matter of time and realizing that it would require a considerable amount of effort
 to get right. With the introduction of neural networks as wave functions, we see
 no apparent reason why using GPUs would not cause significant speed ups also in
-our application of ML. We leave this a potential point of future work.
+our application of ML. The main challenge will likely be to join GPUs into the
+existing MPI codes. We leave this a potential point of future work.
 
 
 
