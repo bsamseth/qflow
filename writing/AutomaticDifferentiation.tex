@@ -20,15 +20,25 @@ out the associated derivatives. They way this is done is though Automatic
 Differentiation (AD), an algorithmic application of the chain rule that can
 compute derivatives of any function specified by a computer program.
 
+This is possible by exploiting the fact that any computer program must be built
+up of elementary operations (\(+,-,*,/\)) and perhaps some elementary functions
+(\(\exp, \sin\) etc.). We know how to handle derivatives for all of these, and
+importantly we know how to combine them in arbitrary ways through the chain
+rule. This allows us to construct a computation for any function which
+will compute its derivative.
+
 Automatic differentiation promises a general purpose implementation that can
 calculate derivatives exactly (within numerical precision) in a manner that uses
 at most a constant factor more operations than the original function. We can
-also generalize to higher order derivatives by repeated application of the algorithm.
+also generalize to higher order derivatives by repeated application of the
+algorithm. That is, viewing the derivative computation as a function in its own
+right we can apply the same trick to construct a computation for the second
+derivative.
 
 
 \section{Example}
 
-Let the function we which to differentiate be the following:\footnote{This example is in large part similar to one found
+Let the function we wish to differentiate be the following:\footnote{This example is in large part similar to one found
     on the AD Wikipedia page, simply because I quite like this explanation.}
 
 \begin{align}
@@ -37,17 +47,18 @@ Let the function we which to differentiate be the following:\footnote{This examp
               &= w_3 + w_4\\
               &= w_5 = y,
 \end{align}
-where we have introduced the temporary variables $w_i$ for notational brevity.
-Assume that we are interested in $\pdv*{f}{x_1}$ and $\pdv*{f}{x_2}$. There are
-two main approaches to use now: Forward and Backward mode.
+where we have introduced the temporary variables $w_i$ for later notational brevity.
+Assume that we are interested in $\pdv*{y}{x_1}$ and $\pdv*{y}{x_2}$. There are
+two main approaches in use: Forward and Reverse mode.
 
 \subsection{Forward Mode}
 
 We first decide on one independent variable to differentiation with respect to,
-say $x_1$. We then compute $\dot w_i = \pdv{w_i}{x_1}$ in order of increasing
+say $x_1$. We then compute $\dot w_i = \pdv*{w_i}{x_1}$ in order of increasing
 $i$ (forward through the computation).
 
-We get by normal rules of differentiation:
+When we step through the computation of $f(x_1, x_2)$, we can simultaneously
+compute the derivative we want. By normal rules of differentiation:
 
 \begin{center}
   \begin{tabular}{ll}
@@ -61,7 +72,9 @@ We get by normal rules of differentiation:
 \end{center}
 Substituting in the values from top to bottom we see that we indeed get
 $\pdv{y}{x_1}=\cos(x_1)+x_2$ as one would expect. We can now repeat the process
-once more for $x_2$.
+once more for $x_2$. Evidently, we only need to change the initial values $\dot
+w_1$ and $\dot w_2$, while the rest remains the same. Because of this, these
+\say{trivial} first derivatives are sometimes referred to as \emph{seed} values.
 
 \subsection{Reverse Mode}
 
@@ -133,9 +146,7 @@ superior in this case, requiring only a single pass.\\
 
 Returning to the list of operations, we still have the ominous Laplace
 operator, $\laplacian$. To see why this will be harder, we can consider the
-\emph{Hessian} matrix, $\mat H$.
-For a wave function with inputs $\vx = (x_1, x_2,\dots, x_M)$ (e.g. all
-coordinates of all particles), we have:
+\emph{Hessian} matrix, $\mat H$:
 
 \begin{align}
   \mat H &=
@@ -151,11 +162,12 @@ a reverse sweep and obtain the Jacobian (the row vector). The act of computing
 the Jacobian is it self a function, $f: \mathbb{R}^m\to\mathbb{R}^m$, and as
 such we can apply AD to it an obtain the elements of $\mat H$.\\
 
-Computing the required Laplace operator equates to computing the trace of the Hessian
-matrix. Remember that a forward/reverse sweep calculates a column/row of the
-matrix. That means that in order to get the diagonal elements, we actually need
-$m$ sweeps, regardless of what direction we go. Sadly, we now see that we need a
-total of $m^2$ sweeps to compute the Laplacian.
+Computing the required Laplace operator equates to computing the trace (sum of
+diagonal) of the Hessian matrix. Remember that a forward/reverse sweep
+calculates a column/row of the matrix. That means that in order to get the
+diagonal elements, we actually need $m$ sweeps, regardless of what direction we
+go. Sadly, the complexity of this operation is so large that we have found it
+unfeasible to use for even a moderate number of inputs. 
 
 
 \section{Why Automatic Differentiation Failed}
@@ -166,15 +178,19 @@ within these. That would give out-of-the-box functionality for neural networks,
 optimization strategies, GPU acceleration etc. Sadly, the inefficiency of the
 calculation of the Laplacian operator put a stop to such a marriage. The time
 spent by AD to compute $\laplacian$ were orders of magnitude worse than the
-manually coded analytically expressions. This severe deficiency of AD resulted
+manually coded analytically expressions, and scaled significantly worse with
+increasing number of particles. This severe deficiency of AD resulted
 in the unfortunate need to depart from the existing ML frameworks and
 implement everything manually (i.e. analytically expressions for derivatives).
 This decision was not made lightly, and only after a painstaking effort to
-somehow defy the above mathematical argument.
+somehow attempt to defy the above mathematical argument. Unfortunately,
+mathematics was right this time as well.
 
 We sincerely hope that AD can somehow be efficiently incorporated in future
-works. If nothing else, we could potentially use AD for Hamiltonian which does
-not include the Laplacian operator. 
+works. Research into how AD can be efficiently applied to higher order
+derivatives is ongoing, see for instance~\textcite{wang2017}. If nothing else,
+we could potentially use AD for Hamiltonians which does not include the Laplacian
+operator.
 
 
 
