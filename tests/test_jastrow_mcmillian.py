@@ -26,19 +26,32 @@ def jastrow_np(X, n, beta):
             if r_ij > 0.5 * L:
                 continue
 
-            r_ij = max(0.3 * 2.556, r_ij);
+            r_ij = max(0.3 * 2.556, r_ij)
 
             exponent += (beta / r_ij) ** n
     return np.exp(-0.5 * exponent)
 
+def is_jastrow_np_adjusted(X, n, beta):
+    adjusted = False
+    for i in range(X.shape[0]):
+        for j in range(i + 1, X.shape[0]):
+            r_ij = X[i] - X[j]
+            r_ij -= np.around(r_ij / L) * L
+            r_ij = np.dot(r_ij, r_ij) ** 0.5
+
+            if r_ij < 0.3 * 2.556:
+                return True
+    return False
+
 
 @given(X=array_strat(min_dims=2), beta=float_strat())
 def test_eval(X, beta):
-
     psi = JastrowMcMillian(5, beta, L)
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        assert np.isclose(jastrow_np(X, 5, beta), psi(X), equal_nan=True)
+        np_eval = jastrow_np(X, 5, beta)
+        if math.isfinite(np_eval):
+            assert np.isclose(np_eval, psi(X), equal_nan=True)
 
 
 @given(X=array_strat(min_dims=2), beta=float_strat())
