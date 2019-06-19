@@ -51,11 +51,11 @@ RowVector JastrowMcMillian::gradient(const System& system)
             auto diff_corrected = diff - Eigen::round(diff / L) * L;
             Real r              = norm(diff_corrected);
 
-            if (r < 0.5 * L)
-            {
-                r = std::max(LennardJones::r_core, r);
-                grad[0] += std::pow(1 / r, n_);
-            }
+            if (r > 0.5 * L)
+              continue;
+
+            r = std::max(LennardJones::r_core, r);
+            grad[0] += std::pow(1 / r, n_);
         }
     }
     grad[0] *= -0.5 * n_ * std::pow(beta, n_ - 1);
@@ -74,11 +74,12 @@ Real JastrowMcMillian::drift_force(const System& system, int k, int d)
             auto diff           = (system.row(i) - system.row(k)).array();
             auto diff_corrected = diff - Eigen::round(diff / L) * L;
             Real r              = norm(diff_corrected);
-            if (r < 0.5 * L)
-            {
-                r = std::max(LennardJones::r_core, r);
-                res += std::pow(beta / r, n_) * diff_corrected[d] / (r * r);
-            }
+
+            if (r > 0.5 * L)
+              continue;
+
+            r = std::max(LennardJones::r_core, r);
+            res += std::pow(beta / r, n_) * diff_corrected[d] / (r * r);
         }
     }
     return 2 * 0.5 * n_ * res;
@@ -101,21 +102,21 @@ Real JastrowMcMillian::laplacian(const System& system)
             auto diff_corrected = diff - Eigen::round(diff / L) * L;
             Real r              = norm(diff_corrected);
 
-            if (r < 0.5 * L)
-            {
-                r        = std::max(LennardJones::r_core, r);
-                Real r2i = beta * beta / square(r);
-                Real ri  = 1. / (beta * r);
-                Real r6i = r2i * r2i * r2i;
+            if (r > 0.5 * L)
+              continue;
 
-                Real v = -5 * r6i * ri;
+            r        = std::max(LennardJones::r_core, r);
+            Real r2i = beta * beta / square(r);
+            Real ri  = 1. / (beta * r);
+            Real r6i = r2i * r2i * r2i;
 
-                RowVector du = v * diff_corrected;
-                dpsi.row(i) += du;
-                dpsi.row(j) -= du;
+            Real v = -5 * r6i * ri;
 
-                d2psi += 20. * r6i * ri;
-            }
+            RowVector du = v * diff_corrected;
+            dpsi.row(i) += du;
+            dpsi.row(j) -= du;
+
+            d2psi += 20. * r6i * ri;
         }
     }
 
