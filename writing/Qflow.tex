@@ -13,6 +13,13 @@ design decisions and comparison with other tools. A more complete technical
 documentation is published online~\cite{qflow}, and it is recommended to consult this
 resource for practical usage.
 
+QFLOW is implemented as an object oriented Python package with bindings into a monolithic C++
+backend library. This allows for easy setup of the computation and post
+processing of data can be done entirely from Python. Still, all the
+computationally intensive code runs entirely in C++, so there is no performance
+penalty in starting things from Python. This design allows us to take the best
+of both languages, and it makes for a much improved user experience.
+
 \section{Installation}
 
 Refer to~\cite{qflow} for up to date instructions. Here we only mention the
