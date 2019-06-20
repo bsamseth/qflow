@@ -153,5 +153,51 @@ method was chosen for the following reasons:
   Python bindings we need a pre-built C++ library.
 \end{itemize}
 
+\section{Testing}
+
+Vital to any large software project is thorough testing. To this end QFLOW is
+heavily tested, including unit tests of most functions in use and larger
+integration tests to test for correct interplay between components.
+
+The tests are written in a mix of C++, using the
+\href{https://github.com/google/googletest}{Google Test framework}, and Python
+using \href{https://docs.pytest.org/en/latest/}{\texttt{pytest}}. The language
+mix is partly due to legacy code from before the Python bindings were included,
+but because large parts of the C++ code is not exposed to Python they continue
+to be useful.
+
+In addition, were applicable we have made use of
+\href{https://hypothesis.readthedocs.io/en/latest/index.html}{Hypothesis} to do
+property based testing from Python. This makes test far superior to hand-crafted examples,
+and the package actively tries to come up with edge cases that will break the
+code. The amount of subtle (as well as obvious ones) bugs that this has found is
+astounding.
+
+Because a lot of the code in QFLOW is implementing mathematical expressions for
+derivatives, we needed a good way to test this. If we want to go beyond testing
+just a few hand-made examples, we need a way to programmatically produce the
+expected derivatives. The problem then is quite typical when writing tests: How
+do you generate the expected answers without simply retyping the same code
+twice? This is a place where Automatic Differentiation actually became useful.
+The derivatives of all wave functions are compared with the values obtained
+through AD by using the Python package
+\href{https://github.com/HIPS/autograd}{Autograd}. We were even able to use AD
+to verify the Laplace operators, because the time inefficiency of AD is less of
+an issue for unit tests.
+
+On top of all these tests, we have also included so called
+\href{https://docs.python.org/2/library/doctest.html}{doctests} in the
+documentation of QFLOW. This is documentation through examples, where the output
+of the examples are given in the documentation. We can then have a tool parse
+the documentation and verify that we indeed get the results that are stated.
+This is a useful way to both improve documentation and to make sure that usage
+does not break in unexpected ways.
+
+Finally, we use \href{https://travis-ci.org/}{Travis CI} for continuous
+integration. That means all tests are checked on every commit made to the version control
+system, by building the project on a remote server and running all tests. For
+convenience, Travis is also set up to build the HTML version of the
+documentation for QFLOW and update the project website.
+
 
 \end{document}
