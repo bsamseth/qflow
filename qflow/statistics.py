@@ -42,7 +42,7 @@ def statistics_to_tex(all_stats, formats=None, filename=None):
         formats = ["f"] * n_stats
 
     tex = f"""\\begin{{tabular}}{{{n_stats * 'c'}}}
-    $\\langle E_L\\rangle$ & SE & Std & Var & CI^{95}_- & CI^{95}_+\\\\
+    $\\langle E_L\\rangle$ & SE & Std & Var & CI^{{95}}_- & CI^{{95}}_+\\\\
     \\hline
     """
 
