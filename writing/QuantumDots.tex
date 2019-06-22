@@ -3,7 +3,67 @@
 \chapter{Quantum Dots}
 \label{chp:quantum-dots}
 
+We now present results for all methods discussed, applied on the example system
+of Quantum Dots (QD) from \cref{sec:quantum-dots-theory}. We present first some
+benchmarks using a typical Slater-Jastrow wave function form, followed by
+introduction of various neural network-based wave function.
+
 \section{Benchmark}
+
+As we shall restrict this analysis to only two interacting particles in the QD,
+$\vX = (\vx_1\ \vx_2)$, our benchmark wave function is rather simple. We build
+it up using the product of single particle ground states (Gaussian), multiplied
+by a Pade-Jastrow correlation term\footnote{We drop the constant factor
+  from~\cref{eq:Phi-non-inter} because we have not normalized the wave function.}:
+
+\begin{align}
+  \label{eq:qd-pade-jastrow-anzats}
+  \psi_{PJ}(\vX) &= \Phi(\vX) \,J_P(\vX)\\
+  &= \exp(-\alpha_G\sum_{i=1}^N \norm{\vx_i}^2 + \sum_{i < j} \frac{\alpha_{PJ}
+    r_{ij}}{1 + \beta_{PJ} r_{ij}}),
+\end{align}
+where $\alpha_{PJ} = 1$ is fixed by the cusp conditions, and $\alpha_G$ and $\beta_{PJ}$
+are the two only variational parameters.
+
+\subsubsection{Optimizing}
+
+We have run a simple optimization of the above wave function, using initial
+values of $\alpha_G = 0.5$ and $\beta_{PJ} = 1$. We used importance sampling and the
+ADAM optimization scheme. We used $\num{2000}$ optimization steps, each with
+$\num{5000}$ MC cycles. The values are somewhat arbitrarily, and we get
+similar results for several other choices.
+
+\begin{figure}[h]
+   \centering
+    \resizebox{\linewidth}{!}{%
+        \input{scripts/QD-benchmark.py.tex}
+    }
+    \caption{\label{fig:QD-benchmark-pade-jastrow-training}Left: Performance of the
+      wave function in \cref{eq:qd-pade-jastrow-anzats} as a function of
+      training steps. Right: Progression of variational parameters as a function
+      of training steps. The source code for this graphic can be found~\cite[TODO: Add
+    path]{MS-thesis-repository}, and \LaTeX{} output generated
+    by~\cite{nico_schlomer_2018_1173090}.}
+\end{figure}
+
+\begin{table}[h]
+  \centering
+  \input{scripts/QD-benchmark.py.table.tex}
+  \caption{Energy benchmark using Pade-Jastrow wave function, using $2^{22}$
+    Monte Carlo samples and errors estimated by an automated blocking algorithm
+    by~\textcite{Jonsson-2018}. See \cref{fig:QD-benchmark-pade-jastrow-training}
+    for source code reference.}
+  \label{tab:pade-jastrow-benchmark-energy}
+\end{table}
+
+\cref{fig:QD-benchmark-pade-jastrow-training} shows the optimization as function
+of percentage of training completed. We can observe that the optimizations
+quickly settles down to a set of optimal values, where it only oscillates
+slightly back and forth. \cref{tab:pade-jastrow-benchmark-energy} shows
+statistics for the energy obtained with the final state. Comparing to the
+analytical result of $\SI{3}{\au}$ these results are in very good agreement. For
+reference we have also given the results obtained without the Pade-Jastrow term,
+i.e. the non-interacting ground state.
 
 \section{Restricted Boltzmann Machine}
 
