@@ -40,8 +40,10 @@ def statistics_to_tex(all_stats, filename=None):
     n_stats = len(used_stats) + 1
 
     tex = f"""\\begin{{tabular}}{{{n_stats * 'c'}}}
-    $\\langle E_L\\rangle$ & CI^{{95}}_- & CI^{{95}}_+ & Std & Var \\\\
-    \\hline
+	\\toprule
+	\\addlinespace
+    $\\langle E_L\\rangle$ & CI$^{{95}}_-$ & CI$^{{95}}_+$ & Std & Var \\\\
+    \\midrule
     """
 
     for stats in all_stats:
@@ -54,12 +56,12 @@ def statistics_to_tex(all_stats, filename=None):
         )
         tex += "{0:.{1}f} & ".format(stats["ci-"], significant_digits)
         tex += "{0:.{1}f} & ".format(stats["ci+"], significant_digits)
-        tex += "\num{0:.1e} & ".format(stats["std"])
-        tex += "\num{0:.1e}".format(stats["var"])
+        tex += "\\num{{{0:.1e}}} & ".format(stats["std"])
+        tex += "\\num{{{0:.1e}}}".format(stats["var"])
 
-        tex + "\\\\"
+        tex += "\\\\"
 
-    tex += "\n\\end{tabular}"
+    tex += "\n\\bottomrule\n\\end{tabular}"
 
     if filename is not None:
         with open(filename, "w") as f:
