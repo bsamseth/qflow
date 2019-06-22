@@ -28,27 +28,26 @@ def compute_statistics_for_series(x, method="plain", **method_kwargs):
     }
 
 
-def statistics_to_tex(all_stats, filename=None):
+def statistics_to_tex(all_stats, labels, filename=None):
     """
     Produce LaTeX table from statistics produced from ``compute_statistics_for_series``.
-    If given a list a dictionaries, each will get its own row.
     """
-    if isinstance(all_stats, dict):
-        all_stats = [all_stats]
 
     used_stats = ("ci-", "ci+", "std", "var")
     n_stats = len(used_stats) + 1
 
-    tex = f"""\\begin{{tabular}}{{{n_stats * 'c'}}}
-	\\toprule
-	\\addlinespace
-    $\\langle E_L\\rangle$ & CI$^{{95}}_-$ & CI$^{{95}}_+$ & Std & Var \\\\
-    \\midrule
+    tex = f"""\\begin{{tabular}}{{l{n_stats * 'c'}}}
+\\toprule
+\\addlinespace
+& $\\langle E_L\\rangle$ & CI$^{{95}}_-$ & CI$^{{95}}_+$ & Std & Var \\\\
+\\midrule
     """
 
-    for stats in all_stats:
+    for stats, label in zip(all_stats, labels):
         stats = stats.copy()
         stats["ci-"], stats["ci+"] = stats.pop("CI")
+
+        tex += label + " & "
 
         significant_digits = abs(int(math.floor(math.log10(stats["sem"]))))
         tex += "{0:.{2}f}({1:.0f}) & ".format(
@@ -59,9 +58,9 @@ def statistics_to_tex(all_stats, filename=None):
         tex += "\\num{{{0:.1e}}} & ".format(stats["std"])
         tex += "\\num{{{0:.1e}}}".format(stats["var"])
 
-        tex += "\\\\"
+        tex += "\\\\\n"
 
-    tex += "\n\\bottomrule\n\\end{tabular}"
+    tex += "\\bottomrule\n\\end{tabular}"
 
     if filename is not None:
         with open(filename, "w") as f:
