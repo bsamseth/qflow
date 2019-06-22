@@ -8,11 +8,11 @@ y = 5 * x + 1 + np.random.normal(scale=1, size=x.shape)
 fit = np.poly1d(np.polyfit(x, y, deg=1))
 
 
-plt.plot(x, y, 'o', alpha=0.3, label='Data points')
-plt.plot(x, fit(x), '--', label='Model')
-plt.xlabel('$x$')
-plt.ylabel('$y$')
-plt.legend(loc='best')
+plt.plot(x, y, "o", alpha=0.3, label="Data points")
+plt.plot(x, fit(x), "--", label="Model")
+plt.xlabel("$x$")
+plt.ylabel("$y$")
+plt.legend(loc="best")
 
 import matplotlib2tikz
 
