@@ -27,6 +27,46 @@ def compute_statistics_for_series(x, method="plain", **method_kwargs):
     }
 
 
+def statistics_to_tex(all_stats, formats=None, filename=None):
+    """
+    Produce LaTeX table from statistics produced from ``compute_statistics_for_series``.
+    If given a list a dictionaries, each will get its own row.
+    """
+    if isinstance(all_stats, dict):
+        all_stats = [all_stats]
+
+    used_stats = ("mean", "sem", "std", "var", "ci-", "ci+")
+    n_stats = len(used_stats)
+
+    if formats is None:
+        formats = ["f"] * n_stats
+
+    tex = f"""\\begin{{tabular}}{{{n_stats * 'c'}}}
+    $\\langle E_L\\rangle$ & SE & Std & Var & CI^{95}_- & CI^{95}_+\\\\
+    \\hline
+    """
+
+    for stats in all_stats:
+
+        stats["ci-"], stats["ci+"] = stats.pop("CI")
+
+        for key, fmt in zip(used_stats, formats):
+            tex += ("{0:%s}" % fmt).format(stats[key])
+
+            if key != used_stats[-1]:
+                tex += " & "
+            else:
+                tex += "\\\\"
+
+    tex += "\n\\end{tabular}"
+
+    if filename is not None:
+        with open(filename, "w") as f:
+            f.write(tex)
+
+    return tex
+
+
 def blocking(x):
     """
     Return an improved estimate of the standard error
