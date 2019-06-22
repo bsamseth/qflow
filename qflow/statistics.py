@@ -1,5 +1,6 @@
 import numpy as np
 import scipy.stats as st
+import math
 
 
 def compute_statistics_for_series(x, method="plain", **method_kwargs):
@@ -27,7 +28,7 @@ def compute_statistics_for_series(x, method="plain", **method_kwargs):
     }
 
 
-def statistics_to_tex(all_stats, formats=None, filename=None):
+def statistics_to_tex(all_stats, filename=None):
     """
     Produce LaTeX table from statistics produced from ``compute_statistics_for_series``.
     If given a list a dictionaries, each will get its own row.
@@ -35,28 +36,28 @@ def statistics_to_tex(all_stats, formats=None, filename=None):
     if isinstance(all_stats, dict):
         all_stats = [all_stats]
 
-    used_stats = ("mean", "sem", "std", "var", "ci-", "ci+")
-    n_stats = len(used_stats)
-
-    if formats is None:
-        formats = ["f"] * n_stats
+    used_stats = ("ci-", "ci+", "std", "var")
+    n_stats = len(used_stats) + 1
 
     tex = f"""\\begin{{tabular}}{{{n_stats * 'c'}}}
-    $\\langle E_L\\rangle$ & SE & Std & Var & CI^{{95}}_- & CI^{{95}}_+\\\\
+    $\\langle E_L\\rangle$ & CI^{{95}}_- & CI^{{95}}_+ & Std & Var \\\\
     \\hline
     """
 
     for stats in all_stats:
-
+        stats = stats.copy()
         stats["ci-"], stats["ci+"] = stats.pop("CI")
 
-        for key, fmt in zip(used_stats, formats):
-            tex += ("{0:%s}" % fmt).format(stats[key])
+        significant_digits = abs(int(math.floor(math.log10(stats["sem"]))))
+        tex += "{0:.{2}f}({1:.0f}) & ".format(
+            stats["mean"], stats["sem"] * 10 ** significant_digits, significant_digits
+        )
+        tex += "{0:.{1}f} & ".format(stats["ci-"], significant_digits)
+        tex += "{0:.{1}f} & ".format(stats["ci+"], significant_digits)
+        tex += "\num{0:.1e} & ".format(stats["std"])
+        tex += "\num{0:.1e}".format(stats["var"])
 
-            if key != used_stats[-1]:
-                tex += " & "
-            else:
-                tex += "\\\\"
+        tex + "\\\\"
 
     tex += "\n\\end{tabular}"
 
