@@ -40,7 +40,10 @@ def statistics_to_tex(all_stats, labels, filename=None):
 \\toprule
 \\addlinespace
 & $\\langle E_L\\rangle$ & CI$^{{95}}_-$ & CI$^{{95}}_+$ & Std & Var \\\\
+\\addlinespace
 \\midrule
+\\addlinespace
+\\addlinespace
     """
 
     for stats, label in zip(all_stats, labels):
@@ -60,7 +63,7 @@ def statistics_to_tex(all_stats, labels, filename=None):
 
         tex += "\\\\\n"
 
-    tex += "\\bottomrule\n\\end{tabular}"
+    tex += "\\addlinespace\\addlinespace\\bottomrule\n\\end{tabular}"
 
     if filename is not None:
         with open(filename, "w") as f:
