@@ -1,0 +1,42 @@
+\tikzstyle{neuron}=[draw,circle,minimum size=20pt,inner sep=0pt, fill=white]
+\tikzstyle{stateTransition}=[thick]
+\tikzstyle{learned}=[text=red]
+\begin{tikzpicture}[scale=2]
+  % \draw ;
+  \draw[fill=black!30, rounded corners] (-0.2, -0.2) rectangle (3.2, 0.2) {};
+  \draw[fill=black!30, rounded corners] (0.3, 0.8) rectangle (2.7, 1.2) {};
+
+  \node (v1)[neuron] at (0, 0) {$x_1$};
+  \node (v2)[neuron] at (1, 0) {$x_2$};
+  \node (v3)[neuron] at (2, 0) {$x_3$};
+  \node (v4)[neuron] at (3, 0) {$x_4$};
+  \node[right=0.1cm of v4] (v) {$\vx \in \mathbb{R}^{P\cdot D}$};
+  \node[learned,below=0.1cm of v1] (bv1) {$a_{1}$};
+  \node[learned,below=0.1cm of v2] (bv2) {$a_{2}$};
+  \node[learned,below=0.1cm of v3] (bv3) {$a_{3}$};
+  \node[learned,below=0.1cm of v4] (bv4) {$a_{4}$};
+
+  \node (h1)[neuron] at (0.5, 1) {$h_1$};
+  \node (h2)[neuron] at (1.5, 1) {$h_2$};
+  \node (h3)[neuron] at (2.5, 1) {$h_3$};
+  \node[right=0.1cm of h3] (h) {$\vb{h} \in \{0, 1\}^3$};
+  \node[learned,above=0.1cm of h1] (bh1) {$b_{1}$};
+  \node[learned,above=0.1cm of h2] (bh2) {$b_{2}$};
+  \node[learned,above=0.1cm of h3] (bh3) {$b_{3}$};
+
+  \draw[learned,stateTransition] (v1) -- (h1) node [midway,above=-0.06cm,sloped] {$W_{1,1}$};
+  \draw[stateTransition] (v1) -- (h2) node [midway,above=-0.06cm,sloped] {};
+  \draw[stateTransition] (v1) -- (h3) node [midway,above=-0.06cm,sloped] {};
+
+  \draw[stateTransition] (v2) -- (h1) node [midway,above=-0.06cm,sloped] {};
+  \draw[stateTransition] (v2) -- (h2) node [midway,above=-0.06cm,sloped] {};
+  \draw[stateTransition] (v2) -- (h3) node [midway,above=-0.06cm,sloped] {};
+
+  \draw[stateTransition] (v3) -- (h1) node [midway,above=-0.06cm,sloped] {};
+  \draw[stateTransition] (v3) -- (h2) node [midway,above=-0.06cm,sloped] {};
+  \draw[stateTransition] (v3) -- (h3) node [midway,above=-0.06cm,sloped] {};
+
+  \draw[stateTransition] (v4) -- (h1) node [midway,above=-0.06cm,sloped] {};
+  \draw[stateTransition] (v4) -- (h2) node [midway,above=-0.06cm,sloped] {};
+  \draw[learned,stateTransition] (v4) -- (h3) node [midway,above=-0.06cm,sloped] {$W_{4,3}$};
+\end{tikzpicture}
