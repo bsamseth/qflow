@@ -1,0 +1,76 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib2tikz
+
+from qflow.wavefunctions import RBMWavefunction
+from qflow.hamiltonians import CoulombHarmonicOscillator
+from qflow.samplers import ImportanceSampler
+from qflow.optimizers import AdamOptimizer
+from qflow.training import train, EnergyCallback, SymmetryCallback, ParameterCallback
+from qflow.statistics import compute_statistics_for_series, statistics_to_tex
+from qflow.mpi import mpiprint, master_rank
+
+
+def plot_training(energies, symmetries, parameters):
+    fig, (eax, pax) = plt.subplots(ncols=2)
+    eax.plot(energies, label=r"$\langle E_L\rangle$")
+    eax.set_ylabel(r"Ground state energy (a.u.)")
+    eax.set_xlabel(r"% of training")
+    eax.axhline(y=3, label="Exact", linestyle="--", color="k", alpha=0.5)
+    eax.legend()
+
+    pax.semilogx(np.asarray(parameters))
+    pax.set_xlabel(r"% of training")
+
+    matplotlib2tikz.save(__file__ + ".tex")
+
+    fig, (sax, wax) = plt.subplots(ncols=2)
+    sax.semilogx(symmetries, label=r"$S(\psi_{RBM})$")
+    sax.set_ylabel("Symmetry")
+    sax.set_xlabel(r"% of training")
+    sax.legend(loc="lower right")
+
+    w = np.asarray(parameters[-1])[P * D + N :].reshape(P * D, N)
+    img = wax.matshow(w)
+    wax.set_xlabel(r"$\mathbf{W}$")
+
+    matplotlib2tikz.save(__file__ + ".symmetry.tex")
+
+
+P, D, N = 2, 2, 4  # Particles, dimensions, hidden nodes.
+system = np.empty((P, D))
+H = CoulombHarmonicOscillator()
+psi = RBMWavefunction(P * D, N)
+psi_sampler = ImportanceSampler(system, psi, step_size=0.1)
+
+psi_energies = EnergyCallback(samples=1000)
+psi_symmetries = SymmetryCallback(samples=500)
+psi_parameters = ParameterCallback()
+
+train(
+    psi,
+    H,
+    psi_sampler,
+    iters=1000,
+    samples=2000,
+    gamma=0.001,
+    optimizer=AdamOptimizer(len(psi.parameters)),
+    call_backs=(psi_energies, psi_symmetries, psi_parameters),
+)
+
+mpiprint("Training complete")
+
+
+stats = [
+    compute_statistics_for_series(
+        H.local_energy_array(psi_sampler, psi, 2 ** 12), method="blocking"
+    )
+]
+labels = [r"$\psi_{RBM}$"]  # , r"$\psi_{PJ}$"]
+
+mpiprint(stats, pretty=True)
+mpiprint(statistics_to_tex(stats, labels, filename=__file__ + ".table.tex"))
+
+if master_rank():
+    plot_training(psi_energies, psi_symmetries, psi_parameters)
+    plt.show()
