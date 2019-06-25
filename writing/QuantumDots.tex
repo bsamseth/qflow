@@ -150,7 +150,7 @@ of magnitude larger than the benchmark.
 the same wave function using input sorting to impose symmetry. Results obtained
 from $2^{23}$ Monte Carlo samples and errors estimated by an automated blocking
 algorithm by~\textcite{Jonsson-2018}. See
-\cref{fig:QD-benchmark-pade-jastrow-training} for source code reference.}
+\cref{fig:QD-rbm-training} for source code reference.}
   \label{tab:rbm-energy-results}
 \end{table}
 
@@ -213,5 +213,153 @@ successful way to impose the symmetry.
 
 \section{Neural Network}
 
+Finally we turn our attention to the new contribution of this thesis - applying
+general neural networks as wave functions.
+
+Firstly, we have not been able to simply replace the entire wave function with a
+neural network from the start. In order for VMC optimization to work we need a
+stable enough starting point to avoid immediate divergence. The better approach
+is to bootstrap the network with an existing wave function as a starting point.
+In our case we use the benchmark wave function $\psi_{PJ}$. There are two
+options for how to do this:
+
+\begin{enumerate}
+\item Pre-train the network to emulate $\psi_{PJ}$ before starting VMC
+  optimization.
+\item Use the network as an extra correlation factor multiplied with $\psi_{PJ}$.
+\end{enumerate}
+While there is a certain appeal to the first alternative, in the
+sense that we would end up with a pure neural network wave function, the
+downside is that pre-training will not be completely accurate, as well as taking
+some time. Small inaccuracies could also lead to instabilities from non-satisfied
+cusp conditions/symmetry requirements.
+
+Because of this, we opted to simply treat the network as a correction factor,
+aimed to fix the small discrepancy between the benchmark and the true ground
+state. This approach allows us to bootstrap learning and start where existing
+techniques have already taken us, and improve from there. It is also trivial to
+implement in QFLOW, as there is built in support for composing wave functions by
+multiplication.
+
+The proposed wave function is:
+
+\begin{align}\label{eq:pade-dnn}
+  \psi_{DNN}(\vX) &= \psi_{PJ}(\vX)\, f(\vX),
+\end{align}
+where $f$ represents some arbitrary neural network. 
+
+
+\subsection{Network Architecture}
+
+We consider here only simple Feed Forward Neural Networks (FFNN) and leave other
+species of NNs for future research.
+
+The number of inputs is determined by the size of the system.
+The output layer is also essentially forced as we want a
+scalar output from our network\footnote{For applications that require complex
+  wave functions, this can be easily modeled by having two outputs and
+  interpret them as the real and imaginary component.}. In addition, all
+existing research implies that such correlation factors should be exponential.
+
+For the hidden layers we have much more of a choice. By simple trail and error
+we found $\tanh$ to be the most suitable activation function, and this is used
+in all cases. The number of nodes needs to be sufficiently large compared to the
+number of inputs. This is to allow the network to learn a large amount of
+different correlations, and not force it to settle on a few right away.
+The specific choices are again empirically motivated, and stems
+from observing worse results with much smaller values and diminishing returns
+for larger choices. 
+
+The later hidden layers should decrease in width as we approach the output, with
+the idea that the network should gradually attempt to compact what it learns
+into a smaller space. We have used powers of two for no particular reason other
+than that it allows for even divisions.
+
+While a large family of architectures are likely to perform well in this case,
+we have found the following setup settled on the following setup:
+
+\begin{center}
+  \begin{tabular}{lcc}
+    \toprule
+    \addlinespace
+    Layer & Nodes & Activation\\
+    \addlinespace
+    \midrule
+    \addlinespace
+    \addlinespace
+    Input & 4 & ---\\
+    Hidden 1& 32 & $\tanh$\\
+    Hidden 2& 16 & $\tanh$\\
+    Output & 1 & $\exp$\\
+    \addlinespace
+    \addlinespace
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+\subsection{Optimization}
+
+Again we find that several different hyper-parameters yield good results. The
+following results are obtained by optimizing $\psi_{DNN}$ using $\num{25000}$
+iterations of $1000$ MC cycles each. We have not used any regularization in this
+case, and as usual we use importance sampling and the ADAM optimizer.
+
+\cref{fig:QD-pade-dnn-training} shows a graph of the absolute error in energy
+during the course of training, both for $\psi_{DNN}$ and the benchmark
+$\psi_{PJ}$. The two curves closely follow each other in early stages, likely
+because the Pade-Jastrow factor contributes most of the improvements at this point. The
+benchmark eventually plateaus after a relatively short amount of time, while the
+network however continues to improve beyond this point. We achieve about an
+order of magnitude better accuracy, with a corresponding reduction in the
+variance.
+
+\cref{tab:pade-dnn-energy-results} shows the final energies produced from
+$\psi_{DNN}$ after training. Also shown is $\psi_{PJ}$ after the same amount of
+training. The results solidify the graphical impression
+of~\cref{fig:QD-pade-dnn-training}, showing a clear improvement.
+
+\begin{figure}[h]
+   \centering
+    \resizebox{\linewidth}{!}{%
+        \input{scripts/QD-pade-dnn.py.tex}
+    }
+    \caption{\label{fig:QD-pade-dnn-training}Left: Performance of the wave
+function in~/cref{eq:pade-dnn} as a function of training steps. Right:
+Progression of variational parameters as a function of training steps. Only a
+small selection of the parameters are included. The source code for this graphic
+can be found~\cite[TODO: Add path]{MS-thesis-repository}, and \LaTeX{} output
+generated by~\cite{nico_schlomer_2018_1173090}.}
+\end{figure}
+
+\begin{table}[h]
+  \centering
+  \input{scripts/QD-pade-dnn.py.table.tex}
+  \caption{Energy using the neural network wave function in~\cref{eq:pade-dnn}, along with
+the benchmark wave function after the same amount of optimization. Results obtained
+from $2^{22}$ Monte Carlo samples and errors estimated by an automated blocking
+algorithm by~\textcite{Jonsson-2018}. See
+\cref{fig:QD-pade-dnn-training} for source code reference.}
+  \label{tab:pade-dnn-energy-results}
+\end{table}
+
+\begin{figure}[h]
+   \centering
+    \resizebox{0.7\linewidth}{!}{%
+        \input{scripts/QD-pade-dnn.py.symmetry.tex}
+    }
+    \caption{\label{fig:QD-pade-dnn-symmetry}Permutation symmetry of
+$\psi_{DNN}$ as a function of training steps. See
+\cref{fig:QD-pade-dnn-training} for source code reference.}
+\end{figure}
+
+\begin{figure}[h]
+   \centering
+    \resizebox{\linewidth}{!}{%
+        \input{scripts/QD-pade-dnn.py.weights.tex}
+    }
+    \caption{\label{fig:QD-rbm-symmetry}Color map representation of the weights
+      and biases in the network of $\psi_{DNN}$. See
+\cref{fig:QD-pade-dnn-training} for source code reference.}
+\end{figure}
 
 \end{document}
