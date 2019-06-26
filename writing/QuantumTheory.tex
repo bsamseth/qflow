@@ -6,29 +6,29 @@
 
 \section{Problem Statement}
 
-Let us assume that we are interested in investigating the properties of some quantum
+Say you want to investigate the properties of some quantum
 mechanical system. The first step is then to firmly establish how we should describe this
 system and the laws that govern its behaviour. For the entirety of this thesis, we shall
 assume that the systems we consider do not show any significant relativistic behaviour, so
 that no such considerations are necessary.
 
-If we were interested in a system consisting of non-quantum entities (e.g. a base ball
-trajectory as its thrown through the air towards a batter), we would likely turn to our
-classical laws, such as Newtons second law of motion
+If our system of interest consisted of non-quantum entities (e.g.\ the
+trajectory of a base ball as it's thrown through the air towards a batter), we
+would likely turn to our classical laws, such as Newton's second law of motion
 %
 \begin{align}
-    \sum_i \vec F_i(t) = \dv{\vec p(t)}{t}
+    \sum_i \vec F_i(t) = \dv{\vec p(t)}{t},
 \end{align}
 %
-\noindent where the $\vec F_i$ are the forces acting on the ball, and $\vec p$ is its momentum at
+\noindent where $\vec F_i$ are the forces acting on the ball, and $\vec p$ is its momentum at
 any given point in time. Using the law of motion we can use our knowledge about how the
 environment affects the object to \emph{deterministically} calculate the resulting
 behaviour. The really nice thing is that, if we also know the mass of the object, we
 can derive the value of any other measurable physical quantity of interest. As such,
-\emph{solving} a classical system could be said to consist of the following steps:
+we can say that \emph{solving} a classical system consists of the following steps:
 
 \begin{enumerate}
-    \item Define the environment, i.e. the forces acting on the object(s)
+    \item Define the environment, i.e.\ the forces acting on the object(s)
     \item Use the Second Law of Motion to obtain momentum $\vec p(t)$ and position $x(t)$
     \item Compute quantity of interest, $Q(\vec p, \vec x, t)$
 \end{enumerate}
@@ -44,10 +44,10 @@ Time-Dependent Schrödinger Equation:
 where $i=\sqrt{-1}$ is the imaginary unit and $\hbar=\flatfrac{h}{2\pi}$ is the reduced Planck constant.
 The thing we want to solve for in this case is the so called wave function $\ket{\Psi}$
 (explained momentarily), while the description of the system (analogous to the forces in
-classical mechanics) goes into $\hat H$. The latter is referred to as the Hamiltonian
+classical mechanics) goes into $\hat H$. We refer to the latter as the Hamiltonian
 operator, and should be a complete description of the kinetic and potential energies of
-the particles involved. As an example, the equation for a single particle in a energy
-potential $V$ can be written as follows (where we explicitly use the position basis):
+the particles involved. As an example, we write the equation for a single particle in an energy
+potential $V$ as follows (where we explicitly use the position basis):
 
 \begin{align}
     \qty[-\frac{\hbar^2}{2m} \laplacian + V(\vb x; t)]\Psi(\vb x;t) =
@@ -67,10 +67,10 @@ like we have for classical mechanics. Perhaps the most helpful way to view $\Psi
 through the fact that its squared absolute value, $\abs{\Psi(\vb x; t)}^2$, is the
 probability to find a particle at position $\vb x$ at time $t$. Thinking of the (squared
 norm of the) wave function as a substitute for the classical position $\vb x$ can
-therefore be a helpful aid, as long as the probabilistic nature of it is kept in mind.
+therefore be a helpful aid, as long as we keep the probabilistic nature of it in mind.
 
-The steps for \emph{solving} a quantum system can then be summarized, analogous to the
-classical approach, as follows:
+Summarizing the steps for \emph{solving} a quantum system, analogous to the
+classical approach, we have the following plan:
 \begin{enumerate}
     \item Define the environment through choosing a form for the Hamiltonian $\hat H$
     \item Use the Schrödinger equation to obtain the wave function $\Psi$
@@ -81,20 +81,20 @@ classical approach, as follows:
 
 \autoref{eq:schrodinger-time-dependent-position-basis} is a partial differential equation,
 as it contains partial derivatives of the wave function with respect to both position and
-time. The standard approach to solving this equation is through Separation of
-Variables. We assume that the full wave function can be factorized as follows:
+time. The standard approach to solving this equation is through \emph{separation of
+variables}. We assume that we can factorize the full wave function as follows:
 
 \begin{align}
     \Psi(\vb x; t) &= \psi(\vb x)\phi(t)\label{eq:separatable-wave-func-def}
 \end{align}
 %
-In addition, we assume that $V(\vb x; t) = V(\vb x)$, i.e. that the potential is
-time-independent\footnote{There are systems for which this assumption does not hold. We
+In addition, we assume that $V(\vb x; t) = V(\vb x)$, i.e.\ that the potential is
+time-independent.\footnote{There are systems for which this assumption does not hold. We
 will, however, restrict ourself to consider only Hamiltonians for which this description
-is valid}. With these assumptions, we can divide through with $\Psi$ in
+is valid} With these assumptions, we can divide through with $\Psi$ in
 \autoref{eq:schrodinger-time-dependent-position-basis} and obtain the
-following\footnote{One could be tempted to simply strike $\Psi$ from the lhs. of
-\autoref{eq:schrodinger-time-dependent-position-basis} when diving by $\Psi$. However, we
+following\footnote{It could be tempting to simply strike $\Psi$ from the lhs.\ of
+\autoref{eq:schrodinger-time-dependent-position-basis} when diving by $\Psi$. Nevertheless, we
 must remember that the Hamiltonian is an operator (specifically seen through the
 $\laplacian$ in this case), and so we must divide only after letting this operate on
 $\Psi$.}
@@ -125,7 +125,7 @@ The time-independent equation, known as the Time-Independent Schrödinger Equati
     - \frac{\hbar^2}{2m} \laplacian\psi + V(\vb x)\psi =
     E\psi\label{eq:schrodinger-time-independent-position-basis}
 \end{align}
-The solutions to this equation are known as the \emph{stationary states} of the system. If
+The solutions to this equation are the \emph{stationary states} of the system. If
 we are able to find these solutions, then we automatically have also the full time
 dependent solution through \autoref{eq:separatable-wave-func-def}.
 
@@ -135,16 +135,16 @@ form,
     \hat H \ket{\psi} &= E\ket{\psi}
 \end{align}
 we can recognize the problem as an eigenvalue problem where we seek the eigenvalues ($E$)
-and eigenvectors ($\ket{\psi}$) of the operator $\hat H$. In this light we might prefer to
+and eigenvectors ($\ket{\psi}$) of the operator $\hat H$. In light of this, we prefer to
 explicitly label the equation to account for the possibility that the equation could have
-many (including infinity) solutions, and write this as
+multiple (potentially infinite) solutions, and write this as
 \begin{align}
     \hat H\ket{\psi_n} &= E_n\ket{\psi_n}
 \end{align}
 Each of the $\ket{\psi_n}$ represents one possible stationary state, and could for instance be
 different levels of energy excitations within an atom. For our purposes, we will only care
-about the so called \emph{ground state}, i.e. the state $\ket{\psi_n}$ corresponding to the
-lowest possible $E_n$. By convention, we assume the energies to be ordered such that $E_i
+about the so called \emph{ground state}, i.e.\ the state $\ket{\psi_n}$ corresponding to the
+lowest possible $E_n$. By convention, we assume that the energies are ordered such that $E_i
 \leq E_j$ if $i < j$, and denote the ground state as $\ket{\psi_0}$ and the corresponding ground
 state energy as $E_0$.
 
@@ -190,7 +190,7 @@ In order to represent a physically observable system, a wave function $\Psi$ mus
     \item Obey suitable symmetry requirements
 \end{enumerate}
 %
-While the first requirements is quite clear, point 2-4 boils down to $\Psi$ taking a
+While the first requirement is obvious, points 2-4 boil down to $\Psi$ taking a
 functional form that is well behaved, satisfying required boundary conditions and being
 possible to view as a probability distribution. The last point is perhaps less clear, and
 we devote some further attention to this point in particular.
@@ -198,9 +198,9 @@ we devote some further attention to this point in particular.
 
 \subsection{Symmetry of wave functions}
 
-Nature has many example of systems made up of several particles of the same
+Nature has many example of systems made up of particles of the same
 species. That is, the particles all have the same mass, spin, electromagnetic
-charge etc. such that there is no way to  distinguish one from the other by
+charge etc.\ such that there is no way to  distinguish one from the other by
 measuring their properties. An example could be the electrons of an atom, all of
 which have the exact same physical properties.
 
@@ -220,7 +220,7 @@ quantum mechanics.
 
 Consider now a system of two indistinguishable particles, labeled $\vec x_1$ and
 $\vec x_2$, where $\vec x_i$ contains all the quantum numbers required to describe
-particle $i$ (e.g. position coordinates and the $z$ component of spin). The
+particle $i$ (e.g.\ position coordinates and the $z$ component of spin). The
 system is then described by a wave function
 
 \begin{align}
@@ -240,7 +240,7 @@ describe the same physical system. That is:
     \abs{\Psi(\vec x_1, \vec x_2)}^2 &= \abs{\Psi(\vec x_2, \vec x_1)}^2\\
     \iff \Psi(\vec x_1,\vec x_2) &= e^{i\alpha}\Psi(\vec x_2, \vec x_1),
 \end{align}
-i.e. they can only differ in their complex phase, which doesn't affect any measurable
+i.e.\ they can only differ in their complex phase, which doesn't affect any measurable
 quantity. Repeating the exchange once more yields the original wave function, and so
 
 \begin{align}
@@ -250,7 +250,7 @@ quantity. Repeating the exchange once more yields the original wave function, an
 This results states that any wave function, upon the exchange of
 indistinguishable particles, must be either symmetric (same sign) or
 anti-symmetric (opposite sign) to that of the original. This is generalizable to
-any number of particles, and is summarized in the following theorem.
+any number of particles, the following theorem summarizes the result:
 
 \begin{theorem}[Spin-Statistic
     Theorem~\cite{PhysRev-58-716}]\label{theorem:spin-statistic}
@@ -272,9 +272,9 @@ into exactly how one can go about this.
 
 Assume we want to compute an observable $O$. The first step is to determine the
 corresponding \emph{operator} $\hat O$. This is in general done by taking the classical
-description of the observable and performing a canonical transformation\footnote{There are
-also quantities that do not have a classical analog (e.g. spin) for which we can still
-find operator forms.}. Most notably, we have for the following transformations for
+description of the observable and performing a canonical transformation.\footnote{There are
+also quantities that do not have a classical analog (e.g.\ spin) for which we can still
+find operator forms.} Most notably, we have for the following transformations for
 position and momentum:
 
 \begin{align}
@@ -300,22 +300,22 @@ compute the expectation of that observable:
     \abs{\Psi(\vb X)}^2}
 \end{align}
 where $\int\dd{\vb X}\qty(\cdot)$ indicates an integral over all possible configurations of the
-system (e.g. all possible position and spin values for each particle). Often we have
+system (e.g.\ all possible position and spin values for each particle). Often we have
 required the wave function to be normalized in such a way that the denominator is equal to
 unity, and it can then be omitted.
 
 For many-body systems it should be apparent that this integral quickly becomes intractable
 to compute analytically. In practice we employ a numerical strategy to evaluate these
 integrals, where the technique we use depends on the dimensionality of the integral and
-the required level of accuracy. In our case, due to the relatively large number
+the required level of accuracy. In our case, due to the large number
 of degrees of freedom in the systems we shall investigate, we will use Monte
-Carlo integration. This will be discussed in more detail in \cref{chp:monte-carlo}.
+Carlo integration. This is will be discussed in more detail in \cref{chp:monte-carlo}.
 
 \section{Example Systems}
 
-So far no particular system description has been presented. In this thesis we focus our
-attention on two particular system for illustration purposes. These systems have been
-chosen largely due to their simplicity and/or the amount of preexisting results available
+So we have not presented any particular systems. In this thesis we focus our
+attention on two particular systems for illustration purposes. We chose these systems
+for their simplicity and/or the amount of preexisting results available
 in the literature. We do this so as to be able to benchmark the eventual results against
 know exact solutions, or when this does not exist, against the state-of-the-art results
 available.
@@ -323,7 +323,7 @@ available.
 \subsection{Quantum Dots}
 \label{sec:quantum-dots-theory}
 
-We consider a system of electrically charged particles (e.g. electrons) confined in a pure
+We consider a system of electrically charged particles (e.g.\ electrons) confined in a pure
 isotropic harmonic oscillator potential, with an idealized total Hamiltonian
 given by:
 
@@ -335,21 +335,21 @@ given by:
         r_i^2) + \sum_{i < j} \frac{1}{r_{ij}},
     \end{split}\label{eq:H-QD-def}
 \end{align}
-where natural units ($\hbar=c=m_e=1$) are used with energies in
+where we use natural units ($\hbar=c=m_e=1$) with energies in
 atomic units (a.u.), $N$ denotes the number of particles in the system, and
 $\omega$ is the oscillator frequency of the trap. Further, $\vec r_i$
 denotes the position vector of particle $i$, with $r_i \defeq \norm{\vec r}$ and
 $r_{ij}\defeq \norm{\vec r_i - \vec r_j}$ defined for notational brevity.
 
-This system describes particles trapped in a parabolic potential well, being pulled
-towards the bottom of the well at all times, while simultaneously feeling the repulsive
+This system describes particles trapped in a parabolic potential well that pulls
+them towards the bottom at all times, while simultaneously feeling the repulsive
 Coulomb forces from the other particles. This hinders all particles from settling together
 at the bottom. Even for this somewhat idealized system, the interplay between these two
 opposing forces gives rise to a surprisingly complex problem, which will prove remarkably
 hard to solve analytically even for two particles, and utterly impossible for higher $N$.
 
-With the natural units in place, the only involved quantity that has not been
-given a unit is length, i.e. what unit does the $\vb r_i$ have. A convenient
+With the natural units in place, the only involved quantity without a proper
+unit is length, i.e.\ what unit does the $\vb r_i$ have. A convenient
 choice is to consider the mean square vibrational amplitude, $\expval{r^2}$, for
 a single particle at $T = \SI{0}{\kelvin}$ placed in the oscillator trap.
 Computing the expectation value we get~\cite{citation-needed}
@@ -359,13 +359,13 @@ characteristic length of the trap, $a_{ho}=\qty(2\expval{r^2})^{\flatfrac{1}{2}}
 In our case, we limit ourselves to $N=2$ interacting electrons in two
 dimensions in a trap with a frequency such that $\hbar \omega =
 1$.\footnote{Note that, due to the natural units, this implies that $\omega =
-  1$, which further means that $a_{ho} = 1$. It should be apparent why these
-  definitions are used, as it simplifies both units and expression quite a bit.} We do this because for
+  1$, which further means that $a_{ho} = 1$. It should be apparent why we use these
+  definitions, as it simplifies both units and expressions.} We do this because for
 this case we have exact, analytical solutions for the ground state energy. With the
 interaction term included, the ground state energy is $E_0 = \SI{3}{\au}$~\cite{Taut1993}.
 This limitation is purely one of convenience, as having exact benchmarks makes for better
 verification of results. Furthermore, limiting the size of the problem makes the required
-computation time manageable, which is good when experimenting with various techniques.
+computation time manageable, which is good when experimenting with different techniques.
 
 \subsubsection{Simple Non-Interacting Case}\label{sec:simple-non-inter-HO}
 If we omit the interacting terms in \autoref{eq:H-QD-def} we have
@@ -401,8 +401,7 @@ product of the one-electron wave functions,
         &= \frac{\omega}{\pi} e^{-\frac{\omega}{2}\qty(r_1^2+r_2^2)}.
     \end{split}\label{eq:Phi-non-inter}
 \end{align}
-The ground state energy can once again be evaluated
-analytically and yields
+We can once again evaluate the ground state energy analytically, which yields
 \begin{align}
     E_0 = \frac{\expval{\hat H_0}{\Phi}}{\braket{\Phi}}
     = 2\omega =\SI{2}{\au}
@@ -432,7 +431,7 @@ A similar argument can be made for particles with different spins.
 The Virial Theorem gives a general relation for the time-averaged kinetic
 energy $\expval{K}$ and the corresponding potential energy
 $\expval{V_{pot}}$ of a stable system of $N$ particles. In general the
-theorem is stated as:
+theorem states:
 
 \begin{align}
     \expval{K} = -\frac{1}{2}\sum_{k=1}^N \expval{\vec F_k \cdot \vec
@@ -480,7 +479,7 @@ together. The Hamiltonian for this system is taken as
 \begin{align}
     \hat H &= -\sum_{i=1}^N \frac{\hbar^2}{2m}\laplacian_i + \sum_{i < j} V(r_{ij})
 \end{align}
-i.e. the kinetic energy of all atoms, plus a interaction potential dependent on
+i.e.\ the kinetic energy of all atoms, plus a interaction potential dependent on
 the distance between all pairs of atoms. The mass $m$ is the mass of one $^4He$
 atom. The form of $V$ is not known analytically, but is experimentally probed to
 great accuracy. Theorists have since fitted specific functional forms to the
