@@ -6,15 +6,14 @@
 We now present results for all methods discussed, applied on the example system
 of Quantum Dots (QD) from \cref{sec:quantum-dots-theory}. We present first some
 benchmarks using a typical Slater-Jastrow wave function form, followed by
-introduction of various neural network-based wave function.
+introduction of neural network-based wave functions.
 
 \section{Benchmark}
 
 As we shall restrict this analysis to only two interacting particles in the QD,
-$\vX = (\vx_1\ \vx_2)$, our benchmark wave function is rather simple. We build
+$\vX = (\vx_1\ \vx_2)$, our benchmark wave function is simple. We build
 it up using the product of single particle ground states (Gaussian), multiplied
-by a Pade-Jastrow correlation term\footnote{We drop the constant factor
-  from~\cref{eq:Phi-non-inter} because we have not normalized the wave function.}:
+by a Pade-Jastrow correlation term:\footnote{We drop the constant factor from~\cref{eq:Phi-non-inter} because we have not normalized the wave function.}
 
 \begin{align}
   \label{eq:qd-pade-jastrow-anzats}
@@ -22,8 +21,8 @@ by a Pade-Jastrow correlation term\footnote{We drop the constant factor
   &= \exp(-\alpha_G\sum_{i=1}^N \norm{\vx_i}^2 + \sum_{i < j} \frac{\alpha_{PJ}
     r_{ij}}{1 + \beta_{PJ} r_{ij}}),
 \end{align}
-where $\alpha_{PJ} = 1$ is fixed by the cusp conditions, and $\alpha_G$ and $\beta_{PJ}$
-are the two only variational parameters.
+where cusp conditions fix $\alpha_{PJ} = 1$, and $\alpha_G$ and $\beta_{PJ}$
+are the only two variational parameters.
 
 \subsubsection{Optimizing}
 
@@ -31,7 +30,7 @@ We have run a simple optimization of the above wave function, using initial
 values of $\alpha_G = 0.5$ and $\beta_{PJ} = 1$. We used importance sampling and the
 ADAM optimization scheme. We used $\num{2000}$ optimization steps, each with
 $\num{5000}$ MC cycles. The values are somewhat arbitrarily, and we get
-similar results for several other choices.
+similar results for other choices.
 
 \begin{figure}[h]
    \centering
@@ -61,9 +60,9 @@ of percentage of training completed. We can observe that the optimizations
 quickly settles down to a set of optimal values, where it only oscillates
 slightly back and forth. \cref{tab:pade-jastrow-benchmark-energy} shows
 statistics for the energy obtained with the final state. Comparing to the
-analytical result of $\SI{3}{\au}$ these results are in very good agreement. For
+analytical result of $\SI{3}{\au}$ these results are in good agreement. For
 reference we have also given the results obtained without the Pade-Jastrow term,
-i.e. the non-interacting ground state.
+i.e.\ the non-interacting ground state.
 
 \section{Restricted Boltzmann Machine}
 
@@ -80,17 +79,17 @@ i.e. the non-interacting ground state.
 
 The first ML inspired model we have applied is a Restricted Boltzmann Machine (RBM).
 This type of model has seen a significant rise in usage
-since~\textcite{Carleo602} demonstrated the RBMs excellent capability to
-represent the wave function for some selected Hamiltonians. However, all the
-Hamiltonians for which they showed successful results were had a discrete
-configuration space. The current system is continuous as the particles can have
+since~\textcite{Carleo602} demonstrated the RBMs capability to
+represent the wave function for some selected Hamiltonians. All the
+Hamiltonians for which they showed successful results, however, had discrete
+configuration spaces. The current system is continuous as the particles can have
 any real valued coordinates, and so the type of RBM must change as well.
 
-While several possible choices exist, we have used a Gaussian-Binary RBM. An
-example diagram is given in~\cref{fig:rbm-diagram-example}. A full
-introduction to RBMs, including the details needed for VMC can be found
-in\cite{Flugsrud-2018}. For our purposes it suffices to say that the resulting
-wave function looks as follows:
+While more than one choice exist, we have used a Gaussian-Binary RBM\@.
+\cref{fig:rbm-diagram-example} shows and example diagram of the network
+structure. \textcite{Flugsrud-2018} has a full introduction to RBMs, including
+all details needed for VMC\@. For our purposes it suffices to say that the
+resulting wave function looks as follows:
 
 \begin{align}
   \label{eq:rbm-def}
@@ -101,26 +100,26 @@ wave function looks as follows:
 where $M = P\cdot D$ is the number of degrees of freedom and $N$ is the number
 of hidden nodes. Note also that $X_i$ in the above refers to the $i$'th degree
 of freedom, counting through $\mat X$ in row major order. The parameters are
-$\vb a, \vb b$ and $\mat W$, and $\sigma^2=1$ is held constant in this case.
+$\vb a, \vb b$ and $\mat W$, and we hold $\sigma^2=1$ constant in this case.
 
 If we set $\vb a = \vb 0$ we can recognize the first factor of~\cref{eq:rbm-def}
 as the non-interacting ground state. That way we can consider the second factor
-the Jastrow factor introduced by the RBM structure. It has a rather
-unconventional form, as it is not a pure exponential.
+the Jastrow factor introduced by the RBM structure. It has an unconventional
+form, as it is not a pure exponential.
 
 
 \subsubsection{Optimizing}
 
-We have run several variations of optimization on the RBM, all leading to rather
-similar results. The following was produced with normally distributed random
+We produced the following with normally distributed random
 initial values for the parameters, running $\num{60000}$ optimization steps with
 $\num{2000}$ MC cycles each. We have also once again used importance sampling
-and ADAM. A new addition (not strictly necessary for similar results) is the use
+and ADAM\@. A new addition (not strictly necessary for similar results) is the use
 of mild $L2$ regularization, which serves to drive parameters that do not
-contribute towards zero.
+contribute towards zero. The results are similar for different hyper-parameter
+choices, and the above is simply one such example.
 
 \cref{fig:QD-rbm-training} shows the ground state energy as a function of
-training steps, along with the progression of the various variational
+training steps, along with the progression of the variational
 parameters. While we see a clear improvement in the initial stages, the RBM
 fails to converge as accurately as the benchmark. \cref{tab:rbm-energy-results}
 shows the precise results of the final model. While slightly different results
@@ -166,7 +165,7 @@ can be found~\cite[TODO: Add path]{MS-thesis-repository}, and \LaTeX{} output
 generated by~\cite{nico_schlomer_2018_1173090}.}
 \end{figure}
 
-An interesting consideration that arises from this form of wave function model
+An important consideration that arises from this form of wave function model
 is that it has no guarantee of satisfying the required permutation symmetry.
 This is an attribute of most neural network based models. Because we know the
 true ground state must have the correct symmetry, we would hope that the RBM is
@@ -175,35 +174,31 @@ metric $S(\psi)$, which has the property of being equal to 1 for symmetric
 functions and $0$ for anti-symmetric ones. See \cref{app:symmetry-metric} for
 its definition and details. The left plot in \cref{fig:QD-rbm-symmetry} shows a
 plot of the symmetry metric of $\psi_{RBM}$ during training. Luckily we see
-that the RBM, initially starting fully non-symmetric, tends rapidly towards 
+that the RBM, initially starting fully non-symmetric, tends rapidly towards
 1. Still it is not purely symmetric, and we see significant
 oscillations around the maximum value.
 
 The right plot in \cref{fig:QD-rbm-symmetry} shows a peculiar pattern emerging
-from the weights $\mat W$ of the final model. Several weights are
+from the weights $\mat W$ of the final model. Half of the weights appear
 inconsequential, while the remaining come in pairs of equal value. Additionally,
 although not obvious from the plot, there are only two unique absolute values,
-i.e. $\pm v_1$ and $\pm v_2$. Increasing the number of hidden nodes results in
-the same two strips, with the extra elements similarly zeroing out. 
+i.e.\ $\pm v_1$ and $\pm v_2$. Increasing the number of hidden nodes results in
+the same two strips, with the extra elements similarly zeroing out.
 
-In attempts to properly fix the symmetry of $\psi_{RBM}$, we have made two meaningful
+In attempts to properly fix the symmetry of $\psi_{RBM}$, we have made two significant
 attempts. The first was reducing the biases $\vb a$ to be $\vb a\in\mathbb{R}^D$
 and reducing the weights to
-$\mat W\in\mathbb{R}^{D\times N}$, i.e. have parameters per dimension and not
-per degree of freedom. The motivation was that this would ensure all
-degrees of freedom was treated in a symmetric manner. While this ensured
-$S(\psi_{RBM})=1$, the resulting wave function proved unable to learn anything
-useful. It could still learn the ground state if the particles where
-non-interacting (i.e. the pure Gaussian), but failed remarkably in the full
-system.
+$\mat W\in\mathbb{R}^{D\times N}$, i.e.\ have parameters per dimension and not
+per degree of freedom. While this ensured
+$S(\psi_{RBM})=1$, and the RBM could still learn the ground state if the particles where
+non-interacting (i.e.\ the pure Gaussian), it failed in the full system.
 
 More successfully we imposed symmetry by sorting the inputs prior to feeding
 them through $\psi_{RBM}$. While this was able to learn something, it stalled
 out at $>\SI{3.1}{\au}$. In general it is our experience that imposing the
 symmetry from the beginning of the training stops the RBM in getting anywhere.
-This appears to be a manifestation of the classical problem in learning of balancing
-exploitation and exploration, with this case suffering from to little
-exploration.
+This is a manifestation of the classical problem in learning of balancing
+exploitation and exploration, with this case suffering from a lack of exploration.
 
 The only truly successful way we found was to train the RBM as before, and then
 apply sorted inputs on it once it had been fully trained. The results of this is
@@ -230,7 +225,7 @@ options for how to do this:
 \end{enumerate}
 While there is a certain appeal to the first alternative, in the
 sense that we would end up with a pure neural network wave function, the
-downside is that pre-training will not be completely accurate, as well as taking
+downside is that pre-training will not be as accurate, as well as taking
 some time. Small inaccuracies could also lead to instabilities from non-satisfied
 cusp conditions/symmetry requirements.
 
@@ -238,7 +233,7 @@ Because of this, we opted to simply treat the network as a correction factor,
 aimed to fix the small discrepancy between the benchmark and the true ground
 state. This approach allows us to bootstrap learning and start where existing
 techniques have already taken us, and improve from there. It is also trivial to
-implement in QFLOW, as there is built in support for composing wave functions by
+implement in QFLOW, because of built in support for composing wave functions by
 multiplication.
 
 The proposed wave function is:
@@ -246,7 +241,7 @@ The proposed wave function is:
 \begin{align}\label{eq:pade-dnn}
   \psi_{DNN}(\vX) &= \psi_{PJ}(\vX)\, f(\vX),
 \end{align}
-where $f$ represents some arbitrary neural network. 
+where $f$ represents some arbitrary neural network.
 
 
 \subsection{Network Architecture}
@@ -254,21 +249,21 @@ where $f$ represents some arbitrary neural network.
 We consider here only simple Feed Forward Neural Networks (FFNN) and leave other
 species of NNs for future research.
 
-The number of inputs is determined by the size of the system.
+The size of the system determines the number of inputs.
 The output layer is also essentially forced as we want a
-scalar output from our network\footnote{For applications that require complex
+scalar output from our network.\footnote{For applications that require complex
   wave functions, this can be easily modeled by having two outputs and
-  interpret them as the real and imaginary component.}. In addition, all
+  interpret them as the real and imaginary component.} In addition, all
 existing research implies that such correlation factors should be exponential.
 
 For the hidden layers we have much more of a choice. By simple trail and error
-we found $\tanh$ to be the most suitable activation function, and this is used
+we found $\tanh$ to be the most suitable activation function, and we have used this
 in all cases. The number of nodes needs to be sufficiently large compared to the
 number of inputs. This is to allow the network to learn a large amount of
-different correlations, and not force it to settle on a few right away.
+different correlations, and not force it to settle right away.
 The specific choices are again empirically motivated, and stems
 from observing worse results with much smaller values and diminishing returns
-for larger choices. 
+for larger choices.
 
 The later hidden layers should decrease in width as we approach the output, with
 the idea that the network should gradually attempt to compact what it learns
@@ -299,16 +294,17 @@ we have found the following setup settled on the following setup:
 
 \subsection{Optimization}
 
-Again we find that several different hyper-parameters yield good results. The
-following results are obtained by optimizing $\psi_{DNN}$ using $\num{25000}$
+We produced the following results by optimizing $\psi_{DNN}$ using $\num{25000}$
 iterations of $1000$ MC cycles each. We have not used any regularization in this
 case, and as usual we use importance sampling and the ADAM optimizer.
+Again, this is an example of hyper-parameters, and we can achieve good results
+with a range of other choices.
 
 \cref{fig:QD-pade-dnn-training} shows a graph of the absolute error in energy
 during the course of training, both for $\psi_{DNN}$ and the benchmark
 $\psi_{PJ}$. The two curves closely follow each other in early stages, likely
 because the Pade-Jastrow factor contributes most of the improvements at this point. The
-benchmark eventually plateaus after a relatively short amount of time, while the
+benchmark eventually plateaus after a short amount of time, while the
 network however continues to improve beyond this point. We achieve about an
 order of magnitude better accuracy, with a corresponding reduction in the
 variance.
@@ -325,8 +321,8 @@ of~\cref{fig:QD-pade-dnn-training}, showing a clear improvement.
     }
     \caption{\label{fig:QD-pade-dnn-training}Left: Performance of the wave
 function in~/cref{eq:pade-dnn} as a function of training steps. Right:
-Progression of variational parameters as a function of training steps. Only a
-small selection of the parameters are included. The source code for this graphic
+Progression of variational parameters as a function of training steps. We Only
+show a small selection of the total number of parameters. The source code for this graphic
 can be found~\cite[TODO: Add path]{MS-thesis-repository}, and \LaTeX{} output
 generated by~\cite{nico_schlomer_2018_1173090}.}
 \end{figure}
@@ -342,24 +338,24 @@ algorithm by~\textcite{Jonsson-2018}. See
   \label{tab:pade-dnn-energy-results}
 \end{table}
 
-\begin{figure}[h]
-   \centering
-    \resizebox{0.7\linewidth}{!}{%
-        \input{scripts/QD-pade-dnn.py.symmetry.tex}
-    }
-    \caption{\label{fig:QD-pade-dnn-symmetry}Permutation symmetry of
-$\psi_{DNN}$ as a function of training steps. See
-\cref{fig:QD-pade-dnn-training} for source code reference.}
-\end{figure}
+% \begin{figure}[h]
+%    \centering
+%     \resizebox{0.7\linewidth}{!}{%
+%         \input{scripts/QD-pade-dnn.py.symmetry.tex}
+%     }
+%     \caption{\label{fig:QD-pade-dnn-symmetry}Permutation symmetry of
+% $\psi_{DNN}$ as a function of training steps. See
+% \cref{fig:QD-pade-dnn-training} for source code reference.}
+% \end{figure}
 
-\begin{figure}[h]
-   \centering
-    \resizebox{\linewidth}{!}{%
-        \input{scripts/QD-pade-dnn.py.weights.tex}
-    }
-    \caption{\label{fig:QD-rbm-symmetry}Color map representation of the weights
-      and biases in the network of $\psi_{DNN}$. See
-\cref{fig:QD-pade-dnn-training} for source code reference.}
-\end{figure}
+% \begin{figure}[h]
+%    \centering
+%     \resizebox{\linewidth}{!}{%
+%         \input{scripts/QD-pade-dnn.py.weights.tex}
+%     }
+%     \caption{\label{fig:QD-rbm-symmetry}Color map representation of the weights
+%       and biases in the network of $\psi_{DNN}$. See
+% \cref{fig:QD-pade-dnn-training} for source code reference.}
+% \end{figure}
 
 \end{document}
