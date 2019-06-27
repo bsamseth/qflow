@@ -241,7 +241,10 @@ a repulsive Coulomb force causing interactions:
     \Psi(\mathbf{X}) = \prod_{i < j}^N e^{\frac{\alpha r_ij}{1 + \beta r_ij}}
 
 )doc")
-        .def(py::init<Real, Real>(), py::arg("alpha") = 0.5, py::arg("beta") = 1);
+        .def(py::init<Real, Real, bool>(),
+             py::arg("alpha")             = 0.5,
+             py::arg("beta")              = 1,
+             py::arg("alpha_is_constant") = true);
 
     py::class_<JastrowOrion, Wavefunction>(m, "JastrowOrion", R"doc(
 A correlation term meant to be suitable for particles in a harmonic oscillator potential with

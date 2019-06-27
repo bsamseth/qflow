@@ -30,19 +30,24 @@ def test_eval(X, beta):
         assert np.isclose(jastrow_np(X, 0.5, beta), psi(X))
 
 
-@given(X=array_strat(min_dims=2), beta=float_strat())
+@given(X=array_strat(min_dims=2), alpha=float_strat(), beta=float_strat())
 @settings(deadline=None)
-def test_gradient(X, beta):
+def test_gradient(X, alpha, beta):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        np_grad_beta = grad(jastrow_np, 2)(X, 0.5, beta) / jastrow_np(X, 0.5, beta)
+        np_grad_alpha = grad(jastrow_np, 1)(X, alpha, beta) / jastrow_np(X, alpha, beta)
+        np_grad_beta = grad(jastrow_np, 2)(X, alpha, beta) / jastrow_np(X, alpha, beta)
 
-    psi = JastrowPade(0.5, beta)
+    psi_alpha_const = JastrowPade(alpha, beta)
+    psi = JastrowPade(alpha, beta, False)
     actual = psi.gradient(X)
-    assert 1 == len(actual)
+    assert 2 == len(actual)
+
+    assert psi_alpha_const.gradient(X)[0] == 0
 
     if math.isfinite(np_grad_beta):
-        assert np.isclose(np_grad_beta, actual[0])
+        assert np.isclose(np_grad_alpha, actual[0])
+        assert np.isclose(np_grad_beta, actual[1])
 
 
 @given(X=array_strat(min_dims=2, max_size=10), beta=float_strat())

@@ -4,16 +4,18 @@
 
 #include <cmath>
 
-JastrowPade::JastrowPade(Real alpha, Real beta)
-    : Wavefunction(vector_from_sequence({beta})), alpha_(alpha)
+JastrowPade::JastrowPade(Real alpha, Real beta, bool alpha_constant)
+  : Wavefunction(vector_from_sequence({alpha, beta})), alpha_is_constant(alpha_constant)
 {
-    assert(_parameters[0] == beta);
-    assert(_parameters.size() == 1);
+    assert(_parameters.size() == 2);
+    assert(_parameters[0] == alpha);
+    assert(_parameters[1] == beta);
 }
 
 Real JastrowPade::operator()(const System& system)
 {
-    const Real beta = _parameters[0];
+    const Real alpha = _parameters[0];
+    const Real beta  = _parameters[1];
     const int  N    = system.rows();
     Real       res  = 0;
     for (int i = 0; i < N - 1; ++i)
@@ -21,7 +23,7 @@ Real JastrowPade::operator()(const System& system)
         for (int j = i + 1; j < N; ++j)
         {
             const Real r_ij = Distance::probe(system, i, j);
-            res += alpha_ * r_ij / (1 + beta * r_ij);
+            res += alpha * r_ij / (1 + beta * r_ij);
         }
     }
     return std::exp(res);
@@ -29,15 +31,17 @@ Real JastrowPade::operator()(const System& system)
 
 RowVector JastrowPade::gradient(const System& system)
 {
-    const Real beta = _parameters[0];
-    RowVector  grad = RowVector::Zero(1);
+  const Real alpha = _parameters[0];
+    const Real beta = _parameters[1];
+    RowVector  grad = RowVector::Zero(2);
     const int  N    = system.rows();
     for (int i = 0; i < N - 1; ++i)
     {
         for (int j = i + 1; j < N; ++j)
         {
             const Real r_ij = Distance::probe(system, i, j);
-            grad[0] -= alpha_ * r_ij * r_ij / square(1 + beta * r_ij);
+            grad[0] += alpha_is_constant ? 0 : r_ij / (1 + beta * r_ij);
+            grad[1] -= alpha * r_ij * r_ij / square(1 + beta * r_ij);
         }
     }
     return grad;
@@ -45,7 +49,8 @@ RowVector JastrowPade::gradient(const System& system)
 
 Real JastrowPade::drift_force(const System& system, int k, int d)
 {
-    const Real beta = _parameters[0];
+    const Real alpha = _parameters[0];
+    const Real beta = _parameters[1];
     const int  N    = system.rows();
     Real       res  = 0;
     for (int i = 0; i < N; ++i)
@@ -53,7 +58,7 @@ Real JastrowPade::drift_force(const System& system, int k, int d)
         if (i != k)
         {
             const Real r_ik = Distance::probe(system, i, k);
-            res += alpha_ * (system(k, d) - system(i, d))
+            res += alpha * (system(k, d) - system(i, d))
                    / (square(1 + beta * r_ik) * r_ik);
         }
     }
@@ -62,7 +67,8 @@ Real JastrowPade::drift_force(const System& system, int k, int d)
 
 Real JastrowPade::laplacian(const System& system)
 {
-    const Real beta = _parameters[0];
+  const Real alpha = _parameters[0];
+    const Real beta = _parameters[1];
     const int  N    = system.rows();
     const int  D    = system.cols();
 
@@ -87,7 +93,7 @@ Real JastrowPade::laplacian(const System& system)
                 term2 += D / (square(beta_rik_1) * r_ik);
             }
         }
-        res += alpha_ * alpha_ * term1.squaredNorm() + alpha_ * term2;
+        res += alpha * alpha * term1.squaredNorm() + alpha * term2;
     }
 
     return res;

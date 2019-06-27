@@ -11,16 +11,15 @@
  *      J(X) = prod_{i < j} exp(  alpha r_ij / ( 1 + beta r_ij )  )
  *
  * where r_ij is the distance between particle i and j. Variational
- * parameters are beta, and alpha is fixed as 1/2 for opposite spins,
- * and 1/4 for equal spins.
+ * parameters are beta, and alpha is either fixed by cusp or allowed to vary.
  */
 class JastrowPade : public Wavefunction
 {
 private:
-    const Real alpha_;
+  const bool alpha_is_constant;
 
 public:
-    JastrowPade(Real alpha = 0.5, Real beta = 1);
+    JastrowPade(Real alpha = 1, Real beta = 0.5, bool alpha_constant = true);
 
     Real operator()(const System&) override;
 
