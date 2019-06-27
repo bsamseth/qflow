@@ -18,7 +18,7 @@ def plot_training(energies, parameters):
     eax.axhline(y=3, label="Exact", linestyle="--", color="k", alpha=0.5)
     eax.legend()
 
-    pax.plot(np.asarray(parameters)[:, [0, 2]])
+    pax.plot(np.asarray(parameters)[:, [0, 3]])
     pax.set_xlabel(r"% of training")
     pax.legend([r"$\alpha_G$", r"$\beta_{PJ}$"])
 
