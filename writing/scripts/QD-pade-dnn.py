@@ -30,7 +30,7 @@ def plot_training(energies, parameters, symmetries):
     eax.set_ylabel(r"Absolute error in $\langle E_L\rangle$ [a.u]")
     eax.legend()
 
-    pax.plot(np.asarray(parameters)[:, 3:50])
+    pax.plot(np.asarray(parameters)[:, 4:50])
     pax.set_xlabel(r"% of training")
 
     matplotlib2tikz.save(__file__ + ".tex")
@@ -44,7 +44,7 @@ def plot_training(energies, parameters, symmetries):
     matplotlib2tikz.save(__file__ + ".symmetry.tex")
 
     fig, axes = plt.subplots(ncols=2, nrows=3)
-    i, j = 3, 3 + 4*32
+    i, j = 4, 4 + 4*32
     p = parameters[-1]
     w0, b0 = p[i:j], p[j: j + 32]
     i, j = j + 32, j + 32 + 32 * 16
