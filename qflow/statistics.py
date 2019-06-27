@@ -36,15 +36,17 @@ def statistics_to_tex(all_stats, labels, filename=None):
     used_stats = ("ci-", "ci+", "std", "var")
     n_stats = len(used_stats) + 1
 
-    tex = f"""\\begin{{tabular}}{{l{n_stats * 'S'}}}
+    digs = max([abs(int(math.floor(math.log10(stats["sem"])))) for stats in all_stats])
+
+    tex = f"""\\begin{{tabular}}{{lS[table-format=1.%d]*2{{S[table-format=1.%d]}}*2{{S[table-format=1.1]}}}}
 \\toprule
 \\addlinespace
-& $\\langle E_L\\rangle$ & CI$^{{95}}_-$ & CI$^{{95}}_+$ & Std & Var \\\\
+& {{$\\langle E_L\\rangle$}} & {{CI$^{{95}}_-$}} & {{CI$^{{95}}_+$}} & {{Std}} & {{Var}} \\\\
 \\addlinespace
 \\midrule
 \\addlinespace
 \\addlinespace
-    """
+    """ % (digs + 2, digs)
 
     for stats, label in zip(all_stats, labels):
         stats = stats.copy()
