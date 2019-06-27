@@ -36,7 +36,7 @@ def statistics_to_tex(all_stats, labels, filename=None):
     used_stats = ("ci-", "ci+", "std", "var")
     n_stats = len(used_stats) + 1
 
-    tex = f"""\\begin{{tabular}}{{l{n_stats * 'c'}}}
+    tex = f"""\\begin{{tabular}}{{l{n_stats * 'S'}}}
 \\toprule
 \\addlinespace
 & $\\langle E_L\\rangle$ & CI$^{{95}}_-$ & CI$^{{95}}_+$ & Std & Var \\\\
