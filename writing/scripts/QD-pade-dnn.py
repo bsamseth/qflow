@@ -24,13 +24,14 @@ from qflow.mpi import mpiprint, master_rank
 
 def plot_training(energies, parameters, symmetries):
     fig, (eax, pax) = plt.subplots(ncols=2)
-    eax.semilogy(np.abs(3 - np.asarray(energies[1])), label=r"$\psi_{PJ}$")
+    eax.semilogy(np.abs(3 - np.asarray(energies[2])), label=r"$\psi_{PJ}$")
     eax.semilogy(np.abs(3 - np.asarray(energies[0])), label=r"$\psi_{DNN}$")
+    eax.semilogy(np.abs(3 - np.asarray(energies[1])), label=r"$\psi_{SDNN}$")
     eax.set_xlabel(r"% of training")
     eax.set_ylabel(r"Absolute error in $\langle E_L\rangle$ [a.u]")
     eax.legend()
 
-    pax.plot(np.asarray(parameters)[:, 4:50])
+    pax.plot(np.asarray(parameters[0])[:, 4:50])
     pax.set_xlabel(r"% of training")
 
     matplotlib2tikz.save(__file__ + ".tex")
@@ -43,39 +44,40 @@ def plot_training(energies, parameters, symmetries):
 
     matplotlib2tikz.save(__file__ + ".symmetry.tex")
 
-    fig, axes = plt.subplots(ncols=2, nrows=3)
-    i, j = 4, 4 + 4*32
-    p = parameters[-1]
-    w0, b0 = p[i:j], p[j: j + 32]
-    i, j = j + 32, j + 32 + 32 * 16
-    w1, b1 = p[i:j], p[j: j + 16]
-    i, j = j + 16, j + 16 + 16
-    w2, b2 = p[i:j], p[j: j + 1]
+    for name, params in zip(["regular", "sorted"], parameters):
+        fig, axes = plt.subplots(ncols=2, nrows=3)
+        i, j = 4, 4 + 4*32
+        p = params[-1]
+        w0, b0 = p[i:j], p[j: j + 32]
+        i, j = j + 32, j + 32 + 32 * 16
+        w1, b1 = p[i:j], p[j: j + 16]
+        i, j = j + 16, j + 16 + 16
+        w2, b2 = p[i:j], p[j: j + 1]
 
-    axes[0][0].matshow(np.reshape(w0, (4,  32)))
-    axes[1][0].matshow(np.reshape(w1, (32, 16)), aspect="auto")
-    axes[2][0].matshow(np.reshape(w2, (16,  1)), aspect="auto")
+        axes[0][0].matshow(np.reshape(w0, (4,  32)))
+        axes[1][0].matshow(np.reshape(w1, (32, 16)), aspect="auto")
+        axes[2][0].matshow(np.reshape(w2, (16,  1)), aspect="auto")
 
-    axes[0][1].matshow(np.reshape(b0, (1, -1)), aspect="auto")
-    axes[1][1].matshow(np.reshape(b1, (1, -1)), aspect="auto")
-    axes[2][1].matshow(np.reshape(b2, (1, -1)), aspect="auto")
+        axes[0][1].matshow(np.reshape(b0, (1, -1)), aspect="auto")
+        axes[1][1].matshow(np.reshape(b1, (1, -1)), aspect="auto")
+        axes[2][1].matshow(np.reshape(b2, (1, -1)), aspect="auto")
 
-    axes[0][0].set_ylabel(r"$\mathbf{W}^{(0)}$")
-    axes[1][0].set_ylabel(r"$\mathbf{W}^{(1)}$")
-    axes[2][0].set_ylabel(r"$\mathbf{W}^{(2)}$")
-    axes[2][0].set_xlabel("Layer weights")
+        axes[0][0].set_ylabel(r"$\mathbf{W}^{(0)}$")
+        axes[1][0].set_ylabel(r"$\mathbf{W}^{(1)}$")
+        axes[2][0].set_ylabel(r"$\mathbf{W}^{(2)}$")
+        axes[2][0].set_xlabel("Layer weights")
 
-    axes[0][1].set_ylabel(r"$\mathbf{b}^{(0)}$")
-    axes[1][1].set_ylabel(r"$\mathbf{b}^{(1)}$")
-    axes[2][1].set_ylabel(r"$\mathbf{b}^{(2)}$")
-    axes[2][1].set_xlabel("Layer biases")
+        axes[0][1].set_ylabel(r"$\mathbf{b}^{(0)}$")
+        axes[1][1].set_ylabel(r"$\mathbf{b}^{(1)}$")
+        axes[2][1].set_ylabel(r"$\mathbf{b}^{(2)}$")
+        axes[2][1].set_xlabel("Layer biases")
 
-    axes[0][1].yaxis.set_label_position("right")
-    axes[1][1].yaxis.set_label_position("right")
-    axes[2][1].yaxis.set_label_position("right")
-    fig.tight_layout()
+        axes[0][1].yaxis.set_label_position("right")
+        axes[1][1].yaxis.set_label_position("right")
+        axes[2][1].yaxis.set_label_position("right")
+        fig.tight_layout()
 
-    matplotlib2tikz.save(__file__ + ".weights.tex")
+        matplotlib2tikz.save(__file__ + f".weights-{name}.tex")
 
 
 P, D = 2, 2  # Particles, dimensions
@@ -98,6 +100,23 @@ for l in layers:
 psi = WavefunctionProduct(simple_and_jastrow, dnn)
 psi_sampler = ImportanceSampler(system, psi, step_size=0.1)
 
+# Sorted
+simple_gaussian2 = SimpleGaussian(alpha=0.5)
+jastrow2 = JastrowPade(alpha=1, beta=1)
+simple_and_jastrow2 = WavefunctionProduct(simple_gaussian2, jastrow2)
+
+layers2 = [
+    DenseLayer(P * D, 32, activation=tanh, scale_factor=0.001),
+    DenseLayer(32, 16, activation=tanh),
+    DenseLayer(16, 1, activation=exponential),
+]
+dnn2 = Dnn()
+for l in layers2:
+    dnn2.add_layer(l)
+psi_sorted = WavefunctionProduct(simple_and_jastrow2, dnn2)
+psi_sorted.parameters = psi.parameters
+psi_sorted_sampler = ImportanceSampler(system, psi_sorted, step_size=0.1)
+
 
 # Benchmark:
 simple_gaussian_bench = SimpleGaussian(alpha=0.5)
@@ -106,30 +125,51 @@ psi_bench = WavefunctionProduct(simple_gaussian_bench, jastrow_bench)
 psi_bench_sampler = ImportanceSampler(system, psi_bench, step_size=0.1)
 
 
-psi_energies = EnergyCallback(samples=1000000, verbose=True)
-psi_symmetries = SymmetryCallback(samples=1000000)
+plot_samples = 1000000
+iters = 25000
+samples = 1000
+gamma = 0.0
+evaluation_points = 2**22
+
+psi_energies = EnergyCallback(samples=plot_samples, verbose=True)
+psi_symmetries = SymmetryCallback(samples=plot_samples)
 psi_parameters = ParameterCallback()
 
 train(
     psi,
     H,
     psi_sampler,
-    iters=25000,
-    samples=1000,
-    gamma=0,
+    iters=iters,
+    samples=samples,
+    gamma=gamma,
     optimizer=AdamOptimizer(len(psi.parameters)),
     call_backs=(psi_energies, psi_symmetries, psi_parameters),
 )
-mpiprint("Training complete")
+mpiprint("Training regular dnn complete")
 
-psi_bench_energies = EnergyCallback(samples=1000000)
+psi_sorted_energies = EnergyCallback(samples=plot_samples, verbose=True)
+psi_sorted_parameters = ParameterCallback()
+
+train(
+    psi_sorted,
+    H,
+    psi_sorted_sampler,
+    iters=iters,
+    samples=samples,
+    gamma=gamma,
+    optimizer=AdamOptimizer(len(psi_sorted.parameters)),
+    call_backs=(psi_sorted_energies, psi_sorted_parameters),
+)
+mpiprint("Training sorted dnn complete")
+
+psi_bench_energies = EnergyCallback(samples=plot_samples)
 
 train(
     psi_bench,
     H,
     psi_bench_sampler,
-    iters=25000,
-    samples=1000,
+    iters=iters,
+    samples=samples,
     gamma=0,
     optimizer=AdamOptimizer(len(psi.parameters)),
     call_backs=(psi_bench_energies,),
@@ -137,17 +177,28 @@ train(
 
 mpiprint("Bench Training complete")
 
-
 stats = [
     compute_statistics_for_series(
-        H.local_energy_array(psi_bench_sampler, psi_bench, 2 ** 22),
+        H.local_energy_array(psi_bench_sampler, psi_bench, evaluation_points),
         method="blocking",
     ),
     compute_statistics_for_series(
-        H.local_energy_array(psi_sampler, psi, 2 ** 22), method="blocking"
+        H.local_energy_array(psi_sampler, psi, evaluation_points), method="blocking"
+    ),
+    compute_statistics_for_series(
+        H.local_energy_array(psi_sorted_sampler, psi_sorted, evaluation_points), method="blocking"
     ),
 ]
-labels = [r"$\psi_{PJ}$", r"$\psi_{DNN}$"]
+old = psi_sorted.parameters
+psi_sorted.parameters = psi.parameters
+psi_sorted_sampler.thermalize(10000)
+
+stats.append(
+    compute_statistics_for_series(
+        H.local_energy_array(psi_sorted_sampler, psi_sorted, evaluation_points), method="blocking"
+    )
+)
+labels = [r"$\psi_{PJ}$", r"$\psi_{DNN}$", r"$\psi_{SDNN}$", r"$\hat{\psi}_{SDNN}$"]
 
 mpiprint(stats, pretty=True)
 mpiprint(statistics_to_tex(stats, labels, filename=__file__ + ".table.tex"))
@@ -155,6 +206,6 @@ mpiprint(statistics_to_tex(stats, labels, filename=__file__ + ".table.tex"))
 
 if master_rank():
     np.savetxt("Dnn-parameters.txt", psi.parameters)
-    plot_training([psi_energies, psi_bench_energies], psi_parameters, psi_symmetries)
+    plot_training([psi_energies, psi_sorted_energies, psi_bench_energies], [psi_parameters, psi_parameters], psi_symmetries)
     plt.show()
 
