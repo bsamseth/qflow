@@ -17,11 +17,25 @@ as the McMillan form wave function~\cite{McMillan-1965}:
   \label{eq:McMillan-wave-function-def}
   \psi_{M} &= \exp(-\frac{1}{2}\sum_{i<j} \qty(\frac{\beta}{r_{ij}})^5).
 \end{align}
-An important observation now is the lack of any single particle wave function
-factor. In the case of the Quantum Dot we had a Gaussian localized at the origin
-as a result of the potential well. In this case, the system is periodic and as
-such it would not make sense to include a localized factor. Furthermore, because
-of the lack of an external field the single particle solutions are just free
-particles, and does not help us understand the many-body system.
+An important observation now is the lack of any single particle wave
+function factor. In the case of the Quantum Dot we had a Gaussian localized at
+the origin as a result of the potential well. This system, however, is infinite
+and periodic and as such it would not make sense to include a localized factor.
+Furthermore, because of the lack of an external field the single particle
+solutions are just free particles, and does not help us understand the many-body
+system.
+
+An important aspect of all the results that we will present is that they are
+highly dependent on the number of particles used in the simulation box. The
+results generally converge with increasing number of particles, but the
+computation time needed to run the simulations increase significantly with
+increasing numbers.
+
+\begin{itemize}
+\item Show plot of training for 32 particles
+\item In table of energies, include same wave function on larger numbers (64,
+  128, 256)
+\end{itemize}
+
 
 \end{document}
