@@ -3,5 +3,25 @@
 \chapter{Liquid $^4$He}
 \label{chp:liquid-helium}
 
+We turn now to the much more challenging system of liquid Helium, presented
+in~\cref{sec:liquid-helium-theory}. As before, we will first present the
+benchmark result followed by the neural networks.
+
+
+\section{Benchmark}
+
+We will use one of the simpler benchmark wave functions for this system, known
+as the McMillan form wave function~\cite{McMillan-1965}:
+
+\begin{align}
+  \label{eq:McMillan-wave-function-def}
+  \psi_{M} &= \exp(-\frac{1}{2}\sum_{i<j} \qty(\frac{\beta}{r_{ij}})^5).
+\end{align}
+An important observation now is the lack of any single particle wave function
+factor. In the case of the Quantum Dot we had a Gaussian localized at the origin
+as a result of the potential well. In this case, the system is periodic and as
+such it would not make sense to include a localized factor. Furthermore, because
+of the lack of an external field the single particle solutions are just free
+particles, and does not help us understand the many-body system.
 
 \end{document}
