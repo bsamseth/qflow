@@ -361,4 +361,46 @@ algorithm by~\textcite{Jonsson-2018}. See
 \cref{fig:QD-pade-dnn-training} for source code reference.}
 \end{figure}
 
+
+\subsection{Complexity}
+
+While the neural network has demonstrated its capacity to learn an improved
+correlation function, this does come at a considerable computational cost. 
+
+The benchmark function has complexity $\mathcal{O}(N^2)$ for $N$ particles,
+rooted in the double sum in~\cref{eq:qd-pade-jastrow-anzats}. Thanks to
+analytic expressions for the derivatives, the otherwise heavy Laplace operator
+is also calculated in $\mathcal{O}(N^2)$ time.
+
+The complexity of the neural network is a little harder to pin down, because of
+the inherent flexibility in how the network can be structured.
+
+The neural network computes a series of matrix-vector multiplications, both during
+evaluation and for its derivatives. The input layer needs to scale equal to $N$,
+while the other layers could in principle be constant. This means we could say
+that the network only scales linearly, $\mathcal{O}(N)$, with increasing number
+of particles. Still, the \say{constant} part of the computation time is very
+large, and this kind of complexity analysis is slightly unfair.
+
+In practice we found that we needed the second layer to have more 
+nodes than we have inputs. We have not determined a strict relationship, but
+either $\mathcal{O}(N)$ or $\mathcal{O}{N^2}$ seems reasonable for the second
+layer. Assuming the network shrinks from there on, the dominant operation is a
+matrix-vector operation with matrix dimensions of order $(N\times N)$ or $(N\times N^2)$,
+which works out to a complexity of $\mathcal{O}(N^2)$ or $\mathcal{O}(N^3)$. In
+this more realistic view, the networks are not improving upon the complexity of
+the benchmark.\\
+
+Importantly the networks also depend highly on the depth (number of layers) as
+well as obviously the sizes of subsequent layers. We should also note that while
+asymptotic cost might be equal to the benchmark, a more precise count of the
+required operations would show a substantial disparity.
+
+However, a constant cost can always be brought down with optimized code, more
+and better hardware, introducing GPUs etc. And while computing power may no
+longer increase exponentially each year, it continues to grow nevertheless.
+Large scale use of networks for quantum mechanics might therefore be well
+within reach.
+
+
 \end{document}
