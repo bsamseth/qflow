@@ -471,11 +471,22 @@ particle.
 \subsection{Liquid $^4$He}
 \label{sec:liquid-helium-theory}
 
-Consider now an infinite collection of $^4$He atoms packed with a given density.
-As infinities are hard to work with, we model this by considering a cubic
-simulation box with side lengths $L$ and periodic boundary conditions. The
+Consider now an infinite collection of $^4$He atoms packed with a given density,
+$\rho$. As infinities are hard to work with, we model this by considering a
+cubic simulation box with side lengths $L$ and periodic boundary conditions. The
 infinite collection is then composed of stacking copies of such simulation boxes
-together. The Hamiltonian for this system is taken as
+together. ~\cref{fig:pbc-illustration} shows an illustration of the idea.
+
+\begin{figure}[h]
+  \centering
+  \input{illustrations/PBC-illustration.tex}
+  \caption{Illustration of $^4$He organized into a grid of identical simulation
+    boxes. The actual boxes are three-dimensional.}
+  \label{fig:pbc-illustration}
+\end{figure}
+
+
+The Hamiltonian for this system is taken as
 
 \begin{align}
     \hat H &= -\sum_{i=1}^N \frac{\hbar^2}{2m}\laplacian_i + \sum_{i < j} V(r_{ij})
