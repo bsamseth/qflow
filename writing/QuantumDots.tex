@@ -68,7 +68,7 @@ i.e.\ the non-interacting ground state.
 
 \begin{figure}[h]
   \centering
-  \input{scripts/rbm-diagram.tex}
+  \input{illustrations/rbm-diagram.tex}
   \caption{Example diagram of a Guassian-Binary Restricted Boltzmann Machine, showed with four visible nodes
     and three hidden nodes. The red values are the parameters, and consist of
     visible layer bias, $\vb a$, hidden layer bias, $\vb b$ and connection
@@ -365,7 +365,7 @@ algorithm by~\textcite{Jonsson-2018}. See
 \subsection{Complexity}
 
 While the neural network has demonstrated its capacity to learn an improved
-correlation function, this does come at a considerable computational cost. 
+correlation function, this does come at a considerable computational cost.
 
 The benchmark function has complexity $\mathcal{O}(N^2)$ for $N$ particles,
 rooted in the double sum in~\cref{eq:qd-pade-jastrow-anzats}. Thanks to
@@ -382,7 +382,7 @@ that the network only scales linearly, $\mathcal{O}(N)$, with increasing number
 of particles. Still, the \say{constant} part of the computation time is very
 large, and this kind of complexity analysis is slightly unfair.
 
-In practice we found that we needed the second layer to have more 
+In practice we found that we needed the second layer to have more
 nodes than we have inputs. We have not determined a strict relationship, but
 either $\mathcal{O}(N)$ or $\mathcal{O}{N^2}$ seems reasonable for the second
 layer. Assuming the network shrinks from there on, the dominant operation is a
