@@ -1,0 +1,25 @@
+\begin{tikzpicture}[baseline,trim axis left]
+    \begin{axis}[every axis plot post/.append style={
+        mark=none,domain=2.51:4.8,samples=50,smooth},
+      axis x line=bottom, % no box around the plot, only x and y axis
+      axis y line=left,
+      enlargelimits=true,
+      xlabel={$r\ [\si{\angstrom}]$},
+      ylabel={$V(r)\ [\si{\kelvin}]$)},
+      width=0.6\textwidth,
+      legend pos=south east,
+      ]
+      \addplot[semithick, color0] {4 * 10.22 * ((2.556/x)^(12) - (2.556/x)^6)};
+      \addplot[semithick, densely dotted, color1] {10.8 * (
+    544850.4 * exp(-13.353384 * x / 2.9673)
+    -  ( 1.37732412 * (2.9673 / x)^6
+        + 0.4253785 * (2.9673 / x)^8
+        + 0.178100  * (2.9673 / x)^(10)
+        ) * (
+        (2.9673/x<=1.241314) * (exp(-(1.241314 * x / 2.9673 - 1)^2) - 1) + 1
+        )
+      )};
+      \addplot[dashed] {0.0};
+      \legend{Lennard-Jones, HFDHE2}
+    \end{axis}
+  \end{tikzpicture}

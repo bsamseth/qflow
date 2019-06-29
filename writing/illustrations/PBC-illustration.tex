@@ -1,0 +1,68 @@
+\begin{tikzpicture}
+\def\proton(#1,#2){%
+    \shade[ball color=red] (#1,#2) circle (3pt);
+    \node at (#1,#2) {};
+}
+\def\neutron(#1,#2){%
+    \shade[ball color=white] (#1,#2) circle (3pt);
+}
+\def\electron{%
+    \shade[ball color=green!30] (0,0) circle (1pt);
+    \node at (0,0) {};
+}
+\def\sorbit(#1,#2,#3,#4,#5){%
+  \draw[
+  color=black!30,
+  postaction=decorate,
+  decoration={markings,
+  mark=at position #5 with {\electron},
+}]
+  (#1,#2) circle[x radius=#3, y radius=#4];
+}
+
+\def\helium(#1,#2,#3,#4,#5,#6){%
+  \neutron(#1+0.1,#2)
+  \proton(#1,#2+0.1)
+  \proton(#1,#2-0.1)
+  \neutron(#1-0.1,#2)
+  \sorbit(#1, #2, 0.2+#5, 0.2+#6, #3)
+  \sorbit(#1, #2, 0.2+#6, 0.2+#5, #4)
+}
+
+\helium(0.45,3.3,0.3,0.9,0.1,0.02)
+\helium(1.6,4.4,0.1,0.5,0.1,0.02)
+\helium(0.5,4.45,0.2, 0.7,0.1, 0.02)
+\helium(1.1,3.7, 0.3, 0.7,0.1, 0.02)
+
+% edge of the initial simulation box
+\path[draw,ultra thick] (0,3) rectangle (2,5) node at (1,5.3) {Simulation box};
+
+
+% periodic boundaries
+\foreach \x in {5,7,9} {
+    \foreach \y in {1,3,5} {
+        \helium(\x+0.45,\y+0.3,0.3,0.9,0.1,0.02)
+        \helium(\x+1.6 ,\y+1.4,0.1,0.5,0.1,0.02)
+        \helium(\x+0.5 ,\y+1.45,0.2, 0.7,0.1, 0.02)
+        \helium(\x+1.1 ,\y+0.7, 0.3, 0.7,0.1, 0.02)
+
+        % edge of each box
+        \path[draw,thick] (\x,\y) rectangle (\x+2,\y+2);
+    }
+}
+
+% central box thicker than other
+\path[draw,ultra thick] (7,3) rectangle (9,5);
+
+% an arrow
+\path[draw,ultra thick,->] (2.5,4) -- (4.5,4);
+
+% dashed lines
+\foreach \x in {5,7,9,11} {
+    % vertical
+    \path[draw,dashed,thick] (\x,0) -- (\x,1) (\x,7) -- (\x,8);
+    % horizontal
+    \path[draw,dashed,thick] (4,\x-4) -- (5,\x-4) (11,\x-4) -- (12,\x-4);
+}
+
+\end{tikzpicture}
