@@ -25,6 +25,8 @@ space. Furthermore, because of the lack of an external field the single particle
 solutions are just free particles, and does not help us understand the many-body
 system.
 
+\subsection{Finite Size Dependency}
+
 An important aspect of all the results that we will present is that they are
 highly dependent on the number of particles used in the simulation box, as well
 as the size of the box it self. We will hold the number density of particles
@@ -44,6 +46,29 @@ increasing numbers. The purpose of the following analysis is to test the
 used a small number of particles in the main results, where the absolute error
 introduced is significant. The number should hopefully still be large enough to
 introduce all the relevant effects and produce valid test results.
+
+
+\subsection{Optimizing}
+
+We have optimized~\cref{eq:McMillan-wave-function-def} using $\num{5000}$
+iterations of $\num{1000}$ MC cycles each. We used standard Metropolis sampling
+along with the ADAM optimizer. \cref{fig:He-benchmark-training} shows the
+progression of both the energy and variational parameter during training.
+Because of the strong correlations involved, there is significantly more
+variance in these results compared to the benchmark used for Quantum Dots. We
+see the value for $\beta$ oscillating without any indication of converging to a
+fixed value.
+
+\cref{tab:He-benchmark-results} show the energy estimates from the final model.
+The same wave function (i.e. same value for $\beta$) has also been used on
+different number of particles to illustrate how the energy increases for larger
+systems. Based on computations with larger and larger systems, the value for $N
+= 256$ is quite close to the apparent convergence for $N\to\infty$.
+
+
+
+
+
 
 \begin{itemize}
 \item Show plot of training for 32 particles
