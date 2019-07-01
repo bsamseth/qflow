@@ -15,10 +15,11 @@ def plot_training(energies, parameters):
     fig, (eax, pax) = plt.subplots(ncols=2)
     eax.plot(energies, label=r"$\langle E_L\rangle$ [a.u]")
     eax.set_xlabel(r"% of training")
+    eax.set_ylabel(r"Ground state energy (a.u.)")
 
     pax.plot(np.asarray(parameters))
     pax.set_xlabel(r"% of training")
-    pax.legend([r"$\alpha_G$", r"$\beta_{PJ}$"])
+    pax.legend([r"$\beta$"])
 
     matplotlib2tikz.save(__file__ + ".tex")
 
@@ -29,43 +30,61 @@ L = (P / rho) ** (1 / 3)
 system = np.empty((P, D))
 
 H = LennardJones(L)
-psi = JastrowMcMillian(5, 2.9, L)
+psi = JastrowMcMillian(5, 2.95, L)
 
 sampler = HeliumSampler(system, psi, 0.5, L)
 sampler.thermalize(10000)
 mpiprint("Acceptance rate after thermalization:", sampler.acceptance_rate)
 
 
-psi_energies = EnergyCallback(samples=100, verbose=True)
+psi_energies = EnergyCallback(samples=1000000, verbose=True)
 psi_parameters = ParameterCallback()
 
 train(
     psi,
     H,
     sampler,
-    iters=2500,
+    iters=5000,
     samples=1000,
     gamma=0,
-    optimizer=AdamOptimizer(len(psi.parameters)),
+    optimizer=AdamOptimizer(len(psi.parameters), 0.0001),
     call_backs=(psi_energies, psi_parameters),
 )
 
 mpiprint("Training complete")
-
-
-stats = [
-    compute_statistics_for_series(
-        H.local_energy_array(sampler, psi, 2 ** 20) / P, method="blocking"
-    ),
-]
-labels = [r"$\Phi$", r"$\psi_{PJ}$"]
-
-mpiprint(stats, pretty=True)
-mpiprint(statistics_to_tex(stats, labels, filename=__file__ + ".table.tex"))
 mpiprint(psi.parameters)
 
-psi_energies = np.asarray(psi_energies) / P
+if master_rank():
+    psi_energies = np.asarray(psi_energies) / P
+    plot_training(psi_energies, psi_parameters)
+    plt.show()
+
+stats, labels = [], []
+
+for P, step in zip([32, 64, 256], [.5, .6, .8]):
+    L = (P / rho) ** (1 / 3)
+    system = np.empty((P, D))
+    H = LennardJones(L)
+    psi_ = JastrowMcMillian(5, 2.95, L)
+    psi_.parameters = psi.parameters
+    samp = HeliumSampler(system, psi_, step, L)
+    samp = HeliumSampler(system, psi_, step, L)
+    samp.thermalize(10000)
+    mpiprint(f"{P}: AR = {samp.acceptance_rate}")
+
+    stats.append(
+        compute_statistics_for_series(
+            H.local_energy_array(samp, psi_, 2 ** 21) / P, method="blocking"
+        ),
+    )
+    labels.append(r"$\psi_M^(%d)$" % P)
+    mpiprint(f"{P}:", end='')
+    mpiprint(stats[-1], pretty=True)
+
+
+mpiprint(statistics_to_tex(stats, labels, filename=__file__ + ".table.tex"))
 
 if master_rank():
+    psi_energies = np.asarray(psi_energies) / P
     plot_training(psi_energies, psi_parameters)
     plt.show()
