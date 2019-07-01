@@ -20,16 +20,30 @@ as the McMillan form wave function~\cite{McMillan-1965}:
 An important observation now is the lack of any single particle wave
 function factor. In the case of the Quantum Dot we had a Gaussian localized at
 the origin as a result of the potential well. This system, however, is infinite
-and periodic and as such it would not make sense to include a localized factor.
-Furthermore, because of the lack of an external field the single particle
+and periodic without any such influence driving it towards particular points in
+space. Furthermore, because of the lack of an external field the single particle
 solutions are just free particles, and does not help us understand the many-body
 system.
 
 An important aspect of all the results that we will present is that they are
-highly dependent on the number of particles used in the simulation box. The
-results generally converge with increasing number of particles, but the
+highly dependent on the number of particles used in the simulation box, as well
+as the size of the box it self. We will hold the number density of particles
+constant, $\rho$, and set the side lengths of the simulation box, $L$, depending on
+the number of particles $N$:
+
+\begin{align}
+  L = \sqrt[3]{\frac{N}{\rho}}.
+\end{align}
+
+\noindent As the assumption of periodicity is a simplifying approximation, we
+introduce some erroneous effects because of it. These generally disappear as we
+increase the number of particles (and hence the size of box), but the
 computation time needed to run the simulations increase significantly with
-increasing numbers.
+increasing numbers. The purpose of the following analysis is to test the
+\emph{relative} accuracy of different wave functions. With that in mind we have
+used a small number of particles in the main results, where the absolute error
+introduced is significant. The number should hopefully still be large enough to
+introduce all the relevant effects and produce valid test results.
 
 \begin{itemize}
 \item Show plot of training for 32 particles
