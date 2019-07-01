@@ -1,6 +1,30 @@
 #include "heliumsampler.hpp"
 
 #include <cmath>
+#include <exception>
+
+namespace
+{
+struct GridPoints
+{
+    int x, y, z;
+};
+
+GridPoints find_cell_dimensions(int n)
+{
+  int x = std::pow(n, 1.0 / 3) + 1;
+  while (n % x != 0)
+    x--;
+
+  int y = std::sqrt(n / x) + 1;
+  while ((n / x) % y != 0)
+    y--;
+
+  int z = (n / x) / y;
+  return {x, y, z};
+}
+
+}  // namespace
 
 HeliumSampler::HeliumSampler(const System& system,
                              Wavefunction& psi,
@@ -13,12 +37,13 @@ HeliumSampler::HeliumSampler(const System& system,
 
 void HeliumSampler::initialize_system()
 {
-    int  ncx       = 2;
-    int  ncy       = 2;
-    int  ncz       = 2;
-    Real basisx[4] = {0., 0.5, 0.0, 0.5};
-    Real basisy[4] = {0., 0.5, 0.5, 0.0};
-    Real basisz[4] = {0., 0.0, 0.5, 0.5};
+    if (_system_old.rows() % 4 != 0)
+        throw std::invalid_argument("System #rows must be divisible by four.");
+
+    auto [ncx, ncy, ncz] = find_cell_dimensions(_system_old.rows() / 4);
+    Real basisx[4]       = {0., 0.5, 0.0, 0.5};
+    Real basisy[4]       = {0., 0.5, 0.5, 0.0};
+    Real basisz[4]       = {0., 0.0, 0.5, 0.5};
 
     const int  N    = _system_old.rows();
     const Real side = std::pow(4. * L * L * L / N, 1. / 3.);
