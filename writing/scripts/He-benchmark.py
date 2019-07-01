@@ -77,7 +77,7 @@ for P, step in zip([32, 64, 256], [.5, .6, .8]):
             H.local_energy_array(samp, psi_, 2 ** 21) / P, method="blocking"
         ),
     )
-    labels.append(r"$\psi_M^(%d)$" % P)
+    labels.append(r"$\psi_M^{(%d)}$" % P)
     mpiprint(f"{P}:", end='')
     mpiprint(stats[-1], pretty=True)
 
