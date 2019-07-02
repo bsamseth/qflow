@@ -12,7 +12,7 @@ from qflow.mpi import mpiprint
 from qflow.hamiltonians import LennardJones
 from qflow.optimizers import AdamOptimizer, SgdOptimizer
 from qflow.samplers import HeliumSampler
-from qflow.statistics import compute_statistics_for_series
+from qflow.statistics import compute_statistics_for_series, statistics_to_tex
 from qflow.training import EnergyCallback, ParameterCallback, SymmetryCallback, train
 from qflow.wavefunctions import (
     Dnn,
@@ -34,6 +34,8 @@ from qflow.wavefunctions.nn.layers import DenseLayer
 
 def plot_training(energies, parameters):
     energies = np.asarray(energies)
+    print(energies.shape)
+    print(energies)
     fig, (eax, pax) = plt.subplots(ncols=2)
     eax.plot(energies[:,0], label=r"$\psi_{M}$")
     eax.plot(energies[:,1], label=r"$\psi_{SDNN}$")
@@ -47,7 +49,7 @@ def plot_training(energies, parameters):
     matplotlib2tikz.save(__file__ + ".tex")
 
 
-# os.makedirs("logfiles", exist_ok=True)
+os.makedirs("logfiles", exist_ok=True)
 
 rho = 0.365 / (2.556) ** 3  # Å^-3
 P, D = 32, 3  # Particles, dimensions
@@ -82,6 +84,10 @@ mpiprint(f"AR (bench): {sampler_bench.acceptance_rate}")
 optimizer = AdamOptimizer(len(psi.parameters), 0.0001)
 optimizer_bench = AdamOptimizer(len(mcmillian_bench.parameters), 0.0001)
 
+iter_per_step = 50
+samples_per_iter = 1000
+plot_samples = 10000
+gamma = 0.00001
 
 steps = 1000
 t_average = 0
@@ -91,12 +97,12 @@ b_bench_training = []
 parameters = []
 for _ in range(steps):
     t0 = time.time()
-    H.optimize_wavefunction(psi, sampler, 50, 1000, optimizer, 0.00001, False)
-    H.optimize_wavefunction(mcmillian_bench, sampler_bench, 50, 1000, optimizer_bench, 0, False)
+    H.optimize_wavefunction(psi, sampler, iter_per_step, samples_per_iter, optimizer, gamma, False)
+    H.optimize_wavefunction(mcmillian_bench, sampler_bench, iter_per_step, samples_per_iter, optimizer_bench, 0, False)
     t1 = time.time() - t0
     t_average = (t_average * _ + t1) / (_ + 1)
-    E = H.local_energy_array(sampler, psi, 10000) / P
-    E_bench = H.local_energy_array(sampler_bench, mcmillian_bench, 10000) / P
+    E = H.local_energy_array(sampler, psi, plot_samples) / P
+    E_bench = H.local_energy_array(sampler_bench, mcmillian_bench, plot_samples) / P
     E_training.append([np.mean(E_bench), np.mean(E)])
     b_training.append(psi.parameters[0])
     b_bench_training.append(mcmillian_bench.parameters[0])
@@ -124,18 +130,28 @@ for _ in range(steps):
 
 # psi.parameters = np.mean(b_training[-steps//10:], keepdims=True)
 
-points = 2 ** 21
+points = 2 ** 10
 t0 = time.time()
 H.local_energy_array(sampler, psi, 500)
+H.local_energy_array(sampler_bench, mcmillian_bench, 500)
 t1 = time.time() - t0
+
 eta = timedelta(seconds=round(t1 / 500 * points))
 mpiprint(f"Calculating final energy - ETA {eta}")
 
-energies = H.local_energy_array(sampler, psi, points) / P
+
+stats = [
+    compute_statistics_for_series(
+        H.local_energy_array(sampler_bench, mcmillian_bench, points),
+        method="blocking",
+    ),
+    compute_statistics_for_series(
+        H.local_energy_array(sampler, psi, points), method="blocking"
+    ),
+]
+labels = [r"$\psi_{M}$", r"$\psi_{DNN}$"]
+mpiprint(stats, pretty=True)
+mpiprint(statistics_to_tex(stats, labels, filename=__file__ + ".table.tex"))
 
 if MPI.COMM_WORLD.rank == 0:
-    np.savetxt(
-        f"logfiles/helium-InputSorterDnn-P{P}-D{D}-energies.csv", energies, delimiter=","
-    )
-    pprint.pprint(compute_statistics_for_series(energies, method="blocking"))
     plot_training(E_training, parameters)
