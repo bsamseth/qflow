@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from os import system
-from multiprocessing import cpu_count
 
 # program = """
 # from time import time
@@ -15,11 +14,11 @@ from multiprocessing import cpu_count
 # s=MetropolisSampler([[0]],psi,1)
 # t0 = time()
 # for _ in range(20):
-#     H.local_energy(s,psi,1000000)
-# mpiprint((time() - t0) / 10)
+#     H.local_energy(s,psi,2**23)
+# mpiprint((time() - t0) / 20)
 # """
 
-# cpus = np.arange(1, cpu_count() + 1)
+# cpus = np.arange(1, 800 + 1)
 # for n in tqdm(cpus):
 #     system(
 #         f"mpiexec -n {n} --oversubscribe pipenv run python -c '{program}' >> mpi-speed-test-results.dat"
