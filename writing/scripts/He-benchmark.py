@@ -56,7 +56,6 @@ mpiprint(psi.parameters)
 
 if master_rank():
     plot_training(np.asarray(psi_energies) / P, psi_parameters)
-    plt.show()
 
 stats, labels = [], []
 
@@ -82,3 +81,4 @@ for P, step in zip([32, 64, 256], [.5, .6, .8]):
 
 
 mpiprint(statistics_to_tex(stats, labels, filename=__file__ + ".table.tex"))
+plt.show()
