@@ -95,7 +95,7 @@ RowVector Hamiltonian::local_energy_array(Sampler&      sampler,
         const long samples_per_proc
             = samples / n_procs + (i < samples % n_procs ? 1 : 0);
         counts[i] = samples_per_proc;
-        disps[i]  = i == 0 ? 0 : disps[i - 1] + samples_per_proc;
+        disps[i]  = i == 0 ? 0 : disps[i - 1] + counts[i - 1];
     }
 
     RowVector E_L(counts[rank]);
