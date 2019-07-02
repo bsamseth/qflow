@@ -84,12 +84,12 @@ mpiprint(f"AR (bench): {sampler_bench.acceptance_rate}")
 optimizer = AdamOptimizer(len(psi.parameters), 0.0001)
 optimizer_bench = AdamOptimizer(len(mcmillian_bench.parameters), 0.0001)
 
-iter_per_step = 50
-samples_per_iter = 1000
-plot_samples = 10000
+iter_per_step = 500
+samples_per_iter = 5000
+plot_samples = 100000
 gamma = 0.00001
 
-steps = 1000
+steps = 100
 t_average = 0
 E_training = []
 b_training = []
@@ -130,7 +130,7 @@ for _ in range(steps):
 
 # psi.parameters = np.mean(b_training[-steps//10:], keepdims=True)
 
-points = 2 ** 10
+points = 2 ** 22
 t0 = time.time()
 H.local_energy_array(sampler, psi, 500)
 H.local_energy_array(sampler_bench, mcmillian_bench, 500)
