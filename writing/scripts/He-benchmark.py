@@ -30,22 +30,22 @@ L = (P / rho) ** (1 / 3)
 system = np.empty((P, D))
 
 H = LennardJones(L)
-psi = JastrowMcMillian(5, 2.95, L)
+psi = JastrowMcMillian(5, 2.85, L)
 
 sampler = HeliumSampler(system, psi, 0.5, L)
 sampler.thermalize(10000)
 mpiprint("Acceptance rate after thermalization:", sampler.acceptance_rate)
 
 
-psi_energies = EnergyCallback(samples=1000000, verbose=True)
+psi_energies = EnergyCallback(samples=5000000, verbose=True)
 psi_parameters = ParameterCallback()
 
 train(
     psi,
     H,
     sampler,
-    iters=5000,
-    samples=1000,
+    iters=10000,
+    samples=5000,
     gamma=0,
     optimizer=AdamOptimizer(len(psi.parameters), 0.0001),
     call_backs=(psi_energies, psi_parameters),
@@ -55,8 +55,7 @@ mpiprint("Training complete")
 mpiprint(psi.parameters)
 
 if master_rank():
-    psi_energies = np.asarray(psi_energies) / P
-    plot_training(psi_energies, psi_parameters)
+    plot_training(np.asarray(psi_energies) / P, psi_parameters)
     plt.show()
 
 stats, labels = [], []
@@ -83,8 +82,3 @@ for P, step in zip([32, 64, 256], [.5, .6, .8]):
 
 
 mpiprint(statistics_to_tex(stats, labels, filename=__file__ + ".table.tex"))
-
-if master_rank():
-    psi_energies = np.asarray(psi_energies) / P
-    plot_training(psi_energies, psi_parameters)
-    plt.show()
