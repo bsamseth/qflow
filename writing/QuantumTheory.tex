@@ -614,4 +614,42 @@ diff_minimum = diff - L * np.round(diff / L)  # [2, -2, -1]
 The last variable, \texttt{diff\_minimum} represents the minimum image distance
 vector and this is the one used for any further calculations.
 
+\subsubsection{Correcting for Periodicity in Potentials}
+
+The potential $V(r_{ij})$ depend on the inter-particles distances. However,
+there are an infinite amount of particle pairs if we consider the system as a
+whole. We use periodic boundary conditions, and shall only consider pairs where
+both particles are in the simulation box (but still respecting the minimum image
+convention). This limitation excludes any interactions that act on length scales
+larger than $\flatfrac{L}{2}$, and this can have a significant impact on the
+total system.
+
+In an attempt to limit this effect, we modify the potentials slightly. First we
+explicitly truncate the potential to be zero for large distances, and shift it
+slightly so that the function remains continuous. That is, considering $V(r)$
+from~\cref{eq:Lennard-Jones-def}, we change it as follows:
+
+\begin{align}
+  \label{eq:Lennard-Jones-truncated-def}
+  V_\mathit{trunc}(r) &=
+                          \begin{cases}
+                            V(r) - V(\flatfrac{L}{2}) & \qfor r \leq \flatfrac{L}{2}\\
+                            0 & \qotherwise
+                          \end{cases}.
+\end{align}
+Note that in order for this truncation to be sensible, we must use a
+sufficiently large box so that $V(\flatfrac{L}{2})$ is sufficiently close to
+zero. What exactly \emph{sufficiently} means is left rather vague, but we
+mention it as a potential source of error.\\
+
+The truncation obviously leads to slightly less precise results, but this can
+partially be corrected for with so-called \emph{tail corrections}. The approach
+is to model the potential contribution of all particles further away than
+$\flatfrac{L}{2}$ in a mean-field manner. The result is simply adding a constant
+term, and acts only to shift the total potential in a given direction. As the
+purpose of this thesis is not to obtain the most realistic results possible, and
+rather a \emph{relative} comparison of methods, and we will not spend more time on
+specific ways of implementing such corrections.
+
+
 \end{document}
