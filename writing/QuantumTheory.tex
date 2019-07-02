@@ -583,4 +583,35 @@ perhaps, simply multiplying with the value of $\kappa$ in the unit system of
 choice should yield the corresponding energy.
 
 
+\subsubsection{Minimum Image}
+
+Because we assume a periodic structure we must take this into account when
+calculating distances. Consider two particles, A and B, located at opposite
+corners of the simulation box. What is the distance between them? The intuitive
+answer is $\norm{\vb r_A - \vb r_B} = \sqrt{3}\,L$, i.e.\ the length of the
+diagonal of the cubic box. Nevertheless, the answer we should use is zero. The
+reason is that there is a periodic copy of the box stacked such A and the
+periodic B copy are located at the same corner. This way of calculating
+distances is called minimum image, and says that we should use the shortest
+possible distance. In general, if two particles have a distance of $\Delta x =
+\flatfrac{L}{2} + \delta_x$ ($\delta_x\geq 0$, each spatial coordinate handled
+individually), the minimum image distance is $\Delta x_{\mathit{min}} = \Delta x
+- L = \flatfrac{L}{2} - \delta_x$.
+
+In our implementation, whenever we need a distance between two particles, we use
+the following prescription (example in Python):
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+# Example coordinates.
+L = 5
+p1, p2 = np.array([0, 0, 0]), np.array([2, 3, 4])
+
+diff = p2 - p1  # [2, 3, 4]
+diff_minimum = diff - L * np.round(diff / L)  # [2, -2, -1]
+\end{lstlisting}
+The last variable, \texttt{diff\_minimum} represents the minimum image distance
+vector and this is the one used for any further calculations.
+
 \end{document}
