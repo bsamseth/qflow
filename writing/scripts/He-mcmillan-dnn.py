@@ -67,8 +67,7 @@ layers = [
 dnn = Dnn()
 for l in layers:
     dnn.add_layer(l)
-mcmillian = JastrowMcMillian(5, 2.9805, L)
-# mcmillian_fixed = FixedWavefunction(mcmillian)
+mcmillian = JastrowMcMillian(5, 2.85, L)
 psi_total = WavefunctionProduct(mcmillian, dnn)
 psi = InputSorter(psi_total)
 # psi = mcmillian
@@ -76,7 +75,7 @@ sampler = HeliumSampler(system, psi, 0.5, L)
 sampler.thermalize(10000)
 mpiprint(f"AR: {sampler.acceptance_rate}")
 
-mcmillian_bench = JastrowMcMillian(5, 2.9805, L)
+mcmillian_bench = JastrowMcMillian(5, 2.85, L)
 sampler_bench = HeliumSampler(system, mcmillian_bench, 0.5, L)
 sampler_bench.thermalize(10000)
 mpiprint(f"AR (bench): {sampler_bench.acceptance_rate}")
@@ -86,10 +85,10 @@ optimizer_bench = AdamOptimizer(len(mcmillian_bench.parameters), 0.0001)
 
 iter_per_step = 500
 samples_per_iter = 5000
-plot_samples = 100000
+plot_samples = 1000000
 gamma = 0.00001
 
-steps = 100
+steps = 500
 t_average = 0
 E_training = []
 b_training = []
@@ -130,7 +129,7 @@ for _ in range(steps):
 
 # psi.parameters = np.mean(b_training[-steps//10:], keepdims=True)
 
-points = 2 ** 22
+points = 2 ** 23
 t0 = time.time()
 H.local_energy_array(sampler, psi, 500)
 H.local_energy_array(sampler_bench, mcmillian_bench, 500)
@@ -142,11 +141,11 @@ mpiprint(f"Calculating final energy - ETA {eta}")
 
 stats = [
     compute_statistics_for_series(
-        H.local_energy_array(sampler_bench, mcmillian_bench, points),
+        H.local_energy_array(sampler_bench, mcmillian_bench, points) / P,
         method="blocking",
     ),
     compute_statistics_for_series(
-        H.local_energy_array(sampler, psi, points), method="blocking"
+        H.local_energy_array(sampler, psi, points) / P, method="blocking"
     ),
 ]
 labels = [r"$\psi_{M}$", r"$\psi_{DNN}$"]
