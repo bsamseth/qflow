@@ -85,35 +85,8 @@ RowVector Hamiltonian::local_energy_array(Sampler&      sampler,
                                           Wavefunction& psi,
                                           long          samples) const
 {
-    const int n_procs = mpiutil::proc_count();
-    const int rank    = mpiutil::get_rank();
-
-    std::vector<int> counts(n_procs, 0);
-    std::vector<int> disps(n_procs, 0);
-    for (int i = 0; i < n_procs; ++i)
-    {
-        const long samples_per_proc
-            = samples / n_procs + (i < samples % n_procs ? 1 : 0);
-        counts[i] = samples_per_proc;
-        disps[i]  = i == 0 ? 0 : disps[i - 1] + counts[i - 1];
-    }
-
-    RowVector E_L(counts[rank]);
-    RowVector E_L_all(samples);
-
-    for (long i = 0; i < counts[rank]; ++i)
-        E_L[i] = local_energy(sampler.next_configuration(), psi);
-
-    MPI_Allgatherv(E_L.data(),
-                   counts[rank],
-                   mpiutil::MPI_REAL_TYPE,
-                   E_L_all.data(),
-                   counts.data(),
-                   disps.data(),
-                   mpiutil::MPI_REAL_TYPE,
-                   MPI_COMM_WORLD);
-
-    return E_L_all;
+    return generic_array_computation(
+        sampler, samples, [&](const System& s) { return local_energy(s, psi); });
 }
 
 RowVector Hamiltonian::local_energy_gradient(Sampler&      sampler,
@@ -203,27 +176,61 @@ void Hamiltonian::optimize_wavefunction(Wavefunction& psi,
     }
 }
 
-Real Hamiltonian::mean_distance(Sampler& sampler, long samples) const
+RowVector Hamiltonian::generic_array_computation(
+    Sampler&                             sampler,
+    long                                 samples,
+    std::function<Real(const System&)>&& func) const
 {
-    if (sampler.get_current_system().rows() < 2)
-        return 0;
+    const int n_procs = mpiutil::proc_count();
+    const int rank    = mpiutil::get_rank();
 
-    const int  n_procs = mpiutil::proc_count();
-    const int  rank    = mpiutil::get_rank();
-    const long samples_per_proc
-        = samples / n_procs + (rank < samples % n_procs ? 1 : 0);
-
-    Real dist = 0;
-    for (long i = 0; i < samples_per_proc; ++i)
+    std::vector<int> counts(n_procs, 0);
+    std::vector<int> disps(n_procs, 0);
+    for (int i = 0; i < n_procs; ++i)
     {
-        dist += Distance::probe(sampler.next_configuration(), 0, 1);
+        const long samples_per_proc
+            = samples / n_procs + (i < samples % n_procs ? 1 : 0);
+        counts[i] = samples_per_proc;
+        disps[i]  = i == 0 ? 0 : disps[i - 1] + counts[i - 1];
     }
 
-    Real global_dist;
-    MPI_Allreduce(
-        &dist, &global_dist, 1, mpiutil::MPI_REAL_TYPE, MPI_SUM, MPI_COMM_WORLD);
+    RowVector X(counts[rank]);
+    RowVector X_all(samples);
 
-    return global_dist / samples;
+    for (long i = 0; i < counts[rank]; ++i)
+        X[i] = func(sampler.next_configuration());
+
+    MPI_Allgatherv(X.data(),
+                   counts[rank],
+                   mpiutil::MPI_REAL_TYPE,
+                   X_all.data(),
+                   counts.data(),
+                   disps.data(),
+                   mpiutil::MPI_REAL_TYPE,
+                   MPI_COMM_WORLD);
+
+    return X_all;
+}
+
+RowVector Hamiltonian::mean_distance_array(Sampler& sampler, long samples) const
+{
+    assert(sampler.get_current_system().rows() > 1);
+    return generic_array_computation(
+        sampler, samples, [&](const System& s) { return Distance::probe(s, 0, 1); });
+}
+
+RowVector Hamiltonian::mean_radius_array(Sampler& sampler, long samples) const
+{
+    return generic_array_computation(
+        sampler, samples, [&](const System& s) { return norm(s.row(0)); });
+}
+
+RowVector Hamiltonian::mean_squared_radius_array(Sampler& sampler, long samples) const
+{
+    return generic_array_computation(sampler, samples, [&](const System& s) {
+        sampler.thermalize(s.rows());
+        return s.squaredNorm() / s.rows();
+    });
 }
 
 namespace
