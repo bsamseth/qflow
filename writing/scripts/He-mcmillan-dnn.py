@@ -68,8 +68,8 @@ dnn = Dnn()
 for l in layers:
     dnn.add_layer(l)
 mcmillian = JastrowMcMillian(5, 2.9805, L)
-mcmillian_fixed = FixedWavefunction(mcmillian)
-psi_total = WavefunctionProduct(mcmillian_fixed, dnn)
+# mcmillian_fixed = FixedWavefunction(mcmillian)
+psi_total = WavefunctionProduct(mcmillian, dnn)
 psi = InputSorter(psi_total)
 # psi = mcmillian
 sampler = HeliumSampler(system, psi, 0.5, L)
