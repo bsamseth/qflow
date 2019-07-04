@@ -372,10 +372,37 @@ algorithm by~\textcite{Jonsson-2018}. See
     \resizebox{\linewidth}{!}{%
         \input{scripts/QD-pade-dnn.py.weights.tex}
     }
-    \caption{\label{fig:QD-rbm-symmetry}Color map representation of the weights
-      and biases in the network of $\psi_{DNN}$. See
-\cref{fig:QD-pade-dnn-training} for source code reference.}
+    \caption{\label{fig:QD-pade-dnn-weights}Color map representation of the
+weights and biases in the network of $\psi_{DNN}$. The left column of plots
+shows the weight matrices in each layer, and the corresponding biases are in the
+right column. The bottom right plot has only one color because there is only one
+output layer bias. Each rectangle represents a parameter, and they have been
+scaled to have the same total size. The size of the rectangles are not
+important. See \cref{fig:QD-pade-dnn-training} for source code reference.}
 \end{figure}
+
+\subsection{Interpreting the Networks}
+
+Given the apparent ability of the networks to improve upon our theoretically
+motivated ansatz, it would be interesting to see if we can learn something from
+the structure of the network. This is, however, notoriously difficult to do with
+neural networks. In most cases the interconnections that make up the network are
+simply treated as a black box, simply because we lack the understanding to do
+anything else.
+
+Still, we can make an attempt. \cref{fig:QD-pade-dnn-weights} show a color map
+representation of all the weights and biases of $\psi_{DNN}$ after training.
+Arguably, we should not attempt to assign physical meanings to any of the later
+layers. If anything, the weight matrix of the first layer could be insightful,
+as this is directly multiplied with the coordinates $\mat X$. Interestingly, 
+two columns appear to have significant values. This is very similar to the
+effect seen in~\cref{fig:QD-rbm-symmetry} for the RBM. In fact, the same
+symmetry between the two columns is even present. The remaining columns are not
+as clearly zeroed out in the networks, perhaps due to the lack of
+regularization. While non-trivial to interpret, this points to the networks
+learning, completely by them selves, some underlying physical structure in the
+inputs. \\
+
 
 
 \subsection{Complexity}
