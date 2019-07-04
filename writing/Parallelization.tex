@@ -3,10 +3,12 @@
 \chapter{Parallelization}
 \label{chp:parallelization}
 
-Running VMC calculations are intrinsically heavy computational tasks. As such we
-need to consider all available resources to be efficient. This chapter is
-dedicated to the various ways of speeding up calculations by means of
-parallelization.
+Variational Monte Carlo calculations take a lot of computing power. It is easy
+to set up a calculation that can take lifetimes to complete. Some systems are
+simply to large for us to ever be able to work with, but at least we want to go
+as far as possible. To do this we need to consider all available resources and
+attempt to utilize them as efficiently as possible. This chapter is dedicated to
+the various ways of speeding up calculations by means of parallelization.
 
 Firstly we should make a few important notes. Parallelization is an effective
 tool \emph{only} if we have more than one processing unit available. On a
@@ -16,7 +18,7 @@ fourth faster than we can observe. This is \emph{concurrency}, or multitasking
 as it is more often called when applied to humans. As we know, you are never
 twice as productive when you attempt to do two things at once - often the
 opposite is closer to the truth. The same is true for computers. So when we now
-discuss ways of speed up calculations by means of \emph{parallelization}, we are
+discuss ways of speeding up calculations by means of \emph{parallelization}, we are
 at all times limited by the number of processing units available.
 
 Lastly, we are going to make a distinction between two types of parallelization.
@@ -59,6 +61,7 @@ memory multi processing. We want to run $p$ independent instances of the
 algorithm, and pause momentarily to communicate the results. In the simple
 example above, we just send the final partial sum acquired by each process. The
 cost of sending the message is negligible compared to the main loop.
+
 The main benefit of distributed memory is that it is easy to scale up to any
 arbitrary number of machines, as long as they are connected in some way. These
 machines could in principle be placed all around the world and still work well
@@ -105,8 +108,11 @@ double Hamiltonian::local_energy(Sampler& sampler, Wavefunction& psi, long sampl
 }
 \end{lstlisting}
 \end{center}
-Running \cref{lst:mpi-example} with a varying number of processors shows how the
-actual speedup obtained quite closely follows the linear ideal, as shown in \cref{fig:mpi-exmple}
+To illustrate the speedup we obtain from using MPI parallelization, we have run
+\cref{lst:mpi-example} on different number of cores. In particular, we computed
+the local energy of a simple harmonic oscillator system of one particle in three
+dimensions, using $2^{23}$ samples. \cref{fig:mpi-example} shows the results,
+and we see a speedup that follows closely the ideal linear curve.
 
 
 \begin{figure}[h]
@@ -131,7 +137,7 @@ is through shared memory. This typically means running multiple threads within
 the same process memory space, so that each thread has access to the same
 memory. This is a faster type of communication compared with message passing,
 but comes at the cost of having to consider data races. A data race occurs when
-multiple workers tries to access (with at least one write operation) the same
+multiple workers try to access (with at least one write operation) the same
 location in memory at the same time. The result of such behavior is undefined
 and must be avoided.
 
@@ -151,7 +157,8 @@ The following example shows a task equivalent in nature to
 the one used in the last section, now parallelized using OpenMP.
 
 \begin{center}
-\begin{lstlisting}[language=C++, caption={Example of parallel estimation of $\pi$ using OpenMP.}, label={lst:openmp-example}]
+\begin{lstlisting}[language=C++, caption={Example of parallel estimation of
+$\pi$ using OpenMP. The example is complete and can be compiled as is.}, label={lst:openmp-example}]
 #include <iostream>
 #include <omp.h>
 int main ()
@@ -175,7 +182,7 @@ int main ()
 \end{lstlisting}
 \end{center}
 Running \cref{lst:openmp-example} with a varying number of threads shows how the
-speed up is about linear until we run out of processing units (16 cores on the
+speedup is about linear until we run out of processing units (16 cores on the
 machine used), after which it flattens out.
 
 \begin{figure}[h]
@@ -214,12 +221,12 @@ pieces of hardware typically designed to enable fast rendering of graphics for
 computers, hence the name. They have a highly parallel structure optimized for
 algorithms that need to process large blocks of data in parallel. A typical
 example that relates to ML is matrix-matrix multiplication. Say we compute $\mat
-C = \mat A \mat B$,
+C = \mat A \mat B$, or more explicitly:
 
 \begin{align}
-  C_{kl} = A_{ki}B_{il}
+  C_{kl} = A_{ki}B_{il}.
 \end{align}
-The order of which we do any of the above $\mathcal{O}(n^3)$ operations really
+The order in which we do any of the above $\mathcal{O}(n^3)$ operations really
 doesn't matter, and so one can see how this can be an extremely parallel
 process. A high-end GPU will have a number of cores in the four digit range,
 facilitating speedups of several orders of magnitude compared to a CPU.
@@ -244,7 +251,7 @@ use such frameworks in this work (mainly due to the reasons described in
 the current codes, despite this having large potential benefits. This is simply
 a matter of time and realizing that it would require a considerable amount of effort
 to get right. With the introduction of neural networks as wave functions, we see
-no apparent reason why using GPUs would not cause significant speed ups also in
+no obvious reason why using GPUs would not cause significant speedups also in
 our application of ML. The main challenge will likely be to join GPUs into the
 existing MPI codes. We leave this a potential point of future work.
 
