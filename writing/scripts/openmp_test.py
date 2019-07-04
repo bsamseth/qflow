@@ -45,7 +45,7 @@ plt.plot(cpus, times[0] / times, label="Actual")
 plt.plot(cpus, cpus, "--", label="Ideal speedup")
 plt.legend()
 plt.xlabel("Threads")
-plt.ylabel("Iterations per second")
+plt.ylabel("Speedup multiplier")
 
 matplotlib2tikz.save(__file__ + ".tex")
 plt.show()
