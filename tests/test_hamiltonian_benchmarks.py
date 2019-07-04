@@ -36,7 +36,7 @@ def test_E_L_grad_small(benchmark):
 
 @pytest.mark.benchmark(group="Small system", warmup=True)
 def test_mean_dist_small(benchmark):
-    result = benchmark(H0.mean_distance, ImportanceSampler(small_system, psi0), samples)
+    result = benchmark(H0.mean_distance_array, ImportanceSampler(small_system, psi0), samples)
     assert np.isfinite(result).all()
 
 
@@ -58,7 +58,7 @@ def test_E_L_grad_large(benchmark):
 
 @pytest.mark.benchmark(group="Large system", warmup=True)
 def test_mean_dist_large(benchmark):
-    result = benchmark(H0.mean_distance, ImportanceSampler(large_system, psi0), samples)
+    result = benchmark(H0.mean_distance_array, ImportanceSampler(large_system, psi0), samples)
     assert np.isfinite(result).all()
 
 
@@ -66,6 +66,6 @@ def test_mean_dist_large(benchmark):
 def test_mean_dist_large_cached(benchmark):
     with DistanceCache(large_system):
         result = benchmark(
-            H0.mean_distance, ImportanceSampler(large_system, psi0), samples
+            H0.mean_distance_array, ImportanceSampler(large_system, psi0), samples
         )
         assert np.isfinite(result).all()
