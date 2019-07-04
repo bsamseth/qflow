@@ -221,8 +221,13 @@ RowVector Hamiltonian::mean_distance_array(Sampler& sampler, long samples) const
 
 RowVector Hamiltonian::mean_radius_array(Sampler& sampler, long samples) const
 {
-    return generic_array_computation(
-        sampler, samples, [&](const System& s) { return norm(s.row(0)); });
+    return generic_array_computation(sampler, samples, [&](const System& s) {
+        sampler.thermalize(s.rows());
+        Real res = 0;
+        for (int j = 0; j < s.rows(); ++j)
+            res += norm(s.row(j));
+        return res / s.rows();
+    });
 }
 
 RowVector Hamiltonian::mean_squared_radius_array(Sampler& sampler, long samples) const
