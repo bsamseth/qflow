@@ -59,7 +59,7 @@ if master_rank():
 
 stats, labels = [], []
 
-for P, step in zip([32, 64, 256], [.5, .6, .8]):
+for P, step in zip([32, 64, 256], [0.5, 0.6, 0.8]):
     L = (P / rho) ** (1 / 3)
     system = np.empty((P, D))
     H = LennardJones(L)
@@ -73,10 +73,10 @@ for P, step in zip([32, 64, 256], [.5, .6, .8]):
     stats.append(
         compute_statistics_for_series(
             H.local_energy_array(samp, psi_, 2 ** 21) / P, method="blocking"
-        ),
+        )
     )
     labels.append(r"$\psi_M^{(%d)}$" % P)
-    mpiprint(f"{P}:", end='')
+    mpiprint(f"{P}:", end="")
     mpiprint(stats[-1], pretty=True)
 
 

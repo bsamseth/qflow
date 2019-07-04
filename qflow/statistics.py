@@ -28,7 +28,7 @@ def compute_statistics_for_series(x, method="plain", **method_kwargs):
     }
 
 
-def statistics_to_tex(all_stats, labels, filename=None):
+def statistics_to_tex(all_stats, labels, filename=None, quantity_name="$\\langle E_L\\rangle$"):
     """
     Produce LaTeX table from statistics produced from ``compute_statistics_for_series``.
     """
@@ -41,12 +41,12 @@ def statistics_to_tex(all_stats, labels, filename=None):
     tex = f"""\\begin{{tabular}}{{lS[table-format=1.%d]*2{{S[table-format=1.%d]}}*2{{S[table-format=1.1]}}}}
 \\toprule
 \\addlinespace
-& {{$\\langle E_L\\rangle$}} & {{CI$^{{95}}_-$}} & {{CI$^{{95}}_+$}} & {{Std}} & {{Var}} \\\\
+& {{%s}} & {{CI$^{{95}}_-$}} & {{CI$^{{95}}_+$}} & {{Std}} & {{Var}} \\\\
 \\addlinespace
 \\midrule
 \\addlinespace
 \\addlinespace
-    """ % (digs + 2, digs)
+    """ % (digs + 2, digs, quantity_name)
 
     for stats, label in zip(all_stats, labels):
         stats = stats.copy()
