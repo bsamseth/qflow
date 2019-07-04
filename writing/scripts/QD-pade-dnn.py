@@ -114,7 +114,7 @@ dnn2 = Dnn()
 for l in layers2:
     dnn2.add_layer(l)
 psi_sorted = WavefunctionProduct(simple_and_jastrow2, dnn2)
-psi_sorted.parameters = psi.parameters
+psi.parameters = psi_sorted.parameters
 psi_sorted_sampler = ImportanceSampler(system, psi_sorted, step_size=0.1)
 
 
@@ -126,10 +126,10 @@ psi_bench_sampler = ImportanceSampler(system, psi_bench, step_size=0.1)
 
 
 plot_samples = 1000000
-iters = 25000
+iters = 30000
 samples = 1000
 gamma = 0.0
-evaluation_points = 2**22
+evaluation_points = 2**23
 
 psi_energies = EnergyCallback(samples=plot_samples, verbose=True)
 psi_symmetries = SymmetryCallback(samples=plot_samples)

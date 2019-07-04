@@ -35,7 +35,9 @@ void init_hamiltonian(py::module& main)
         .def("kinetic_energy_numeric", &Hamiltonian::kinetic_energy_numeric)
         .def("local_energy_gradient", &Hamiltonian::local_energy_gradient)
         .def("optimize_wavefunction", &Hamiltonian::optimize_wavefunction)
-        .def("mean_distance", &Hamiltonian::mean_distance)
+        .def("mean_distance_array", &Hamiltonian::mean_distance_array)
+        .def("mean_radius_array", &Hamiltonian::mean_radius_array)
+        .def("mean_squared_radius_array", &Hamiltonian::mean_squared_radius_array)
         .def("onebodydensity", &Hamiltonian::onebodydensity);
 
     py::class_<HarmonicOscillator, Hamiltonian>(m, "HarmonicOscillator")

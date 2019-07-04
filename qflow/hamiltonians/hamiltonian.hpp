@@ -6,6 +6,7 @@
 #include "wavefunction.hpp"
 
 #include <cassert>
+#include <functional>
 
 /**
  * Class used to model a Hamiltonian.
@@ -75,9 +76,15 @@ public:
     Real local_energy(Sampler& sampler, Wavefunction& psi, long samples) const;
 
     RowVector
+        generic_array_computation(Sampler&                             sampler,
+                                  long                                 samples,
+                                  std::function<Real(const System&)>&& func) const;
+    RowVector
         local_energy_array(Sampler& sampler, Wavefunction& psi, long samples) const;
 
-    Real mean_distance(Sampler&, long samples) const;
+    RowVector mean_distance_array(Sampler&, long samples) const;
+    RowVector mean_radius_array(Sampler& sampler, long samples) const;
+    RowVector mean_squared_radius_array(Sampler& sampler, long samples) const;
 
     RowVector onebodydensity(Sampler& sampler,
                              int      n_bins,
