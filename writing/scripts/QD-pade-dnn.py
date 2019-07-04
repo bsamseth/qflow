@@ -10,10 +10,16 @@ from qflow.wavefunctions import (
     FixedWavefunction,
     Dnn,
     SumPooling,
-    InputSorter
+    InputSorter,
 )
 from qflow.wavefunctions.nn.layers import DenseLayer
-from qflow.wavefunctions.nn.activations import sigmoid, tanh, relu, identity, exponential
+from qflow.wavefunctions.nn.activations import (
+    sigmoid,
+    tanh,
+    relu,
+    identity,
+    exponential,
+)
 from qflow.hamiltonians import CoulombHarmonicOscillator
 from qflow.samplers import ImportanceSampler
 from qflow.optimizers import AdamOptimizer
@@ -46,17 +52,17 @@ def plot_training(energies, parameters, symmetries):
 
     for name, params in zip(["regular", "sorted"], parameters):
         fig, axes = plt.subplots(ncols=2, nrows=3)
-        i, j = 4, 4 + 4*32
+        i, j = 4, 4 + 4 * 32
         p = params[-1]
-        w0, b0 = p[i:j], p[j: j + 32]
+        w0, b0 = p[i:j], p[j : j + 32]
         i, j = j + 32, j + 32 + 32 * 16
-        w1, b1 = p[i:j], p[j: j + 16]
+        w1, b1 = p[i:j], p[j : j + 16]
         i, j = j + 16, j + 16 + 16
-        w2, b2 = p[i:j], p[j: j + 1]
+        w2, b2 = p[i:j], p[j : j + 1]
 
-        axes[0][0].matshow(np.reshape(w0, (4,  32)))
+        axes[0][0].matshow(np.reshape(w0, (4, 32)))
         axes[1][0].matshow(np.reshape(w1, (32, 16)), aspect="auto")
-        axes[2][0].matshow(np.reshape(w2, (16,  1)), aspect="auto")
+        axes[2][0].matshow(np.reshape(w2, (16, 1)), aspect="auto")
 
         axes[0][1].matshow(np.reshape(b0, (1, -1)), aspect="auto")
         axes[1][1].matshow(np.reshape(b1, (1, -1)), aspect="auto")
@@ -129,7 +135,7 @@ plot_samples = 1000000
 iters = 30000
 samples = 1000
 gamma = 0.0
-evaluation_points = 2**23
+evaluation_points = 2 ** 23
 
 psi_energies = EnergyCallback(samples=plot_samples, verbose=True)
 psi_symmetries = SymmetryCallback(samples=plot_samples)
@@ -186,7 +192,8 @@ stats = [
         H.local_energy_array(psi_sampler, psi, evaluation_points), method="blocking"
     ),
     compute_statistics_for_series(
-        H.local_energy_array(psi_sorted_sampler, psi_sorted, evaluation_points), method="blocking"
+        H.local_energy_array(psi_sorted_sampler, psi_sorted, evaluation_points),
+        method="blocking",
     ),
 ]
 old = psi_sorted.parameters
@@ -195,7 +202,8 @@ psi_sorted_sampler.thermalize(10000)
 
 stats.append(
     compute_statistics_for_series(
-        H.local_energy_array(psi_sorted_sampler, psi_sorted, evaluation_points), method="blocking"
+        H.local_energy_array(psi_sorted_sampler, psi_sorted, evaluation_points),
+        method="blocking",
     )
 )
 labels = [r"$\psi_{PJ}$", r"$\psi_{DNN}$", r"$\psi_{SDNN}$", r"$\hat{\psi}_{SDNN}$"]
@@ -206,6 +214,9 @@ mpiprint(statistics_to_tex(stats, labels, filename=__file__ + ".table.tex"))
 
 if master_rank():
     np.savetxt("Dnn-parameters.txt", psi.parameters)
-    plot_training([psi_energies, psi_sorted_energies, psi_bench_energies], [psi_parameters, psi_parameters], psi_symmetries)
+    plot_training(
+        [psi_energies, psi_sorted_energies, psi_bench_energies],
+        [psi_parameters, psi_parameters],
+        psi_symmetries,
+    )
     plt.show()
-

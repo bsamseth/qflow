@@ -63,7 +63,7 @@ train(
 mpiprint("Training complete")
 
 
-psi_sorted_sampler.thermalize(100000);
+psi_sorted_sampler.thermalize(100000)
 mpiprint(f"Sorted sampler acceptance rate: {psi_sorted_sampler.acceptance_rate}")
 
 stats = [
@@ -72,7 +72,7 @@ stats = [
     ),
     compute_statistics_for_series(
         H.local_energy_array(psi_sorted_sampler, psi_sorted, 2 ** 23), method="blocking"
-    )
+    ),
 ]
 labels = [r"$\psi_{RBM}$", r"$\psi_{SRBM}$"]
 
