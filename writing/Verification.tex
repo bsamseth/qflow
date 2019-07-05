@@ -1,0 +1,72 @@
+\documentclass[Thesis.tex]{subfiles}
+\begin{document}
+\chapter{Verification}
+\label{chp:verfication}
+
+This chapter is dedicated to presenting some of the tests that we have done to
+verify that the software we have developed is indeed functioning as advertised.
+
+\section{Setup}
+
+We focus our tests on the idealized harmonic oscillator system in $D = 3$ dimensions
+with $N$ non-interacting particles, i.e.\ the Hamiltonian given by
+\cref{eq:ho-no-interaction-hamiltonian}:
+
+\begin{align}
+    \hat H_0 &= \sum_{i=1}^N\qty(-\frac{1}{2}\laplacian_i +
+    \frac{1}{2}r_i^2),
+\end{align}
+where we have $\hbar = m = \omega = 1$, and
+$r_i^2 = x_i^2 + y_i^2+z_i^2$. This has the ground state given by
+\cref{eq:Phi-non-inter}, generalized to $N$ particles in three dimension and
+omitting normalization constants:
+
+\begin{align}
+        \Phi(\mat X) &= \exp[-\frac{1}{2}\sum_{i=1}^N r_i^2],
+\end{align}
+where as before we have defined $\mat X$ as
+
+\begin{align}
+  \mat X &\defeq \mqty(\vx_1\\\vx_2\\\vdots\\\vx_N) \defeq \mqty(x_1&y_1&z_1\\x_2&y_2&z_2\\\vdots&\vdots&\vdots\\x_N&y_N&z_N)
+\end{align}
+
+For the trail wave function we shall use two different ones. First, the simple
+Gaussian form of the ground state it self:
+
+\begin{align}
+  \psi_G(\mat X) = \exp(-\alpha\sum_{i = 1}^N r_i^2),
+\end{align}
+with $\alpha$ the only variational parameter. Learning the ideal parameters
+should be trivial in this case, and we should expect perfect results.
+
+Second, we use an ansatz resulting from a Gaussian-Binary Restricted Boltzmann
+Machine (RBM), given in \cref{eq:rbm-def}:
+
+
+\begin{align}
+  \psi_{RBM}(\vX) &=
+        \exp[-\sum_i^{M} \frac{\qty(X_i-a_i)^2}{2\sigma^2}]
+        \prod_j^H \qty(1 + \exp[b_j+\sum_i^M \frac{X_iW_{ij}}{\sigma^2}]),
+\end{align}
+where $M = P\cdot D$ is the number of degrees of freedom and $H$ is
+the number of hidden nodes (set to 4 through this section). Note also that $X_i$
+in the above refers to the $i$'th degree of freedom, counting through $\mat X$
+in row major order. The variational parameters are $\vb a, \vb b$ and $\mat W$,
+and we hold $\sigma^2=1$ constant in this case.
+
+We use this wave function simply to make learning the true ground state slightly
+more challenging than proposing a simple Gaussian straight away. Note that
+setting $\vb{a}, \vb b$ and $\mat W$ all to zero yields the correct ground state in this particular case.
+
+
+\section{Optimization}
+
+The simplest possible test is to initialize $\psi_G$ with a non-optimal
+parameter, e.g.\ $\alpha=0.8$.
+
+
+
+
+
+
+\end{document}
