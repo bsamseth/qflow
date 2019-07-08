@@ -61,12 +61,35 @@ setting $\vb{a}, \vb b$ and $\mat W$ all to zero yields the correct ground state
 
 \section{Optimization}
 
-The simplest possible test is to initialize $\psi_G$ with a non-optimal
-parameter, e.g.\ $\alpha=0.8$.
+\subsection{Integration Test}
+The simplest complete test is to initialize $\psi_G$ with a non-optimal
+parameter, e.g.\ $\alpha=0.3$, and attempt to learn the optimal value.
+Optimizing this is trivially accomplished, and
+\cref{fig:verify-gaussian-simplest} shows a training progression using $N=10$
+particles. The hyperparameters have here been artificially tuned to avoid
+immediate convergence to $\alpha =0.5$ so as to better illustrate
+the process.
 
+If we allow the training to progress a little further (or use more optimal
+hyperparameters), it eventually finds
+$\alpha = 0.5$ to within machine precision and we get
+$\flatfrac{\expval{E_L}}{N} = \flatfrac{D}{2}$ with exactly zero variance. While
+this test is not the most challenging, it is nevertheless a useful check.
 
+\begin{figure}[h]
+  \centering
+    \resizebox{\linewidth}{!}{%
+      \input{scripts/verify-simple-gaussian.py.first.tex}
+    }
+  \caption{\label{fig:verify-gaussian-simplest}Example training progression using $\psi_G$ as trial wave function.
+    Hyperparameters have been tuned so that we can see what happens, as opposed
+    to immediate convergence to the perfect result.}
+\end{figure}
 
+\subsection{Learning Rate Dependency}
 
+Successful training is highly dependent on using the correct hyperparameters.
+Among the most important are the ones controlling the optimization schemes.
 
 
 \end{document}
