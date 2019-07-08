@@ -167,4 +167,40 @@ different scales and variability in the components of the parameter gradient.
 \end{figure}
 
 
+\section{Sampling}
+
+We will now investigate the behavior of the implemented sampling strategies.
+
+\subsection{Step Dependency}
+
+Similarly to the learning rate in optimization schemes, the Monte Carlo samplers
+are highly dependent setting an appropriate step parameter. We want to use a 
+step size that balances two opposing attributes:
+
+\begin{itemize}
+\item Particles should be sufficiently mobile.
+  \begin{itemize}
+  \item Unchanging configurations lead to biased energy estimates with high
+    autocorrelation.
+  \end{itemize}
+\item New configurations should be accepted as much as possible.
+  \begin{itemize}
+  \item Rejections imply wasted computation time as well as increased autocorrelation.
+  \end{itemize}
+\end{itemize}
+
+
+\cref{fig:verify-sampling-step} shows how 
+
+\begin{figure}[h]
+  \centering
+    \resizebox{\linewidth}{!}{%
+      \input{scripts/verify-sampling-step.py.tex}
+    }
+  \caption{\label{fig:verify-sampling-step}Example training progression using
+    $\psi_{RBM}$ as trial wave function with different optimization schemes. We
+    see evidence of learning getting stuck in local minima.}
+\end{figure}
+
+
 \end{document}
