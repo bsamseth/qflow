@@ -79,7 +79,7 @@ this test is not the most challenging, it is nevertheless a useful check.
 \begin{figure}[h]
   \centering
     \resizebox{\linewidth}{!}{%
-      \input{scripts/verify-simple-gaussian.py.first.tex}
+      \input{scripts/verify-simple-gaussian.py.tex}
     }
   \caption{\label{fig:verify-gaussian-simplest}Example training progression using $\psi_G$ as trial wave function.
     Hyperparameters have been tuned so that we can see what happens, as opposed
@@ -89,7 +89,82 @@ this test is not the most challenging, it is nevertheless a useful check.
 \subsection{Learning Rate Dependency}
 
 Successful training is highly dependent on using the correct hyperparameters.
-Among the most important are the ones controlling the optimization schemes.
+Among the most important are the ones controlling the optimization scheme, such
+as the learning rate in Stochastic Gradient Decent (SGD). The following plots
+aim to illustrate this dependency, while also serving as a check that the
+implemented optimization schemes work as expected.
+
+Importantly, these results are not meant to infer that some schemes or learning
+rates are superior to others. Which scheme works best for a given learning
+problem will depend on a number of factors, such as the:
+
+\begin{itemize}
+  \item Magnitude of the gradients
+  \item Number of parameters
+  \item Variance in gradient estimates
+  \item etc.
+\end{itemize}
+
+
+\subsubsection{Simple Problem - $\psi_G$}
+
+\cref{fig:verify-lr-gaussian} shows the absolute error of $\psi_G$ during
+training with several different schemes. For standard SGD we see that a learning
+rate around $\eta = 0.1$ performs best among these results, and SGD with $\eta
+=0.01$ showing the slowest convergence. Naturally, values of $0.1>\eta>0.01$
+perform somewhere between the two.
+
+From these results alone it might seem like
+larger learning rates always perform better. To an extent this is true, as it
+allows for more rapid learning. However, setting $\eta$ too high can lead to
+divergence and unpredictable behavior. In less extreme cases, it can also keep
+us from converging properly onto the correct parameters by oscillating around
+the ideal values.
+
+We have also included some runs using ADAM. Here we have more parameters to play
+with, but only a few are shown here. In this trivial learning example it is hard
+to beat properly tuned SGD, but we see how ADAM is able to follow closely. In
+this particular case, we saw large improvements by reducing $\beta_1$, which
+effectively reduces the momentum applied. An important fact is also that ADAM is
+designed to be used with many parameters, with individual learning rates per
+parameter. This enhancement does not show itself in this single-parameters example.
+
+
+\begin{figure}[h]
+  \centering
+    \resizebox{\linewidth}{!}{%
+      \input{scripts/verify-learning-rate-gaussian.py.tex}
+    }
+  \caption{\label{fig:verify-lr-gaussian}Example training progression using
+    $\psi_G$ as trial wave function with different optimization schemes.}
+\end{figure}
+
+\subsubsection{More Complex Problem - $\psi_{RBM}$}
+
+We run the same test as above, now with $\psi_{RBM}$ as the trial wave function
+instead. We do this to illustrate a common pitfall of gradient based
+optimization - local minima. \cref{fig:verify-lr-rbm} shows three runs
+plateauing around an error $\sim 10^{-6}\si{\au}$. Interestingly, the worst
+result is obtained with the middle most value of $\eta$. This shows the random
+nature of SGD, in that it is quite unpredictable when and where we might get
+stuck due to local minimum. Repeating the same experiment with different random
+seeds does not consistently reproduce this result.
+
+Similarly, we see that one of the ADAM runs did in fact stumble on to a
+different, better local minimum. While this is also subject to randomness, we
+find that ADAM tends to be at least as good as SGD whenever we have more than
+one parameter to learn. This is to be expected, as ADAM can account for
+different scales and variability in the components of the parameter gradient.
+
+\begin{figure}[h]
+  \centering
+    \resizebox{\linewidth}{!}{%
+      \input{scripts/verify-learning-rate-rbm.py.tex}
+    }
+  \caption{\label{fig:verify-lr-rbm}Example training progression using
+    $\psi_{RBM}$ as trial wave function with different optimization schemes. We
+    see evidence of learning getting stuck in local minima.}
+\end{figure}
 
 
 \end{document}
