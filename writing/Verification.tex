@@ -190,17 +190,72 @@ step size that balances two opposing attributes:
 \end{itemize}
 
 
-\cref{fig:verify-sampling-step} shows how 
+\cref{fig:verify-sampling-step} shows how the acceptance rate (AR) changes with
+different step sizes. For both Metropolis and Importance sampling, the AR tends
+to $\SI{100}{\percent}$ for low step sizes, and to $\SI{0}{\percent}$ for large
+values. Both algorithms show a similar pattern in the middle region, with
+a steeper decline for Importance sampling. A good trade-off between the above
+considerations is achieved when the AR is somewhere in the range
+\SIrange{50}{99}{\percent}, with the exact best value dependent on the
+particular problem at hand.
 
 \begin{figure}[h]
   \centering
     \resizebox{\linewidth}{!}{%
       \input{scripts/verify-sampling-step.py.tex}
     }
-  \caption{\label{fig:verify-sampling-step}Example training progression using
-    $\psi_{RBM}$ as trial wave function with different optimization schemes. We
-    see evidence of learning getting stuck in local minima.}
+    \caption{\label{fig:verify-sampling-step}\emph{Solid lines:} Acceptance rate of
+    Metropolis and Importance sampling as a function of step size. Note that the
+  interpretation of the step size is different for the two algorithms. \emph{Dashed
+  lines:} Standard error of energy estimates obtained using the corresponding
+  sampling algorithm and step size, using $\psi_G$ with $\alpha=0.51$.}
 \end{figure}
 
+
+The dotted lines show the standard error obtained using the
+corresponding sampler and step size, when calculating the local energy with
+$\psi_G$ and $\alpha=0.51$.\footnote{The value $\alpha=0.51$ was used to avoid
+  the zero variance of the ideal value $\alpha=0.5$, but still behaving
+  similarly to the real system.} The errors were calculated using $2^{21}$ MC
+samples and corrected for autocorrelation using Blocking~\cite{Jonsson-2018}.
+
+We see Metropolis tending to very small errors in the range shown, with a large
+spike around $\delta \approx 0.01$. We believe step sizes around this critical
+point allows enough movement for the system to randomly get into unlikely
+states, but still so small that getting out of these states takes a long time,
+leading to a significant portion of samples from unimportant states. The low
+error for both high and low step sizes can be explained by both extremes
+resulting in similar behavior; no effective change. When the system remains
+unchanged, either from rejected samples or effectively equivalent ones (for high
+and low step sizes, respectively), the resulting local energies must necessarily
+be very similar as well. Neither case is desirable considering accurate
+integration results. Recall that the standard error is a statistical measure of
+the \emph{precision} of the local energy estimate, and not a measure of its
+\emph{accuracy}.\footnote{The number $3.14159$ is more precise than the number
+$6$, but if the true value is $6.28$, then the latter is more accurate.}\\
+
+Importance sampling shows different behavior with respect to the standard error.
+For the entire range of good step size choices, Importance sampling results in
+smaller statistical errors. This is to be expected, and Importance sampling will
+therefore be preferred whenever it is available to us.
+
+Still, we would like to explain the behavior for non-optimal step sizes. The
+error shows a spike as the step size decreases, in a similar way as seen for
+Metropolis. Although not shown fully, the error also explodes once the
+acceptance rate goes below a few percent. We believe this behavior is a result
+of how the update rule for Importance sampling is dependent on both the step
+size and its square root.
+
+For small step sizes, the square root term will dominate, and the algorithm
+effectively decays into standard Metropolis. The location of the spike is
+shifted to smaller values (the square of the corresponding Metropolis values),
+and the spike is wider because the square root function grows slower than
+linearly.
+
+Finally, the unstable behavior for large step sizes can be explained the other
+way. The little remaining movement is dominated by the drift force, and the
+system will quickly get stuck in a local maximum of the wave function, and then be
+unable to get out again. These are maxima with large probability amplitudes,
+resulting in large values for the local energy and correspondingly large errors.
 
 \end{document}
