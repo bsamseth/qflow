@@ -22,7 +22,7 @@ n_energy = 2**21
 
 arm, ari = [], []
 semm, semi = [], []
-steps = np.logspace(-4, 1, 100)
+steps = np.logspace(-6.5, 1.1, 150)
 for step in tqdm(steps):
     ms = MetropolisSampler(system, psi, step)
     si = ImportanceSampler(system, psi, step)
