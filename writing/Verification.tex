@@ -1,10 +1,14 @@
 \documentclass[Thesis.tex]{subfiles}
 \begin{document}
-\chapter{Verification}
+\chapter{Verification and Benchmarking}
 \label{chp:verfication}
 
 This chapter is dedicated to presenting some of the tests that we have done to
 verify that the software we have developed is indeed functioning as advertised.
+These types of tests are more large scale (integration tests) compared to low
+level unit tests which is a part of the source code for QFLOW. By checking that
+we can reproduce known benchmarks and observe behavior that is consistent with
+our expectations we can increase the amount of trust assigned to the implementation.
 
 \section{Setup}
 
@@ -127,7 +131,7 @@ to beat properly tuned SGD, but we see how ADAM is able to follow closely. In
 this particular case, we saw large improvements by reducing $\beta_1$, which
 effectively reduces the momentum applied. An important fact is also that ADAM is
 designed to be used with many parameters, with individual learning rates per
-parameter. This enhancement does not show itself in this single-parameters example.
+parameter. This enhancement does not show itself in this single-parameter example.
 
 
 \begin{figure}[h]
@@ -136,7 +140,8 @@ parameter. This enhancement does not show itself in this single-parameters examp
       \input{scripts/verify-learning-rate-gaussian.py.tex}
     }
   \caption{\label{fig:verify-lr-gaussian}Example training progression using
-    $\psi_G$ as trial wave function with different optimization schemes.}
+    $\psi_G$ as trial wave function with different optimization schemes. With
+    sufficient time, all algorithms tend towards zero error.}
 \end{figure}
 
 \subsubsection{More Complex Problem - $\psi_{RBM}$}
@@ -147,8 +152,8 @@ optimization - local minima. \cref{fig:verify-lr-rbm} shows three runs
 plateauing around an error $\sim 10^{-6}\si{\au}$. Interestingly, the worst
 result is obtained with the middle most value of $\eta$. This shows the random
 nature of SGD, in that it is quite unpredictable when and where we might get
-stuck due to local minimum. Repeating the same experiment with different random
-seeds does not consistently reproduce this result.
+stuck due to a local minimum. Repeating the same experiment with different random
+seeds does not consistently reproduce this particular result.
 
 Similarly, we see that one of the ADAM runs did in fact stumble on to a
 different, better local minimum. While this is also subject to randomness, we
@@ -163,7 +168,8 @@ different scales and variability in the components of the parameter gradient.
     }
   \caption{\label{fig:verify-lr-rbm}Example training progression using
     $\psi_{RBM}$ as trial wave function with different optimization schemes. We
-    see evidence of learning getting stuck in local minima.}
+    see evidence of learning getting stuck in local minima due to the overly
+    complex wave function anstaz.}
 \end{figure}
 
 
@@ -248,7 +254,7 @@ size and its square root.
 
 For small step sizes, the square root term will dominate, and the algorithm
 effectively decays into standard Metropolis. The location of the spike is
-shifted to smaller values (the square of the corresponding Metropolis values),
+shifted towards smaller step sizes (approximately the square of the Metropolis spike location),
 and the spike is wider because the square root function grows slower than
 linearly.
 
