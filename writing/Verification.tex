@@ -72,20 +72,20 @@ $D=3$ dimensions and set $N=100$ particles.
 two different values of $\alpha_G$. For the optimal choice $\alpha_G = 0.5$ we
 get the exact analytic ground state energy, $\flatfrac{\expval{E_L}}{N} =
 \flatfrac{D}{2}$. The reported variance is entirely due to the limited  
-precision $\SI{64}{bit}$ floating point numbers.
+precision of $\SI{64}{bit}$ floating point numbers.
 
 For the non-optimal $\alpha_G=0.51$ we get a larger energy, as we would expect.
 Furthermore, we get a reported standard error of $\sim \SI{2e-5}{\au}$. This
 includes a correction from the automated Blocking mechanism
-by~\textcite{Jonsson-2018}. The results where obtained using $2^{23}$ MC
+by~\textcite{Jonsson-2018}. The results were obtained using $2^{23}$ MC
 samples, so by the standard prescription for standard error we should have
-gotten $\flatfrac{\SI{8e-4}{\au}}{\sqrt{2^{23}}} \approx \SI{3e-7}{\au}$. This
+gotten $\flatfrac{\SI{8e-4}{\au}}{\sqrt{2^{23}}} \approx \SI{3e-7}{\au}$ This
 large discrepancy can be explained by the presence of a large amount of
 autocorrelation in the energy estimates. Inherent to Monte Carlo integration is
 some degree of autocorrelation, but the reason for this large amount is because
 of the large number of particles and how sampling is implemented. Each Monte
 Carlo step we move only a single particle. For large $N$ this means it takes a
-lot of samples change the positions of all particles substantially. For smaller
+lot of samples to substantially change the positions of all particles. For smaller
 $N$ the correction from Blocking is smaller, albeit still present. This
 exemplifies the importance of proper calculation of statistical errors. Every
 standard error presented in this thesis will include this correction.
@@ -95,15 +95,15 @@ standard error presented in this thesis will include this correction.
   \centering
   \caption{\label{tab:verify-energy-estimates}Estimated ground state energy
     using $\psi_G$ with two different values for $\alpha_G$. The energies are
-    given per particle, and where produced using Importance sampling and
-    $2^{23}$ samples. The errors given are corrected for autocorrelation using
+    given per particle, and were produced using Importance sampling and
+    $2^{23}$ samples. Statistical errors are corrected for autocorrelation using
     Blocking.}
   \input{scripts/verify-energy-stats.py.table1.tex}
 \end{table}
 
 Moving from energy to distance metrics, \cref{tab:verify-radius-estimates} shows
 the mean radial displacement and its squared sibling for all the particles in the system.
-The results are obtained using $\alpha_G=0.5$ and $2^{23}$ MC samples. For
+The results were obtained using $\alpha_G=0.5$ and $2^{23}$ MC samples. For
 reference, the table also states the exact analytic results. Unlike the energy,
 which for the ideal $\alpha_G$ is independent of position, these results are not
 perfectly accurate. However, the results are correct to five significant digits,
