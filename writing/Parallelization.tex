@@ -111,8 +111,17 @@ double Hamiltonian::local_energy(Sampler& sampler, Wavefunction& psi, long sampl
 To illustrate the speedup we obtain from using MPI parallelization, we have run
 \cref{lst:mpi-example} on different number of cores. In particular, we computed
 the local energy of a simple harmonic oscillator system of one particle in three
-dimensions, using $2^{23}$ samples. \cref{fig:mpi-example} shows the results,
-and we see a speedup that follows closely the ideal linear curve.
+dimensions. \cref{fig:mpi-example} shows the number of MC iterations per second
+as a function of the number of cores used. As advertised, we see a speedup that
+follows closely the ideal linear curve.
+
+Still, we should emphasize that in order to obtain these results, we had to
+increase the total workload linearly with increasing number of CPUs. If we
+don't, the task finishes so quickly that communication becomes a significant
+part of the total time. So in order to fully utilize the power
+of extra CPUs, we should make sure to structure the program such that the bulk of
+it is spent in the independent parts of the program. In practice that means to
+use a sufficiently large number of Monte Carlo samples.
 
 
 \begin{figure}[h]
@@ -122,10 +131,8 @@ and we see a speedup that follows closely the ideal linear curve.
     }
   \caption{Iterations per second when running \cref{lst:mpi-example} with
     varying number of processors. These results where obtained by running a test
-    on the Abel computing cluster. The test used ran a relatively small job,
-    which introduces a higher potential discrepancy to the ideal than what one
-    can expect for heavier tasks. Exact results will vary greatly depending on
-    the availability of the cores along with several other factors.}
+    on the Abel computing cluster. Exact results will vary greatly depending on
+    the availability of the cores, size of the workload and several other factors.}
   \label{fig:mpi-example}
 \end{figure}
 
