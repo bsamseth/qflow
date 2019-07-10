@@ -153,16 +153,56 @@ Finally, based on the success of applying sorting on the inputs to the network
 to impose symmetry we will reuse this strategy here. The wave function with
 input sorting applied is denoted as $\psi_{SDNN}$.
 
+\subsection{Optimization}
+
+We produced the following results by optimizing $\psi_M$ and $\psi_{SDNN}$ with
+similar hyperparameters. We initialized $\beta=\num{2.85}$ for both wave functions
+for a fair comparison. We used $\num{250000}$ training iterations of
+$\num{5000}$ MC cycles each. Contrary to the quantum dot system, where a large
+set of hyperparameters yielded good results, we have found this problem to be
+highly sensitive to good hyperparameters. We had to reduce the learning rate to
+$\eta=\num{0.0001}$ to avoid divergence during training. We also found that the
+networks performed better with a small degree of L2 regularization,
+$\gamma=\num{0.00001}$. While other choices might still be better, there were
+significantly less room for error in this much more challenging problem.
+
 \begin{figure}[h]
   \centering
   \input{scripts/He-mcmillan-dnn.py.tex}
-  \caption{\label{fig:He-dnn-training}Helium neural network training.}
+  \caption{\label{fig:He-dnn-training}Performance of $\psi_M$ and $\psi_{SDNN}$
+    as a function of training steps. The network shows a clear energy reduction
+    compared to the traditional benchmark.}
 \end{figure}
+
+\cref{fig:He-dnn-training} shows a graph of the ground state energy during the
+course of training for both wave functions. On this time scale (i.e.\ $\num{25}$
+times more training than used for the benchmark alone) we see $\psi_M$ converge
+immediately to the same energy level as we saw in
+\cref{fig:He-benchmark-training}. With the neural network, however, there is an
+apparent immediate lowering of energy. Furthermore, after 
+about \SIrange{30}{60}{\percent} of the total training we see a gradual lowering
+in the energy before it plateaus again.
+
+\cref{tab:He-dnn-results} shows the final energies produced from the two wave
+functions after training. We see a significant lowering of the total energy.
+Unlike the results for quantum dots, however, we do not get a lowering of the
+variance, but rather a small increase. It is hard to say exactly how much of the
+total error in energy is corrected for by the inclusion of the networks, due to
+the lack of existing results using $N=32$ particles with the Lennard-Jones
+potential, with the same potential corrections that we have included.
+Nevertheless, the networks continue to show their ability to improve upon the
+results of all the benchmark wave functions we have paired them with. As our
+main interest in this work is to demonstrate this general ability, as opposed to
+producing results closest to experimental results, we view these results as
+positive encouragement to continue this line of research.
 
 \begin{table}[h]
   \centering
   \input{scripts/He-mcmillan-dnn.py.table.tex}
-  \caption{\label{tab:He-dnn-results}Helium neural network results.}
+  \caption{\label{tab:He-dnn-results}Predicted ground state energy of both
+    $\psi_M$ and $\psi_{SDNN}$ after the same amount of optimization. Results
+    obtained from $2^{23}$ Monte Carlo samples and with errors estimated using
+    Blocking. See \cref{fig:He-dnn-training} for source code reference.}
 \end{table}
 
 
