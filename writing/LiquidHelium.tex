@@ -90,18 +90,79 @@ Monte Carlo samples.}
 
 \section{Neural Networks}
 
+We again attempt to apply a neural network to our wave function representation.
+Liquid $^4$He is a far more challenging problem compared to the two-particle
+quantum dot, and as such it will serve as an important test of the capabilities
+of neural networks for general quantum mechanical many problems.
+
+As before, we have not simply removed the original wave function, but rather
+added the network as another correlation factor:
+
+\begin{align}
+  \label{eq:helium-dnn-mcmillan-def}
+  \psi_{DNN}(\mat X) &= \psi_M(\mat X)\,f(\mat X),
+\end{align}
+where once again $f: \mathbb{R}^{N\times D}\to\mathbb{R}$ represents an
+arbitrary neural network. 
+
+Lastly, we limit our investigation to $N=32$ particles and still with density
+$\rho=\flatfrac{0.365}{\sigma^3}$. This is done from a practical standpoint,
+considering the substantial computational cost.
+
+\subsection{Network Architecture}
+
+The proposed network structure is one of many that are likely to perform well,
+and in all likelihood this is not the optimal form. A more in depth analysis of
+what structures perform best, including other types of networks (e.g.\ recurrent,
+convolutional, residual etc.) is left for future research.\\
+
+Based on the experimental results observed for quantum dots, in conjunction with
+trail and error, we have used the following network structure:
+
+\begin{center}
+  \begin{tabular}{lcc}
+    \toprule
+    \addlinespace
+    Layer & Nodes & Activation\\
+    \addlinespace
+    \midrule
+    \addlinespace
+    \addlinespace
+    Input & 96 & ---\\
+    Hidden 1& 144 & $\tanh$\\
+    Hidden 2& 36 & $\tanh$\\
+    Output & 1 & $\exp$\\
+    \addlinespace
+    \addlinespace
+    \bottomrule
+  \end{tabular}
+\end{center}
+Once again the number of nodes in the input layer is fixed by the number of
+degrees of freedom ($D\times N$ for $D$ dimensions). The number of nodes in the
+second layer is somewhat arbitrary, and could be changed. Importantly it is
+larger than $96$, allowing the network to learn more features. Still, it is not
+enough nodes to fully encode the relative difference between every pair of
+coordinates, as would be required to reproduce $\psi_M$ fully. This number was
+found to be large enough to allow learning, but still be reasonably efficient.
+Lastly, the second hidden layer was set to $36$ nodes. This is also somewhat
+arbitrary, but importantly it is smaller than $144$, allowing the gradual
+narrowing down to the single output. The activation functions are the same as
+those used for quantum dots.
+
+Finally, based on the success of applying sorting on the inputs to the network
+to impose symmetry we will reuse this strategy here. The wave function with
+input sorting applied is denoted as $\psi_{SDNN}$.
+
 \begin{figure}[h]
   \centering
   \input{scripts/He-mcmillan-dnn.py.tex}
-  \caption{Helium neural network training.}
-  \label{fig:He-dnn-training}
+  \caption{\label{fig:He-dnn-training}Helium neural network training.}
 \end{figure}
 
 \begin{table}[h]
   \centering
   \input{scripts/He-mcmillan-dnn.py.table.tex}
-  \caption{Helium neural network results.}
-  \label{tab:He-dnn-results}
+  \caption{\label{tab:He-dnn-results}Helium neural network results.}
 \end{table}
 
 
