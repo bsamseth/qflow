@@ -23,7 +23,10 @@ xtick style={color=black},
 y grid style={white!69.01960784313725!black},
 ylabel={Ground state energy [a.u]},
 ymin=-7.05951553745272, ymax=-6.21815498548895,
-ytick style={color=black}
+ytick style={color=black},
+each nth point=2, filter discard warning=false, unbounded coords=discard,
+scaled x ticks={real:5},
+xtick scale label code/.code={},
 ]
 \addplot [semithick, color0]
 table {%
