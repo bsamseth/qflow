@@ -1,0 +1,58 @@
+% This file was created by matplotlib2tikz v0.7.4.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+
+\begin{axis}[
+legend cell align={left},
+legend style={at={(0.97,0.03)}, anchor=south east, draw=white!80.0!black},
+tick align=outside,
+tick pos=left,
+x grid style={white!69.01960784313725!black},
+xlabel={Number of samples [\(\displaystyle \log_2 N\)]},
+xmin=1, xmax=27,
+x dir=reverse,
+xtick style={color=black},
+y grid style={white!69.01960784313725!black},
+ylabel={Standard error of the mean},
+ymin=2.34108439617707e-05, ymax=0.000317790214944944,
+ytick style={color=black}
+]
+\addplot [semithick, color0, forget plot]
+table {%
+27 3.67917244610058e-05
+26 5.08561376062952e-05
+25 6.96692672721627e-05
+24 9.34552651332882e-05
+23 0.000120713739651834
+22 0.000147100021974398
+21 0.000166850831566622
+20 0.000177932968353421
+19 0.000183425162994512
+18 0.000186334983085339
+17 0.000187672447620898
+16 0.000188413104177414
+15 0.000188165276488921
+14 0.000188912298901297
+13 0.000189945032792876
+12 0.000193566076049745
+11 0.000194033153176985
+10 0.000189501762734578
+9 0.000193910232467662
+8 0.000196755580260382
+7 0.000204949815919038
+6 0.000232063166781732
+5 0.000215889931697987
+4 0.000238840926305042
+3 0.000250129403607225
+2 0.000304409334445708
+1 0.000295753527333449
+};
+\addplot [semithick, red, mark=*, mark size=3, mark options={solid}, only marks]
+table {%
+15 0.000188168147728901
+};
+\addlegendentry{Optimal estimate}
+\end{axis}
+
+\end{tikzpicture}
