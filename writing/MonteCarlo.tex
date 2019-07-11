@@ -3,9 +3,11 @@
 \chapter{Monte Carlo Methods}
 \label{chp:monte-carlo}
 
-In \autoref{chp:variational-monte-carlo} we found that we needed a way to
-sample system configurations $\vX$ from the probability distribution  described
-by the wave function. We needed this as a means to evaluate integrals. Specifically, we needed to evaluate the expectation value of the Hamiltonian w.r.t. a given wave function $\psialpha$:
+In \autoref{chp:variational-monte-carlo} we found that we needed a way to sample
+system configurations $\vX$ from the probability distribution described by the
+wave function. We needed this as a means to evaluate integrals. Specifically, we
+needed to evaluate the expectation value of the Hamiltonian w.r.t. a given wave
+function $\psialpha$:
 
 \begin{align}
     \expval{\hat H} &= \frac{\expval{\hat H}{\psialpha}}{\braket{\psialpha}} = \int\dd{\vX} P_{\psi_{\valpha}} (\vX) E_L(\vX)\label{eq:chp-mc-anon-1}\\
@@ -19,7 +21,9 @@ obtain the samples we need.
 
 \section{Monte Carlo Integration}
 
-Monte Carlo Integration (MCI) is a general technique for numeric evaluation of any arbitrary integral. In general it concerns evaluating any multidimensional definite integral, written as
+Monte Carlo Integration (MCI) is a general technique for numeric evaluation of
+any arbitrary integral. In general it concerns evaluating any multidimensional
+definite integral, written as
 
 \begin{align}
     I = \idotsint_\sigma\dd{\vx} f(\vx)
@@ -28,37 +32,155 @@ where $\sigma$ denotes a subset of $\mathbb{R}^m$, with a $m$-dimensional volume
 \begin{align}
     V = \idotsint_\sigma\dd{\vx}
 \end{align}
-In its simplest form, MCI samples $N$ \emph{uniformly} distributed points
+In its simplest form, MCI works by sampling $N$ \emph{uniformly} distributed points
 $\vx_1,\dots,\vx_N$ from $\sigma$, and uses a Riemann sum formulation of the integral $I$:
 \begin{align}
+  \label{eq:mci-def}
     I = \lim_{N\to\infty} M_N \defeq \lim_{N\to\infty}\sum_{i=1}^N f(\vx_i) \frac{V}{N} = V\expval{f(\vx)}_\sigma
 \end{align}
-where $\expval{\cdot}_\sigma$ denotes the expectation value over all points in $\sigma$. For finite $N$ we may obtain estimates of the error we make in approximating the integral. First, we estimate the variance of the integrand:
+where $\expval{\cdot}_\sigma$ denotes the expectation value over all points in
+$\sigma$ when all points are equally likely. The estimate becomes increasingly
+accurate for increasing $N$, and is exact in the limit where $N\to\infty$.
+
+\subsection{Estimating the Error}
+
+For any finite $N$ the result of using MCI will not be exact. Because of this,
+it is immensely useful to be able to assign a statistical certainty to the
+result. For instance, say we estimate the ground state energy of a system using
+two different wave functions. We perform the integrals and get (to the first
+five digits) $\expval{H}_A = \SI{1.0315}{eV}$ and $\expval{H}_B =
+\SI{1.0943}{eV}$. Recalling that the lowest energy is the most physically
+accurate, can we say that $A$ is better than $B$? As stated, these results are
+borderline meaningless, because we lack information of the precision of the
+integrals. Assume that in reality, the numbers were
+$\expval{H}_A=\SI{1.03(8)}{eV}$ and $\expval{H}_B=\SI{1.09(4)}{eV}$, where the
+numbers in parenthesis indicate the uncertainty in the last digit. Now we know
+that the two numbers are not different in a statistically significant way, and
+any difference could be entire random. We would need to use more sample points
+to lower the uncertainty to be able to say anything more about them.\\
+
+We obtain a statistical estimate of the error we make in approximating the
+integral by considering the variability of the individual terms of
+\cref{eq:mci-def}. Let's start by estimating the variance of the integrand:
 \begin{align}
     \Var[f(\vx)] \defeq \sigma^2_N = \frac{1}{N-1} \sum_{i=1}^N\qty(f(\vx_i) - \frac{1}{N}\sum_{i=j}^N f(\vx_j))^2
 \end{align}
 It then follows, by the properties of variance,
 \begin{align}
+  \label{eq:mci-annon-2}
     \Var[M_N] = \Var\qty[ \frac{V}{N} \sum_{i=1}^Nf(\vx_i)] = \frac{V^2}{N^2}\sum_{i=1}^N\Var[f(\vx_i)] = \frac{V^2\sigma^2_N}{N}
 \end{align}
 \begin{align}
+  \label{eq:mci-sem-def}
     \implies \Std[M_N] = \sqrt{\Var[M_N]} = \frac{V\sigma_N}{\sqrt N}
 \end{align}
-This tells us that the expected statistical error we make goes like
-$\mathcal{O}(1 / \sqrt N)$, and depends linearly on the size of the volume.
-This illustrates both the advantage, and disadvantage of Monte Carlo
-integration compared to other, deterministic integration methods. Its advantage
-is its simple dependency on the volume, and its independence from the
-particular number of dimensions in the integral. Other methods tend to depend
-exponentially on the dimensionality, and as such MCI is often the best choice
-for multidimensional integrals. Its disadvantage is the relatively slow
-convergence rate, which is asymptotically much worse than other
-approaches~\cite{Numerical-Recipes-Press-et-al}.
+\cref{eq:mci-sem-def} is the standard deviation of the sample mean, otherwise
+known as the \emph{standard error of the mean}. It is common to use this
+directly as the uncertainty of the expectation values.
+
+This tells us that the expected statistical error we make when using MCI goes
+like $\mathcal{O}(1 / \sqrt N)$, and depends linearly on the size of the volume
+and standard deviation of the integrand it self. This illustrates both the
+advantage, and disadvantage of MCI compared to other,
+deterministic integration methods. Its advantage is its simple dependency on the
+volume, and its independence from the particular number of dimensions in the
+integral. Other methods tend to depend exponentially on the dimensionality, and
+as such MCI is often the best choice for multidimensional integrals. Its
+disadvantage is the relatively slow convergence rate, which is asymptotically
+much worse than other approaches~\cite{Numerical-Recipes-Press-et-al}.
+
+\subsubsection{Correction for Autocorrelation}
+
+Actually, \cref{eq:mci-annon-2} includes a mistake. We applied a property of
+variance on a sum of random of random variables. The equation is correct if and
+only if the samples $x_i$ are perfectly independent. Unfortunately for us,
+the samples will not always be so, depending on the algorithm used to generate
+them. We can sample independently from a uniform distribution and some other
+notable distributions (\cref{sec:sampling-arb-prob-dist-funcs}), but not in
+general. This will be especially true for the algorithms we use to sample from
+arbitrary wave functions (\cref{sec:metro-hastings-alg}).
+
+The version of \cref{eq:mci-annon-2} that is true in general accounts for
+autocorrelated samples:\footnote{Covariance is a measure of the joint
+  variability between two random variables. Autocorrelation is used to refer to
+  the covariance between a random variable and itself at pairs of time points.}
+
+
+\begin{align}
+  \label{eq:mci-annon-3}
+    \Var[M_N] = \Var\qty[ \frac{V}{N} \sum_{i=1}^Nf(\vx_i)] = \frac{V^2}{N^2}\sum_{i=1}^N\sum_{j=1}^N\Cov[f(\vx_i), f(\vx_j)].
+\end{align}
+This is always greater than or equal to \cref{eq:mci-annon-2}, and equal only if
+the off-diagonal covariance terms (where $i\neq j$) are all zero. Not accounting
+for the autocorrelation in the samples will therefore lead us to underestimate
+the error, which is arguably much worse than the opposite.
+
+There is, unfortunately a heavy cost to computing the full covariance.
+Typically, to keep the expectation values accurate, we will use very large
+values for $N$, often on the order of tens or hundreds of millions. The double loop in
+\cref{eq:mci-annon-3} will then quickly become unfeasible to compute, with
+trillions or quadrillions of iterations. In practice we need to estimate it.
+Yes, we are going to estimate the estimate of the error we make in an estimate. 
+
+The strategy we shall use for all later error analysis is called Blocking,
+specifically the article by \textcite{Jonsson-2018}. Say we have a sequence of
+sample value $f(x_i)$:
+
+\begin{align}
+  D_0 = \mqty[f(x_1) & f(x_2) & \dots & f(x_N)],
+\end{align}
+and let's assume that there is some non-zero covariance between samples that are
+sufficiently close in the sequence. The idea of Blocking is to group
+\say{blocks} of samples together, replacing them by their mean value. For
+instance, after one blocking transformation of the above sequence we get:
+
+\begin{align}
+  D_1 = \mqty[\qty(\frac{f(x_1) + f(x_2)}{2}) & \qty(\frac{f(x_3) + f(x_4)}{2}) & \dots & \qty(\frac{f(x_{n-1}) + f(x_n)}{2})]
+\end{align}
+If $N = 2^d$ with $d > 1$ we can repeat the process to obtain $d$ different
+sequences $D_i$. These transformations conserve the value of \cref{eq:mci-annon-3}
+while decreasing the covariance between samples~\cite{Jonsson-2018}. That implies that measuring
+the variance with \cref{eq:mci-annon-2} on each $D_i$ will yield greater and
+greater errors, until there is no more covariance and the error estimate
+converges. 
+
+\cref{fig:blocking-example-diagram} shows this process in practice. The example
+data is $2^{27}$ samples of the mean radial displacement of a single
+one-dimensional particle placed in a harmonic oscillator. Due to how the data is
+generated, we expect there to be a significant portion of autocorrelation
+present. The figure shows the standard error from \cref{eq:mci-annon-2},
+calculated on the data sets obtained by performing repeated blocking
+transformations. We can see it rise steadily up until the block sizes are big
+enough to remove all the covariance, at which point the estimate converges. As
+the data set becomes to small the results start to become unpredictable. The
+optimal estimate is indicated by the red circle, as determined by the automated
+procedure developed by \textcite{Jonsson-2018}, which in this case occured after
+$\num{12}$ blocking transformations.
+
+If not explicitly stated otherwise, all error estimates in this thesis will
+include this correction.
+
+
+\begin{figure}[h]
+  \centering
+  \resizebox{0.7\linewidth}{!}{%
+    \input{scripts/blocking-example-diagram.py.tex}
+  }
+  \caption{The estimated standard error of a random process excibiting symptoms
+    of autocorrelation, shown as a function of the effective size of the data set as
+    blocking transformations are applied. As the block sizes increase the 
+    covariance goes away, while the variance increases. After convergence, the
+    optimal estimate is illustrated by the red dot, as determined by an automated blocking
+    procedure~\cite{Jonsson-2018}.}
+  \label{fig:blocking-example-diagram}
+\end{figure}
+
+
 
 \subsection{Importance Sampling}
 
 In some suitable cases we can improve quite dramatically on the simple,
-straightforward approach presented above. To illustrate this, say we
+straightforward integration approach given in \cref{eq:mci-def}. To illustrate this, say we
 would like to evaluate the following integral:
 
 \begin{align}
@@ -156,6 +278,7 @@ bounds. In general, using better sampling distributions will tend to give us
 lower variance results.
 
 \section{Sampling from Arbitrary Probability Distribution Functions}
+\label{sec:sampling-arb-prob-dist-funcs}
 
 So far we have taken for granted the ability to sample numbers from various
 probability distribution functions. We dedicate this section to discuss sampling from the bottom up, culminating in a detailed presentation of the most central algorithm in this thesis, the Metropolis-Hastings algorithm.
@@ -259,6 +382,7 @@ listed in Algorithm \autoref{alg:inverse-transform-sampling}.
 \end{algorithm}
 
 \subsection{The Metropolis-Hastings Algorithm}
+\label{sec:metro-hastings-alg}
 
 Algorithm \autoref{alg:inverse-transform-sampling} works great for a number of standard
 PDFs. For many cases, however, we do not have a tractable form for the inverse
