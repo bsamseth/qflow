@@ -398,10 +398,13 @@ make practical sampling from $P_\psi$ impossible. Even worse, considering that
 $\psi$ is updated continuously throughout a VMC calculation, we could not even
 cache the result of the integral after computing it once.
 
-Luckily, we have a solution: The Metropolis-Hastings Algorithm. While the
-algorithm it self is quite simple, the argument for \emph{why} it works is a
-little more involved. The following sections will be dedicated to the mathematical
-underpinnings. In the mean time, the full algorithm is shown in~\Cref{alg:metropolis-hastings-general}.
+Luckily, we have a solution: The Metropolis-Hastings Algorithm. This algorithm
+is the workhorse behind of a great ocean of applications, including VMC, and is
+considered to be among the most influential algorithms of the 20th century.
+While the algorithm it self is quite simple, the argument for \emph{why} it
+works is a little more involved. The following sections will be dedicated to the
+mathematical underpinnings. In the mean time, the full algorithm is shown
+in~\Cref{alg:metropolis-hastings-general}.
 
 \begin{algorithm}[h]
     \caption{Metropolis-Hastings Algorithm}
@@ -412,8 +415,8 @@ underpinnings. In the mean time, the full algorithm is shown in~\Cref{alg:metrop
         \State Initialize $\vx$, randomly or otherwise
         \Repeat
           \State Sample $\vx'\sim q(\vx'|\vx)$
-          \State $u\gets\text{unif}(0, 1)$
-          \State $A\gets P(\vx')q(\vx|\vx')\qty[P(\vx)q(\vx'|\vx)]^{-1}$
+          \State Sample $u\sim\text{unif}(0, 1)$
+          \State $A\gets \flatfrac{P(\vx')q(\vx|\vx')}{P(\vx)q(\vx'|\vx)}$
           \If{$u \leq A$}
             \State $\vx \gets \vx'$
           \EndIf
@@ -423,34 +426,79 @@ underpinnings. In the mean time, the full algorithm is shown in~\Cref{alg:metrop
 \end{algorithm}
 
 The most important thing about~\Cref{alg:metropolis-hastings-general} is the
-fact that we only need to know the ratios of probabilities. This means that we
-don't need the probabilities to be normalized to unity\footnote{We do need the
-probabilities to be \emph{normalizable} though. In our case, where $P\propto
-\abs{\Psi}^2$, we have already assumed this requirement
-in~\cref{sec:requirements-of-wave-functions}.}, meaning we don't have to compute
-the costly integral in~\cref{eq:wavefunc-probability-density-def}. For our
-purposes this is essential, and~\cref{alg:metropolis-hastings-general} is the
-reason why VMC is possible.
+fact that we only need to know the ratios of probabilities,
+$\flatfrac{P(\vx')}{P(\vx)}$. This means that we don't need the probabilities to
+be normalized to unity\footnote{We do need the probabilities to be
+\emph{normalizable} though. In our case, where $P\propto \abs{\Psi}^2$, we have
+already assumed this requirement in~\cref{sec:requirements-of-wave-functions}.},
+meaning we don't have to compute the costly integral
+in~\cref{eq:wavefunc-probability-density-def}. For our purposes this is
+essential, and~\cref{alg:metropolis-hastings-general} is the reason why VMC is
+possible.
 
-\subsubsection{Markov Chains}
+\subsubsection{Formal Derivation}
 
 The Metropolis-Hastings algorithm builds what is called a \emph{Markov Chain}. A
 Markov Chain is a type of stochastic model that describes a sequence of possible
-states. We imagine some finite space of possible states\footnote{The states can
-either be enumerable in space and continuous in time, continuous in space and
-enumerable in time (our most common case), or enumerable in both.
-Generalizations to continuous space and time are possible, but beyond the scope
-of this thesis.} and a set of probabilities describing the likelihood of moving
-from one to the other. The defining property of a Markov Chain, as opposed to
-other stochastic processes is that the transition probabilities $q(x'|x)$ from a
-state $x$ to a state $x'$ depends only on the current state and not on any
-previous states.
+states. We imagine some space of possible states and a set of transition
+probabilities, $T(\vx'|\vx)$, describing the likelihood of moving between them.
+The defining property of a Markov Chain, as opposed to other stochastic
+processes is that the transition probabilities $T(\vx'|\vx)$ from a state $\vx$
+to a state $\vx'$ depends only on the current state and not on any previous
+states. In other words, it matter only where you are, not where you have been.
 
 For well behaved Markov Chains, as the number of steps in the chain increases,
 the distribution of the states will asymptotically approach a stationary
-distribution, call it $\pi(x)$. By well behaved we mean that the Markov Chain
-described by $q(x'|x)$ must have a \emph{unique}
+distribution, $\pi(\vx)$. The Metropolis-Hastings algorithm works by carefully
+constructing $T(\vx'|\vx)$ such that $\pi(\vx)=P(\vx)$, where $P(\vx)$ is the
+desired probability distribution. 
 
+In order to find the correct $T(\vx'|\vx)$, we require that the stationary
+distribution $\pi(\vx)$ exists and that it is unique:
 
+\begin{description}
+\item[Existence:] A sufficient condition for the existence of $\pi(\vx)$ is that
+  of \emph{detailed balance}. This says that the probability of being in state
+  $\vx$ and transitioning to $\vx'$ is equal to the probability of being in state
+  $\vx'$ and transitioning to $\vx$:
+  \begin{align}
+    \label{eq:detailed-balance}
+    \pi(\vx)T(\vx'|\vx) = \pi(\vx')T(\vx|\vx').
+  \end{align}
+\item[Uniqueness:] The distribution $\pi(\vx)$ is unique if the Markov chain is
+  \emph{ergodic}. This is the case when we don't return to the same state after
+  a fixed number of transitions, and that all states can be reached in a finite
+  number of transitions.
+\end{description}
+Deriving the correct $T(\vx'|\vx)$ starts by factoring the transition
+probabilities into a proposal distribution, $q(\vx'|\vx)$, and an acceptance
+ratio $A(\vx',\vx)$. The idea is to use the former to propose the next state,
+and use the latter to accept or reject the proposal. Inserting this into
+\cref{eq:detailed-balance} and rearranging we get:
+
+\begin{align}
+  \frac{A(\vx',\vx)}{A(\vx,\vx')} = \frac{P(\vx')}{P(\vx)}\frac{q(\vx|\vx')}{q(\vx'|\vx)}.
+\end{align}
+We can now freely choose an acceptance ratio that satisfies the above. The
+common choice is:
+
+\begin{align}
+  A(\vx',\vx) = \min\qty(1, \frac{P(\vx')}{P(\vx)}\frac{q(\vx|\vx')}{q(\vx'|\vx)})
+\end{align}
+
+At this point, all that remains is to specify a proposal distribution
+$\q(\vx'|\vx)$. Depending on the choice of $q$ we get a sampler with different
+attributes. We have implemented two version, presented in the follwing sections.
+
+\subsubsection{Metropolis Algorithm}
+
+The simplest choice, referred to as simply the Metropolis algorithm, is to
+choose a distribution such that $q(\vx'|\vx)=q(\vx|\vx')$. That way the
+acceptance ratio simplifies significantly, fully canceling out $q$. In our
+implementation we have used a uniform proposal distribution,
+
+\begin{align}
+  q(\vx' | \vx)
+\end{align}
 
 \end{document}
