@@ -292,14 +292,14 @@ possible, where all numbers in the range $[a, b]$ have the same probability
 density. The definition of its PDF is simply
 
 \begin{align}\label{eq:uniform-pdf-definition}
-    p_U(x\,|\, a, b) \defeq  \begin{cases}
+    p_U\qty(x\;\middle|\; a, b) \defeq  \begin{cases}
         \frac{1}{b - a} &\qfor x\in [a, b]\\
         0&\qotherwise
     \end{cases}.
 \end{align}
 Most commonly we operate only with the \emph{standard uniform distribution}, $\text{Uniform}(0, 1)$. Any other range can be simply related via the trivially verifiable identity
 \begin{align}
-    p_U(x\,|\, a,b) = p_U\qty(\left. \frac{x-a}{b-a} \,\right|\, 0, 1).
+    p_U\qty(x\;\middle|\; a,b) = p_U\qty( \frac{x-a}{b-a} \;\middle|\; 0, 1).
 \end{align}
 
 But how exactly do we obtain random realizations from this PDF? Firstly we need
@@ -401,7 +401,7 @@ cache the result of the integral after computing it once.
 Luckily, we have a solution: The Metropolis-Hastings Algorithm. This algorithm
 is the workhorse behind of a great ocean of applications, including VMC, and is
 considered to be among the most influential algorithms of the 20th century.
-While the algorithm it self is quite simple, the argument for \emph{why} it
+While the algorithm itself is quite simple, the argument for \emph{why} it
 works is a little more involved. The following sections will be dedicated to the
 mathematical underpinnings. In the mean time, the full algorithm is shown
 in~\Cref{alg:metropolis-hastings-general}.
@@ -410,13 +410,13 @@ in~\Cref{alg:metropolis-hastings-general}.
     \caption{Metropolis-Hastings Algorithm}
     \label{alg:metropolis-hastings-general}
     \begin{algorithmic}[1]
-        \Require Probability density $P(\vx)$, proposal distribution $q(\vx'|\vx)$
+        \Require Probability density $P(\vx)$, proposal distribution $q\qty(\vx'\;\middle|\;\vx)$
         \Ensure Random $\vx$ drawn from $P$
         \State Initialize $\vx$, randomly or otherwise
         \Repeat
-          \State Sample $\vx'\sim q(\vx'|\vx)$
+          \State Sample $\vx'\sim q\qty(\vx'\;\middle|\;\vx)$
           \State Sample $u\sim\text{unif}(0, 1)$
-          \State $A\gets \flatfrac{P(\vx')q(\vx|\vx')}{P(\vx)q(\vx'|\vx)}$
+          \State $A\gets \flatfrac{P(\vx')q\qty(\vx\;\middle|\;\vx')}{P(\vx)q\qty(\vx'\;\middle|\;\vx)}$
           \If{$u \leq A$}
             \State $\vx \gets \vx'$
           \EndIf
@@ -441,19 +441,19 @@ possible.
 The Metropolis-Hastings algorithm builds what is called a \emph{Markov Chain}. A
 Markov Chain is a type of stochastic model that describes a sequence of possible
 states. We imagine some space of possible states and a set of transition
-probabilities, $T(\vx'|\vx)$, describing the likelihood of moving between them.
+probabilities, $T\qty(\vx'\;\middle|\;\vx)$, describing the likelihood of moving between them.
 The defining property of a Markov Chain, as opposed to other stochastic
-processes is that the transition probabilities $T(\vx'|\vx)$ from a state $\vx$
+processes is that the transition probabilities $T\qty(\vx'\;\middle|\;\vx)$ from a state $\vx$
 to a state $\vx'$ depends only on the current state and not on any previous
 states. In other words, it matter only where you are, not where you have been.
 
 For well behaved Markov Chains, as the number of steps in the chain increases,
 the distribution of the states will asymptotically approach a stationary
 distribution, $\pi(\vx)$. The Metropolis-Hastings algorithm works by carefully
-constructing $T(\vx'|\vx)$ such that $\pi(\vx)=P(\vx)$, where $P(\vx)$ is the
+constructing $T\qty(\vx'\;\middle|\;\vx)$ such that $\pi(\vx)=P(\vx)$, where $P(\vx)$ is the
 desired probability distribution. 
 
-In order to find the correct $T(\vx'|\vx)$, we require that the stationary
+In order to find the correct $T\qty(\vx'\;\middle|\;\vx)$, we require that the stationary
 distribution $\pi(\vx)$ exists and that it is unique:
 
 \begin{description}
@@ -463,42 +463,174 @@ distribution $\pi(\vx)$ exists and that it is unique:
   $\vx'$ and transitioning to $\vx$:
   \begin{align}
     \label{eq:detailed-balance}
-    \pi(\vx)T(\vx'|\vx) = \pi(\vx')T(\vx|\vx').
+    \pi\qty(\vx)T\qty(\vx'\;\middle|\;\vx) = \pi\qty(\vx')T\qty(\vx\;\middle|\;\vx').
   \end{align}
 \item[Uniqueness:] The distribution $\pi(\vx)$ is unique if the Markov chain is
   \emph{ergodic}. This is the case when we don't return to the same state after
   a fixed number of transitions, and that all states can be reached in a finite
   number of transitions.
 \end{description}
-Deriving the correct $T(\vx'|\vx)$ starts by factoring the transition
-probabilities into a proposal distribution, $q(\vx'|\vx)$, and an acceptance
-ratio $A(\vx',\vx)$. The idea is to use the former to propose the next state,
-and use the latter to accept or reject the proposal. Inserting this into
-\cref{eq:detailed-balance} and rearranging we get:
+Deriving the correct $T\qty(\vx'\;\middle|\;\vx)$ starts by factoring the transition
+probabilities into a proposal distribution, $q\qty(\vx'\;\middle|\;\vx)$, and an
+acceptance ratio $A\qty(\vx',\vx)$. The idea is to use the former to propose the
+next state, and use the latter to accept or reject the proposal. Inserting this
+into \cref{eq:detailed-balance} and rearranging we get:
 
 \begin{align}
-  \frac{A(\vx',\vx)}{A(\vx,\vx')} = \frac{P(\vx')}{P(\vx)}\frac{q(\vx|\vx')}{q(\vx'|\vx)}.
+  \frac{A\qty(\vx',\vx)}{A\qty(\vx,\vx')} = \frac{P\qty(\vx')}{P\qty(\vx)}\frac{q\qty(\vx\;\middle|\;\vx')}{q\qty(\vx'\;\middle|\;\vx)}.
 \end{align}
 We can now freely choose an acceptance ratio that satisfies the above. The
 common choice is:
 
 \begin{align}
-  A(\vx',\vx) = \min\qty(1, \frac{P(\vx')}{P(\vx)}\frac{q(\vx|\vx')}{q(\vx'|\vx)})
+  A\qty(\vx',\vx) = \min\qty(1, \frac{P\qty(\vx')}{P\qty(\vx)}\frac{q\qty(\vx\;\middle|\;\vx')}{q\qty(\vx'\;\middle|\;\vx)})
 \end{align}
 
 At this point, all that remains is to specify a proposal distribution
-$\q(\vx'|\vx)$. Depending on the choice of $q$ we get a sampler with different
-attributes. We have implemented two version, presented in the follwing sections.
+$q\qty(\vx'\;\middle|\;\vx)$. Depending on the choice of $q$ we get a sampler with
+different attributes. We have implemented two version, presented in the follwing
+sections.
 
 \subsubsection{Metropolis Algorithm}
 
 The simplest choice, referred to as simply the Metropolis algorithm, is to
-choose a distribution such that $q(\vx'|\vx)=q(\vx|\vx')$. That way the
-acceptance ratio simplifies significantly, fully canceling out $q$. In our
-implementation we have used a uniform proposal distribution,
+choose a distribution such that
+$q\qty(\vx'\;\middle|\;\vx)=q\qty(\vx\;\middle|\;\vx')$. That way the acceptance
+ratio simplifies significantly, fully canceling out $q$. In our implementation
+we have used a uniform proposal distribution:
 
 \begin{align}
-  q(\vx' | \vx)
+  q\qty(\vx' \;\middle|\; \vx) &= p_U\qty(\vx' \;\middle|\; \vx -\frac{\Delta x}{2}, \vx + \frac{\Delta x}{2}),
 \end{align}
+where $\Delta x$ is a \emph{step size} that regulates how large each
+perturbation should be. This leads to the simplest form of
+\cref{alg:metropolis-hastings-general}, given for completeness in
+\cref{alg:metropolis-simple}. The algorithm given here is adapted particularly
+for our purposes, where we want to sample a matrix, $\mat
+X\in\mathbb{R}^{N\times D}$, for $N$ particles in $D$ dimensions. In particular,
+our implementation yields a new sample after moving only one of the particles.
+This is a common case for VMC applications, because this allows for a code
+optimization that is crucial when using Slater determinants in wave functions.
+We don't use such wave functions in this thesis, but future work might benefit
+from this choice.
 
+\begin{algorithm}[h]
+    \caption{Metropolis Algorithm}
+    \label{alg:metropolis-simple}
+    \begin{algorithmic}[1]
+        \Require Probability density $P(\vX)=\abs{\psi(\vX)}^2$, step size $\Delta x$
+        \Ensure Random $\vX$ drawn from $P$
+        \State Initialize $\vX$, randomly or otherwise
+        \Repeat
+          \For{$i \gets 1:N$}
+            \State $\vX'\gets \vX$
+            \For{$d \gets 1:D$}
+              \State Sample $\delta\sim \text{unif}(-0.5, 0.5)$
+              \State $X_{i,d}'\gets X_{i,d} + \Delta x \cdot \delta$
+            \EndFor
+            \State Sample $u\sim\text{unif}(0, 1)$
+            \State $A\gets \flatfrac{P\qty(\vX')}{P\qty(\vX)}$
+            \If{$u \leq A$}
+              \State $\vX \gets \vX'$
+            \EndIf
+            \State \Yield $\vX$
+          \EndFor
+        \Until{done}
+    \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Importance Sampling}
+
+\cref{alg:metropolis-simple} suffers from the same issues that ordinary MCI
+does, as opposed to the enhancement of Importance sampling. The proposal
+distribution used in the Metropolis algorithm, while simple to implement, can
+certainly be improved upon. The idea is to guide the random walk in space
+towards areas of greater probability. We will now give a brief physical
+motivation for the strategy, glossing over most technical details.
+
+Particles will tend towards regions of space where $P(\vX)$ is large. We may say
+that this is the result of a \emph{quantum drift force}. Without further
+motivation, we define the drift force acting on particle $k$ as follows:
+
+\begin{align}
+  \vb{F}_k(\vX) = \frac{2\grad_k{\Psi(\vX)}}{\Psi(\vX)},
+\end{align}
+which points in the direction of greatest increase in $\Psi$ with respect to
+particle $k$'s position. We also expect the
+system to exhibit some degree of random motion, as it is a quantum system. This
+combination of drift and random motion is described by the Langevin equation,
+
+\begin{align}
+ \pdv{\vx_k}{t} &= D\vb{F}_k + \vb{\eta}, 
+\end{align}
+where $D$ is called the drift coefficient, and $\vb{\eta}$ is a vector of
+uniformly distributed random values (with zero mean) and accounts for the random
+motion. We fix $D=\flatfrac{1}{2}$. Applying Euler's method to the Langevin
+equation we can get:
+
+\begin{align}
+  \vx_k' = \vx_k + \frac{1}{2}\vb{F}_k\,\Delta t + \vb{\xi}\sqrt{\Delta t},
+\end{align}
+where $\Delta t$ is a time step similar to $\Delta x$ for plain Metropolis, and
+$\vb{\xi}$ is a vector of values drawn from the standard normal distribution.
+This is our new recipe for generating proposals $\vx'$. The final piece is 
+to find the corresponding probability distribution,
+$q\qty(\vx'\;\middle|\;\vx)$.
+
+To this end, we consider the Fokker-Planck equation, which for one particle in
+one dimension is written as
+
+\begin{align}
+  \label{eq:mc-annon-4}
+  \pdv{\Psi}{t} &= D\pdv{}{x}\qty(\pdv{}{x} - F)\Psi,
+\end{align}
+where $D$ is as before and $F$ is the one-dimensional analog of $\vb{F}_k$. This
+describes the time-evolution of a probability distribution under the influence
+of a drift force and random impulses. We've let $\Psi$ play the role of the
+probability distribution. \cref{eq:mc-annon-4} yields a solution given by the
+following Green's function (for one particle):
+
+\begin{align}
+  \label{eq:mc-annon-5}
+  G\qty(\vx_k', \,\vx_k,\,\Delta t) &\propto \exp[-\frac{\norm{\vx_k' - \vx_k - D\Delta t\,\vb{F}_k}^2}{4D\Delta t}].
+\end{align}
+This is interpreted as the probability of transitioning to position $\vx_k'$
+from $\vx_k$ within a time interval $\Delta t$, so that finally we have the
+proposal distribution:
+
+\begin{align}
+  q\qty(\vx'\;\middle|\;\vx) &=G\qty(\vx', \,\vx,\,\Delta t). 
+\end{align}
+Note that because we ever only need the ratio of $q$ values, there is no problem
+that \cref{eq:mc-annon-5} only gives the proportionality. The final algorithm is
+shown in \cref{alg:metropolis-importance}.
+
+\begin{algorithm}[h]
+    \caption{Metropolis-Hastings with Importance Sampling.}
+    \label{alg:metropolis-importance}
+    \begin{algorithmic}[1]
+        \Require Probability density $P(\vX) = \abs{\psi(\vX)}$, step size $\Delta t$
+        \Ensure Random $\vX$ drawn from $P$
+        \State Initialize $\vX$, randomly or otherwise
+        \Repeat
+          \For{$i \gets 1:N$}
+            \State $\vX'\gets \vX$
+            \For{$d \gets 1:D$}
+              \State Sample $\xi\sim \mathcal{N}(0, 1)$
+              \State $X_{i,d}'\gets X_{i,d} + \sqrt{\Delta t} \cdot \xi +
+              \frac{1}{2}\Delta t\,(\vb{F}_i(\psi))_d$
+            \EndFor
+            \State Sample $u\sim\text{unif}(0, 1)$
+            \State $A\gets \flatfrac{P\qty(\vX')}{P\qty(\vX)}$
+            \State $A\gets A\cdot \flatfrac{q\qty(\vx_i\;\middle|\;\vx_i')}{q\qty(\vx_i'\;\middle|\;\vx_i)}$
+            \If{$u \leq A$}
+              \State $\vX \gets \vX'$
+            \EndIf
+            \State \Yield $\vX$
+          \EndFor
+        \Until{done}
+    \end{algorithmic}
+\end{algorithm}
+See \cref{sec:verify-sampling} for a demonstration of how
+\cref{alg:metropolis-importance} compares to \cref{alg:metropolis-simple}.
 \end{document}
