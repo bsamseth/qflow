@@ -122,6 +122,56 @@ implementation and the validity of the statistical estimates.
   \input{scripts/verify-energy-stats.py.table2.tex}
 \end{table}
 
+\section{One-Body Density}
+
+Because the wave functions we typically encounter tend to be multidimensional,
+visualizing them can be quite challenging. One way of reducing the
+dimensionality is to integrate out the positions for all but one particle. The
+result is called the One-Body Density (OBD):
+
+\begin{align}
+  \label{eq:one-body-density-def}
+  \rho(\vx_1) = \idotsint \dd{\vx_2}\dd{\vx_2}\dots\dd{\vx_N} \abs{\Psi(\vX)}^2,
+\end{align}
+where we have arbitrarily chosen to keep particle index $1$. This gives the
+probability distribution for where one might expect to find particle $1$,
+averaged over all possible configurations of the other particles.
+
+As a validating example, we consider the simple Gaussian wave function $\psi_G$.
+We get:
+
+\begin{align}
+  \rho(\vx_1) &= \idotsint \dd{\vx_2}\dd{\vx_2}\dots\dd{\vx_N} \abs{\psi_G(\vX)}^2\\
+  &= e^{-2\alpha r_1^2}\idotsint \dd{\vx_2}\dd{\vx_2}\dots\dd{\vx_N} \,e^{-2\alpha\sum_{i=2}^N r_i^2}\\
+    &= C e^{-2\alpha r_1^2},\label{eq:ver-annon-1}
+\end{align}
+where $C$ is a normalization constant.
+
+We can perform the integral in \cref{eq:one-body-density-def} for any wave
+function using Monte Carlo integration. We simply make a histogram of the
+particles position as we sample a large amount of configuration.\footnote{A
+technical caveat is that when we discretize the radius $r_1$ into bins for the
+histogram we must account for the different volumes (or areas or lengths in two
+and one dimensions) of the bins. Greater $r$ will correspond to greater volumes,
+and because of this they will receive a correspondingly greater proportion of
+the samples. Dividing the bin counts by their respective volumes fixes this.}
+\cref{fig:verify-onebody} shows the resulting plot of $\rho(r_1)$ in a harmonic
+oscillator with $N=100$ three-dimensional particles, using $2^{23}$ Monte Carlo
+samples. After normalizing both the result and \cref{eq:ver-annon-1} the two
+curves are indistinguishable, showing that our implementation is indeed correct.
+
+\begin{figure}[h]
+  \centering
+  \resizebox{0.7\linewidth}{!}{%
+    \input{scripts/verify-onebody-density.py.tex}
+  }
+  \caption{\label{fig:verify-onebody}One-body density of a particle in a
+    harmonic oscillator potential, as described by $\psi_G$ with $\alpha=0.5$.
+    The curve is indistinguishable from the analytic result. The small
+    discrepancy around $r_1=0$ is an artifact of the vanishing volume of the
+    inner most bins, and the discrepancy becomes increasingly negligible with
+    more samples. This result used $2^{23}$ MC samples.}
+\end{figure}
 
 \section{Optimization}
 
