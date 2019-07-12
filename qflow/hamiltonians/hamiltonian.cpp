@@ -268,7 +268,7 @@ RowVector Hamiltonian::onebodydensity(Sampler& sampler,
     const long samples_per_proc
         = samples / n_procs + (rank < samples % n_procs ? 1 : 0);
     const Real r_step      = max_radius / n_bins;
-    RowVector  bins        = RowVector(n_bins);
+    RowVector  bins        = RowVector::Zero(n_bins);
     long       total_count = 0;
     const int n_particles = sampler.get_current_system().rows();
 
