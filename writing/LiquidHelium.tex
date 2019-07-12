@@ -73,23 +73,21 @@ systems. Based on computations with larger and larger systems, the value for $N
   \resizebox{\linewidth}{!}{%
     \input{scripts/He-benchmark.py.tex}
   }
-  \caption{Left: Ground state energy produced by~\cref{eq:McMillan-wave-function-def}
+  \caption{\label{fig:He-benchmark-training}Left: Ground state energy produced by~\cref{eq:McMillan-wave-function-def}
     as a function of training steps. Right: Progression of the variational
     parameter $\beta$ of~\cref{eq:McMillan-wave-function-def} as a function of
     training steps. A convergence is clearly visible, although there is more
     variance in the value for $\beta$ compared to the parameters of the
     benchmark used for Quantum Dots.}
-  \label{fig:He-benchmark-training}
 \end{figure}
 
 \begin{table}[h]
   \centering
-  \input{scripts/He-benchmark.py.table.tex}
-  \caption{Predicted ground state energy of helium atoms at density $\rho =
+  \caption{\label{tab:He-benchmark-results}Predicted ground state energy of helium atoms at density $\rho =
 \flatfrac{0.365}{\sigma^3}$. The number of particles used in the simulation box
 is indicated by the superscript on $\psi_M$. Values obtained using $2^{22}$
 Monte Carlo samples.}
-  \label{tab:He-benchmark-results}
+  \input{scripts/He-benchmark.py.table.tex}
 \end{table}
 
 
