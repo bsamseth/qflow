@@ -270,11 +270,13 @@ RowVector Hamiltonian::onebodydensity(Sampler& sampler,
     const Real r_step      = max_radius / n_bins;
     RowVector  bins        = RowVector(n_bins);
     long       total_count = 0;
+    const int n_particles = sampler.get_current_system().rows();
 
     for (long i = 0; i < samples_per_proc; ++i)
     {
-        System& system = sampler.next_configuration();
-        for (int p = 0; p < system.rows(); ++p)
+        sampler.thermalize(n_particles);
+        const System& system = sampler.get_current_system();
+        for (int p = 0; p < n_particles; ++p)
         {
             Real r_k = norm(system.row(p));
             if (r_k < max_radius)
