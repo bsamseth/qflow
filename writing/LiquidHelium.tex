@@ -17,20 +17,23 @@ as the McMillan form wave function~\cite{McMillan-1965}:
   \label{eq:McMillan-wave-function-def}
   \psi_{M} &= \exp(-\frac{1}{2}\sum_{i<j} \qty(\frac{\beta}{r_{ij}})^5).
 \end{align}
-where $\beta$ is the only variational parameter. An important observation now is
-the lack of any single particle wave function factor. In the case of the Quantum
-Dot we had a Gaussian localized at the origin as a result of the potential well.
-This system, however, is infinite and periodic without any such influence
-driving it towards particular points in space. Furthermore, because of the lack
-of an external field the single particle solutions are just free particles, and
-does not help us understand the many-body system.
+where $\beta$ is the only variational parameter and has units of angstrom. An
+important observation now is the lack of any single particle wave function
+factor. In the case of the Quantum Dot we had a Gaussian localized at the origin
+as a result of the potential well. This system, however, is infinite and
+periodic without any such influence driving it towards particular points in
+space. Furthermore, because of the lack of an external field the single particle
+solutions are just free particles, and does not help us understand the many-body
+system.
 
 \subsection{Finite Size Dependency}
 
 An important aspect of all the results that we will present is that they are
 highly dependent on the number of particles used in the simulation box, as well
 as the size of the box it self. We will hold the number density of particles
-constant, $\rho$, and set the side lengths of the simulation box, $L$, depending on
+constant, $\rho = \flatfrac{\num{0.365}}{\sigma^3}$ (where $\sigma =
+\SI{2.556}{\angstrom}$ as defined in \cref{eq:Lennard-Jones-def}), and set the
+side lengths of the simulation box, $L$, depending on
 the number of particles $N$:
 
 \begin{align}
@@ -43,8 +46,8 @@ increase the number of particles (and hence the size of box), but the
 computation time needed to run the simulations increase significantly with
 increasing numbers. The purpose of the following analysis is to test the
 \emph{relative} accuracy of different wave functions. With that in mind we have
-used a small number of particles in the main results, where the absolute error
-introduced is significant. The number should hopefully still be large enough to
+used a small number of particles in the main results, which introduces a
+significant error. The number of particles should still be large enough to
 introduce all the relevant effects and produce valid test results.
 
 
@@ -67,7 +70,9 @@ systems. Based on computations with larger and larger systems, the value for $N
 
 \begin{figure}[h]
   \centering
-  \input{scripts/He-benchmark.py.tex}
+  \resizebox{\linewidth}{!}{%
+    \input{scripts/He-benchmark.py.tex}
+  }
   \caption{Left: Ground state energy produced by~\cref{eq:McMillan-wave-function-def}
     as a function of training steps. Right: Progression of the variational
     parameter $\beta$ of~\cref{eq:McMillan-wave-function-def} as a function of
