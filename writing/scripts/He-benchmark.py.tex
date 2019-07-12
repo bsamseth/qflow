@@ -3,7 +3,7 @@
 
 \definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
 
-\begin{groupplot}[group style={group size=2 by 1}]
+\begin{groupplot}[group style={group size=2 by 1, horizontal sep=0.5cm}]
 \nextgroupplot[
 tick align=outside,
 tick pos=left,
@@ -12,6 +12,7 @@ xlabel={\% of training},
 xmin=-5, xmax=105,
 xtick style={color=black},
 y grid style={white!69.01960784313725!black},
+ylabel near ticks,
 ylabel={Ground state energy (a.u.)},
 ymin=-6.84184972585454, ymax=-5.82548788292397,
 ytick style={color=black}
@@ -132,7 +133,10 @@ xmin=-5, xmax=105,
 xtick style={color=black},
 y grid style={white!69.01960784313725!black},
 ymin=2.84333389626312, ymax=2.98998817847455,
-ytick style={color=black}
+ytick style={color=black},
+ylabel={Variational parameter $\beta$ $[\si{\angstrom}]$},
+ylabel near ticks,
+ytick pos=right,
 ]
 \addplot [semithick, color0]
 table {%
