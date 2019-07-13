@@ -24,7 +24,7 @@ by a Pade-Jastrow correlation term:\footnote{We drop the constant factor from~\c
 where cusp conditions fix $\alpha_{PJ} = 1$, and $\alpha_G$ and $\beta_{PJ}$
 are the only two variational parameters.
 
-\subsubsection{Optimizing}
+\subsection{Optimizing}
 
 We have run a simple optimization of the above wave function, using initial
 values of $\alpha_G = 0.5$ and $\beta_{PJ} = 1$. We used importance sampling and the
@@ -63,6 +63,53 @@ statistics for the energy obtained with the final state. Comparing to the
 analytical result of $\SI{3}{\au}$ these results are in good agreement. For
 reference we have also given the results obtained without the Pade-Jastrow term,
 i.e.\ the non-interacting ground state.
+
+\subsection{Two-Body Density}
+
+Given that we now consider two interacting particles, a natural quantity to
+investigate is the two-body density. Recall \cref{fig:verify-twobody} which
+showed the two-body density for the non-interacting system as a simple Gaussian.
+Computing $\rho(\vx_1, \vx_2)$ using $\psi_{PJ}$ with the final parameters
+obtained previously we get \cref{fig:QD-benchmark-pade-jastrow-density}.
+
+This plot shows a very different behavior. The particles no longer prefer to
+(simultaneously) stay close to the center of the potential because of the Coulomb repulsion, and
+the density maxima is pushed outwards. Additionally, there is a small dent in
+the density when $r_1\approx r_2$, not only in the center. This effect is made
+clearer by looking at the squared density. These results are quite intuitive,
+while showcasing the highly non-trivial behavior that the two particles exhibit.
+
+If we integrate out one of the particle positions, i.e.\ compute the one-body
+density we get \cref{fig:QD-benchmark-pade-jastrow-onebody}. This shows that the
+most probable position for any single particle is still in the center, but the
+density is much more spread out to larger $r$.
+
+\begin{figure}[h]
+   \centering
+    \resizebox{0.7\linewidth}{!}{%
+        \input{scripts/QD-benchmark-onebody.py.tex}
+    }
+    \caption{\label{fig:QD-benchmark-pade-jastrow-onebody}One-body density
+      described by $\psi_{PJ}$ with optimized parameters. For reference, the
+      exact OBD for the non-interacting system is indicated by the dotted line.}
+\end{figure}
+
+\begin{figure}[h]
+   \centering
+    \resizebox{0.7\linewidth}{!}{%
+        \input{scripts/QD-benchmark-density.py.tex}
+    }
+    \resizebox{0.7\linewidth}{!}{%
+        \input{scripts/QD-benchmark-density.py.squared.tex}
+    }
+    \caption{\label{fig:QD-benchmark-pade-jastrow-density}Top: Two-body density
+      described by $\psi_{PJ}$ with optimized parameters. Bottom: The squared
+      equivalent of the top figure, included to emphasize the small decrease in
+      density along the diagonal $r_1=r_2$.}
+\end{figure}
+
+\clearpage
+
 
 \section{Restricted Boltzmann Machine}
 
@@ -449,7 +496,7 @@ Still, we can make an attempt. \cref{fig:QD-pade-dnn-weights} show a color map
 representation of all the weights and biases of $\psi_{DNN}$ after training.
 Arguably, we should not attempt to assign physical meanings to any of the later
 layers. If anything, the weight matrix of the first layer could be insightful,
-as this is directly multiplied with the coordinates $\mat X$. Interestingly, 
+as this is directly multiplied with the coordinates $\mat X$. Interestingly,
 two columns appear to have significant values. This is very similar to the
 effect seen in~\cref{fig:QD-rbm-symmetry} for the RBM. In fact, the same
 symmetry between the two columns is even present. The remaining columns are not
@@ -508,7 +555,7 @@ $\expval{r}$, the mean squared distance from the origin, $\expval{r^2}$ and the 
 inter-particle distance, $\expval{r_{12}}$. These are all quantities that should
 depend on the correlation between the particles.
 \cref{tab:QD-mean-distance-metrics} shows the three observables as predicted
-from the three wave functions trained previously. 
+from the three wave functions trained previously.
 
 \begin{table}[h]
   \centering
@@ -530,7 +577,7 @@ indicate that $\psi_{PJ}$ slightly underestimates the effect of the Coulomb
 repulsion. While $\expval{r}$ and $\expval{r^2}$ are not significantly different
 from the networks, we see a larger difference in $\expval{r_{12}}$. This might
 be because $\expval{r_{12}}$ is the quantity which is most directly
-connected to the strength of the interaction 
+connected to the strength of the interaction
 
 The two network types seem to once again be equivalent, with the observed differences well
 within statistical expectations.
