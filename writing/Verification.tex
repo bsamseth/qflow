@@ -71,7 +71,7 @@ $D=3$ dimensions and set $N=100$ particles.
 \cref{tab:verify-energy-estimates} shows the energy obtained using $\psi_G$ with
 two different values of $\alpha_G$. For the optimal choice $\alpha_G = 0.5$ we
 get the exact analytic ground state energy, $\flatfrac{\expval{E_L}}{N} =
-\flatfrac{D}{2}$. The reported variance is entirely due to the limited  
+\flatfrac{D}{2}$. The reported variance is entirely due to the limited
 precision of $\SI{64}{bit}$ floating point numbers.
 
 For the non-optimal $\alpha_G=0.51$ we get a larger energy, as we would expect.
@@ -174,6 +174,48 @@ curves are indistinguishable, showing that our implementation is indeed correct.
     inner most bins, and the discrepancy becomes increasingly negligible with
     more samples. This result used $2^{23}$ MC samples.}
 \end{figure}
+
+\section{Two-Body Density}
+
+Similarly to the one-body density, we can integrate out all degrees of freedom
+except for two particles. This will give us a two-dimensional probability
+distribution showing how the two particles are likely to be located relative to
+each other.
+
+Mathematically we define it in a similar way,
+
+\begin{align}
+  \label{eq:two-body-density-def}
+  \rho(\vx_1, \vx_2) = \idotsint \dd{\vx_3}\dd{\vx_4}\dots\dd{\vx_N} \abs{\Psi(\vX)}^2,
+\end{align}
+which for $N$ non-interacting particles governed by $\psi_G$ can be solved
+analytically:
+
+\begin{align}
+  \label{eq:two-body-analytic}
+  \rho(\vx_1, \vx_2) = Ce^{-2\alpha\qty(r_1^2 + r_2^2)}.
+\end{align}
+
+Again we can perform the integral numerically using MCI.
+\cref{fig:verify-twobody} shows a contour plot of the density along with the
+exact contour lines from \cref{eq:two-body-analytic} indicated by the dashed
+lines. Visually distinguishing the two is a little harder now, as we have turned
+to colors to visualize the three-dimensional plot. Still, the two sets of
+contour lines are very much in agreement, indicating that the implementation is
+correct.
+
+\begin{figure}[h]
+  \centering
+  \resizebox{0.7\linewidth}{!}{%
+    \input{scripts/verify-twobody-density.py.tex}
+  }
+  \caption{\label{fig:verify-twobody}Contour plot of the two-body density of
+$N=10$ particles in a harmonic oscillator potential, as described by $\psi_G$
+with $\alpha=0.5$. The dotted lines are the contours given by
+\cref{eq:two-body-analytic}. Again the numerical result follows closely that of
+the exact result. This result used $2^{25}$ MC samples.}
+\end{figure}
+
 
 \section{Optimization}
 
@@ -293,7 +335,7 @@ We will now investigate the behavior of the implemented sampling strategies.
 \subsection{Step Dependency}
 
 Similarly to the learning rate in optimization schemes, the Monte Carlo samplers
-are highly dependent setting an appropriate step parameter. We want to use a 
+are highly dependent setting an appropriate step parameter. We want to use a
 step size that balances two opposing attributes:
 
 \begin{itemize}
