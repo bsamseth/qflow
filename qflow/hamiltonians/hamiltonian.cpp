@@ -270,7 +270,7 @@ RowVector Hamiltonian::onebodydensity(Sampler& sampler,
     const Real r_step      = max_radius / n_bins;
     RowVector  bins        = RowVector::Zero(n_bins);
     long       total_count = 0;
-    const int n_particles = sampler.get_current_system().rows();
+    const int  n_particles = sampler.get_current_system().rows();
 
     for (long i = 0; i < samples_per_proc; ++i)
     {
@@ -306,6 +306,73 @@ RowVector Hamiltonian::onebodydensity(Sampler& sampler,
         Real r_i   = r_step * bin;
         Real r_ip1 = r_step * (bin + 1);
         global_bins[bin] /= n_dim_volume(r_i, r_ip1, dimensions) * global_total_count;
+    }
+    return global_bins;
+}
+
+Array Hamiltonian::twobodydensity(Sampler& sampler,
+                                  int      n_bins,
+                                  Real     max_radius,
+                                  long     samples) const
+{
+    const int  n_procs = mpiutil::proc_count();
+    const int  rank    = mpiutil::get_rank();
+    const long samples_per_proc
+        = samples / n_procs + (rank < samples % n_procs ? 1 : 0);
+    const Real r_step      = max_radius / n_bins;
+    Array      bins        = Array::Zero(n_bins, n_bins);
+    long       total_count = 0;
+    const int  n_particles = sampler.get_current_system().rows();
+
+    for (long i = 0; i < samples_per_proc; ++i)
+    {
+        sampler.thermalize(n_particles);
+        const System& system = sampler.get_current_system();
+
+        for (int i = 0; i < n_particles - 1; ++i)
+        {
+            const Real r_i = norm(system.row(i));
+            if (r_i >= max_radius)
+                continue;
+
+            for (int j = i + 1; j < n_particles; ++j)
+            {
+                const Real r_j = norm(system.row(j));
+
+                if (r_j < max_radius)
+                {
+                    bins((int) (r_i / r_step), (int) (r_j / r_step))++;
+                    bins((int) (r_j / r_step), (int) (r_i / r_step))++;
+                    total_count++;
+                }
+            }
+        }
+    }
+
+    // Gather results.
+    long  global_total_count;
+    Array global_bins(n_bins, n_bins);
+    MPI_Allreduce(
+        &total_count, &global_total_count, 1, MPI_LONG, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(bins.data(),
+                  global_bins.data(),
+                  bins.size(),
+                  mpiutil::MPI_REAL_TYPE,
+                  MPI_SUM,
+                  MPI_COMM_WORLD);
+
+    // Normalize counts to physical size of each bin.
+    int dimensions = sampler.get_current_system().cols();
+    for (int i = 0; i < n_bins; ++i)
+    {
+        const Real bin_volume_i
+            = n_dim_volume(r_step * i, r_step * (i + 1), dimensions);
+        for (int j = 0; j < n_bins; ++j)
+        {
+            const Real bin_volume_j
+                = n_dim_volume(r_step * j, r_step * (j + 1), dimensions);
+            global_bins(i, j) /= bin_volume_i * bin_volume_j * global_total_count;
+        }
     }
     return global_bins;
 }

@@ -38,7 +38,8 @@ void init_hamiltonian(py::module& main)
         .def("mean_distance_array", &Hamiltonian::mean_distance_array)
         .def("mean_radius_array", &Hamiltonian::mean_radius_array)
         .def("mean_squared_radius_array", &Hamiltonian::mean_squared_radius_array)
-        .def("onebodydensity", &Hamiltonian::onebodydensity);
+        .def("onebodydensity", &Hamiltonian::onebodydensity)
+        .def("twobodydensity", &Hamiltonian::twobodydensity);
 
     py::class_<HarmonicOscillator, Hamiltonian>(m, "HarmonicOscillator")
         .def(py::init<Real, Real, Real>(),

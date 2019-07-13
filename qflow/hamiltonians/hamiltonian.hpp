@@ -91,6 +91,11 @@ public:
                              Real     max_radius,
                              long     samples) const;
 
+    Array twobodydensity(Sampler& sampler,
+                         int      n_bins,
+                         Real     max_radius,
+                         long     samples) const;
+
     void optimize_wavefunction(Wavefunction& psi,
                                Sampler&      sampler,
                                int           iterations,
