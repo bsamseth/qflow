@@ -3,5 +3,117 @@
 \chapter{Conclusion}
 \label{chp:conclusion}
 
+\section{Summary}
+
+In this work we have presented the underlying theory of Variational
+Monte Carlo for the study of many-body quantum mechanical systems, along
+with fundamental machine learning techniques and the necessary glue that
+brings the two together. From this theory we have developed a code
+library suitable for rapid development and experimentation with
+variations of Hamiltonians, wave functions, sampling strategies,
+optimization schemes etc., which still performs well enough to
+handle large scale computations running on supercomputing clusters. The
+code was thoroughly tested and verified by reproducing known analytical
+results. Finally we applied our techniques on two different test
+systems; quantum dots and liquid helium. In both cases we were able to
+outperform the classical benchmarks by a significant margin, at the
+expense of increased computational cost.
+
+
+\section{Related Works}
+
+The initial motivation for this topic sprung out of the article by
+\textcite{Carleo602} which first showed the promise of neural networks (RBMs in
+particular) for quantum many-body wave functions. Following this, in a thesis by
+\textcite{Flugsrud-2018}, attempts were made to apply RBMs to Quantum dots. This
+saw some success, but the particular RBM used proved to be insufficient for
+accurate reproduction of the ground state. At this point the idea of applying
+more general neural networks started to develop and the work on this thesis
+started around mid 2018. Since then we have seen a few articles arise with
+similar ideas. \textcite{Saito-2018} used a simple neural network with one
+hidden layer to represent the ground state wave function of 
+selected few-body bosonic systems. The approach used here is very comparable to our,
+except that \citeauthor{Saito-2018} chose to pre-train the network instead of
+simply adding it as another correlation factor. \textcite{Han-2018} applied a
+much more complex network to other systems, including systems of many fermions,
+where part of the complexity was added to account for the Pauli exclusion
+principle. Others have used so called Backflow transformations expressed as
+neural networks, also with encouraging results~\cite{ruggeri2018,Luo-2019}.
+
+\section{Our Contributions}
+
+The main contributions of this work are as follows:
+
+\begin{enumerate}
+  \item We proposed a new formalism for using arbitrary neural networks as
+    correction factors which can be used in conjunction with established
+    methods.
+  \item We developed a flexible Python library which enabled rapid development
+    and experimentation with different algorithms and network architectures.
+  \item We demonstrated the validity of our approach by 
+    improving upon the accuracy of the benchmarks for both few-body and
+    many-body systems.
+    \item In particular, these where continuous space Hamiltonians with a
+      kinetic energy term, which necessitates tractable computation of second
+      order derivatives of the networks. To our knowledge, few authors have
+      selected to work with such terms in the Hamiltonians, possibly due to this
+      very issue.
+\end{enumerate}
+
+The obvious downside to applying the techniques developed here is the increased
+computational cost. Still, we have argued that the complexity of the operations
+need not scale worse than quadratic in the number of particles,
+$\mathcal{O}(N^2)$. Of course, asymptotic scaling is not always the most
+important, as there can be a preemptively large constant increase. However, we
+have demonstrated that it is more than feasible for many-body problems already.
+With proper integration of GPUs we expect that this barrier becomes even
+smaller. After all, a constant cost increase is just that - constant.
+
+The most promising aspect of the results of this work is the indication that we
+can apply a neural network on top of existing techniques and systematically
+obtain improved results. If proved to be universally true, this means that our
+technique is not one which can be outperformed by later advancements. Rather, it
+would be a tool to be combined with any other method, always providing increased
+levels of accuracy. This could serve particularly useful for problems where we
+have limited theoretical insight and only approximate results. Neural networks
+have many times demonstrated their ability to learn without prior knowledge, so
+why not apply them where there is no prior knowledge to be found?
+
+\section{Future Prospects}
+
+In addition to the many areas of this work alone where there are much room for
+further research, a myriad of articles are surfacing each year with new and
+novel applications of machine learning withing quantum mechanics. As said by
+\citeauthor{Melko-2019} in a recent article in Nature: \say{[...] the
+exploration of machine learning in many-body physics has just
+begun}~\cite{Melko-2019}.
+
+We would like to emphasize a few of the most compelling areas to continue with
+this work:
+
+\begin{enumerate}
+\item Incorporate GPU acceleration. This is perhaps the most important point, if
+  large scale VMC calculations are ever going to utilize neural networks in a
+  meaningful way. How to optimally combine MPI acceleration on thousands of CPUs
+  together with a (because of costs) much smaller number of GPUs remains a
+  challenging problem.
+\item Investigate systems of many fermions. We hypothesize that our approach
+  should still prove useful as a correction factor on Slater determinants, and
+  verifying this should be a high priority.
+\item Apply different types of neural networks. We limited our work to
+  Feed-Forward Neural Networks, but there are more exotic types which might
+  prove equally or better suited. In particular, Convolutional networks might
+  better learn spacial correlations for certain systems, and Recurrent networks
+  might be especially suitable for Time-Dependent VMC extensions.
+\item Go deeper into optimization techniques. The methods we have applied are
+  relatively basic, at least compared to the current state of the art. For example,
+  Batch Normalization, which consistently improves training results, has not
+  been applied. We have not placed much emphasis on this point simply because we
+  wanted to demonstrate \emph{an} improvement, as opposed to obtaining the very
+  best results possible.
+\end{enumerate}
+
+
+
 
 \end{document}
