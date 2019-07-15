@@ -76,7 +76,7 @@ Variational Monte Carlo is a type of reinforcement learning. This is because we
 do not have information about exactly what the value of the wave function should
 be for every configuration, but we still have a way to evaluate the correctness
 of the wave function by calculating the energy it predicts. We'll go more in
-depth into how all this connects to VMC in~\cref{chp:machine-learning}.
+depth into how all this connects to VMC in~\cref{sec:reinf-learning-for-vmc}.
 
 \section{Supervised Learning}
 
@@ -211,6 +211,8 @@ problem of \emph{overfitting}, and can lead to strange behavior. The opposite
 problem called \emph{underfitting} refers to the case where the model is too
 constrained, e.g. trying to fit a first order polynomial to
 quadratic data.
+
+
 
 \section{Gradient Based Optimization}
 \label{sec:ml-optimization}
@@ -351,8 +353,51 @@ in many cases these work excellently right out of the box.
   \end{split}
 \end{align}
 
+Especially important for us is how ADAM adapts \emph{individual} learning rates
+per parameter. After all, given tens of thousands of parameters, what are the
+chances that all of them have the same optimal learning rate? ADAM allows us to
+account for different degrees of variability in the parameters.
+
 We will make extensive use of ADAM in our VMC calculations, and as we will later
-see in \cref{chp:results}, it will prove to outperform vanilla SGD in all cases.
+see in \cref{prt:results}, it will prove to outperform vanilla SGD in all cases.
+
+\section{Reinforcement Learning for VMC}
+\label{sec:reinf-learning-for-vmc}
+
+As mentioned, VMC is a type of reinforcement learning problem. While we don't
+have access to a data set of configurations and their corresponding wave
+function amplitude, we can say something about the goodness of any particular
+wave function by measuring the expected ground state energy.
+
+While reinforcement learning typically differs quite a lot from supervised
+learning in both model type, optimization strategy etc., they are not so by
+definition. When considering VMC in particular, we can treat it exactly the same
+as we would a supervised problem, with one major difference: The cost function
+is \emph{not} dependent on a data set. We use the same types of models, and the
+same strategies to minimize the cost function.
+
+With this key change comes some differences. In particular, in some sense it
+is impossible to overfit a model. Overfitting happens when a model performs
+significantly better on the training data compared to data it has not seen
+before. We detect overfitting in supervised learning by withholding some of
+the training data and then evaluate the performance on this test data. This
+measures the models ability to generalize information, as opposed to memorizing
+exact values from the training data.
+
+For reinforcement learning, however, what would the equivalent be? There is no
+data to withhold. If a VMC calculation suddenly results in an amazingly accurate
+result, then we simply have an amazingly accurate wave function. With this in
+mind, why not use an incredibly complex model? To some extent, this is the exact
+argument of this thesis, and we will use some highly complex models later on.
+There is, however, two limiting issues with this approach. First of is the
+computational cost, which limits what we can feasibly do. Second, and more
+importantly, learning becomes harder with more complex models. Just because the
+model is theoretically capable of representing the wave function to great
+accuracy, it does not mean that we will ever be able to learn the correct
+parameters. With increasing complexity we increase the number of local
+minima in the parameter space. In here lies the challenge, attempting balance
+the \emph{exploration} of all possible parameter configurations with \emph{exploitation} of
+promising minima.
 
 
 \section{Artificial Neural Networks}
