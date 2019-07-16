@@ -38,20 +38,20 @@ case, we have a different law of motion. In our non-relativistic view, this is t
 Time-Dependent Schrödinger Equation:
 
 \begin{align}
-    \hat H\ket{\Psi} &= i\hbar \pdv{}{t}\ket{\Psi}\label{eq:schrodinger-time-dependent-general}
+    \hat H\ket{\Psi} &= i\hbar \pdv{}{t}\ket{\Psi},\label{eq:schrodinger-time-dependent-general}
 \end{align}
 %
 where $i=\sqrt{-1}$ is the imaginary unit and $\hbar=\flatfrac{h}{2\pi}$ is the reduced Planck constant.
 The thing we want to solve for in this case is the so called wave function $\ket{\Psi}$
 (explained momentarily), while the description of the system (analogous to the forces in
 classical mechanics) goes into $\hat H$. We refer to the latter as the Hamiltonian
-operator, and should be a complete description of the kinetic and potential energies of
+operator, and it should be a complete description of the kinetic and potential energies of
 the particles involved. As an example, we write the equation for a single particle in an energy
 potential $V$ as follows (where we explicitly use the position basis):
 
 \begin{align}
     \qty[-\frac{\hbar^2}{2m} \laplacian + V(\vb x; t)]\Psi(\vb x;t) =
-    i\hbar\pdv{\Psi(\vb x; t)}{t}\label{eq:schrodinger-time-dependent-position-basis}
+    i\hbar\pdv{\Psi(\vb x; t)}{t},\label{eq:schrodinger-time-dependent-position-basis}
 \end{align}
 %
 where the first term constitutes the kinetic energy of the particle (with mass $m$), and the second term is
@@ -85,7 +85,7 @@ time. The standard approach to solving this equation is through \emph{separation
 variables}. We assume that we can factorize the full wave function as follows:
 
 \begin{align}
-    \Psi(\vb x; t) &= \psi(\vb x)\phi(t)\label{eq:separatable-wave-func-def}
+    \Psi(\vb x; t) &= \psi(\vb x)\phi(t).\label{eq:separatable-wave-func-def}
 \end{align}
 %
 In addition, we assume that $V(\vb x; t) = V(\vb x)$, i.e.\ that the potential is
@@ -101,24 +101,26 @@ $\Psi$.}
 
 \begin{align}
     \qty[- \frac{\hbar^2}{2m} \laplacian \psi + V(\vb x)\psi]\psi^{-1} &=
-    i\hbar\dv{\phi}{t} \phi^{-1}
+    i\hbar\dv{\phi}{t} \phi^{-1}.
 \end{align}
 %
 We now make the following subtle observation: Since the lhs., a function of $\vb x$, is
-equal to the rhs, a function of $t$, they must both be equal to a constant. As both sides
-have units of energy, lets denote this energy as $E$, and proceed to solve each equation
-by it self.
+equal to the rhs, a function of $t$, they must both be equal to a constant. If
+this was not true, we could vary one of $\vx$ or $t$ and alter only one side of
+the equation, leaving it invalid.
+As both sides have units of energy, let's denote this constant energy as $E$, and proceed
+to solve each equation by it self.
 
-The time dependent equation becomes
+The time dependent equation becomes:
 
 \begin{align}
-    i\hbar \dv{\phi}{t} &= E\phi(t)
+    i\hbar \dv{\phi}{t} &= E\phi(t),
 \end{align}
 which is trivially solvable:
 \begin{align}
-    \phi(t) &= Ae^{-iEt/\hbar}
+    \phi(t) &= Ae^{-iEt/\hbar},
 \end{align}
-for some normalization constant $A$.
+for some constant $A=\phi(0)$ determined by boundary conditions.
 
 The time-independent equation, known as the Time-Independent Schrödinger Equation, is
 \begin{align}
@@ -166,7 +168,7 @@ appropriate sums. The general form of the Many-Body Hamiltonian we will consider
 were $\mat X \defeq (\vb x_1\ \vb x_2\ \dots\ \vb x_N)^T\in \mathbb{R}^{N\times D}$ is the matrix
 of $D$-dimensional row vectors of coordinates for each particle. For further clarity,
 $\vb x_i \defeq \sum_{d=1}^D x_{i,d} \vb e_d$ is a $D$-dimensional vector described by
-its coordinates $x_{i,d}$ (with unit vectors $e_d$), and the corresponding Laplacian
+its coordinates $x_{i,d}$ (with unit vectors $\vb{e}_d$), and the corresponding Laplacian
 operator is
 \begin{align}
     \laplacian_i \defeq \sum_{d = 1}^D \pdv[2]{}{x_{i,d}}.
@@ -190,7 +192,7 @@ In order to represent a physically observable system, a wave function $\Psi$ mus
     \item Obey suitable symmetry requirements
 \end{enumerate}
 %
-While the first requirement is obvious, points 2-4 boil down to $\Psi$ taking a
+While the first requirement are obvious, points 2-4 boil down to $\Psi$ taking a
 functional form that is well behaved, satisfying required boundary conditions and being
 possible to view as a probability distribution. The last point is perhaps less clear, and
 we devote some further attention to this point in particular.
@@ -234,7 +236,8 @@ arbitrary, and so we should be able to relabel them:
 \end{align}
 
 These two equations, which represents exchanging the two particles, \emph{must}
-describe the same physical system. That is:
+describe the same physical system. That is, the probabilities of both states
+must be equal:
 
 \begin{align}
     \abs{\Psi(\vec x_1, \vec x_2)}^2 &= \abs{\Psi(\vec x_2, \vec x_1)}^2\\
@@ -250,10 +253,11 @@ quantity. Repeating the exchange once more yields the original wave function, an
 This results states that any wave function, upon the exchange of
 indistinguishable particles, must be either symmetric (same sign) or
 anti-symmetric (opposite sign) to that of the original. This is generalizable to
-any number of particles, the following theorem summarizes the result:
+any number of particles, and is known as the \emph{Pauli exclusion principle}.
+The following theorem summarizes the result~\cite{PhysRev-58-716}:
 
 \begin{theorem}[Spin-Statistic
-    Theorem~\cite{PhysRev-58-716}]\label{theorem:spin-statistic}
+    Theorem]\label{theorem:spin-statistic}
 
     The wave function of a system of identical integer-spin particles has the same value
     when the positions of any two particles are swapped. Particles with wave functions
