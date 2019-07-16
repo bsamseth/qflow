@@ -3,14 +3,59 @@
 \chapter{Introduction}
 \label{chp:introduction}
 
-Intro goes here.
+Motivating \emph{why} we want to do this...
 
-Things to mention here:
-\begin{itemize}
-  \item Motivating \emph{why} we want to do this
-  \item Layout of thesis, in an easy to follow way
-  \item Striving to make reproducing trivial, ref results, graphs and
-    implementation details.
-\end{itemize}
+
+\section{How to Use This Thesis}
+
+\subsection{Structure}
+\cref{prt:theory} starts with a introduction to all the underlying theory
+necessary to understand the results of this work. \cref{chp:the-quantum-problem}
+starts with introducing the relevant bits of Quantum Mechanics, followed
+immediately by a presentation of Variational Monte Carlo and Monte Carlo methods
+in general (\cref{chp:variational-monte-carlo,chp:monte-carlo}). This forms the
+backbone of the thesis. Next we shift gears and discuss Machine Learning in
+general (\cref{chp:machine-learning}), focusing again on the parts which are
+most relevant to us. We end \cref{prt:theory} by talking about the glue that
+connects all of this together (\cref{chp:mergin-vmc-with-ml}).
+
+\cref{prt:implementation} is all about the technical details of how we implement
+the algorithms from \cref{prt:theory} into efficient and correct code. We
+discuss design choices (\cref{chp:parallelization,chp:auto-diff}), and culminate
+with presenting QFLOW, the library we have
+developed for all our computing needs (\cref{chp:qflow}). Lastly we make an effort to convince the
+reader that the code is correct by verifying the results on some
+selected idealized cases (\cref{chp:verfication}).
+
+\cref{prt:results} finally presents the results of the new method we have
+developed, testing it on both a few-body system (\cref{chp:quantum-dots}) and a
+more complicated many-body system (\cref{chp:liquid-helium}). 
+
+Finally, \cref{prt:conclusion} offers conclusions and future prospects.
+
+\subsection{Reproducible}
+
+One of the most frustrating parts of writing this thesis has been attempting to
+reproduce results from published articles. Far to often vital details are left
+out, both in theory and implementation, leaving poor soles to guess as to how
+they achieved the results they present.
+
+We have made a conscious effort to be
+better in this regard. To that end, all of the code, data, figures etc.\ that
+you find in this thesis are openly available at one central
+repository~\cite{qflow}. That even includes the source code for this very
+document. The QFLOW library is permissively licensed under the MIT license,
+allowing anyone to use the code how ever they see fit. Furthermore, \emph{every} table
+and figure has a reference to where you may find the exact source code which
+generated it, leaving no doubt as to the details of any results.
+
+\subsection{Notation}
+
+Another point of possible frustration is unclear use of notation. While we
+assume a certain general familiarity with mathematics, we strive to make our
+notation as clear as possible. All symbols should an accompanying
+explanation following their first use. Furthermore, while we attempt to use
+standard notation where possible, any doubt should be removed by consulting the
+notation reference in \cref{app:notation-reference}.
 
 \end{document}
