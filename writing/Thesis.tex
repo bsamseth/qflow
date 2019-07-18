@@ -16,7 +16,30 @@
 \maketitle
 
 \begin{abstract}
-    In this thesis we explore this, this and that. We find that this outperforms that, but that this is even better.
+Recent applications of machine learning for quantum mechanics have shown
+encouraging results in efforts to overcome the exponential scaling complexity of
+the many-body wave function. We continue this exploration by introducing a
+neural network as an additional Jastrow factor to the wave function ansatz
+within the framework of Variational Monte Carlo (VMC), with the hope of learning
+correlations beyond what traditional methods have been able to.
+
+We begin with a review of the relevant parts of quantum mechanics with particular
+emphasis on Monte Carlo methods. We then introduce central elements of machine
+learning, focusing on neural networks. Finally we discuss implementation
+challenges.
+
+We test our approach first on interacting electrons in a harmonic oscillator
+potential. The energy estimates approach those of Diffusion Monte Carlo,
+outperforming the accuracy of benchmarks by more than an order of magnitude,
+with a similar lowering of the standard deviation.
+
+Second we apply the same technique to the strongly correlated system of liquid
+$^4$He. Again we obtain significant lowering of the ground state energy,
+although the optimization problem proves far more challenging.
+
+These improvements come at the cost of greatly increased computing time,
+however, we argue that the time complexity can still be made to scale similarly to
+$\mathcal{O}(N^2)$ with the number of particles.
 \end{abstract}
 
 \begin{acknowledgements}
