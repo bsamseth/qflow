@@ -97,7 +97,7 @@ standard error presented in this thesis will include this correction.
     using $\psi_G$ with two different values for $\alpha_G$. The energies are
     given per particle, and were produced using Importance sampling and
     $2^{23}$ samples. Statistical errors are corrected for autocorrelation using
-    Blocking.}
+    Blocking.\citesource{writing/scripts/verify-energy-stats.py}}
   \input{scripts/verify-energy-stats.py.table1.tex}
 \end{table}
 
@@ -118,7 +118,7 @@ implementation and the validity of the statistical estimates.
     $\expval{r^2}$. For reference the exact analytic results are listed as well
     ($\expval{r}=\flatfrac{2}{\sqrt{\pi\omega}}$ and
     $\expval{r^2}=\flatfrac{D}{2}$), which can be easily verified by computing
-    the corresponding integrals directly.}
+    the corresponding integrals directly.\citesource{writing/scripts/verify-energy-stats.py}}
   \input{scripts/verify-energy-stats.py.table2.tex}
 \end{table}
 
@@ -172,7 +172,7 @@ curves are indistinguishable, showing that our implementation is indeed correct.
     The curve is indistinguishable from the analytic result. The small
     discrepancy around $r_1=0$ is an artifact of the vanishing volume of the
     inner most bins, and the discrepancy becomes increasingly negligible with
-    more samples. This result used $2^{23}$ MC samples.}
+    more samples. This result used $2^{23}$ MC samples.\citesource{writing/scripts/verify-onebody-density.py}}
 \end{figure}
 
 \section{Two-Body Density}
@@ -213,7 +213,7 @@ correct.
 $N=10$ particles in a harmonic oscillator potential, as described by $\psi_G$
 with $\alpha=0.5$. The dotted lines are the contours given by
 \cref{eq:two-body-analytic}. Again the numerical result follows closely that of
-the exact result. This result used $2^{25}$ MC samples.}
+the exact result. This result used $2^{25}$ MC samples.\citesource{writing/scripts/verify-twobody-density.py}}
 \end{figure}
 
 
@@ -241,7 +241,7 @@ this test is not the most challenging, it is nevertheless a useful check.
     }
   \caption[Learning progression using VMC on the ideal harmonic oscillator]{\label{fig:verify-gaussian-simplest}Example training progression using $\psi_G$ as trial wave function.
     Hyperparameters have been tuned so that we can see what happens, as opposed
-    to immediate convergence to the perfect result.}
+    to immediate convergence to the perfect result.\citesource{writing/scripts/verify-simple-gaussian.py}}
 \end{figure}
 
 \subsection{Learning Rate Dependency}
@@ -295,7 +295,7 @@ parameter. This enhancement does not show itself in this single-parameter exampl
     }
   \caption[Comparison of optimization schemes on a simple problem]{\label{fig:verify-lr-gaussian}Example training progression using
     $\psi_G$ as trial wave function with different optimization schemes. With
-    sufficient time, all algorithms tend towards zero error.}
+    sufficient time, all algorithms tend towards zero error.\citesource{writing/scripts/verify-learning-rate-gaussian.py}}
 \end{figure}
 
 \subsubsection{More Complex Problem - $\psi_{RBM}$}
@@ -323,7 +323,7 @@ different scales and variability in the components of the parameter gradient.
   \caption[Comparison of optimization schemes on a complicated problem]{\label{fig:verify-lr-rbm}Example training progression using
     $\psi_{RBM}$ as trial wave function with different optimization schemes. We
     see evidence of learning getting stuck in local minima due to the overly
-    complex wave function anstaz.}
+    complex wave function anstaz.\citesource{writing/scripts/verify-learning-rate-rbm.py}}
 \end{figure}
 
 
@@ -369,7 +369,7 @@ particular problem at hand.
     Metropolis and Importance sampling as a function of step size. Note that the
   interpretation of the step size is different for the two algorithms. \emph{Dashed
   lines:} Standard error of energy estimates obtained using the corresponding
-  sampling algorithm and step size, using $\psi_G$ with $\alpha=0.51$.}
+  sampling algorithm and step size, using $\psi_G$ with $\alpha=0.51$.\citesource{writing/scripts/verify-sampling-step.py}}
 \end{figure}
 
 
