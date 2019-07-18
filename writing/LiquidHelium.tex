@@ -86,7 +86,8 @@ systems. Based on computations with larger and larger systems, the value for $N
   \caption[Energy estimates of McMillan wave function on $^4$He]{\label{tab:He-benchmark-results}Predicted ground state energy of helium atoms at density $\rho =
 \flatfrac{0.365}{\sigma^3}$ using $\psi_{M}$ with $\beta$ as determined after training. The number of particles used in the simulation box
 is indicated by the superscript on $\psi_M$. Values obtained using $2^{22}$
-Monte Carlo samples. See \cref{fig:He-benchmark-training} for source code reference.}
+Monte Carlo samples. Energies in units of Kelvin per particle
+$[\si{\kelvin\per N}]$. See \cref{fig:He-benchmark-training} for source code reference.}
   \input{scripts/He-benchmark.py.table.tex}
 \end{table}
 \clearpage
@@ -205,7 +206,7 @@ positive encouragement to continue this line of research.
   \caption[Energy estimates using a neural network on liquid helium]{\label{tab:He-dnn-results}Predicted ground state energy of both
     $\psi_M$ and $\psi_{SDNN}$ after the same amount of optimization. Results
     obtained from $2^{23}$ Monte Carlo samples and with errors estimated using
-    Blocking. See \cref{fig:He-dnn-training} for source code reference.}
+    Blocking. Energies in units of Kelvin per particle $[\si{\kelvin\per N}]$. See \cref{fig:He-dnn-training} for source code reference.}
   \input{scripts/He-mcmillan-dnn.py.table.tex}
 \end{table}
 

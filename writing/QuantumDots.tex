@@ -47,7 +47,7 @@ similar results for other choices.
   \centering
   \caption[Energy estimates of Pade-Jastrow wave function]{Energy benchmark using Pade-Jastrow wave function, using $2^{22}$
     Monte Carlo samples and errors estimated by an automated blocking algorithm
-    by~\textcite{Jonsson-2018}. See \cref{fig:QD-benchmark-pade-jastrow-training}
+    by~\textcite{Jonsson-2018}. Energies in atomic units $[\si{\au}]$. See \cref{fig:QD-benchmark-pade-jastrow-training}
     for source code reference.}
   \input{scripts/QD-benchmark.py.table.tex}
   \label{tab:pade-jastrow-benchmark-energy}
@@ -190,7 +190,7 @@ of magnitude larger than the benchmark.
   \caption[Energy estimates using an RBM on quantum dots]{Energy using the RBM wave function in~\cref{eq:rbm-def}, along with
 the same wave function using input sorting to impose symmetry. Results obtained
 from $2^{23}$ Monte Carlo samples and errors estimated by an automated blocking
-algorithm by~\textcite{Jonsson-2018}. See
+algorithm by~\textcite{Jonsson-2018}. Energies in atomic units $[\si{\au}]$. See
 \cref{fig:QD-rbm-training} for source code reference.}
   \input{scripts/QD-rbm.py.table.tex}
   \label{tab:rbm-energy-results}
@@ -446,7 +446,7 @@ show a small selection of the total number of parameters.\citesource{writing/scr
   \caption[Energy estimates using a neural network on quantum dots]{Energy using the neural network wave function in~\cref{eq:pade-dnn}, along with
 the benchmark wave function after the same amount of optimization. Results obtained
 from $2^{22}$ Monte Carlo samples and errors estimated by an automated blocking
-algorithm by~\textcite{Jonsson-2018}. See
+algorithm by~\textcite{Jonsson-2018}. Energies in atomic units $[\si{\au}]$. See
 \cref{fig:QD-pade-dnn-training} for source code reference.}
   \input{scripts/QD-pade-dnn.py.table.tex}
 \end{table}
@@ -558,7 +558,7 @@ from the three wave functions trained previously.
     expressions $\expval{r}=\flatfrac{\sqrt\pi}{2\sqrt\omega}$ and
     $\expval{r^2}=\omega^{-1}$. While the differences between $\psi_{PJ}$ and
     the networks are small, the inter-particle distance shows the largest
-    difference.\citesource{writing/scripts/QD-other-metrics.py}}
+    difference. Distances in dimensionless units of $a_{ho}$.\citesource{writing/scripts/QD-other-metrics.py}}
   \input{scripts/QD-other-metrics.py.fixed-table.tex}
   \label{tab:QD-mean-distance-metrics}
 \end{table}
