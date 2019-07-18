@@ -78,17 +78,18 @@ systems. Based on computations with larger and larger systems, the value for $N
     parameter $\beta$ of~\cref{eq:McMillan-wave-function-def} as a function of
     training steps. A convergence is clearly visible, although there is more
     variance in the value for $\beta$ compared to the parameters of the
-    benchmark used for Quantum Dots.}
+    benchmark used for Quantum Dots.\citesource{writing/scripts/He-benchmark.py}}
 \end{figure}
 
 \begin{table}[h]
   \centering
   \caption{\label{tab:He-benchmark-results}Predicted ground state energy of helium atoms at density $\rho =
-\flatfrac{0.365}{\sigma^3}$. The number of particles used in the simulation box
+\flatfrac{0.365}{\sigma^3}$ using $\psi_{M}$ with $\beta$ as determined after training. The number of particles used in the simulation box
 is indicated by the superscript on $\psi_M$. Values obtained using $2^{22}$
-Monte Carlo samples.}
+Monte Carlo samples. See \cref{fig:He-benchmark-training} for source code reference.}
   \input{scripts/He-benchmark.py.table.tex}
 \end{table}
+\clearpage
 
 
 \section{Neural Networks}
@@ -106,7 +107,7 @@ added the network as another correlation factor:
   \psi_{DNN}(\mat X) &= \psi_M(\mat X)\,f(\mat X),
 \end{align}
 where once again $f: \mathbb{R}^{N\times D}\to\mathbb{R}$ represents an
-arbitrary neural network. 
+arbitrary neural network.
 
 Lastly, we limit our investigation to $N=32$ particles and still with density
 $\rho=\flatfrac{0.365}{\sigma^3}$. This is done from a practical standpoint,
@@ -174,7 +175,7 @@ significantly less room for error in this much more challenging problem.
   \input{scripts/He-mcmillan-dnn.py.tex}
   \caption{\label{fig:He-dnn-training}Performance of $\psi_M$ and $\psi_{SDNN}$
     as a function of training steps. The network shows a clear energy reduction
-    compared to the traditional benchmark.}
+    compared to the traditional benchmark.\citesource{writing/scripts/He-mcmillan-dnn.py}}
 \end{figure}
 
 \cref{fig:He-dnn-training} shows a graph of the ground state energy during the
@@ -182,7 +183,7 @@ course of training for both wave functions. On this time scale (i.e.\ $\num{25}$
 times more training than used for the benchmark alone) we see $\psi_M$ converge
 immediately to the same energy level as we saw in
 \cref{fig:He-benchmark-training}. With the neural network, however, there is an
-apparent immediate lowering of energy. Furthermore, after 
+apparent immediate lowering of energy. Furthermore, after
 about \SIrange{30}{60}{\percent} of the total training we see a gradual lowering
 in the energy before it plateaus again.
 
@@ -201,11 +202,11 @@ positive encouragement to continue this line of research.
 
 \begin{table}[h]
   \centering
-  \input{scripts/He-mcmillan-dnn.py.table.tex}
   \caption{\label{tab:He-dnn-results}Predicted ground state energy of both
     $\psi_M$ and $\psi_{SDNN}$ after the same amount of optimization. Results
     obtained from $2^{23}$ Monte Carlo samples and with errors estimated using
     Blocking. See \cref{fig:He-dnn-training} for source code reference.}
+  \input{scripts/He-mcmillan-dnn.py.table.tex}
 \end{table}
 
 

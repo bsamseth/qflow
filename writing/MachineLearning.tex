@@ -110,10 +110,7 @@ In general for a supervised learning task, we have the following ingredients:
   }
   \caption{Example of linear regression applied to a simple data set of a single
     input variable. The regression tries to filter away the noise and find the
-    most likely actual trend line. The source code for this graphic can be found
-    at ~\cite[TODO: Add
-    path]{MS-thesis-repository}, and \LaTeX{} output generated
-    by~\cite{nico_schlomer_2018_1173090}}
+    most likely actual trend line.\citesource{writing/scripts/linear_regression_example.py}}
   \label{fig:linear-regression-example}
 \end{figure}
 
@@ -433,51 +430,10 @@ architecture choices and training strategies.
 
 \begin{figure}[h]
   \centering
-  \def\layersep{2.5cm}
-  \begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
-    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
-    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
-    \tikzstyle{input neuron}=[neuron, fill={rgb:red,0.12156862745098;green,0.466666666666667;blue,0.705882352941177}];
-    \tikzstyle{output neuron}=[neuron, fill={rgb:red,1;green,0.498039215686275;blue,0.0549019607843137}];
-    \tikzstyle{hidden neuron}=[neuron, fill={rgb:red,0.172549019607843;green,0.627450980392157;blue,0.172549019607843}];
-    \tikzstyle{bias neuron}=[neuron, fill={rgb:red,0.580392156862745;green,0.403921568627451;blue,0.741176470588235}];
-    \tikzstyle{annot} = [text width=4em, text centered]
-
-    % Draw the input layer nodes
-    \foreach \name / \y in {1,...,4}
-    % This is the same as writing \foreach \name / \y in {1/1,2/2,3/3,4/4}
-    \node[input neuron, pin=left:$x_\y$] (I-\name) at (0,-\y) {};
-
-    \node[bias neuron, pin=left:$b^{(0)}$] (I-5) at (0, -5) {};
-
-    % Draw the hidden layer nodes
-    \foreach \name / \y in {1,...,5}
-    \path[yshift=0.5cm]
-    node[hidden neuron] (H-\name) at (\layersep,-\y cm) {};
-
-    \path[yshift=0.5cm] node[bias neuron, pin=left:$b^{(1)}$] (H-6) at (\layersep,-6 cm) {};
-
-    % Draw the output layer node
-    \node[output neuron,pin={[pin edge={->}]right:Output}, right of=H-3] (O) {};
-
-    % Connect every node in the input layer with every node in the
-    % hidden layer.
-    \foreach \source in {1,...,5}
-    \foreach \dest in {1,...,5}
-    \path (I-\source) edge (H-\dest);
-
-    % Connect every node in the hidden layer with the output layer
-    \foreach \source in {1,...,6}
-    \path (H-\source) edge (O);
-
-    % Annotate the layers
-    \node[annot,above of=H-1, node distance=1cm] (hl) {Hidden layer};
-    \node[annot,left of=hl] {Input layer};
-    \node[annot,right of=hl] {Output layer};
-  \end{tikzpicture}
+  \input{illustrations/neural-network.tex}
   \caption{Illustration of a general Feed-Forward Neural Network architecture,
     here shown with four inputs nodes, one hidden layer of 5 nodes and a
-    single output node.}
+    single output node.\citesource{writing/illustrations/neural-network.tex}}
   \label{fig:neural-network-example-diagram}
 \end{figure}
 
@@ -589,7 +545,7 @@ as the output transformation on our networks.
     \cref{tab:activation-functions-table} for their definitions. Note that the
     plots for LReLU and EReLU involve a parameter which has been arbitrarily set
     to 0.1 in the plots, and that the actual behavior of the function might be
-    different for other choices.
+    different for other choices.\citesource{writing/illustrations/activation.tex}
   }
   \label{fig:activation-function-gallery}
 \end{figure}

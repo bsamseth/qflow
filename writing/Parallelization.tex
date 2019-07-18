@@ -84,10 +84,10 @@ and illustrates a simply parallelized task: Computing the expected local energy.
 While some details are specific to QFLOW's implementation, the general concept
 should be clear.
 
-\begin{center}
-\begin{lstlisting}[language=C++, caption={Example excerpt
-from the source code of QFLOW~\cite{qflow}, showing an MPI parallelized
-computation of the expected local energy.}, label={lst:mpi-example}]
+\begin{lstfloat}
+  \centering
+\caption{Example excerpt from the source code of QFLOW, showing an MPI parallelized computation of the expected local energy.\citesource{qflow/hamiltonians/hamiltonian.cpp}}
+\begin{lstlisting}[language=C++, label={lst:mpi-example}]
 double Hamiltonian::local_energy(Sampler& sampler, Wavefunction& psi, long samples) const
 {
     const int  n_procs = mpiutil::proc_count();
@@ -107,9 +107,10 @@ double Hamiltonian::local_energy(Sampler& sampler, Wavefunction& psi, long sampl
     return global_E_L / samples;
 }
 \end{lstlisting}
-\end{center}
+\end{lstfloat}
+
 To illustrate the speedup we obtain from using MPI parallelization, we have run
-\cref{lst:mpi-example} on different number of cores. In particular, we computed
+Listing~\ref{lst:mpi-example} on different number of cores. In particular, we computed
 the local energy of a simple harmonic oscillator system of one particle in three
 dimensions. \cref{fig:mpi-example} shows the number of MC iterations per second
 as a function of the number of cores used. As advertised, we see a speedup that
@@ -130,9 +131,10 @@ use a sufficiently large number of Monte Carlo samples.
         \input{scripts/mpi-speed-test.py.tex}
     }
   \caption{Iterations per second when running \cref{lst:mpi-example} with
-    varying number of processors. These results where obtained by running a test
-    on the Abel computing cluster. Exact results will vary greatly depending on
-    the availability of the cores, size of the workload and several other factors.}
+varying number of processors. These results where obtained by running a test on
+the Abel computing cluster. Exact results will vary greatly depending on the
+availability of the cores, size of the workload and several other
+factors.\citesource{writing/scripts/mpi-speed-test.py}}
   \label{fig:mpi-example}
 \end{figure}
 
@@ -163,9 +165,11 @@ created and destroyed throughout the course of the computation.
 The following example shows a task equivalent in nature to
 the one used in the last section, now parallelized using OpenMP.
 
-\begin{center}
-\begin{lstlisting}[language=C++, caption={Example of parallel estimation of
-$\pi$ using OpenMP. The example is complete and can be compiled as is.}, label={lst:openmp-example}]
+\begin{lstfloat}
+  \centering
+  \caption{Example of parallel estimation of
+$\pi$ using OpenMP. The example is complete and can be compiled as is.}
+\begin{lstlisting}[language=C++, label={lst:openmp-example}]
 #include <iostream>
 #include <omp.h>
 int main ()
@@ -187,11 +191,12 @@ int main ()
     std::cout << "Pi = " << pi << std::endl;
 }
 \end{lstlisting}
-\end{center}
-Running \cref{lst:openmp-example} with a varying number of threads results in
-\cref{fig:openmp-example} which shows how the
-speedup is about linear until we run out of processing units (16 cores on the
-machine used), after which it flattens out.
+\end{lstfloat}
+
+Running Listing~\ref{lst:openmp-example} with a varying number of threads
+results in \cref{fig:openmp-example} which shows how the speedup is about linear
+until we run out of processing units (16 cores on the machine used), after which
+it flattens out.
 
 \begin{figure}[h]
   \centering
@@ -202,7 +207,7 @@ machine used), after which it flattens out.
     varying number of processors. These results where obtained by running a test
     on the Abel computing cluster, on a node with 16 cores. We see a clear
     speedup until we run out of cores, at which point using more threads hurts
-    performance.}
+    performance.\citesource{writing/scripts/openmp_test.py}}
   \label{fig:openmp-example}
 \end{figure}
 

@@ -120,7 +120,7 @@ Typically, to keep the expectation values accurate, we will use very large
 values for $N$, often on the order of tens or hundreds of millions. The double loop in
 \cref{eq:mci-annon-3} will then quickly become unfeasible to compute, with
 trillions or quadrillions of iterations. In practice we need to estimate it.
-Yes, we are going to estimate the estimate of the error we make in an estimate. 
+Yes, we are going to estimate the estimate of the error we make in an estimate.
 
 The strategy we shall use for all later error analysis is called Blocking,
 specifically the article by \textcite{Jonsson-2018}. Say we have a sequence of
@@ -142,7 +142,7 @@ sequences $D_i$. These transformations conserve the value of \cref{eq:mci-annon-
 while decreasing the covariance between samples~\cite{Jonsson-2018}. That implies that measuring
 the variance with \cref{eq:mci-annon-2} on each $D_i$ will yield greater and
 greater errors, until there is no more covariance and the error estimate
-converges. 
+converges.
 
 \cref{fig:blocking-example-diagram} shows this process in practice. The example
 data is $2^{27}$ samples of the mean radial displacement of a single
@@ -168,10 +168,10 @@ include this correction.
   }
   \caption{The estimated standard error of a random process excibiting symptoms
     of autocorrelation, shown as a function of the effective size of the data set as
-    blocking transformations are applied. As the block sizes increase the 
+    blocking transformations are applied. As the block sizes increase the
     covariance goes away, while the variance increases. After convergence, the
     optimal estimate is illustrated by the red dot, as determined by an automated blocking
-    procedure~\cite{Jonsson-2018}.}
+    procedure~\cite{Jonsson-2018}.\citesource{writing/scripts/blocking-example-diagram.py}}
   \label{fig:blocking-example-diagram}
 \end{figure}
 
@@ -205,7 +205,7 @@ would like to evaluate the following integral:
     \end{tikzpicture}
     }
     \caption{\label{fig:mci-importance-example-func-plot}Plot of the function in
-      \cref{eq:mci-importance-example-func}, enveloped by a standard normal distribution.}
+      \cref{eq:mci-importance-example-func}, enveloped by a standard normal distribution.\citesource{writing/MonteCarlo.tex}}
 \end{figure}
 The integrand is plotted in \autoref{fig:mci-importance-example-func-plot}, and
 the observant reader might recognise this as the product of a normal
@@ -263,9 +263,8 @@ enclosing $f(x)$ much more tightly than any rectangular box might hope to.
     particular experiment, and the shaded areas indicate the corresponding
     $\SI{95}{\percent}$ confidence intervals for the expected value. We see the
     latter displaying both greater accuracy and tighter confidence intervals.
-    The source code for this graphic can be found~\cite[TODO: Add
-    path]{MS-thesis-repository}, and \LaTeX{} output generated
-    by~\cite{nico_schlomer_2018_1173090}.}
+    \citesource{writing/scripts/monte_carlo_int_example.py}
+    }
 \end{figure}
 
 \autoref{fig:mci-importance-example-func-convergence} show the convergence of
@@ -451,7 +450,7 @@ For well behaved Markov Chains, as the number of steps in the chain increases,
 the distribution of the states will asymptotically approach a stationary
 distribution, $\pi(\vx)$. The Metropolis-Hastings algorithm works by carefully
 constructing $T\qty(\vx'\;\middle|\;\vx)$ such that $\pi(\vx)=P(\vx)$, where $P(\vx)$ is the
-desired probability distribution. 
+desired probability distribution.
 
 In order to find the correct $T\qty(\vx'\;\middle|\;\vx)$, we require that the stationary
 distribution $\pi(\vx)$ exists and that it is unique:
@@ -561,7 +560,7 @@ system to exhibit some degree of random motion, as it is a quantum system. This
 combination of drift and random motion is described by the Langevin equation,
 
 \begin{align}
- \pdv{\vx_k}{t} &= D\vb{F}_k + \vb{\eta}, 
+ \pdv{\vx_k}{t} &= D\vb{F}_k + \vb{\eta},
 \end{align}
 where $D$ is called the drift coefficient, and $\vb{\eta}$ is a vector of
 uniformly distributed random values (with zero mean) and accounts for the random
@@ -573,7 +572,7 @@ equation we can get:
 \end{align}
 where $\Delta t$ is a time step similar to $\Delta x$ for plain Metropolis, and
 $\vb{\xi}$ is a vector of values drawn from the standard normal distribution.
-This is our new recipe for generating proposals $\vx'$. The final piece is 
+This is our new recipe for generating proposals $\vx'$. The final piece is
 to find the corresponding probability distribution,
 $q\qty(\vx'\;\middle|\;\vx)$.
 
@@ -599,7 +598,7 @@ from $\vx_k$ within a time interval $\Delta t$, so that finally we have the
 proposal distribution:
 
 \begin{align}
-  q\qty(\vx'\;\middle|\;\vx) &=G\qty(\vx', \,\vx,\,\Delta t). 
+  q\qty(\vx'\;\middle|\;\vx) &=G\qty(\vx', \,\vx,\,\Delta t).
 \end{align}
 Note that because we ever only need the ratio of $q$ values, there is no problem
 that \cref{eq:mc-annon-5} only gives the proportionality. The final algorithm is

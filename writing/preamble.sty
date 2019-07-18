@@ -5,6 +5,7 @@
 \usepackage{hyperref}          % Links.
 \usepackage[capitalise]{cleveref}          % Links.
 \crefname{appsec}{Appendix}{Appendices}
+\usepackage{float}
 
 
 \usepackage[hyperref, backend=biber, backref, backrefstyle=none, sorting=none]{biblatex}
@@ -138,6 +139,8 @@
 \RequirePackage{listings}
 \RequirePackage{xcolor}
 
+\newfloat{lstfloat}{htbp}{lop}
+\floatname{lstfloat}{Listing}
 \renewcommand*{\lstlistlistingname}{Code Listings}
 \renewcommand*{\lstlistingname}{Code Listing}
 \definecolor{gray}{gray}{0.5}
