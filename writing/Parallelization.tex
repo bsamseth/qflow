@@ -188,7 +188,8 @@ int main ()
 }
 \end{lstlisting}
 \end{center}
-Running \cref{lst:openmp-example} with a varying number of threads shows how the
+Running \cref{lst:openmp-example} with a varying number of threads results in
+\cref{fig:openmp-example} which shows how the
 speedup is about linear until we run out of processing units (16 cores on the
 machine used), after which it flattens out.
 
@@ -202,7 +203,7 @@ machine used), after which it flattens out.
     on the Abel computing cluster, on a node with 16 cores. We see a clear
     speedup until we run out of cores, at which point using more threads hurts
     performance.}
-  \label{fig:mpi-example}
+  \label{fig:openmp-example}
 \end{figure}
 
 This showcases how shared memory has excellent potential for speedup, but also
