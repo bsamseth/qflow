@@ -130,7 +130,7 @@ use a sufficiently large number of Monte Carlo samples.
     \resizebox{0.7\linewidth}{!}{%
         \input{scripts/mpi-speed-test.py.tex}
     }
-  \caption{Iterations per second when running \cref{lst:mpi-example} with
+  \caption[Speedup using MPI parallelization]{Iterations per second when running \cref{lst:mpi-example} with
 varying number of processors. These results where obtained by running a test on
 the Abel computing cluster. Exact results will vary greatly depending on the
 availability of the cores, size of the workload and several other
@@ -203,7 +203,7 @@ it flattens out.
     \resizebox{0.7\linewidth}{!}{%
         \input{scripts/openmp_test.py.tex}
     }
-  \caption{Iterations per second when running \cref{lst:openmp-example} with
+  \caption[Speedup using OpenMP parallelization]{Iterations per second when running \cref{lst:openmp-example} with
     varying number of processors. These results where obtained by running a test
     on the Abel computing cluster, on a node with 16 cores. We see a clear
     speedup until we run out of cores, at which point using more threads hurts

@@ -93,7 +93,7 @@ standard error presented in this thesis will include this correction.
 
 \begin{table}[h]
   \centering
-  \caption{\label{tab:verify-energy-estimates}Estimated ground state energy
+  \caption[Ground state energies of the ideal harmonic oscillator]{\label{tab:verify-energy-estimates}Estimated ground state energy
     using $\psi_G$ with two different values for $\alpha_G$. The energies are
     given per particle, and were produced using Importance sampling and
     $2^{23}$ samples. Statistical errors are corrected for autocorrelation using
@@ -113,7 +113,7 @@ implementation and the validity of the statistical estimates.
 
 \begin{table}[h]
   \centering
-  \caption{\label{tab:verify-radius-estimates}Estimates for the mean radial
+  \caption[Radial metrics of the ideal harmonic oscillator]{\label{tab:verify-radius-estimates}Estimates for the mean radial
     displacement, $\expval{r}$, and the mean squared radial displacement,
     $\expval{r^2}$. For reference the exact analytic results are listed as well
     ($\expval{r}=\flatfrac{2}{\sqrt{\pi\omega}}$ and
@@ -167,7 +167,7 @@ curves are indistinguishable, showing that our implementation is indeed correct.
   \resizebox{0.7\linewidth}{!}{%
     \input{scripts/verify-onebody-density.py.tex}
   }
-  \caption{\label{fig:verify-onebody}One-body density of a particle in a
+  \caption[One-body density of the ideal harmonic oscillator]{\label{fig:verify-onebody}One-body density of a particle in a
     harmonic oscillator potential, as described by $\psi_G$ with $\alpha=0.5$.
     The curve is indistinguishable from the analytic result. The small
     discrepancy around $r_1=0$ is an artifact of the vanishing volume of the
@@ -209,7 +209,7 @@ correct.
   \resizebox{0.7\linewidth}{!}{%
     \input{scripts/verify-twobody-density.py.tex}
   }
-  \caption{\label{fig:verify-twobody}Contour plot of the two-body density of
+  \caption[Two-body density of the ideal harmonic oscillator]{\label{fig:verify-twobody}Contour plot of the two-body density of
 $N=10$ particles in a harmonic oscillator potential, as described by $\psi_G$
 with $\alpha=0.5$. The dotted lines are the contours given by
 \cref{eq:two-body-analytic}. Again the numerical result follows closely that of
@@ -239,7 +239,7 @@ this test is not the most challenging, it is nevertheless a useful check.
     \resizebox{\linewidth}{!}{%
       \input{scripts/verify-simple-gaussian.py.tex}
     }
-  \caption{\label{fig:verify-gaussian-simplest}Example training progression using $\psi_G$ as trial wave function.
+  \caption[Learning progression using VMC on the ideal harmonic oscillator]{\label{fig:verify-gaussian-simplest}Example training progression using $\psi_G$ as trial wave function.
     Hyperparameters have been tuned so that we can see what happens, as opposed
     to immediate convergence to the perfect result.}
 \end{figure}
@@ -293,7 +293,7 @@ parameter. This enhancement does not show itself in this single-parameter exampl
     \resizebox{\linewidth}{!}{%
       \input{scripts/verify-learning-rate-gaussian.py.tex}
     }
-  \caption{\label{fig:verify-lr-gaussian}Example training progression using
+  \caption[Comparison of optimization schemes on a simple problem]{\label{fig:verify-lr-gaussian}Example training progression using
     $\psi_G$ as trial wave function with different optimization schemes. With
     sufficient time, all algorithms tend towards zero error.}
 \end{figure}
@@ -320,7 +320,7 @@ different scales and variability in the components of the parameter gradient.
     \resizebox{\linewidth}{!}{%
       \input{scripts/verify-learning-rate-rbm.py.tex}
     }
-  \caption{\label{fig:verify-lr-rbm}Example training progression using
+  \caption[Comparison of optimization schemes on a complicated problem]{\label{fig:verify-lr-rbm}Example training progression using
     $\psi_{RBM}$ as trial wave function with different optimization schemes. We
     see evidence of learning getting stuck in local minima due to the overly
     complex wave function anstaz.}
@@ -365,7 +365,7 @@ particular problem at hand.
     \resizebox{\linewidth}{!}{%
       \input{scripts/verify-sampling-step.py.tex}
     }
-    \caption{\label{fig:verify-sampling-step}\emph{Solid lines:} Acceptance rate of
+    \caption[Comparison of sampling strategies]{\label{fig:verify-sampling-step}\emph{Solid lines:} Acceptance rate of
     Metropolis and Importance sampling as a function of step size. Note that the
   interpretation of the step size is different for the two algorithms. \emph{Dashed
   lines:} Standard error of energy estimates obtained using the corresponding

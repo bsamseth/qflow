@@ -37,7 +37,7 @@ similar results for other choices.
     \resizebox{\linewidth}{!}{%
         \input{scripts/QD-benchmark.py.tex}
     }
-    \caption{\label{fig:QD-benchmark-pade-jastrow-training}Left: Performance of the
+    \caption[Learning progression of Pade-Jastrow wave function]{\label{fig:QD-benchmark-pade-jastrow-training}Left: Performance of the
       wave function in \cref{eq:qd-pade-jastrow-anzats} as a function of
       training steps. Right: Progression of variational parameters as a function
       of training steps.\citesource{writing/scripts/QD-benchmark.py}}
@@ -45,7 +45,7 @@ similar results for other choices.
 
 \begin{table}[h]
   \centering
-  \caption{Energy benchmark using Pade-Jastrow wave function, using $2^{22}$
+  \caption[Energy estimates of Pade-Jastrow wave function]{Energy benchmark using Pade-Jastrow wave function, using $2^{22}$
     Monte Carlo samples and errors estimated by an automated blocking algorithm
     by~\textcite{Jonsson-2018}. See \cref{fig:QD-benchmark-pade-jastrow-training}
     for source code reference.}
@@ -87,7 +87,7 @@ density is much more spread out to larger $r$.
     \resizebox{0.7\linewidth}{!}{%
         \input{scripts/QD-benchmark-onebody.py.tex}
     }
-    \caption{\label{fig:QD-benchmark-pade-jastrow-onebody}One-body density
+    \caption[One-body density using Pade-Jastrow wave function]{\label{fig:QD-benchmark-pade-jastrow-onebody}One-body density
       described by $\psi_{PJ}$ with optimized parameters. For reference, the
       exact OBD for the non-interacting system is indicated by the dotted line.\citesource{writing/scripts/QD-benchmark-onebody.py}}
 \end{figure}
@@ -100,7 +100,7 @@ density is much more spread out to larger $r$.
     \resizebox{0.7\linewidth}{!}{%
         \input{scripts/QD-benchmark-density.py.squared.tex}
     }
-    \caption{\label{fig:QD-benchmark-pade-jastrow-density}Top: Two-body density
+    \caption[Two-body density using Pade-Jastrow wave function]{\label{fig:QD-benchmark-pade-jastrow-density}Top: Two-body density
       described by $\psi_{PJ}$ with optimized parameters. Bottom: The squared
       equivalent of the top figure, included to emphasize the small decrease in
       density along the diagonal $r_1=r_2$.\citesource{writing/scripts/QD-benchmark-density.py}}
@@ -114,7 +114,7 @@ density is much more spread out to larger $r$.
 \begin{figure}[h]
   \centering
   \input{illustrations/rbm-diagram.tex}
-  \caption{Example diagram of a Guassian-Binary Restricted Boltzmann Machine, showed with four visible nodes
+  \caption[Illustration of a Restricted Boltzmann Machine (RBM)]{Example diagram of a Guassian-Binary Restricted Boltzmann Machine, showed with four visible nodes
     and three hidden nodes. The red values are the parameters, and consist of
     visible layer bias, $\vb a$, hidden layer bias, $\vb b$ and connection
     weights $\mat W$.\citesource{writing/illustrations/rbm-diagram.tex}}
@@ -179,15 +179,15 @@ of magnitude larger than the benchmark.
     \resizebox{\linewidth}{!}{%
         \input{scripts/QD-rbm.py.tex}
     }
-    \caption{\label{fig:QD-rbm-training}Left: Performance of the
-      wave function in ?? as a function of
+    \caption[Learning progression of an RBM on quantum dots]{\label{fig:QD-rbm-training}Left: Performance of the
+      wave function in \cref{eq:rbm-def} as a function of
       training steps. Right: Progression of variational parameters as a function
       of training steps.\citesource{writing/scripts/QD-rbm.py}}
 \end{figure}
 
 \begin{table}[h]
   \centering
-  \caption{Energy using the RBM wave function in~\cref{eq:rbm-def}, along with
+  \caption[Energy estimates using an RBM on quantum dots]{Energy using the RBM wave function in~\cref{eq:rbm-def}, along with
 the same wave function using input sorting to impose symmetry. Results obtained
 from $2^{23}$ Monte Carlo samples and errors estimated by an automated blocking
 algorithm by~\textcite{Jonsson-2018}. See
@@ -201,7 +201,7 @@ algorithm by~\textcite{Jonsson-2018}. See
     \resizebox{\linewidth}{!}{%
         \input{scripts/QD-rbm.py.symmetry.tex}
     }
-    \caption{\label{fig:QD-rbm-symmetry}Left: Permutation symmetry of the RBM wave
+    \caption[Symmetry and weight matrix of an RBM used on quantum dots]{\label{fig:QD-rbm-symmetry}Left: Permutation symmetry of the RBM wave
 function in~\cref{eq:rbm-def} as a function of training steps. Right: Color map
 of the weight matrix of the RBM after training. Weights have been scaled to
 $[-1, 1]$ for simplicity. See \cref{fig:QD-rbm-training} for source code reference.}
@@ -434,7 +434,7 @@ as the DMC result, which has an overlapping confidence interval with our results
     \resizebox{\linewidth}{!}{%
         \input{scripts/QD-pade-dnn.py.tex}
     }
-    \caption{\label{fig:QD-pade-dnn-training}Left: Performance of the wave
+    \caption[Learning progression of a neural network on quantum dots]{\label{fig:QD-pade-dnn-training}Left: Performance of the wave
 function in~\cref{eq:pade-dnn} as a function of training steps. Right:
 Progression of variational parameters as a function of training steps. We only
 show a small selection of the total number of parameters.\citesource{writing/scripts/QD-pade-dnn.py}}
@@ -443,7 +443,7 @@ show a small selection of the total number of parameters.\citesource{writing/scr
 \begin{table}[h]
   \centering
   \label{tab:pade-dnn-energy-results}
-  \caption{Energy using the neural network wave function in~\cref{eq:pade-dnn}, along with
+  \caption[Energy estimates using a neural network on quantum dots]{Energy using the neural network wave function in~\cref{eq:pade-dnn}, along with
 the benchmark wave function after the same amount of optimization. Results obtained
 from $2^{22}$ Monte Carlo samples and errors estimated by an automated blocking
 algorithm by~\textcite{Jonsson-2018}. See
@@ -466,7 +466,7 @@ algorithm by~\textcite{Jonsson-2018}. See
     \resizebox{\linewidth}{!}{%
         \input{scripts/QD-pade-dnn.py.weights.tex}
     }
-    \caption{\label{fig:QD-pade-dnn-weights}Color map representation of the
+    \caption[Weights of a neural network trained on quantum dots]{\label{fig:QD-pade-dnn-weights}Color map representation of the
 weights and biases in the network of $\psi_{DNN}$. The left column of plots
 shows the weight matrices in each layer, and the corresponding biases are in the
 right column. The bottom right plot has only one color because there is only one
@@ -551,7 +551,7 @@ from the three wave functions trained previously.
 
 \begin{table}[h]
   \centering
-  \caption{Average distances predicted by the different wave functions. Results
+  \caption[Radial metrics of different wave functions on quantum dots]{Average distances predicted by the different wave functions. Results
     obtained by Monte Carlo integration using importance sampling and $2^{24}$
     samples. The first row shows the corresponding values for a single particle
     in an ideal harmonic oscillator, with the values coming from the analytic

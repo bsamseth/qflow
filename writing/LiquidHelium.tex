@@ -73,7 +73,7 @@ systems. Based on computations with larger and larger systems, the value for $N
   \resizebox{\linewidth}{!}{%
     \input{scripts/He-benchmark.py.tex}
   }
-  \caption{\label{fig:He-benchmark-training}Left: Ground state energy produced by~\cref{eq:McMillan-wave-function-def}
+  \caption[Learning progression of McMillan wave function on $^4$He]{\label{fig:He-benchmark-training}Left: Ground state energy produced by~\cref{eq:McMillan-wave-function-def}
     as a function of training steps. Right: Progression of the variational
     parameter $\beta$ of~\cref{eq:McMillan-wave-function-def} as a function of
     training steps. A convergence is clearly visible, although there is more
@@ -83,7 +83,7 @@ systems. Based on computations with larger and larger systems, the value for $N
 
 \begin{table}[h]
   \centering
-  \caption{\label{tab:He-benchmark-results}Predicted ground state energy of helium atoms at density $\rho =
+  \caption[Energy estimates of McMillan wave function on $^4$He]{\label{tab:He-benchmark-results}Predicted ground state energy of helium atoms at density $\rho =
 \flatfrac{0.365}{\sigma^3}$ using $\psi_{M}$ with $\beta$ as determined after training. The number of particles used in the simulation box
 is indicated by the superscript on $\psi_M$. Values obtained using $2^{22}$
 Monte Carlo samples. See \cref{fig:He-benchmark-training} for source code reference.}
@@ -173,7 +173,7 @@ significantly less room for error in this much more challenging problem.
 \begin{figure}[h]
   \centering
   \input{scripts/He-mcmillan-dnn.py.tex}
-  \caption{\label{fig:He-dnn-training}Performance of $\psi_M$ and $\psi_{SDNN}$
+  \caption[Learning progression of a neural network on liquid helium]{\label{fig:He-dnn-training}Performance of $\psi_M$ and $\psi_{SDNN}$
     as a function of training steps. The network shows a clear energy reduction
     compared to the traditional benchmark.\citesource{writing/scripts/He-mcmillan-dnn.py}}
 \end{figure}
@@ -202,7 +202,7 @@ positive encouragement to continue this line of research.
 
 \begin{table}[h]
   \centering
-  \caption{\label{tab:He-dnn-results}Predicted ground state energy of both
+  \caption[Energy estimates using a neural network on liquid helium]{\label{tab:He-dnn-results}Predicted ground state energy of both
     $\psi_M$ and $\psi_{SDNN}$ after the same amount of optimization. Results
     obtained from $2^{23}$ Monte Carlo samples and with errors estimated using
     Blocking. See \cref{fig:He-dnn-training} for source code reference.}
