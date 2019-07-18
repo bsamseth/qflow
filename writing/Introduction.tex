@@ -3,10 +3,110 @@
 \chapter{Introduction}
 \label{chp:introduction}
 
-Motivating \emph{why} we want to do this...
+Quantum mechanics (QM) is the fundamental theory which describes nature at its
+smallest scales. Its predictions have been verified by every experiment ever
+devised to test it, and is considered by many to be our most successful physical
+theory. Still, QM is far from fully understood, and there is an ocean of
+questions we still want to get out of it. Continued study of QM is arguably one
+of the most worthwhile undertakings we can work on.
+
+Nevertheless, to a layperson QM might just mean \say{complicated science} and it
+is happily ignored in favor of more relatable topics. But if we could turn off QM
+for a day, its effects on our daily life would become blazingly obvious. You no
+longer need to go to that doctors appointment for an MRI, because that not a
+thing anymore. Better call and cancel - to bad your phone is now the size of
+your apartment. At least you can still watch the world fall apart on your new TV -
+never mind, LEDs don't work anymore either.
+
+The point of this thought experiment is not to say everyone should become a
+theoretical physicist, but rather to point out the immense technological
+progress we have made as side effects of our pursuit to unravel natures inner
+workings. So while QM may be the law of the microscopic, there are
+real life, large scale effects from which we benefit on a daily basis.\\
+
+The most challenging problem in QM is the study of strongly correlated
+many-body systems. Put 100 electrons in a box and press play. What happens next
+turns out to be extremely complicated to accurately predict. The equation that
+governs this world is the Schrödinger equation,
+
+\begin{align}
+  \label{eq:schrodinger-intro-def}
+  \hat H\ket{\Psi} &= i\hbar \pdv{}{t}\ket\Psi.
+\end{align}
+We will revisit this equation in \cref{chp:the-quantum-problem}, but for now it
+suffices to know that $\ket\Psi$ is the so called \emph{wave function}. This
+mysterious thing is what we seek to get out of \cref{eq:schrodinger-intro-def},
+and it can tell us \emph{anything} we wish to know about the system.
+
+The reason for our troubles is that \cref{eq:schrodinger-intro-def} leads us to
+a many-body wave function plagued with \emph{exponential} scaling complexity.
+For instance, the wave function might require $2^N$ components, which for our
+100 electrons means we would need a \emph{nonillion} ($10^{30}$) parts. That's
+more parts than there are bits in all the computers of the world, with plenty to
+spare.
+
+\begin{comment}
+In most other areas of science we have been able to tame the mathematical
+challenges through sophisticated high-performance computational frameworks.
+Scaling complexities of $N^2$, $N^3$ or similar can usually be overcome by
+simply using bigger and better computers, all the way to supercomputers with
+hundreds of thousands of cores. But exponential scaling - that becomes
+infeasible quickly.
+\end{comment}
+
+In the words of one of the founding fathers of QM:
+\begin{displayquote}
+\emph{The underlying physical laws necessary for the mathematical theory of a large
+part of physics and the whole of chemistry are thus completely known, and the
+difficulty is only that the exact application of these laws leads to equations
+much too complicated to be soluble.} --- P.A.M. Dirac
+\end{displayquote}
+
+
+So how do we do get around this fundamental issue of an equation so complicated
+we literally cannot solve it through analytical means? Throughout this thesis,
+we will be concerned with one particular method: \emph{Guessing}. Based on our
+theoretical understanding we can make an educated guess as to what $\ket\Psi$
+should look like. Even if the guess is not completely accurate, we can now
+simulate the system as if it was described by this wave function and measure its
+properties. From fundamental principles, we know nature prefers the state of
+smallest possible energy. That means that if we tweak our guess slightly and
+obtain a smaller predicted energy, then our new guess is closer to the
+underlying truth. If we keep updating our guess, keeping those that lead to
+smaller energies, we will eventually end up with something that hopefully is a
+much better approximate solution. The problem is now how to make good guesses,
+and how tweak them in the right direction. This approach is known as Variational
+Monte Carlo (VMC), and will be discussed in depth in
+\cref{chp:variational-monte-carlo}.\\
+
+Enter the world of Machine Learning (ML) which over the last years have seen
+huge successes in a range of real-world problems, including computer vision and
+natural language processing, each with a scaling complexity similar to
+the quantum many-body problem. Physicists have taken notice and are now trying
+to apply techniques from ML in an attempt to make progress in QM. ML has
+demonstrated how we can train computer models to see patterns and connections
+far beyond human comprehension, and be able to condense these down to tangible
+predictions that we can use.
+
+The goal of this thesis is to build upon existing machinery for VMC by extending
+theoretical guesses for $\ket\Psi$ with a neural network component, thus massively
+increasing the flexibility and expressiveness of our guesses. If successful, this
+network will be able to learn the physical correlations present in the system
+and correct for them more accurately than we could ever do ourselves.
+
 
 
 \section{How to Use This Thesis}
+
+This thesis is written with an undergraduate physics student as the intended
+audience. It is written in a way that I would have liked to read it when first
+embarking on a master's degree. Regardless of how many readers fall into this
+category, it is our hope that anyone comfortable with first year university
+level mathematics should able to understand the majority of the results of this
+thesis, even if not every detail is equally clear. While the topics at hand might be
+inherently complex, we have made an attempt at guiding the reader through the
+background in a way that explains all necessary components as they arise.
+
 
 \subsection{Structure}
 \cref{prt:theory} starts with a introduction to all the underlying theory
@@ -29,7 +129,7 @@ selected idealized cases (\cref{chp:verfication}).
 
 \cref{prt:results} finally presents the results of the new method we have
 developed, testing it on both a few-body system (\cref{chp:quantum-dots}) and a
-more complicated many-body system (\cref{chp:liquid-helium}). 
+more complicated many-body system (\cref{chp:liquid-helium}).
 
 Finally, \cref{prt:conclusion} offers conclusions and future prospects.
 
