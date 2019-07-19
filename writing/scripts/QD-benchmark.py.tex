@@ -12,11 +12,13 @@ tick align=outside,
 tick pos=left,
 x grid style={white!69.01960784313725!black},
 xlabel={\% of training},
+ylabel={Ground state energy $[\si{\au}]$},
 xmin=-5, xmax=105,
 xtick style={color=black},
 y grid style={white!69.01960784313725!black},
 ymin=2.99704592819679, ymax=3.0553945154196,
-ytick style={color=black}
+ytick style={color=black},
+ylabel near ticks,
 ]
 \addplot [semithick, color0]
 table {%
@@ -122,7 +124,7 @@ table {%
 99 3.0002256484428
 100 3.000608740078
 };
-\addlegendentry{$\langle E_L\rangle$ [a.u]}
+\addlegendentry{$\psi_{PJ}$}
 \addplot [semithick, black, opacity=0.5, dashed]
 table {%
 -5 3
@@ -137,11 +139,16 @@ tick align=outside,
 tick pos=left,
 x grid style={white!69.01960784313725!black},
 xlabel={\% of training},
+ylabel={Parameters},
 xmin=-5, xmax=105,
 xtick style={color=black},
 y grid style={white!69.01960784313725!black},
 ymin=0.366969287310357, ymax=1.03014431965189,
-ytick style={color=black}
+ytick style={color=black},
+ylabel near ticks,
+ytick pos=right,
+yticklabel pos=right,
+ylabel style={rotate=-180},
 ]
 \addplot [semithick, color0]
 table {%

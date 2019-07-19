@@ -9,10 +9,11 @@
 \nextgroupplot[
 tick align=outside,
 tick pos=left,
-title={$\langle E_L\rangle$ [a.u]},
+ylabel={$\langle E_L\rangle$ [a.u]},
 x grid style={white!69.01960784313725!black},
 xmin=-5, xmax=105,
 xtick style={color=black},
+xlabel={\% of training},
 y grid style={white!69.01960784313725!black},
 ymin=2.97679626711076, ymax=3.48370206437361,
 ytick style={color=black}
@@ -127,13 +128,17 @@ legend cell align={left},
 legend style={at={(0.91,0.5)}, anchor=east, draw=white!80.0!black},
 tick align=outside,
 tick pos=left,
-title={Parameters},
+ylabel={Parameters},
+ylabel style={rotate=-180},
+xlabel={\% of training},
 x grid style={white!69.01960784313725!black},
 xmin=-5, xmax=105,
 xtick style={color=black},
 y grid style={white!69.01960784313725!black},
 ymin=0.378191221816561, ymax=1.02960994181826,
-ytick style={color=black}
+ytick style={color=black},
+ytick pos=right,
+ylabel near ticks
 ]
 \addplot [semithick, color0]
 table {%

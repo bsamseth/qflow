@@ -26,7 +26,8 @@ y grid style={white!69.01960784313725!black},
 ylabel={Absolute error in \(\displaystyle \langle E_L\rangle\) [a.u]},
 ymin=3.02113114177492e-07, ymax=0.0987601903856263,
 ymode=log,
-ytick style={color=black}
+ytick style={color=black},
+ylabel near ticks,
 ]
 \addplot [semithick, color0]
 table {%
@@ -349,11 +350,15 @@ tick align=outside,
 tick pos=left,
 x grid style={white!69.01960784313725!black},
 xlabel={\% of training},
+ylabel={Parameters of $\psi_{DNN}$},
 xmin=-5, xmax=105,
 xtick style={color=black},
 y grid style={white!69.01960784313725!black},
 ymin=-0.384756982019709, ymax=0.341581802961275,
-ytick style={color=black}
+ytick style={color=black},
+ylabel near ticks,
+ytick pos=right,
+ylabel style={rotate=-180},
 ]
 \addplot [semithick, color0]
 table {%

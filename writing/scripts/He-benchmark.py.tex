@@ -13,7 +13,7 @@ xmin=-5, xmax=105,
 xtick style={color=black},
 y grid style={white!69.01960784313725!black},
 ylabel near ticks,
-ylabel={Ground state energy (a.u.)},
+ylabel={Ground state energy $[\si{\kelvin\per N}]$},
 ymin=-6.84184972585454, ymax=-5.82548788292397,
 ytick style={color=black}
 ]
@@ -135,8 +135,10 @@ y grid style={white!69.01960784313725!black},
 ymin=2.84333389626312, ymax=2.98998817847455,
 ytick style={color=black},
 ylabel={Variational parameter $\beta$ $[\si{\angstrom}]$},
+ylabel style={rotate=-180},
 ylabel near ticks,
 ytick pos=right,
+ylabel style={rotate=-180},
 ]
 \addplot [semithick, color0]
 table {%
@@ -242,7 +244,6 @@ table {%
 99 2.98080690182921
 100 2.98153186471406
 };
-\addlegendentry{$\beta$}
 \end{groupplot}
 
 \end{tikzpicture}

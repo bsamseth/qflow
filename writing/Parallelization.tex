@@ -203,11 +203,13 @@ it flattens out.
     \resizebox{0.7\linewidth}{!}{%
         \input{scripts/openmp_test.py.tex}
     }
-  \caption[Speedup using OpenMP parallelization]{Iterations per second when running \cref{lst:openmp-example} with
-    varying number of processors. These results where obtained by running a test
+  \caption[Speedup using OpenMP parallelization]{Achieved speedup when
+    running Listing~\ref{lst:openmp-example} with
+    varying number of threads. These results where obtained by running a test
     on the Abel computing cluster, on a node with 16 cores. We see a clear
     speedup until we run out of cores, at which point using more threads hurts
-    performance.\citesource{writing/scripts/openmp_test.py}}
+    performance. Speedup is here defined as the ratio of iterations per second
+    to iterations per second using one thread.\citesource{writing/scripts/openmp_test.py}}
   \label{fig:openmp-example}
 \end{figure}
 
