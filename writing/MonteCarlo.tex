@@ -3,7 +3,7 @@
 \chapter{Monte Carlo Methods}
 \label{chp:monte-carlo}
 
-In \autoref{chp:variational-monte-carlo} we found that we needed a way to sample
+In \cref{chp:variational-monte-carlo} we found that we needed a way to sample
 system configurations $\vX$ from the probability distribution described by the
 wave function. We needed this as a means to evaluate integrals. Specifically, we
 needed to evaluate the expectation value of the Hamiltonian w.r.t. a given wave
@@ -207,7 +207,7 @@ would like to evaluate the following integral:
     \caption[Illustration of example probability distributions]{\label{fig:mci-importance-example-func-plot}Plot of the function in
       \cref{eq:mci-importance-example-func}, enveloped by a standard normal distribution.\citesource{writing/MonteCarlo.tex}}
 \end{figure}
-The integrand is plotted in \autoref{fig:mci-importance-example-func-plot}, and
+The integrand is plotted in \cref{fig:mci-importance-example-func-plot}, and
 the observant reader might recognise this as the product of a normal
 distribution and a Student-t distribution. The correct value for the integral
 is also given, so we have a reference for the results.
@@ -215,7 +215,7 @@ is also given, so we have a reference for the results.
 For comparison, lets start with the straightforward approach from before.
 Because the integral goes to infinity the "volume" $V$ would not be well
 defined, and we are forced to truncate the region manually. From looking at the
-graph in \autoref{fig:mci-importance-example-func-plot} we may say that $x\in
+graph in \cref{fig:mci-importance-example-func-plot} we may say that $x\in
 [-5, 5]$ should account for the vast majority of the total integral. That means
 we use the following estimate:
 
@@ -241,14 +241,14 @@ This can be interpreted as the expectation of $z(x)=\flatfrac{f(x)}{g(x)}$ for $
 \begin{align}
     I \approx \frac{1}{N} \sum_{i=1}^N \frac{f(x_i)}{g(x_i)} \qq{where} x_i\sim g
 \end{align}
-Setting $g = \text{Uniform}(-5, 5)$ recovers \autoref{eq:chp-mc-anon-2}, so this is simply the natural generalization of the standard approach for an arbitrary distribution function $g$.
+Setting $g = \text{Uniform}(-5, 5)$ recovers \cref{eq:chp-mc-anon-2}, so this is simply the natural generalization of the standard approach for an arbitrary distribution function $g$.
 
 
 Going back to the example, we should now chose a distribution function that
 closely resembles the integrand, while still being simple to sample from. In
 this (contrived) example, a natural choice is to use the standard normal
 distribution, $g = \mathcal{N}(0, 1)$. In
-\autoref{fig:mci-importance-example-func-plot} we can see how $g(x)$ is
+\cref{fig:mci-importance-example-func-plot} we can see how $g(x)$ is
 enclosing $f(x)$ much more tightly than any rectangular box might hope to.
 
 \begin{figure}
@@ -257,7 +257,7 @@ enclosing $f(x)$ much more tightly than any rectangular box might hope to.
         \input{scripts/monte_carlo_int_example.py.tex}
     }
     \caption[Convergence of Monte Carlo Integration]{\label{fig:mci-importance-example-func-convergence}Convergence of
-    the integral in \autoref{eq:mci-importance-example-func}, using regular
+    the integral in \cref{eq:mci-importance-example-func}, using regular
     Monte Carlo integration and Importance Sampling with $g = \mathcal{N}(0,
     1)$. The points indicate the approximated value of the integral for each
     particular experiment, and the shaded areas indicate the corresponding
@@ -267,7 +267,7 @@ enclosing $f(x)$ much more tightly than any rectangular box might hope to.
     }
 \end{figure}
 
-\autoref{fig:mci-importance-example-func-convergence} show the convergence of
+\cref{fig:mci-importance-example-func-convergence} show the convergence of
 the Monte Carlo approximations towards the correct value for an increasing
 number of sampled points. The drawn line is the mean value at each run, while
 the shaded areas show the corresponding $\SI{95}{\percent}$ confidence
@@ -330,7 +330,7 @@ $m=2^{32}$.
 
 This produces uniformly distributed integers in the range $[0, m)$. Numbers
 from the standard uniform distribution can then simply be obtained by dividing
-the integers by $m$. The complete algorithm is shown in Algorithm \autoref{alg:uniform-LCG-sampling}.
+the integers by $m$. The complete algorithm is shown in \cref{alg:uniform-LCG-sampling}.
 
 \begin{algorithm}[h]
     \caption{Sampling from $\text{Uniform}(l, u)$}
@@ -366,7 +366,7 @@ because $T^{-1}(x)\in[0, 1]$ by definition, and assuming that $T^{-1}(x)$ is str
 
 The algorithm to sample from any PDF with a tractable inverse cumulative
 distribution function is then extremely simple, and for completeness it is
-listed in Algorithm \autoref{alg:inverse-transform-sampling}.
+listed in \cref{alg:inverse-transform-sampling}.
 
 \begin{algorithm}[h]
     \caption{Inverse Transform Sampling}
@@ -383,10 +383,10 @@ listed in Algorithm \autoref{alg:inverse-transform-sampling}.
 \subsection{The Metropolis-Hastings Algorithm}
 \label{sec:metro-hastings-alg}
 
-Algorithm \autoref{alg:inverse-transform-sampling} works great for a number of standard
+\cref{alg:inverse-transform-sampling} works great for a number of standard
 PDFs. For many cases, however, we do not have a tractable form for the inverse
 CDF, which renders the algorithm useless. So what about the wave functions we
-are interested in? The PDF in question is, as defined in \autoref{eq:wavefunc-probability-density-def},
+are interested in? The PDF in question is, as defined in \cref{eq:wavefunc-probability-density-def},
 
 \begin{align}
     P_{\psi}(\vX) \defeq \frac{\abs{\psi}^2}{\int\dd{\vX}\abs{\psi}^2}.
@@ -403,7 +403,7 @@ considered to be among the most influential algorithms of the 20th century.
 While the algorithm itself is quite simple, the argument for \emph{why} it
 works is a little more involved. The following sections will be dedicated to the
 mathematical underpinnings. In the mean time, the full algorithm is shown
-in~\Cref{alg:metropolis-hastings-general}.
+in~\cref{alg:metropolis-hastings-general}.
 
 \begin{algorithm}[h]
     \caption{Metropolis-Hastings Algorithm}
@@ -424,7 +424,7 @@ in~\Cref{alg:metropolis-hastings-general}.
     \end{algorithmic}
 \end{algorithm}
 
-The most important thing about~\Cref{alg:metropolis-hastings-general} is the
+The most important thing about~\cref{alg:metropolis-hastings-general} is the
 fact that we only need to know the ratios of probabilities,
 $\flatfrac{P(\vx')}{P(\vx)}$. This means that we don't need the probabilities to
 be normalized to unity\footnote{We do need the probabilities to be
