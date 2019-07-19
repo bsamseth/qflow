@@ -43,13 +43,22 @@ be unambiguous and clear.
 Example: The matrix $\mat X\in\mathbb{R}^{m\times n}$ is defined by its column
 vectors $\{\vx_i\}_{i=1}^n$ (with $\vx_i\in\mathbb{R}^{m}$) such that $ \mat X =
 (\vx_1\ \vx_2\ \dots\ \vx_n)$ column vectors, such that the scalar $X_{ij}$ is
-the $i$'th component of $\vx_j$.
+the $i$'th component of $\vx_j$.\\
+
+In particular, $\mat X$ is often used throughout this thesis. If not explicitly
+defined otherwise, $\mat X$ denotes a matrix of particle coordinates, $\mat X
+\defeq (\vb x_1\ \vb x_2\ \dots\ \vb x_N)^T\in \mathbb{R}^{N\times D}$ for $N$
+particles in $D$ dimensions. In three dimensions that is:
+
+\begin{align}
+  \mat X &\defeq \mqty(\vx_1\\\vx_2\\\vdots\\\vx_N) \defeq \mqty(x_1&y_1&z_1\\x_2&y_2&z_2\\\vdots&\vdots&\vdots\\x_N&y_N&z_N).
+\end{align}
 
 \subsection{Indices}
 
 Some indices are meant to be summed over, while others remain fixed throughout a
-calculation. To help making the distinction between the two, the following
-sequences of indices is used for each class, in decreasing order of
+calculation. To help make the distinction between the two, the following
+sequences of indices are used for each class, in decreasing order of
 precedence:
 
 \begin{description}
@@ -81,8 +90,8 @@ summation are determined by their context.
   $\sum_{i=1}^n \equiv \sum_{i}^n\equiv \sum_i$.
 \item[Implicit summation symbols:]\hfill\\
   We make heavy use of the Einstein summation convention when this is
-  appropriate. Any summation index (see above) which appears more than once with
-  \emph{a single term} is implicitly summed over all its possible values.
+  appropriate. Any summation index (see above) which appears more than once \emph{within
+  a single term} is implicitly summed over all its possible values.
   Superscripts in parenthesis are excluded from this rule, i.e. $a^{(k)}b^{(k)}$
   does not have an implied sum.
 \end{description}
@@ -96,6 +105,22 @@ explicitly, all of the following statements about the elements of $\vx$ are equi
   x_k &= \sum_{i} A_{ki}b_i,\qq{ } x_k = A_{ki}b_i
   \end{split}
 \end{align}
+
+\subsection{Statistics}
+
+\begin{center}
+\begin{tabular}{lr}
+  Quantity & Notation\\
+  \hline\\
+  Expectation value & $\expval{\cdot}$ \\
+  Standard deviation & $\Std[\cdot]$\\
+  Variance & $\Var[\cdot]$\\
+  Covariance & $\Cov[\cdot]$\\
+  Standard Error & $\SE[\cdot]$\\
+\end{tabular}
+\end{center}
+
+
 
 \section{Symmetry Metric}
 \label{app:symmetry-metric}
