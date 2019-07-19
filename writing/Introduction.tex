@@ -5,8 +5,8 @@
 
 \Gls{qm} is the fundamental theory which describes nature at its
 smallest scales. Its predictions have been verified by every experiment ever
-devised to test it, and is considered by many to be our most successful physical
-theory. Still, \gls{qm} is far from fully understood, and there is an ocean of
+devised to test it, and it is considered by many to be our most successful physical
+theory ever developed. Still, \gls{qm} is far from fully understood, and there is an ocean of
 questions we still want to get out of it. Continued study of \gls{qm} is arguably one
 of the most worthwhile undertakings we can work on.
 
@@ -26,19 +26,21 @@ real life, large scale effects from which we benefit on a daily basis.\\
 
 The most challenging problem in \gls{qm} is the study of strongly correlated
 many-body systems. Put $\num{100}$ electrons in a box and press play. What happens next
-turns out to be extremely complicated to accurately predict. The equation that
-governs this world is the Schrödinger equation,
+turns out to be extremely complicated to accurately predict. To find out, we
+turn to the equation that governs this world, the Schrödinger equation:
 
 \begin{align}
   \label{eq:schrodinger-intro-def}
   \hat H\ket{\Psi} &= i\hbar \pdv{}{t}\ket\Psi.
 \end{align}
 We will revisit this equation in \cref{chp:the-quantum-problem}, but for now it
-suffices to know that $\ket\Psi$ is the so called \emph{wave function}. This
-mysterious thing is what we seek to get out of \cref{eq:schrodinger-intro-def},
-and it can tell us \emph{anything} we wish to know about the system.
+suffices to know that want to solve it for $\ket\Psi$, the so called \emph{wave
+function}. This mysterious thing describes everything about our box, and it can
+tell us \emph{anything} we wish to know about the system.
 
-The reason for our troubles is that \cref{eq:schrodinger-intro-def} leads us to
+The reason for our troubles is that \cref{eq:schrodinger-intro-def} turns out to
+be horrendously hard to solve for all but the simplest possible systems we can
+imagine. Attempting to solve it for e.g.\ our box of electrons lead us to
 a many-body wave function plagued with \emph{exponential} scaling complexity.
 For instance, the wave function might require $2^N$ components, which for our
 $\num{100}$ electrons means we would need a \emph{nonillion} ($10^{30}$) parts. That's
@@ -62,21 +64,23 @@ difficulty is only that the exact application of these laws leads to equations
 much too complicated to be soluble.} --- P.A.M. Dirac
 \end{displayquote}
 
-
 So how do we do get around this fundamental issue of an equation so complicated
-we literally cannot solve it through analytical means? Throughout this thesis,
-we will be concerned with one particular method: \emph{Guessing}. Based on our
-theoretical understanding we can make an educated guess as to what $\ket\Psi$
-should look like. Even if the guess is not completely accurate, we can now
-simulate the system as if it was described by this wave function and measure its
-properties. From fundamental principles, we know nature prefers the state of
-smallest possible energy. That means that if we tweak our guess slightly and
-obtain a smaller predicted energy, then our new guess is closer to the
-underlying truth. If we keep updating our guess, keeping those that lead to
-smaller energies, we will eventually end up with something that hopefully is a
-much better approximate solution. The problem is now how to make good guesses,
-and how tweak them in the right direction. This approach is known as \gls{vmc},
-and will be discussed in depth in \cref{chp:variational-monte-carlo}.\\
+we literally cannot solve it through analytical means? Depending on the
+complexity of the system under investigation and our required level of
+precision, a variety of approximate methods have been developed. Throughout this
+thesis, we will be concerned with one of the more versatile methods:
+\emph{Guessing}. Based on our theoretical understanding we can make an educated
+guess as to what $\ket\Psi$ should look like. Even if the guess is not
+completely accurate, we can now simulate the system as if it was described by
+this wave function and measure its properties. From fundamental principles, we
+know nature prefers the state of smallest possible energy. That means that if we
+tweak our guess slightly and obtain a smaller predicted energy, then our new
+guess is closer to the underlying truth. If we keep updating our guess, keeping
+those that lead to smaller energies, we will eventually end up with something
+that hopefully is a much better approximate solution. The problem is now how to
+make good guesses, and how tweak them in the right direction. This approach is
+known as \acrfull{vmc}, and will be discussed in depth in
+\cref{chp:variational-monte-carlo}.\\
 
 Enter the world of \gls{ml} which over the last years have seen
 huge successes in a range of real-world problems, including computer vision and
@@ -95,7 +99,7 @@ and correct for them more accurately than we could ever do ourselves.
 
 
 
-\section*{How to Use This Thesis}
+\section*{Reading This Thesis}
 
 This thesis is written with an undergraduate physics student as the intended
 audience. It is written in a way that I would have liked to read it when first
@@ -104,7 +108,8 @@ category, it is our hope that anyone comfortable with first year university
 level mathematics should able to understand the majority of the results of this
 thesis, even if not every detail is equally clear. While the topics at hand might be
 inherently complex, we have made an attempt at guiding the reader through the
-background in a way that explains all necessary components as they arise.
+background in a way that explains all necessary components as they arise, but
+also limit ourselves as much as possible to just what is needed.
 
 
 \subsection*{Structure}
