@@ -1,0 +1,23 @@
+\usepackage{xparse}
+\DeclareDocumentCommand{\newdualentry}{ O{} O{} m m m m } {
+  \newglossaryentry{gls-#3}{name={#5},text={#5\glsadd{#3}},
+    description={#6},#1
+  }
+  \makeglossaries
+  \newacronym[see={[Glossary:]{gls-#3}},#2]{#3}{#4}{#5\glsadd{gls-#3}}
+}
+\let\firstchar\lowercase
+\let\oldprintglossaries\printglossaries
+\def\printglossaries{\let\firstchar\uppercase\oldprintglossaries}
+
+\newacronym{mc}{MC}{Monte Carlo}
+\newacronym{mci}{MCI}{Monte Carlo integration}
+\newacronym[description=Importance sampling]{is}{IS}{importance sampling}
+\newacronym[description=Variational Monte Carlo]{vmc}{VMC}{variational Monte Carlo}
+\newacronym[description=Diffusion Monte Carlo]{dmc}{DMC}{diffusion Monte Carlo}
+\newacronym[description=Machine learning]{ml}{ML}{machine learning}
+\newacronym[description=Quantum mechanics]{qm}{QM}{quantum mechanics}
+\newacronym[description=Magnetic resonance imaging]{mri}{MRI}{magnetic resonance imaging}
+\newacronym[description=Light-emitting diode]{led}{LED}{light-emitting-diode}
+\newacronym[description=Time-dependent Schrödinger equation]{tdse}{TDSE}{time-dependent Schrödinger equation}
+\newacronym[description=Time-independent Schrödinger equation]{tise}{TISE}{time-independent Schrödinger equation}

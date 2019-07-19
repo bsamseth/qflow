@@ -23,6 +23,8 @@
     \DeclareSIUnit{\au}{a.u.}
     \sisetup{exponent-product = \cdot}	    % Dot as multiplication symbol (not cross).
  	% \sisetup{separate-uncertainty = true} 	% Use pluss-minus form for uncertainty.
+\usepackage[toc, acronym, xindy]{glossaries}
+\renewcommand*{\glspostdescription}{\dotfill}
 \usepackage{tikz}
 \usetikzlibrary{shapes, calc, shapes, arrows, positioning, decorations.markings, external}
 \tikzexternalize[prefix=figures/]
