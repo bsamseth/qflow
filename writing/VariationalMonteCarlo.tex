@@ -4,16 +4,17 @@
 \chapter{Variational Monte Carlo}
 \label{chp:variational-monte-carlo}
 
-Variational Monte Carlo (VMC) is a method for obtaining the ground state wave function of
+\glsreset{vmc}
+
+\Gls{vmc} is a method for obtaining the ground state wave function of
 a quantum mechanical system, and it constitutes the framework for all the calculations we
 perform in this thesis. As this method is of great significance to us, this chapter is
 devoted to all relevant definitions, derivations and technical details required for a
 successful study of the systems of interest.
 
-
 \section{The Variational Principle}
 
-The fundamental principle that enables VMC is the observation that the wave function that
+The fundamental principle that enables \gls{vmc} is the observation that the wave function that
 describes the ground state of a system, is the wave function which produces the lowest
 expectation value of the energy. Read this statement a couple of times and it almost seems
 like a circular definition, because we define the ground state as the state with the
@@ -25,8 +26,7 @@ Let's formalize the above statement.
     Suppose a time-independent Hamiltonian, $\hat H$, an associated set of eigenvalues,
     $E_0\leq E_1\leq\dots$ and
     a set of orthonormal eigenvectors, $\{\ket{\phi_n}\}$ spanning the associated
-    Hilbert space, such that the Time-Independent
-    Schrödinger equation is satisfied,
+    Hilbert space, such that the \gls{tise} is satisfied,
 
     \begin{align}
         \hat H\ket{\phi_n} = E_n\ket\phi_n.
@@ -70,7 +70,7 @@ extend our results if need be.
 
 \section{The Variational Monte Carlo Algorithm}
 
-Rooted in the Variational Principle, the general approach to finding a good estimate of
+Rooted in the variational principle, the general approach to finding a good estimate of
 the ground state goes as follows:
 
 \begin{enumerate}
@@ -92,14 +92,14 @@ attention to these two points in particular.
 
 \section{The Trial Wave Function}
 
-Critical to the outcome of a VMC calculation is the quality of the proposed trail wave
+Critical to the outcome of a \gls{vmc} calculation is the quality of the proposed trail wave
 function. In order to have stable and sensible results we should also take care that the
 wave function obeys the requirements stated in
-\autoref{sec:requirements-of-wave-functions}. Beyond these basic assertions, it is
+\cref{sec:requirements-of-wave-functions}. Beyond these basic assertions, it is
 imperative that the functional form of the proposed wave function is capable of expressing
 the true underlying ground state, or at least a good approximation of it. As an example,
 take the simple case of the idealized one-dimensional harmonic oscillator presented in
-\autoref{sec:simple-non-inter-HO}, with the ground state expressed as
+\cref{sec:simple-non-inter-HO}, with the ground state expressed as
 \begin{align}
     \phi_0(x) \propto \exp(- \frac{1}{2} x^2)
 \end{align}
@@ -148,12 +148,12 @@ factor}.
 
 
 For clarity, we present a couple different Slater forms. We consider the two-dimensional
-quantum dots system from \autoref{sec:quantum-dots-theory} for $N$ particles.  We have
+quantum dots system from \cref{sec:quantum-dots-theory} for $N$ particles.  We have
 $\vb x_i=(x_i, y_i)$ being the position of the particle $i$, and $\vb X\defeq (\vb x_1,
 \dots \vb x_N)$ defined as a shorthand. Let $\vb\Phi$ be a matrix defined by $\Phi_{i,j}
 \defeq \phi_{i}(\vb x_j)$, where the $\phi_i$ is part of the set of orbitals
 $\{\phi_{0,0}, \phi_{1,0},\phi_{0,1}, \phi_{1,1},\dots\}$, as defined in
-\autoref{eq:ho-single-particle-orbitals}. Lastly, let $\vb \Phi^{(M)}$ denote the
+\cref{eq:ho-single-particle-orbitals}. Lastly, let $\vb \Phi^{(M)}$ denote the
 resulting matrix with $M$ rows, one for each of the $M$ lowest energy orbitals. Finally,
 if the particles are fermions we define the Slater factor as\footnote{Spin considerations not mentioned here, as they will not be important for the particular systems we will investigate. In general though, the structure of the Slater factor needs to account for spin in a well defined way.}
 
@@ -222,7 +222,7 @@ and we have proposed a trial wave function $\ket{\vb\alpha}$ based on the
 theoretical intuition we have. The wave function has by design some free
 parameters $\vb\alpha$ which we now want to pin down to their optimal values.
 
-From the Variational Principle (\autoref{thm:variational-principle}), we know
+From the Variational Principle (\cref{thm:variational-principle}), we know
 that the best set of parameters are those that minimizes the expected energy,
 $\expval{\hat H}{\vb\alpha}$. As such, a natural place to start would be to
 determine an efficient way to evaluate said energy.
@@ -266,7 +266,7 @@ So, if we can sample $\vX$ from the distribution described by our trial wave
 function, we simply need to evaluate the local energy at a sufficiently large
 number of configurations  to obtain a good estimate of the expectation value of
 the Hamiltonian. How exactly to do the sampling is a rather large topic, and
-will be handled in \autoref{chp:monte-carlo}.
+will be handled in \cref{chp:monte-carlo}.
 
 \subsection{Updating Parameters}
 
@@ -281,7 +281,7 @@ Perhaps the most common optimization strategy relies on computing the gradient
 of the energy w.r.t. $\valpha$, and then change $\valpha$ in the opposite
 direction of this. After all, a gradient by definition points in the direction
 of steepest ascent, so going the other way will be the direction of steepest
-decent. How exactly to make these changes are a topic of its own, and discussed in depth in \autoref{chp:machine-learning}, but the simplest implementation is as follows:
+decent. How exactly to make these changes are a topic of its own, and discussed in depth in \cref{chp:machine-learning}, but the simplest implementation is as follows:
 
 \begin{align}
     \valpha^{(i+1)} = \valpha^{(i)} - \eta \grad_{\valpha}{\expval{\hat H}}
