@@ -1,6 +1,6 @@
 \documentclass[Thesis.tex]{subfiles}
 \begin{document}
-\chapter{QFLOW: Software Package for VMC with Neural Networks}
+\chapter{QFLOW: Software Package for \gls{vmc} with Neural Networks}
 \label{chp:qflow}
 
 Everything discussed so far has culminated into the development of a self
@@ -36,7 +36,7 @@ Every other dependency should be automatically resolved during installation.
 
 The following example aims to showcase the basic usage pattern of QFLOW.
 
-Say we want run a VMC optimization of two electrons in two
+Say we want run a \gls{vmc} optimization of two electrons in two
 dimensions confined in a harmonic oscillator trap, i.e. the quantum dot system
 described in \cref{sec:quantum-dots-theory}. The following complete code runs an
 optimization using a Pade-Jastrow wave function and evaluates the result. All in
@@ -60,7 +60,7 @@ a few readable lines of Python:\\
   % \resizebox{0.7\linewidth}{!}{%
       \input{scripts/quickstart.py_.tex}
   % }
-  \caption[Learning progression of an example VMC optimization]{Learning progression in terms of energy (left) and variational
+  \caption[Learning progression of an example \gls{vmc} optimization]{Learning progression in terms of energy (left) and variational
     parameters (right).\citesource{writing/scripts/quickstart.py}}
   \label{fig:quickstart-example}
 \end{figure}
@@ -69,7 +69,7 @@ a few readable lines of Python:\\
 
 \section{Structure}
 
-The package has been structured around four basic building blocks of a VMC
+The package has been structured around four basic building blocks of a \gls{vmc}
 calculation, each of which is represented by a base class:
 
 \begin{itemize}
@@ -111,8 +111,8 @@ later examples).
 
 \subsection{Samplers}
 
-Monte Carlo sampling is done through one of the implemented methods in the
-\texttt{qflow.samplers} module. Again the code is structured around the base
+\gls{mc} sampling is done through one of the implemented methods in the
+\texttt{qflow.samplers} module. Again the code is structured around a base
 class \texttt{qflow.samplers.Sampler}, which defines the basic interface to the
 sampler, including querying for samples (system configurations) and obtaining
 the acceptance rate. Specific algorithms are subclasses, such as
@@ -174,11 +174,11 @@ derivatives, we needed a good way to test this. If we want to go beyond testing
 just a few hand-made examples, we need a way to programmatically produce the
 expected derivatives. The problem then is quite typical when writing tests: How
 do you generate the expected answers without simply retyping the same code
-twice? This is a place where Automatic Differentiation actually became useful.
+twice? This is a place where \gls{ad} actually became useful.
 The derivatives of all wave functions are compared with the values obtained
-through AD by using the Python package
-\href{https://github.com/HIPS/autograd}{Autograd}. We were even able to use AD
-to verify the Laplace operators, because the time inefficiency of AD is less of
+through \gls{ad} by using the Python package
+\href{https://github.com/HIPS/autograd}{Autograd}. We were even able to use \gls{ad}
+to verify the Laplace operators, because the time inefficiency of \gls{ad} is less of
 an issue for unit tests.
 
 On top of all these tests, we have also included so called

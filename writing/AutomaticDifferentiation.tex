@@ -16,9 +16,9 @@ premise of applying the chain rule.
 
 One of the perhaps most appealing attributes of ML frameworks such as TensorFlow
 is how we can design arbitrary networks \emph{without} having to manually work
-out the associated derivatives. They way this is done is though Automatic
-Differentiation (AD), an algorithmic application of the chain rule that can
-compute derivatives of any function specified by a computer program.
+out the associated derivatives. They way this is done is though \gls{ad}, an
+algorithmic application of the chain rule that can compute derivatives of any
+function specified by a computer program.
 
 This is possible by exploiting the fact that any computer program must be built
 up of elementary operations (\(+,-,*,/\)) and perhaps some elementary functions
@@ -27,7 +27,7 @@ importantly we know how to combine them in arbitrary ways through the chain
 rule. This allows us to construct a computation for any function which
 will compute its derivative.
 
-Automatic differentiation promises a general purpose implementation that can
+\Gls{ad} promises a general purpose implementation that can
 calculate derivatives exactly (within numerical precision) in a manner that uses
 at most a constant factor more operations than the original function. We can
 also generalize to higher order derivatives by repeated application of the
@@ -39,7 +39,7 @@ derivative.
 \section{Example}
 
 Let the function we wish to differentiate be the following:\footnote{This example is in large part similar to one found
-    on the AD Wikipedia page, simply because I quite like this explanation.}
+    on the \gls{ad} Wikipedia page, simply because I quite like this explanation.}
 
 \begin{align}
   f(x_1, x_2) &= x_1x_2 + \sin(x_1)\\
@@ -95,7 +95,7 @@ Notice how reverse mode required only one pass though the algorithm in order to
 find the derivatives of both independent variables, compared to two passes for
 forward mode.
 
-Keen readers might also recognize backpropagation as a special case of reverse mode AD.
+Keen readers might also recognize backpropagation as a special case of reverse mode \gls{ad}.
 
 \section{Forward Mode vs. Reverse Mode}
 
@@ -104,17 +104,17 @@ preferable to the other depending on the structure of the computation. Let the
 computation be a function $f: \mathbb{R}^{m}\to\mathbb{R}^n$. Forward mode
 requires $m$ passes (one per input), while reverse mode requires $n$ passes (one
 per output). So in general, if $m \gg n$ we prefer reverse mode and when $m\ll
-n$ we prefer forward. 
+n$ we prefer forward.
 
 Because of this, reverse mode automatic differentiation is by far the most
 prevailing choice in ML frameworks. This is because models almost always have
-more inputs than outputs. 
+more inputs than outputs.
 
-\section{Automatic Differentiation for VMC}
+\section{Automatic Differentiation for \gls{vmc}}
 
-AD is the workhorse of modern ML which enables rapid development of complex
-models by removing the need to manually implement derivatives. As VMC also needs
-quite a lot of derivatives it is natural to wonder if we can have AD tools work
+\gls{ad} is the workhorse of modern ML which enables rapid development of complex
+models by removing the need to manually implement derivatives. As \gls{vmc} also needs
+quite a lot of derivatives it is natural to wonder if we can have \gls{ad} tools work
 to our advantage also in this area.
 
 \subsection{First Order Derivatives}
@@ -123,7 +123,7 @@ To see how this could work, we should revisit the list of required operations
 for wave functions in \cref{sec:arbitrary-models-as-trial-wave-functions}. In
 the list we see the need for first order derivatives w.r.t. both the inputs to
 the wave function and its parameters. Both of these are straightforward to
-obtain in an efficient manner using reverse mode AD. To illustrate why, we can
+obtain in an efficient manner using reverse mode \gls{ad}. To illustrate why, we can
 consider the \emph{Jacobian} matrix, $\mat J$, which for a function
 $f:\mathbb{R}^m\to\mathbb{R}^n$ looks like:
 
@@ -153,46 +153,46 @@ operator, $\laplacian$. To see why this will be harder, we can consider the
   \begin{pmatrix}
     \pdv[2]{f}{x_1} & \pdv{f}{x_1}{x_2} & \dots & \pdv{f}{x_1}{x_m}\\
     \pdv{f}{x_2}{x_1} & \pdv[2]{f}{x_2} & \dots & \pdv{f}{x_2}{x_m}\\
-    \vdots & \vdots & \ddots & \vdots\\                          
+    \vdots & \vdots & \ddots & \vdots\\
     \pdv{f}{x_M}{x_1} & \pdv{f}{x_M}{x_2} & \dots & \pdv[2]{f}{x_m}\\
   \end{pmatrix}
 \end{align}
-We can compute these second order derivatives by applying AD twice. First we do
+We can compute these second order derivatives by applying \gls{ad} twice. First we do
 a reverse sweep and obtain the Jacobian (the row vector). The act of computing
 the Jacobian is it self a function, $f: \mathbb{R}^m\to\mathbb{R}^m$, and as
-such we can apply AD to it an obtain the elements of $\mat H$.\\
+such we can apply \gls{ad} to it an obtain the elements of $\mat H$.\\
 
 Computing the required Laplace operator equates to computing the trace (sum of
 diagonal) of the Hessian matrix. Remember that a forward/reverse sweep
 calculates a column/row of the matrix. That means that in order to get the
 diagonal elements, we actually need $m$ sweeps, regardless of what direction we
 go. Sadly, the complexity of this operation is so large that we have found it
-unfeasible to use for even a moderate number of inputs. 
+unfeasible to use for even a moderate number of inputs.
 
 
 \section{Why Automatic Differentiation Failed}
 
-Because AD is so central to most ML frameworks, like TensorFlow and PyTorch, a
-great deal of effort was put in to attempt to make a viable VMC implementation
+Because \gls{ad} is so central to most ML frameworks, like TensorFlow and PyTorch, a
+great deal of effort was put in to attempt to make a viable \gls{vmc} implementation
 within these. That would give out-of-the-box functionality for neural networks,
-optimization strategies, GPU acceleration etc. Sadly, the inefficiency of the
+optimization strategies, \acrshort{gpu} acceleration etc. Sadly, the inefficiency of the
 calculation of the Laplacian operator put a stop to such a marriage. The time
-spent by AD to compute $\laplacian$ were orders of magnitude worse than the
+spent by \gls{ad} to compute $\laplacian$ were orders of magnitude worse than the
 manually coded analytically expressions, and scaled significantly worse with
-increasing number of particles. This severe deficiency of AD resulted
+increasing number of particles. This severe deficiency of \gls{ad} resulted
 in the unfortunate need to depart from the existing ML frameworks and
 implement everything manually (i.e. analytically expressions for derivatives).
 This decision was not made lightly, and only after a painstaking effort to
 somehow attempt to defy the above mathematical argument. Unfortunately,
 mathematics was right this time as well.
 
-We sincerely hope that AD can somehow be efficiently incorporated in future
-works. Research into how AD can be efficiently applied to higher order
+We sincerely hope that \gls{ad} can somehow be efficiently incorporated in future
+works. Research into how \gls{ad} can be efficiently applied to higher order
 derivatives is ongoing, see for instance~\textcite{wang2017}. If nothing else,
-we could potentially use AD for Hamiltonians which does not include the Laplacian
+we could potentially use \gls{ad} for Hamiltonians which does not include the Laplacian
 operator.
 
-
+\glsreset{gpu}
 
 
 \end{document}

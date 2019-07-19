@@ -76,17 +76,17 @@ precision of $\SI{64}{bit}$ floating point numbers.
 
 For the non-optimal $\alpha_G=0.51$ we get a larger energy, as we would expect.
 Furthermore, we get a reported standard error of $\sim \SI{2e-5}{\au}$. This
-includes a correction from the automated Blocking mechanism
-by~\textcite{Jonsson-2018}. The results were obtained using $2^{23}$ MC
+includes a correction from the automated blocking mechanism
+by~\textcite{Jonsson-2018}. The results were obtained using $2^{23}$ \gls{mc}
 samples, so by the standard prescription for standard error we should have
 gotten $\flatfrac{\SI{8e-4}{\au}}{\sqrt{2^{23}}} \approx \SI{3e-7}{\au}$ This
 large discrepancy can be explained by the presence of a large amount of
-autocorrelation in the energy estimates. Inherent to Monte Carlo integration is
+autocorrelation in the energy estimates. Inherent to \gls{mci} is
 some degree of autocorrelation, but the reason for this large amount is because
-of the large number of particles and how sampling is implemented. Each Monte
-Carlo step we move only a single particle. For large $N$ this means it takes a
+of the large number of particles and how sampling is implemented. Each \gls{mc}
+step we move only a single particle. For large $N$ this means it takes a
 lot of samples to substantially change the positions of all particles. For smaller
-$N$ the correction from Blocking is smaller, albeit still present. This
+$N$ the correction from blocking is smaller, albeit still present. This
 exemplifies the importance of proper calculation of statistical errors. Every
 standard error presented in this thesis will include this correction.
 
@@ -95,15 +95,15 @@ standard error presented in this thesis will include this correction.
   \centering
   \caption[Ground state energies of the ideal harmonic oscillator]{\label{tab:verify-energy-estimates}Estimated ground state energy
     using $\psi_G$ with two different values for $\alpha_G$. The energies are
-    given per particle, and were produced using Importance sampling and
+    given per particle, and were produced using \gls{is} and
     $2^{23}$ samples. Statistical errors are corrected for autocorrelation using
-    Blocking. Energies in atomic units $[\si{\au}]$.\citesource{writing/scripts/verify-energy-stats.py}}
+    blocking. Energies in atomic units $[\si{\au}]$.\citesource{writing/scripts/verify-energy-stats.py}}
   \input{scripts/verify-energy-stats.py.table1.tex}
 \end{table}
 
 Moving from energy to distance metrics, \cref{tab:verify-radius-estimates} shows
 the mean radial displacement and its squared sibling for all the particles in the system.
-The results were obtained using $\alpha_G=0.5$ and $2^{23}$ MC samples. For
+The results were obtained using $\alpha_G=0.5$ and $2^{23}$ \gls{mc} samples. For
 reference, the table also states the exact analytic results. Unlike the energy,
 which for the ideal $\alpha_G$ is independent of position, these results are not
 perfectly accurate. However, the results are correct to five significant digits,
@@ -150,7 +150,7 @@ tend to be located close to the center of the potential well, with exponentially
 decreasing probability for increasing radii.
 
 We can perform the integral in \cref{eq:one-body-density-def} for any wave
-function using Monte Carlo integration. We simply make a histogram of the
+function using \gls{mci}. We simply make a histogram of the
 particles position as we sample a large amount of configuration.\footnote{A
 technical caveat is that when we discretize the radius $r_1$ into bins for the
 histogram we must account for the different volumes (or areas or lengths in two
@@ -158,7 +158,7 @@ and one dimensions) of the bins. Greater $r$ will correspond to greater volumes,
 and because of this they will receive a correspondingly greater proportion of
 the samples. Dividing the bin counts by their respective volumes fixes this.}
 \cref{fig:verify-onebody} shows the resulting plot of $\rho(r_1)$ in a harmonic
-oscillator with $N=100$ three-dimensional particles, using $2^{23}$ Monte Carlo
+oscillator with $N=100$ three-dimensional particles, using $2^{23}$
 samples. After normalizing both the result and \cref{eq:ver-annon-1} the two
 curves are indistinguishable, showing that our implementation is indeed correct.
 
@@ -172,7 +172,7 @@ curves are indistinguishable, showing that our implementation is indeed correct.
     The curve is indistinguishable from the analytic result. The small
     discrepancy around $r_1=0$ is an artifact of the vanishing volume of the
     inner most bins, and the discrepancy becomes increasingly negligible with
-    more samples. This result used $2^{23}$ MC samples.\citesource{writing/scripts/verify-onebody-density.py}}
+    more samples. This result used $2^{23}$ \gls{mc} samples.\citesource{writing/scripts/verify-onebody-density.py}}
 \end{figure}
 
 \section{Two-Body Density}
@@ -196,7 +196,7 @@ analytically:
   \rho(\vx_1, \vx_2) = Ce^{-2\alpha\qty(r_1^2 + r_2^2)}.
 \end{align}
 
-Again we can perform the integral numerically using MCI.
+Again we can perform the integral numerically using \gls{mci}.
 \cref{fig:verify-twobody} shows a contour plot of the density along with the
 exact contour lines from \cref{eq:two-body-analytic} indicated by the dashed
 lines. Visually distinguishing the two is a little harder now, as we have turned
@@ -213,7 +213,7 @@ correct.
 $N=10$ particles in a harmonic oscillator potential, as described by $\psi_G$
 with $\alpha=0.5$. The dotted lines are the contours given by
 \cref{eq:two-body-analytic}. Again the numerical result follows closely that of
-the exact result. This result used $2^{25}$ MC samples.\citesource{writing/scripts/verify-twobody-density.py}}
+the exact result. This result used $2^{25}$ \gls{mc} samples.\citesource{writing/scripts/verify-twobody-density.py}}
 \end{figure}
 
 
@@ -239,7 +239,7 @@ this test is not the most challenging, it is nevertheless a useful check.
     \resizebox{\linewidth}{!}{%
       \input{scripts/verify-simple-gaussian.py.tex}
     }
-  \caption[Learning progression using VMC on the ideal harmonic oscillator]{\label{fig:verify-gaussian-simplest}Example training progression using $\psi_G$ as trial wave function.
+  \caption[Learning progression using \gls{vmc} on the ideal harmonic oscillator]{\label{fig:verify-gaussian-simplest}Example training progression using $\psi_G$ as trial wave function.
     Hyperparameters have been tuned so that we can see what happens, as opposed
     to immediate convergence to the perfect result.\citesource{writing/scripts/verify-simple-gaussian.py}}
 \end{figure}
@@ -334,7 +334,7 @@ We will now investigate the behavior of the implemented sampling strategies.
 
 \subsection{Step Dependency}
 
-Similarly to the learning rate in optimization schemes, the Monte Carlo samplers
+Similarly to the learning rate in optimization schemes, the \gls{mc} samplers
 are highly dependent setting an appropriate step parameter. We want to use a
 step size that balances two opposing attributes:
 
@@ -351,12 +351,12 @@ step size that balances two opposing attributes:
 \end{itemize}
 
 
-\cref{fig:verify-sampling-step} shows how the acceptance rate (AR) changes with
-different step sizes. For both Metropolis and Importance sampling, the AR tends
+\cref{fig:verify-sampling-step} shows how the \gls{ar} changes with
+different step sizes. For both Metropolis and \gls{is}, the \gls{ar} tends
 to $\SI{100}{\percent}$ for low step sizes, and to $\SI{0}{\percent}$ for large
 values. Both algorithms show a similar pattern in the middle region, with
-a steeper decline for Importance sampling. A good trade-off between the above
-considerations is achieved when the AR is somewhere in the range
+a steeper decline for \gls{is}. A good trade-off between the above
+considerations is achieved when the \gls{ar} is somewhere in the range
 \SIrange{50}{99}{\percent}, with the exact best value dependent on the
 particular problem at hand.
 
@@ -366,7 +366,7 @@ particular problem at hand.
       \input{scripts/verify-sampling-step.py.tex}
     }
     \caption[Comparison of sampling strategies]{\label{fig:verify-sampling-step}\emph{Solid lines:} Acceptance rate of
-    Metropolis and Importance sampling as a function of step size. Note that the
+    Metropolis and \gls{is} as a function of step size. Note that the
   interpretation of the step size is different for the two algorithms. \emph{Dashed
   lines:} Standard error of energy estimates obtained using the corresponding
   sampling algorithm and step size, using $\psi_G$ with $\alpha=0.51$.\citesource{writing/scripts/verify-sampling-step.py}}
@@ -377,8 +377,8 @@ The dotted lines show the standard error obtained using the
 corresponding sampler and step size, when calculating the local energy with
 $\psi_G$ and $\alpha=0.51$.\footnote{The value $\alpha=0.51$ was used to avoid
   the zero variance of the ideal value $\alpha=0.5$, but still behaving
-  similarly to the real system.} The errors were calculated using $2^{21}$ MC
-samples and corrected for autocorrelation using Blocking~\cite{Jonsson-2018}.
+  similarly to the real system.} The errors were calculated using $2^{21}$ \gls{mc}
+samples and corrected for autocorrelation using blocking~\cite{Jonsson-2018}.
 
 We see Metropolis tending to very small errors in the range shown, with a large
 spike around $\delta \approx 0.01$. We believe step sizes around this critical
@@ -395,23 +395,23 @@ the \emph{precision} of the local energy estimate, and not a measure of its
 \emph{accuracy}.\footnote{The number $3.14159$ is more precise than the number
 $6$, but if the true value is $6.28$, then the latter is more accurate.}\\
 
-Importance sampling shows different behavior with respect to the standard error.
-For the entire range of good step size choices, Importance sampling results in
-smaller statistical errors. This is to be expected, and Importance sampling will
+\Gls{is} shows different behavior with respect to the standard error.
+For the entire range of good step size choices, \gls{is} results in
+smaller statistical errors. This is to be expected, and \gls{is} will
 therefore be preferred whenever it is available to us.
 
 Still, we would like to explain the behavior for non-optimal step sizes. The
 error shows a spike as the step size decreases, in a similar way as seen for
 Metropolis. Although not shown fully, the error also explodes once the
 acceptance rate goes below a few percent. We believe this behavior is a result
-of how the update rule for Importance sampling is dependent on both the step
+of how the update rule for \gls{is} is dependent on both the step
 size and its square root.
 
 For small step sizes, the square root term will dominate, and the algorithm
 effectively decays into standard Metropolis. The location of the spike is
-shifted towards smaller step sizes (approximately the square of the Metropolis spike location),
-and the spike is wider because the square root function grows slower than
-linearly.
+shifted towards smaller step sizes (approximately the square of the Metropolis
+spike location), and the spike is wider because the square root function grows
+slower than linearly.
 
 Finally, the unstable behavior for large step sizes can be explained the other
 way. The little remaining movement is dominated by the drift force, and the

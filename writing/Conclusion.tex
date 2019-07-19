@@ -5,8 +5,8 @@
 
 \section{Summary}
 
-In this work we have presented the underlying theory of Variational
-Monte Carlo for the study of many-body quantum mechanical systems, along
+In this work we have presented the underlying theory of \gls{vmc}
+for the study of many-body quantum mechanical systems, along
 with fundamental machine learning techniques and the necessary glue that
 brings the two together. From this theory we have developed a code
 library suitable for rapid development and experimentation with
@@ -31,7 +31,7 @@ accurate reproduction of the ground state. At this point the idea of applying
 more general neural networks started to develop and the work on this thesis
 started around mid 2018. Since then we have seen a few articles arise with
 similar ideas. \textcite{Saito-2018} used a simple neural network with one
-hidden layer to represent the ground state wave function of 
+hidden layer to represent the ground state wave function of
 selected few-body bosonic systems. The approach used here is very comparable to our,
 except that \citeauthor{Saito-2018} chose to pre-train the network instead of
 simply adding it as another correlation factor. \textcite{Han-2018} applied a
@@ -50,7 +50,7 @@ The main contributions of this work are as follows:
     methods.
   \item We developed a flexible Python library which enabled rapid development
     and experimentation with different algorithms and network architectures.
-  \item We demonstrated the validity of our approach by 
+  \item We demonstrated the validity of our approach by
     improving upon the accuracy of the benchmarks for both few-body and
     many-body systems.
     \item In particular, these where continuous space Hamiltonians with a
@@ -66,7 +66,7 @@ need not scale worse than quadratic in the number of particles,
 $\mathcal{O}(N^2)$. Of course, asymptotic scaling is not always the most
 important, as there can be a preemptively large constant increase. However, we
 have demonstrated that it is more than feasible for many-body problems already.
-With proper integration of GPUs we expect that this barrier becomes even
+With proper integration of \glspl{gpu} we expect that this barrier becomes even
 smaller. After all, a constant cost increase is just that - constant.
 
 The most promising aspect of the results of this work is the indication that we
@@ -92,10 +92,10 @@ We would like to emphasize a few of the most compelling areas to continue with
 this work:
 
 \begin{enumerate}
-\item Incorporate GPU acceleration. This is perhaps the most important point, if
-  large scale VMC calculations are ever going to utilize neural networks in a
-  meaningful way. How to optimally combine MPI acceleration on thousands of CPUs
-  together with a (because of costs) much smaller number of GPUs remains a
+\item Incorporate \gls{gpu} acceleration. This is perhaps the most important point, if
+  large scale \gls{vmc} calculations are ever going to utilize neural networks in a
+  meaningful way. How to optimally combine \gls{mpi} acceleration on thousands of \glspl{cpu}
+  together with a (because of costs) much smaller number of \glspl{gpu} remains a
   challenging problem.
 \item Investigate systems of many fermions. We hypothesize that our approach
   should still prove useful as a correction factor on Slater determinants, and
@@ -104,7 +104,7 @@ this work:
   Feed-Forward Neural Networks, but there are more exotic types which might
   prove equally or better suited. In particular, Convolutional networks might
   better learn spacial correlations for certain systems, and Recurrent networks
-  might be especially suitable for Time-Dependent VMC extensions.
+  might be especially suitable for time-dependent \gls{vmc} extensions.
 \item Go deeper into optimization techniques. The methods we have applied are
   relatively basic, at least compared to the current state of the art. For example,
   Batch Normalization, which consistently improves training results, has not

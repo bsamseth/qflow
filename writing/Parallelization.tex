@@ -3,7 +3,7 @@
 \chapter{Parallelization}
 \label{chp:parallelization}
 
-Variational Monte Carlo calculations take a lot of computing power. It is easy
+\Acrlong{vmc} calculations take a lot of computing power. It is easy
 to set up a calculation that can take lifetimes to complete. Some systems are
 simply to large for us to ever be able to work with, but at least we want to go
 as far as possible. To do this we need to consider all available resources and
@@ -35,7 +35,7 @@ between the workers. We have two options for how to achieve this:
 
 \section{Distributed Memory}
 
-The main bottle neck in VMC computations is the evaluation of expectation
+The main bottle neck in \gls{vmc} computations is the evaluation of expectation
 values, such as \cref{eq:vmc-local-energy-formulation} and
 \cref{eq:local-energy-gradient-alpha}. These calculations boil down to the
 following basic algorithm:
@@ -70,7 +70,7 @@ for our purposes (some extra latency would be introduced by the distance).
 \subsection{Implementation API: Message Passing Interface}
 
 For the actual communication between distributed memory processes, we have the
-standardized Message Passing Interface (MPI). This is typically implemented as a
+standardized \gls{mpi}. This is typically implemented as a
 set of C/C++ library functions with which we define the communication we want,
 along with a special compiler (\texttt{mpicc/mpic++}) and a utility to start
 multiple instances of a program (\texttt{mpiexec}\footnote{Quite common is the
@@ -79,14 +79,14 @@ multiple instances of a program (\texttt{mpiexec}\footnote{Quite common is the
 
 \subsection{Example: Expectation Value of the Local Energy}
 
-The following example is taken from the source code of QFLOW (\cref{chp:qflow}),
-and illustrates a simply parallelized task: Computing the expected local energy.
-While some details are specific to QFLOW's implementation, the general concept
-should be clear.
+The following example is taken from the source code of our code library QFLOW
+(\cref{chp:qflow}), and illustrates a simply parallelized task: Computing the
+expected local energy. While some details are specific to QFLOW's
+implementation, the general concept should be clear.
 
 \begin{lstfloat}
   \centering
-\caption{Example excerpt from the source code of QFLOW, showing an MPI parallelized computation of the expected local energy.\citesource{qflow/hamiltonians/hamiltonian.cpp}}
+\caption{Example excerpt from the source code of QFLOW, showing an \gls{mpi} parallelized computation of the expected local energy.\citesource{qflow/hamiltonians/hamiltonian.cpp}}
 \begin{lstlisting}[language=C++, label={lst:mpi-example}]
 double Hamiltonian::local_energy(Sampler& sampler, Wavefunction& psi, long samples) const
 {
@@ -109,20 +109,20 @@ double Hamiltonian::local_energy(Sampler& sampler, Wavefunction& psi, long sampl
 \end{lstlisting}
 \end{lstfloat}
 
-To illustrate the speedup we obtain from using MPI parallelization, we have run
+To illustrate the speedup we obtain from using \gls{mpi} parallelization, we have run
 Listing~\ref{lst:mpi-example} on different number of cores. In particular, we computed
 the local energy of a simple harmonic oscillator system of one particle in three
-dimensions. \cref{fig:mpi-example} shows the number of MC iterations per second
+dimensions. \cref{fig:mpi-example} shows the number of \gls{mc} iterations per second
 as a function of the number of cores used. As advertised, we see a speedup that
 follows closely the ideal linear curve.
 
 Still, we should emphasize that in order to obtain these results, we had to
-increase the total workload linearly with increasing number of CPUs. If we
+increase the total workload linearly with increasing number of \glspl{cpu}. If we
 don't, the task finishes so quickly that communication becomes a significant
 part of the total time. So in order to fully utilize the power
-of extra CPUs, we should make sure to structure the program such that the bulk of
+of extra \glspl{cpu}, we should make sure to structure the program such that the bulk of
 it is spent in the independent parts of the program. In practice that means to
-use a sufficiently large number of Monte Carlo samples.
+use a sufficiently large number of \gls{mc} samples.
 
 
 \begin{figure}[h]
@@ -230,12 +230,12 @@ MPI processes as possible to be the most beneficial strategy.
 
 The final form of hardware acceleration we will mention is one that is
 particularly central for ML in particular. While the two prior techniques boil
-down to having multiple CPUs work together, certain tasks are particularly well
-suited to acceleration by using a Graphics Processing Unit (GPU). These are
+down to having multiple \glspl{cpu} work together, certain tasks are particularly well
+suited to acceleration by using a \gls{gpu}. These are
 pieces of hardware typically designed to enable fast rendering of graphics for
 computers, hence the name. They have a highly parallel structure optimized for
 algorithms that need to process large blocks of data in parallel. A typical
-example that relates to ML is matrix-matrix multiplication. Say we compute $\mat
+example that relates to \gls{ml} is matrix-matrix multiplication. Say we compute $\mat
 C = \mat A \mat B$, or more explicitly:
 
 \begin{align}
@@ -243,32 +243,33 @@ C = \mat A \mat B$, or more explicitly:
 \end{align}
 The order in which we do any of the above $\mathcal{O}(n^3)$ operations really
 doesn't matter, and so one can see how this can be an extremely parallel
-process. A high-end GPU will have a number of cores in the four digit range,
-facilitating speedups of several orders of magnitude compared to a CPU.
+process. A high-end \gls{gpu} will have a number of cores in the four digit range,
+facilitating speedups of several orders of magnitude compared to a \gls{cpu}.
 
-The recent (last decade) advancements in GPU technology has been an integral
-part of the enormous amount of success in recent ML applications. Their use has
-facilitated building models far beyond the capacity of an ordinary CPU.
+The recent (last decade) advancements in \gls{gpu} technology has been an integral
+part of the enormous amount of success in recent \gls{ml} applications. Their use has
+facilitated building models far beyond the capacity of an ordinary \gls{cpu}.
 
 \subsection{Implementation API: CUDA}
 
-One popular way to program for a GPU is through CUDA, a programming
-interface developed by NVIDIA. Similarly to MPI programming, its use is (for
+One popular way to program for a \gls{gpu} is through CUDA, a programming
+interface developed by NVIDIA. Similarly to \gls{mpi} programming, its use is (for
 C/C++) through a specialized compiler and some library functions. The typical
 flow is to implement the parallel computation (say matrix-matrix multiplication
 as above) in a dedicated CUDA function, and then call to this function from
-regular code running on the CPU.
+regular code running on the \gls{cpu}.
 
-Many ML frameworks such as TensorFlow and PyTorch have built in support for GPU,
+Many \gls{ml} frameworks such as TensorFlow and PyTorch have built in support for \gls{gpu},
 and offloading work to them is \say{trivial}. Unfortunately, we where unable to
 use such frameworks in this work (mainly due to the reasons described in
-\cref{chp:auto-diff}). Further, we have not actually implemented GPU support in
+\cref{chp:auto-diff}). Further, we have not actually implemented \gls{gpu} support in
 the current codes, despite this having large potential benefits. This is simply
 a matter of time and realizing that it would require a considerable amount of effort
 to get right. With the introduction of neural networks as wave functions, we see
-no obvious reason why using GPUs would not cause significant speedups also in
-our application of ML. The main challenge will likely be to join GPUs into the
-existing MPI codes. We leave this a potential point of future work.
+no obvious reason why using \glspl{gpu} would not cause significant speedups also in
+our application of \gls{ml}. The main challenge will likely be to join
+\glspl{gpu} into the existing \gls{mpi} codes. We leave this a potential point
+of future work.
 
 
 

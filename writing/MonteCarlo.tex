@@ -16,12 +16,12 @@ function $\psialpha$:
 \end{align}
 where $N$ is set sufficiently large to satisfy the required accuracy. Due to
 the central nature of this method, we will start by a proper presentation of
-Monte Carlo Integration as it is used here, followed the details of how to
+\acrlong{mci} as it is used here, followed the details of how to
 obtain the samples we need.
 
 \section{Monte Carlo Integration}
 
-Monte Carlo Integration (MCI) is a general technique for numeric evaluation of
+\acrfull{mci} is a general technique for numeric evaluation of
 any arbitrary integral. In general it concerns evaluating any multidimensional
 definite integral, written as
 
@@ -32,7 +32,7 @@ where $\sigma$ denotes a subset of $\mathbb{R}^m$, with a $m$-dimensional volume
 \begin{align}
     V = \idotsint_\sigma\dd{\vx}
 \end{align}
-In its simplest form, MCI works by sampling $N$ \emph{uniformly} distributed points
+In its simplest form, \gls{mci} works by sampling $N$ \emph{uniformly} distributed points
 $\vx_1,\dots,\vx_N$ from $\sigma$, and uses a Riemann sum formulation of the integral $I$:
 \begin{align}
   \label{eq:mci-def}
@@ -44,7 +44,7 @@ accurate for increasing $N$, and is exact in the limit where $N\to\infty$.
 
 \subsection{Estimating the Error}
 
-For any finite $N$ the result of using MCI will not be exact. Because of this,
+For any finite $N$ the result of using \gls{mci} will not be exact. Because of this,
 it is immensely useful to be able to assign a statistical certainty to the
 result. For instance, say we estimate the ground state energy of a system using
 two different wave functions. We perform the integrals and get (to the first
@@ -56,7 +56,7 @@ integrals. Assume that in reality, the numbers were
 $\expval{H}_A=\SI{1.03(8)}{eV}$ and $\expval{H}_B=\SI{1.09(4)}{eV}$, where the
 numbers in parenthesis indicate the uncertainty in the last digit. Now we know
 that the two numbers are not different in a statistically significant way, and
-any difference could be entire random. We would need to use more sample points
+any difference could be entirely random. We would need to use more sample points
 to lower the uncertainty to be able to say anything more about them.\\
 
 We obtain a statistical estimate of the error we make in approximating the
@@ -75,17 +75,17 @@ It then follows, by the properties of variance,
     \implies \Std[M_N] = \sqrt{\Var[M_N]} = \frac{V\sigma_N}{\sqrt N}
 \end{align}
 \cref{eq:mci-sem-def} is the standard deviation of the sample mean, otherwise
-known as the \emph{standard error of the mean}. It is common to use this
+known as the \gls{sem}. It is common to use this
 directly as the uncertainty of the expectation values.
 
-This tells us that the expected statistical error we make when using MCI goes
+This tells us that the expected statistical error we make when using \gls{mci} goes
 like $\mathcal{O}(1 / \sqrt N)$, and depends linearly on the size of the volume
 and standard deviation of the integrand it self. This illustrates both the
-advantage, and disadvantage of MCI compared to other,
+advantage, and disadvantage of \gls{mci} compared to other,
 deterministic integration methods. Its advantage is its simple dependency on the
 volume, and its independence from the particular number of dimensions in the
 integral. Other methods tend to depend exponentially on the dimensionality, and
-as such MCI is often the best choice for multidimensional integrals. Its
+as such \gls{mci} is often the best choice for multidimensional integrals. Its
 disadvantage is the relatively slow convergence rate, which is asymptotically
 much worse than other approaches~\cite{Numerical-Recipes-Press-et-al}.
 
@@ -122,9 +122,9 @@ values for $N$, often on the order of tens or hundreds of millions. The double l
 trillions or quadrillions of iterations. In practice we need to estimate it.
 Yes, we are going to estimate the estimate of the error we make in an estimate.
 
-The strategy we shall use for all later error analysis is called Blocking,
-specifically the article by \textcite{Jonsson-2018}. Say we have a sequence of
-sample value $f(x_i)$:
+The strategy we shall use for all later error analysis is called \emph{blocking},
+and specifically we use an automated form presented in an article by
+\textcite{Jonsson-2018}. Say we have a sequence of sample value $f(x_i)$:
 
 \begin{align}
   D_0 = \mqty[f(x_1) & f(x_2) & \dots & f(x_N)],
@@ -180,7 +180,8 @@ include this correction.
 \subsection{Importance Sampling}
 
 In some suitable cases we can improve quite dramatically on the simple,
-straightforward integration approach given in \cref{eq:mci-def}. To illustrate this, say we
+straightforward integration approach given in \cref{eq:mci-def} with a technique
+known as \gls{is}. To illustrate this, say we
 would like to evaluate the following integral:
 
 \begin{align}
@@ -229,7 +230,7 @@ manually and 2) now matter where we place the box boundaries we will tend to
 sample a lot of $x_i$'s in areas where $f$ gives very small contributions to
 the integral. Ideally we would like our sample points to be distributed as
 closely as possible to $f$, in order to capture as much information as we can.
-This is the idea of importance sampling. Instead of using the uniform
+This is the idea of \gls{is}. Instead of using the uniform
 distribution for sampling, we use some probability distribution which more
 closely resembles the integrand, call it $g(x)$. Formally we then restate the integral as follows:
 
@@ -258,7 +259,7 @@ enclosing $f(x)$ much more tightly than any rectangular box might hope to.
     }
     \caption[Convergence of Monte Carlo Integration]{\label{fig:mci-importance-example-func-convergence}Convergence of
     the integral in \cref{eq:mci-importance-example-func}, using regular
-    Monte Carlo integration and Importance Sampling with $g = \mathcal{N}(0,
+    \gls{mci} and \gls{is} with $g = \mathcal{N}(0,
     1)$. The points indicate the approximated value of the integral for each
     particular experiment, and the shaded areas indicate the corresponding
     $\SI{95}{\percent}$ confidence intervals for the expected value. We see the
@@ -268,7 +269,7 @@ enclosing $f(x)$ much more tightly than any rectangular box might hope to.
 \end{figure}
 
 \cref{fig:mci-importance-example-func-convergence} show the convergence of
-the Monte Carlo approximations towards the correct value for an increasing
+the \gls{mc} approximations towards the correct value for an increasing
 number of sampled points. The drawn line is the mean value at each run, while
 the shaded areas show the corresponding $\SI{95}{\percent}$ confidence
 intervals. Because of the more suited sampling distribution, we obtain results
@@ -369,7 +370,7 @@ distribution function is then extremely simple, and for completeness it is
 listed in \cref{alg:inverse-transform-sampling}.
 
 \begin{algorithm}[h]
-    \caption{Inverse Transform Sampling}
+    \caption{Inverse transform sampling}
     \label{alg:inverse-transform-sampling}
     \begin{algorithmic}[1]
         \Require Cumulative distribution function $F$
@@ -394,11 +395,11 @@ are interested in? The PDF in question is, as defined in \cref{eq:wavefunc-proba
 Sadly, computing $F^{-1}$ for this PDF, if even possible, would be a very costly
 operation. In fact, the normalization integral in the denominator is enough to
 make practical sampling from $P_\psi$ impossible. Even worse, considering that
-$\psi$ is updated continuously throughout a VMC calculation, we could not even
+$\psi$ is updated continuously throughout a \gls{vmc} calculation, we could not even
 cache the result of the integral after computing it once.
 
 Luckily, we have a solution: The Metropolis-Hastings Algorithm. This algorithm
-is the workhorse behind of a great ocean of applications, including VMC, and is
+is the workhorse behind of a great ocean of applications, including \gls{vmc}, and is
 considered to be among the most influential algorithms of the 20th century.
 While the algorithm itself is quite simple, the argument for \emph{why} it
 works is a little more involved. The following sections will be dedicated to the
@@ -406,7 +407,7 @@ mathematical underpinnings. In the mean time, the full algorithm is shown
 in~\cref{alg:metropolis-hastings-general}.
 
 \begin{algorithm}[h]
-    \caption{Metropolis-Hastings Algorithm}
+    \caption{Metropolis-Hastings sampling}
     \label{alg:metropolis-hastings-general}
     \begin{algorithmic}[1]
         \Require Probability density $P(\vx)$, proposal distribution $q\qty(\vx'\;\middle|\;\vx)$
@@ -432,7 +433,7 @@ be normalized to unity\footnote{We do need the probabilities to be
 already assumed this requirement in~\cref{sec:requirements-of-wave-functions}.},
 meaning we don't have to compute the costly integral
 in~\cref{eq:wavefunc-probability-density-def}. For our purposes this is
-essential, and~\cref{alg:metropolis-hastings-general} is the reason why VMC is
+essential, and~\cref{alg:metropolis-hastings-general} is the reason why \gls{vmc} is
 possible.
 
 \subsubsection{Formal Derivation}
@@ -508,13 +509,13 @@ perturbation should be. This leads to the simplest form of
 for our purposes, where we want to sample a matrix, $\mat
 X\in\mathbb{R}^{N\times D}$, for $N$ particles in $D$ dimensions. In particular,
 our implementation yields a new sample after moving only one of the particles.
-This is a common case for VMC applications, because this allows for a code
+This is a common case for \gls{vmc} applications, because this allows for a code
 optimization that is crucial when using Slater determinants in wave functions.
 We don't use such wave functions in this thesis, but future work might benefit
 from this choice.
 
 \begin{algorithm}[h]
-    \caption{Metropolis Algorithm}
+    \caption{Metropolis sampling}
     \label{alg:metropolis-simple}
     \begin{algorithmic}[1]
         \Require Probability density $P(\vX)=\abs{\psi(\vX)}^2$, step size $\Delta x$
@@ -540,8 +541,8 @@ from this choice.
 
 \subsubsection{Importance Sampling}
 
-\cref{alg:metropolis-simple} suffers from the same issues that ordinary MCI
-does, as opposed to the enhancement of Importance sampling. The proposal
+\cref{alg:metropolis-simple} suffers from the same issues that ordinary \gls{mci}
+does, as opposed to the enhancement of \gls{is}. The proposal
 distribution used in the Metropolis algorithm, while simple to implement, can
 certainly be improved upon. The idea is to guide the random walk in space
 towards areas of greater probability. We will now give a brief physical
@@ -605,7 +606,7 @@ that \cref{eq:mc-annon-5} only gives the proportionality. The final algorithm is
 shown in \cref{alg:metropolis-importance}.
 
 \begin{algorithm}[h]
-    \caption{Metropolis-Hastings with Importance Sampling.}
+    \caption{Metropolis-Hastings importance sampling}
     \label{alg:metropolis-importance}
     \begin{algorithmic}[1]
         \Require Probability density $P(\vX) = \abs{\psi(\vX)}$, step size $\Delta t$

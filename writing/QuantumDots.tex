@@ -27,9 +27,9 @@ are the only two variational parameters.
 \subsection{Optimizing}
 
 We have run a simple optimization of the above wave function, using initial
-values of $\alpha_G = 0.5$ and $\beta_{PJ} = 1$. We used importance sampling and the
+values of $\alpha_G = 0.5$ and $\beta_{PJ} = 1$. We used \acrlong{is} and the
 ADAM optimization scheme. We used $\num{2000}$ optimization steps, each with
-$\num{5000}$ MC cycles. The values are somewhat arbitrarily, and we get
+$\num{5000}$ \gls{mc} cycles. The values are somewhat arbitrarily, and we get
 similar results for other choices.
 
 \begin{figure}[h]
@@ -46,7 +46,7 @@ similar results for other choices.
 \begin{table}[h]
   \centering
   \caption[Energy estimates of Pade-Jastrow wave function]{Energy benchmark using Pade-Jastrow wave function, using $2^{22}$
-    Monte Carlo samples and errors estimated by an automated blocking algorithm
+    samples and errors estimated by an automated blocking algorithm
     by~\textcite{Jonsson-2018}. Energies in atomic units $[\si{\au}]$. See \cref{fig:QD-benchmark-pade-jastrow-training}
     for source code reference.}
   \input{scripts/QD-benchmark.py.table.tex}
@@ -133,7 +133,7 @@ any real valued coordinates, and so the type of RBM must change as well.
 While more than one choice exist, we have used a Gaussian-Binary RBM\@.
 \cref{fig:rbm-diagram-example} shows and example diagram of the network
 structure. \textcite{Flugsrud-2018} has a full introduction to RBMs, including
-all details needed for VMC\@. For our purposes it suffices to say that the
+all details needed for \gls{vmc}\@. For our purposes it suffices to say that the
 resulting wave function looks as follows:
 
 \begin{align}
@@ -157,7 +157,7 @@ form, as it is not a pure exponential.
 
 We produced the following with normally distributed random
 initial values for the parameters, running $\num{60000}$ optimization steps with
-$\num{2000}$ MC cycles each. We have also once again used importance sampling
+$\num{2000}$ \gls{mc} cycles each. We have also once again used \acrlong{is}
 and ADAM\@. A new addition (not strictly necessary for similar results) is the use
 of mild $L2$ regularization, which serves to drive parameters that do not
 contribute towards zero. The results are similar for different hyper-parameter
@@ -189,7 +189,7 @@ of magnitude larger than the benchmark.
   \centering
   \caption[Energy estimates using an RBM on quantum dots]{Energy using the RBM wave function in~\cref{eq:rbm-def}, along with
 the same wave function using input sorting to impose symmetry. Results obtained
-from $2^{23}$ Monte Carlo samples and errors estimated by an automated blocking
+from $2^{23}$ samples and errors estimated by an automated blocking
 algorithm by~\textcite{Jonsson-2018}. Energies in atomic units $[\si{\au}]$. See
 \cref{fig:QD-rbm-training} for source code reference.}
   \input{scripts/QD-rbm.py.table.tex}
@@ -308,14 +308,14 @@ Finally we turn our attention to the new contribution of this thesis - applying
 general neural networks as wave functions.
 
 Firstly, we have not been able to simply replace the entire wave function with a
-neural network from the start. In order for VMC optimization to work we need a
+neural network from the start. In order for \gls{vmc} optimization to work we need a
 stable enough starting point to avoid immediate divergence. The better approach
 is to bootstrap the network with an existing wave function as a starting point.
 In our case we use the benchmark wave function $\psi_{PJ}$. There are two
 options for how to do this:
 
 \begin{enumerate}
-\item Pre-train the network to emulate $\psi_{PJ}$ before starting VMC
+\item Pre-train the network to emulate $\psi_{PJ}$ before starting \gls{vmc}
   optimization.
 \item Use the network as an extra correlation factor multiplied with $\psi_{PJ}$.
 \end{enumerate}
@@ -399,9 +399,9 @@ symmetric version of $\psi_{DNN}$ is labeled $\psi_{SDNN}$ in all of the followi
 We produced the following results by optimizing $\psi_{PJ}, \psi_{DNN}$ and
 $\psi_{SDNN}$ with all the same hyper-parameters. We also initialized the
 parameters of the two network wave functions equally for better comparison.
-We used $\num{30000}$ iterations of $1000$ MC cycles each. We did not use any
-regularization in this case, and as usual we used importance sampling and the
-ADAM optimizer. Again, this is an example of hyper-parameters, and we can
+We used $\num{30000}$ iterations of $1000$ \gls{mc} cycles each. We did not use any
+regularization in this case, and as usual we used \acrlong{is} and the
+ADAM optimizer. Again, this is an example of hyperparameters, and we can
 achieve good results with a range of other choices.
 
 \cref{fig:QD-pade-dnn-training} shows a graph of the absolute error in energy
@@ -425,9 +425,9 @@ reduction in the variance.\\
 \cref{tab:pade-dnn-energy-results} shows the final energies produced from the
 three wave functions after training. The results solidify the graphical impression
 of~\cref{fig:QD-pade-dnn-training}, showing a clear improvement. These results
-approach the accuracy of Diffusion Monte Carlo (DMC), a technique that can obtain
+approach the accuracy of \gls{dmc}, a technique that can obtain
 exact numerical results. \textcite{Pedersen-2011} lists $\SI{3.00000(1)}{\au}$
-as the DMC result, which has an overlapping confidence interval with our results.
+as the \gls{dmc} result, which has an overlapping confidence interval with our results.
 
 \begin{figure}[h]
    \centering
@@ -445,7 +445,7 @@ show a small selection of the total number of parameters.\citesource{writing/scr
   \label{tab:pade-dnn-energy-results}
   \caption[Energy estimates using a neural network on quantum dots]{Energy using the neural network wave function in~\cref{eq:pade-dnn}, along with
 the benchmark wave function after the same amount of optimization. Results obtained
-from $2^{22}$ Monte Carlo samples and errors estimated by an automated blocking
+from $2^{22}$ samples and errors estimated by an automated blocking
 algorithm by~\textcite{Jonsson-2018}. Energies in atomic units $[\si{\au}]$. See
 \cref{fig:QD-pade-dnn-training} for source code reference.}
   \input{scripts/QD-pade-dnn.py.table.tex}
@@ -534,7 +534,7 @@ asymptotic cost might be equal to the benchmark, a more precise count of the
 required operations would show a substantial disparity.
 
 However, a constant cost difference can always be brought down with optimized code, more
-and better hardware, introducing GPUs etc. And while computing power may no
+and better hardware, introducing \glspl{gpu} etc. And while computing power may no
 longer increase exponentially each year, it continues to grow nevertheless.
 Large scale use of networks for quantum mechanics might therefore be well
 within reach.
@@ -552,7 +552,7 @@ from the three wave functions trained previously.
 \begin{table}[h]
   \centering
   \caption[Radial metrics of different wave functions on quantum dots]{Average distances predicted by the different wave functions. Results
-    obtained by Monte Carlo integration using importance sampling and $2^{24}$
+    obtained by \gls{mci} using \gls{is} and $2^{24}$
     samples. The first row shows the corresponding values for a single particle
     in an ideal harmonic oscillator, with the values coming from the analytic
     expressions $\expval{r}=\flatfrac{\sqrt\pi}{2\sqrt\omega}$ and

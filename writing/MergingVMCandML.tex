@@ -3,28 +3,28 @@
 \chapter{Merging Variational Monte Carlo and Machine Learning}
 \label{chp:mergin-vmc-with-ml}
 
-The purpose of Variational Monte Carlo is to find a (wave) function which
-minimizes the expected energy of the system. Stated like this, VMC clearly fits
+The purpose of \acrlong{vmc} is to find a (wave) function which
+minimizes the expected energy of the system. Stated like this, \gls{vmc} clearly fits
 under the Machine Learning umbrella as a problem of optimizing a function with
 respect to some metric. Still, it is not a standard Supervised Learning problem
 such as linear regression, because we don't have a data set of expected outputs
 for every input. Additionally there are some extra challenges introduced from
 the quantum problems themselves, such as symmetry requirements and cusp
-conditions. I believe these extra challenges are the reason why VMC
+conditions. I believe these extra challenges are the reason why \gls{vmc}
 optimizations seem to have been done entirely independently of the rest of the
 ML research advancements seen in the last few decades.
 
 In the last few years, more and more research seems to go into applying various
 techniques from the more general field of ML into the natural sciences,
-including VMC. A notable example is~\textcite{Carleo602}, who demonstrated that
+including \gls{vmc}. A notable example is~\textcite{Carleo602}, who demonstrated that
 a Restricted Boltzmann Machine (RBM) was capable of representing the wave
 function for some notable systems to great effect.
 
 Despite of these recent advancements, I would argue that there
 still exists a great deal of hesitancy towards using general models from Machine
-Learning for VMC. This chapter aims to enable the use of \emph{any} arbitrary
+Learning for \gls{vmc}. This chapter aims to enable the use of \emph{any} arbitrary
 machine learning model, and in so doing open the door for many new applications
-and advancements in the field of VMC.
+and advancements in the field of \gls{vmc}.
 
 
 \section{Discriminative vs. Generative Models}
@@ -61,8 +61,8 @@ correctly, but also to generate new images.
 
 \subsubsection{Benefits of a Generative Model}
 
-So what does this have to do with VMC? Our ultimate
-goal in VMC to model a probability amplitude for system configurations
+So what does this have to do with \gls{vmc}? Our ultimate
+goal in \gls{vmc} to model a probability amplitude for system configurations
 $\vX\rightarrow \psi(\vX)$. We want this, in part, so that we can sample
 configurations from it. So wouldn't it be nice if we could have the model
 generate the configurations directly, instead of having to go through the whole
@@ -88,10 +88,10 @@ significant.
 Second, and arguably more importantly, limiting ourselves to generative models
 is - well, limiting. A vast pool of potential models are discriminative,
 including the neural networks from \cref{sec:artificial-neural-networks}. Given
-that we have the Metropolis-Hastings algorithm which works excellently in 
+that we have the Metropolis-Hastings algorithm which works excellently in
 most situations, it seems unnecessary to completely disregard so many options.
 Part of the intent of this entire thesis is to illustrate how discriminative
-models can be used effectively for VMC purposes.
+models can be used effectively for \gls{vmc} purposes.
 
 
 \section{Arbitrary Models as Trial Wave Functions}
@@ -101,7 +101,7 @@ Suppose we propose some arbitrary wave function $\psialpha(\vX)$, parameterized
 by an arbitrary number of parameters $\valpha$. Subject to the
 requirements on wave functions from \cref{sec:requirements-of-wave-functions},
 there are a few things we need from this function in order to successfully run a
-VMC optimization. The complete list of required operations is as
+\gls{vmc} optimization. The complete list of required operations is as
 follows:\footnote{These operations are rooted in the assumption that we are
   working with coordinates as the system configuration specification, and where
   the kinetic energy is part of the energy. We acknowledge that there are a
@@ -120,13 +120,13 @@ follows:\footnote{These operations are rooted in the assumption that we are
     \frac{1}{\psialpha(\vX)}\grad_{\valpha}{\psialpha(\vX)} = \grad_{\valpha}{\ln\psialpha(\vX)}
   \end{align}
 \item[Gradient w.r.t. inputs:](optional)\hfill\\
-  For use with Importance Sampling, we need to compute the drift force
+  For use with \gls{is}, we need to compute the drift force
   associated with the wave function (for particle $k$):
   \begin{align}
     \label{eq:ml-vmc-operation-drfit-force}
     \frac{2}{\psialpha(\vX)}\grad_k{\psialpha(\vX)} = 2 \grad_k{\ln\psialpha(\vX)}
   \end{align}
-  Note that this is only strictly needed when Importance Sampling is used, and
+  Note that this is only strictly needed when \gls{is} is used, and
   can be omitted.
 \item[Laplacian w.r.t. inputs:]\hfill\\
   For use with any Hamiltonian which includes kinetic energy, we need to compute
@@ -168,7 +168,7 @@ wave function.
 
 Back in \cref{sec:ml-backprop} we derived the formulas for the gradient of a
 general cost function, with respect to the weights and biases of any network. In
-the case of VMC, we need the quantity given in
+the case of \gls{vmc}, we need the quantity given in
 \cref{eq:ml-vmc-operation-gradient}. We can get this trivially through the
 backpropagation algorithm by defining the cost function to be the output of the
 network:

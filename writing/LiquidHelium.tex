@@ -54,7 +54,7 @@ introduce all the relevant effects and produce valid test results.
 \subsection{Optimizing}
 
 We have optimized~\cref{eq:McMillan-wave-function-def} using $\num{10000}$
-iterations of $\num{5000}$ MC cycles each. We used standard Metropolis sampling
+iterations of $\num{5000}$ \gls{mc} cycles each. We used standard Metropolis sampling
 along with the ADAM optimizer. \cref{fig:He-benchmark-training} shows the
 progression of both the energy and variational parameter during training.
 Because of the strong correlations involved, there is significantly more
@@ -83,11 +83,14 @@ systems. Based on computations with larger and larger systems, the value for $N
 
 \begin{table}[h]
   \centering
-  \caption[Energy estimates of McMillan wave function on $^4$He]{\label{tab:He-benchmark-results}Predicted ground state energy of helium atoms at density $\rho =
-\flatfrac{0.365}{\sigma^3}$ using $\psi_{M}$ with $\beta$ as determined after training. The number of particles used in the simulation box
-is indicated by the superscript on $\psi_M$. Values obtained using $2^{22}$
-Monte Carlo samples. Energies in units of Kelvin per particle
-$[\si{\kelvin\per N}]$. See \cref{fig:He-benchmark-training} for source code reference.}
+  \caption[Energy estimates of McMillan wave function on
+$^4$He]{\label{tab:He-benchmark-results}Predicted ground state energy of helium
+atoms at density $\rho = \flatfrac{0.365}{\sigma^3}$ using $\psi_{M}$ with
+$\beta$ as determined after training. The number of particles used in the
+simulation box is indicated by the superscript on $\psi_M$. Values obtained
+using $2^{22}$ samples. Energies in units of Kelvin per particle
+$[\si{\kelvin\per N}]$. See \cref{fig:He-benchmark-training} for source code
+reference.}
   \input{scripts/He-benchmark.py.table.tex}
 \end{table}
 \clearpage
@@ -163,7 +166,7 @@ input sorting applied is denoted as $\psi_{SDNN}$.
 We produced the following results by optimizing $\psi_M$ and $\psi_{SDNN}$ with
 similar hyperparameters. We initialized $\beta=\num{2.85}$ for both wave functions
 for a fair comparison. We used $\num{250000}$ training iterations of
-$\num{5000}$ MC cycles each. Contrary to the quantum dot system, where a large
+$\num{5000}$ \gls{mc} cycles each. Contrary to the quantum dot system, where a large
 set of hyperparameters yielded good results, we have found this problem to be
 highly sensitive to good hyperparameters. We had to reduce the learning rate to
 $\eta=\num{0.0001}$ to avoid divergence during training. We also found that the
@@ -205,8 +208,8 @@ positive encouragement to continue this line of research.
   \centering
   \caption[Energy estimates using a neural network on liquid helium]{\label{tab:He-dnn-results}Predicted ground state energy of both
     $\psi_M$ and $\psi_{SDNN}$ after the same amount of optimization. Results
-    obtained from $2^{23}$ Monte Carlo samples and with errors estimated using
-    Blocking. Energies in units of Kelvin per particle $[\si{\kelvin\per N}]$. See \cref{fig:He-dnn-training} for source code reference.}
+    obtained from $2^{23}$ samples and with errors estimated using
+    blocking. Energies in units of Kelvin per particle $[\si{\kelvin\per N}]$. See \cref{fig:He-dnn-training} for source code reference.}
   \input{scripts/He-mcmillan-dnn.py.table.tex}
 \end{table}
 

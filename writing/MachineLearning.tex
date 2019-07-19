@@ -72,15 +72,15 @@ checkmate are probably good. Reinforcement learning tries to adapt a model so as
 to maximize/minimize the reward/punishment that follows as a consequence of its
 actions.
 
-Variational Monte Carlo is a type of reinforcement learning. This is because we
+\gls{vmc} is a type of reinforcement learning. This is because we
 do not have information about exactly what the value of the wave function should
 be for every configuration, but we still have a way to evaluate the correctness
 of the wave function by calculating the energy it predicts. We'll go more in
-depth into how all this connects to VMC in~\cref{sec:reinf-learning-for-vmc}.
+depth into how all this connects to \gls{vmc} in~\cref{sec:reinf-learning-for-vmc}.
 
 \section{Supervised Learning}
 
-Even though our particular interest in machine learning is for its use in VMC, a
+Even though our particular interest in machine learning is for its use in \gls{vmc}, a
 lot of the ideas and techniques we need come from the supervised learning
 domain. Because of that, we will quickly introduce all the relevant components in the
 following sections. For simplicity and clarity, we will do this through the
@@ -317,6 +317,7 @@ $\vx^*$ we use is set to the average of all the intermediate steps:
 \end{align}
 
 \subsection{ADAM: Adaptive Moment Estimation}
+\label{sec:adam}
 
 Among the state-of-the-art algorithms available, employing both momentum,
 averaging and several other ideas, is the ADAM algorithm, invented by
@@ -355,20 +356,20 @@ per parameter. After all, given tens of thousands of parameters, what are the
 chances that all of them have the same optimal learning rate? ADAM allows us to
 account for different degrees of variability in the parameters.
 
-We will make extensive use of ADAM in our VMC calculations, and as we will later
+We will make extensive use of ADAM in our \gls{vmc} calculations, and as we will later
 see in \cref{prt:results}, it will prove to outperform vanilla SGD in all cases.
 
-\section{Reinforcement Learning for VMC}
+\section{Reinforcement Learning for \gls{vmc}}
 \label{sec:reinf-learning-for-vmc}
 
-As mentioned, VMC is a type of reinforcement learning problem. While we don't
+As mentioned, \gls{vmc} is a type of reinforcement learning problem. While we don't
 have access to a data set of configurations and their corresponding wave
 function amplitude, we can say something about the goodness of any particular
 wave function by measuring the expected ground state energy.
 
 While reinforcement learning typically differs quite a lot from supervised
 learning in both model type, optimization strategy etc., they are not so by
-definition. When considering VMC in particular, we can treat it exactly the same
+definition. When considering \gls{vmc} in particular, we can treat it exactly the same
 as we would a supervised problem, with one major difference: The cost function
 is \emph{not} dependent on a data set. We use the same types of models, and the
 same strategies to minimize the cost function.
@@ -382,7 +383,7 @@ measures the models ability to generalize information, as opposed to memorizing
 exact values from the training data.
 
 For reinforcement learning, however, what would the equivalent be? There is no
-data to withhold. If a VMC calculation suddenly results in an amazingly accurate
+data to withhold. If a \gls{vmc} calculation suddenly results in an amazingly accurate
 result, then we simply have an amazingly accurate wave function. With this in
 mind, why not use an incredibly complex model? To some extent, this is the exact
 argument of this thesis, and we will use some highly complex models later on.
