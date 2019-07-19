@@ -35,7 +35,7 @@ we can say that \emph{solving} a classical system consists of the following step
 
 Moving to the quantum world, much of the same procedure remains the same. For the quantum
 case, we have a different law of motion. In our non-relativistic view, this is the
-Time-Dependent Schrödinger Equation:
+\gls{tdse}:
 
 \begin{align}
     \hat H\ket{\Psi} &= i\hbar \pdv{}{t}\ket{\Psi},\label{eq:schrodinger-time-dependent-general}
@@ -73,13 +73,13 @@ Summarizing the steps for \emph{solving} a quantum system, analogous to the
 classical approach, we have the following plan:
 \begin{enumerate}
     \item Define the environment through choosing a form for the Hamiltonian $\hat H$
-    \item Use the Schrödinger equation to obtain the wave function $\Psi$
-    \item Use wave function to compute quantity of interest $Q$
+    \item Use the \gls{tdse} to obtain the wave function $\ket\Psi$
+    \item Use wave function to compute quantity of interest, $Q$
 \end{enumerate}
 
 \section{Stationary States}
 
-\autoref{eq:schrodinger-time-dependent-position-basis} is a partial differential equation,
+The \gls{tdse} (\cref{eq:schrodinger-time-dependent-position-basis}) is a partial differential equation,
 as it contains partial derivatives of the wave function with respect to both position and
 time. The standard approach to solving this equation is through \emph{separation of
 variables}. We assume that we can factorize the full wave function as follows:
@@ -92,9 +92,9 @@ In addition, we assume that $V(\vb x; t) = V(\vb x)$, i.e.\ that the potential i
 time-independent.\footnote{There are systems for which this assumption does not hold. We
 will, however, restrict ourself to consider only Hamiltonians for which this description
 is valid} With these assumptions, we can divide through with $\Psi$ in
-\autoref{eq:schrodinger-time-dependent-position-basis} and obtain the
-following\footnote{It could be tempting to simply strike $\Psi$ from the lhs.\ of
-\autoref{eq:schrodinger-time-dependent-position-basis} when diving by $\Psi$. Nevertheless, we
+\cref{eq:schrodinger-time-dependent-position-basis} and obtain the
+following:\footnote{It could be tempting to simply strike $\Psi$ from the lhs.\ of
+\cref{eq:schrodinger-time-dependent-position-basis} when diving by $\Psi$. Nevertheless, we
 must remember that the Hamiltonian is an operator (specifically seen through the
 $\laplacian$ in this case), and so we must divide only after letting this operate on
 $\Psi$.}
@@ -122,16 +122,16 @@ which is trivially solvable:
 \end{align}
 for some constant $A=\phi(0)$ determined by boundary conditions.
 
-The time-independent equation, known as the Time-Independent Schrödinger Equation, is
+The time-independent equation, known as the \gls{tise}, is:
 \begin{align}
     - \frac{\hbar^2}{2m} \laplacian\psi + V(\vb x)\psi =
     E\psi\label{eq:schrodinger-time-independent-position-basis}
 \end{align}
 The solutions to this equation are the \emph{stationary states} of the system. If
 we are able to find these solutions, then we automatically have also the full time
-dependent solution through \autoref{eq:separatable-wave-func-def}.
+dependent solution through \cref{eq:separatable-wave-func-def}.
 
-If we return \autoref{eq:schrodinger-time-independent-position-basis} to the more general
+If we return \cref{eq:schrodinger-time-independent-position-basis} to the more general
 form,
 \begin{align}
     \hat H \ket{\psi} &= E\ket{\psi}
@@ -157,13 +157,13 @@ Up until now, for simplicity, we've only considered the description of single-pa
 systems. Changing the number of particles is a change in the system description, and as
 such it entails modifying the Hamiltonian operator accordingly. Everything presented thus
 far generalizes well to the case of more than one particle, simply by introducing the
-appropriate sums. The general form of the Many-Body Hamiltonian we will consider is now
+appropriate sums. The general form of the many-body Hamiltonian we will consider is now:
 
 \begin{align}
     \hat H &= - \sum_{i=1}^N \frac{\hbar^2}{2m_i} \laplacian_i + V(\vb x_1, \vb x_2,\dots,
     \vb x_N)\\
     &= -\sum_{i=1}^N \frac{\hbar^2}{2m_i} \laplacian_i + V(\vb
-    X)\label{eq:Hamiltonian-operator-general}
+    X),\label{eq:Hamiltonian-operator-general}
 \end{align}
 were $\mat X \defeq (\vb x_1\ \vb x_2\ \dots\ \vb x_N)^T\in \mathbb{R}^{N\times D}$ is the matrix
 of $D$-dimensional row vectors of coordinates for each particle. For further clarity,
@@ -198,7 +198,7 @@ possible to view as a probability distribution. The last point is perhaps less c
 we devote some further attention to this point in particular.
 
 
-\subsection{Symmetry of wave functions}
+\subsection{Symmetry of Wave Functions}
 
 Nature has many example of systems made up of particles of the same
 species. That is, the particles all have the same mass, spin, electromagnetic
@@ -268,7 +268,7 @@ The following theorem summarizes the result~\cite{PhysRev-58-716}:
     exchange are called fermions.
 \end{theorem}
 
-\section{Observables - From Wave function to Measurement}
+\section{Observables - From Wave Function to Measurement}
 
 We have previously stated that armed with the correct wave function we can compute any
 measurable quantity of interest. This statement would not be of much use without going
@@ -292,7 +292,7 @@ system. For $N$ particles that would classically be
 \end{align}
 where $\vb p_i$ denotes the momentum of particle $i$, all of which are placed in some
 spacial potential $V$. It is easily verified that if we perform the above mentioned
-substitutions we will recover \autoref{eq:Hamiltonian-operator-general} and recognize
+substitutions we will recover \cref{eq:Hamiltonian-operator-general} and recognize
 it as the Hamiltonian operator, $\hat H$.
 
 Finally, having both the wave function and the appropriate operator $\hat O$ we can
@@ -312,8 +312,8 @@ For many-body systems it should be apparent that this integral quickly becomes i
 to compute analytically. In practice we employ a numerical strategy to evaluate these
 integrals, where the technique we use depends on the dimensionality of the integral and
 the required level of accuracy. In our case, due to the large number
-of degrees of freedom in the systems we shall investigate, we will use Monte
-Carlo integration. This is will be discussed in more detail in \cref{chp:monte-carlo}.
+of degrees of freedom in the systems we shall investigate, we will use
+\gls{mci}. This is will be discussed in more detail in \cref{chp:monte-carlo}.
 
 \section{Example Systems}
 
@@ -372,7 +372,7 @@ verification of results. Furthermore, limiting the size of the problem makes the
 computation time manageable, which is good when experimenting with different techniques.
 
 \subsubsection{Simple Non-Interacting Case}\label{sec:simple-non-inter-HO}
-If we omit the interacting terms in \autoref{eq:H-QD-def} we have
+If we omit the interacting terms in \cref{eq:H-QD-def} we have
 the standard harmonic oscillator Hamiltonian:
 \begin{align}
   \label{eq:ho-no-interaction-hamiltonian}
@@ -421,7 +421,7 @@ per degree of freedom, so adding another two yields and extra $\omega$.
 When the two particles are electrons, we may say something about their total
 spin. As electrons are fermions, their total wavefunction must be
 anti-symmetric upon interchanging the labels $1$ and $2$.
-\autoref{eq:Phi-non-inter} is obviously symmetric, and so the
+\cref{eq:Phi-non-inter} is obviously symmetric, and so the
 spin-wavefunction must necessarily be anti-symmetric. For the combination of
 two spin-1/2 particles, there is only one candidate, namely the spin-0
 singlet:
@@ -460,7 +460,7 @@ works out to the same relation in our case. Computing the full relation for
 our Hamiltonian for two electrons in two dimensions, it even works out so
 that we can use the same relation on the HO potential and the Coulomb
 potential separately, and add the result.\footnote{We can (and have) work(ed) this out
-via \autoref{eq:virial-theorem} directly using the corresponding forces for
+via \cref{eq:virial-theorem} directly using the corresponding forces for
 the harmonic oscillator and Coulomb potential. A write-up of the derivation is not given
 though, as this is a well known result.} This means that the Virial Theorem
 predicts the following~\cite{Katriel2012}:
@@ -654,7 +654,7 @@ is to model the potential contribution of all particles further away than
 $\flatfrac{L}{2}$ in a mean-field manner. The result is simply adding a constant
 term, and acts only to shift the total potential in a given direction. As the
 purpose of this thesis is not to obtain the most realistic results possible, and
-rather a \emph{relative} comparison of methods, and we will not spend more time on
+rather a \emph{relative} comparison of methods, we will not spend more time on
 specific ways of implementing such corrections.
 
 
