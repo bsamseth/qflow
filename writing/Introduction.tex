@@ -3,28 +3,28 @@
 \chapter{Introduction}
 \label{chp:introduction}
 
-Quantum mechanics (QM) is the fundamental theory which describes nature at its
+\Gls{qm} is the fundamental theory which describes nature at its
 smallest scales. Its predictions have been verified by every experiment ever
 devised to test it, and is considered by many to be our most successful physical
-theory. Still, QM is far from fully understood, and there is an ocean of
-questions we still want to get out of it. Continued study of QM is arguably one
+theory. Still, \gls{qm} is far from fully understood, and there is an ocean of
+questions we still want to get out of it. Continued study of \gls{qm} is arguably one
 of the most worthwhile undertakings we can work on.
 
-Nevertheless, to a layperson QM might just mean \say{complicated science} and it
-is happily ignored in favor of more relatable topics. But if we could turn off QM
+Nevertheless, to a layperson \acrshort{qm} might just mean \say{complicated science} and it
+is happily ignored in favor of more relatable topics. But if we could turn off \gls{qm}
 for a day, its effects on our daily life would become blazingly obvious. You no
-longer need to go to that doctors appointment for an MRI, because that not a
+longer need to go to that doctors appointment for an \acrshort{mri}, because that not a
 thing anymore. Better call and cancel - to bad your phone is now the size of
 your apartment. At least you can still watch the world fall apart on your new TV -
-never mind, LEDs don't work anymore either.
+never mind, \acrshort{led}s don't work anymore either.
 
 The point of this thought experiment is not to say everyone should become a
 theoretical physicist, but rather to point out the immense technological
 progress we have made as side effects of our pursuit to unravel natures inner
-workings. So while QM may be the law of the microscopic, there are
+workings. So while \acrshort{qm} may be the law of the microscopic, there are
 real life, large scale effects from which we benefit on a daily basis.\\
 
-The most challenging problem in QM is the study of strongly correlated
+The most challenging problem in \gls{qm} is the study of strongly correlated
 many-body systems. Put 100 electrons in a box and press play. What happens next
 turns out to be extremely complicated to accurately predict. The equation that
 governs this world is the Schrödinger equation,
@@ -54,7 +54,7 @@ hundreds of thousands of cores. But exponential scaling - that becomes
 infeasible quickly.
 \end{comment}
 
-In the words of one of the founding fathers of QM:
+In the words of one of the founding fathers of \acrshort{qm}:
 \begin{displayquote}
 \emph{The underlying physical laws necessary for the mathematical theory of a large
 part of physics and the whole of chemistry are thus completely known, and the
@@ -75,20 +75,19 @@ obtain a smaller predicted energy, then our new guess is closer to the
 underlying truth. If we keep updating our guess, keeping those that lead to
 smaller energies, we will eventually end up with something that hopefully is a
 much better approximate solution. The problem is now how to make good guesses,
-and how tweak them in the right direction. This approach is known as Variational
-Monte Carlo (VMC), and will be discussed in depth in
-\cref{chp:variational-monte-carlo}.\\
+and how tweak them in the right direction. This approach is known as \gls{vmc},
+and will be discussed in depth in \cref{chp:variational-monte-carlo}.\\
 
-Enter the world of Machine Learning (ML) which over the last years have seen
+Enter the world of \gls{ml} which over the last years have seen
 huge successes in a range of real-world problems, including computer vision and
 natural language processing, each with a scaling complexity similar to
 the quantum many-body problem. Physicists have taken notice and are now trying
-to apply techniques from ML in an attempt to make progress in QM. ML has
+to apply techniques from \gls{ml} in an attempt to make progress in \gls{qm}. \Acrlong{ml} has
 demonstrated how we can train computer models to see patterns and connections
 far beyond human comprehension, and be able to condense these down to tangible
 predictions that we can use.
 
-The goal of this thesis is to build upon existing machinery for VMC by extending
+The goal of this thesis is to build upon existing machinery for \gls{vmc} by extending
 theoretical guesses for $\ket\Psi$ with a neural network component, thus massively
 increasing the flexibility and expressiveness of our guesses. If successful, this
 network will be able to learn the physical correlations present in the system
@@ -111,10 +110,10 @@ background in a way that explains all necessary components as they arise.
 \subsection*{Structure}
 \cref{prt:theory} starts with a introduction to all the underlying theory
 necessary to understand the results of this work. \cref{chp:the-quantum-problem}
-starts with introducing the relevant bits of Quantum Mechanics, followed
-immediately by a presentation of Variational Monte Carlo and Monte Carlo methods
+starts with introducing the relevant bits of \acrlong{qm}, followed
+immediately by a presentation of \acrlong{vmc} and \acrlong{mc} methods
 in general (\cref{chp:variational-monte-carlo,chp:monte-carlo}). This forms the
-backbone of the thesis. Next we shift gears and discuss Machine Learning in
+backbone of the thesis. Next we shift gears and discuss \acrlong{ml} in
 general (\cref{chp:machine-learning}), focusing again on the parts which are
 most relevant to us. We end \cref{prt:theory} by talking about the glue that
 connects all of this together (\cref{chp:mergin-vmc-with-ml}).
