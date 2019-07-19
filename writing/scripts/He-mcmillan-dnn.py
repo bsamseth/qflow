@@ -3,17 +3,14 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib2tikz
-from datetime import datetime, timedelta
-import pprint
+from datetime import timedelta
 from mpi4py import MPI
-from tqdm import trange
 
 from qflow.mpi import mpiprint
 from qflow.hamiltonians import LennardJones
-from qflow.optimizers import AdamOptimizer, SgdOptimizer
+from qflow.optimizers import AdamOptimizer
 from qflow.samplers import HeliumSampler
 from qflow.statistics import compute_statistics_for_series, statistics_to_tex
-from qflow.training import EnergyCallback, ParameterCallback, SymmetryCallback, train
 from qflow.wavefunctions import (
     Dnn,
     FixedWavefunction,
@@ -37,8 +34,8 @@ def plot_training(energies, parameters):
     print(energies.shape)
     print(energies)
     fig, (eax, pax) = plt.subplots(ncols=2)
-    eax.plot(energies[:,0], label=r"$\psi_{M}$")
-    eax.plot(energies[:,1], label=r"$\psi_{SDNN}$")
+    eax.plot(energies[:, 0], label=r"$\psi_{M}$")
+    eax.plot(energies[:, 1], label=r"$\psi_{SDNN}$")
     eax.set_xlabel(r"% of training")
     eax.set_ylabel(r"Ground state energy [a.u]")
     eax.legend()
@@ -85,7 +82,7 @@ optimizer_bench = AdamOptimizer(len(mcmillian_bench.parameters), 0.0001)
 
 iter_per_step = 500
 samples_per_iter = 5000
-plot_samples = 1000000
+plot_samples = 1_000_000
 gamma = 0.00001
 
 steps = 500
@@ -96,8 +93,18 @@ b_bench_training = []
 parameters = []
 for _ in range(steps):
     t0 = time.time()
-    H.optimize_wavefunction(psi, sampler, iter_per_step, samples_per_iter, optimizer, gamma, False)
-    H.optimize_wavefunction(mcmillian_bench, sampler_bench, iter_per_step, samples_per_iter, optimizer_bench, 0, False)
+    H.optimize_wavefunction(
+        psi, sampler, iter_per_step, samples_per_iter, optimizer, gamma, False
+    )
+    H.optimize_wavefunction(
+        mcmillian_bench,
+        sampler_bench,
+        iter_per_step,
+        samples_per_iter,
+        optimizer_bench,
+        0,
+        False,
+    )
     t1 = time.time() - t0
     t_average = (t_average * _ + t1) / (_ + 1)
     E = H.local_energy_array(sampler, psi, plot_samples) / P
@@ -108,12 +115,12 @@ for _ in range(steps):
     parameters.append(psi.parameters[:100])
     eta = timedelta(seconds=round(t_average * (steps - _)))
     mpiprint(
-        f"Step {_+1:5d}/{steps:d} - {1 / t1:5.3f} it/s - ETA {eta} - AR = {sampler.acceptance_rate:.4f} - " +
-        f"<E> =  {np.mean(np.asarray(E_training)[:,1]):3.5f} ({np.asarray(E_training)[-1,1]:3.5f}) - " +
-        f"<E'> = {np.mean(np.asarray(E_training)[:,0]):3.5f} ({np.asarray(E_training)[-1,0]:3.5f}) - " +
-        f"E_sem = {np.std(np.asarray(E_training)[:,1]) / np.sqrt(len(E_training)):3.3f}  - " +
-        f"params[0] = {np.mean(b_training):3.5f} ({b_training[-1]:3.5f}) " +
-        f"bench[0] = {np.mean(b_bench_training):3.5f} ({b_bench_training[-1]:3.5f})"
+        f"Step {_+1:5d}/{steps:d} - {1 / t1:5.3f} it/s - ETA {eta} - AR = {sampler.acceptance_rate:.4f} - "
+        + f"<E> =  {np.mean(np.asarray(E_training)[:,1]):3.5f} ({np.asarray(E_training)[-1,1]:3.5f}) - "
+        + f"<E'> = {np.mean(np.asarray(E_training)[:,0]):3.5f} ({np.asarray(E_training)[-1,0]:3.5f}) - "
+        + f"E_sem = {np.std(np.asarray(E_training)[:,1]) / np.sqrt(len(E_training)):3.3f}  - "
+        + f"params[0] = {np.mean(b_training):3.5f} ({b_training[-1]:3.5f}) "
+        + f"bench[0] = {np.mean(b_bench_training):3.5f} ({b_bench_training[-1]:3.5f})"
     )
     if MPI.COMM_WORLD.rank == 0:
         np.savetxt(

@@ -1,8 +1,6 @@
 import time
 from datetime import timedelta
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib2tikz
 
 from qflow.wavefunctions import (
     JastrowPade,
@@ -24,10 +22,8 @@ from qflow.wavefunctions.nn.activations import (
 )
 from qflow.hamiltonians import CoulombHarmonicOscillator
 from qflow.samplers import ImportanceSampler
-from qflow.optimizers import AdamOptimizer
-from qflow.training import train, EnergyCallback, SymmetryCallback, ParameterCallback
 from qflow.statistics import compute_statistics_for_series, statistics_to_tex
-from qflow.mpi import mpiprint, master_rank
+from qflow.mpi import mpiprint
 
 
 P, D = 2, 2  # Particles, dimensions
@@ -73,7 +69,7 @@ psi_sorted_sampler = ImportanceSampler(system, psi_sorted, step_size=0.1)
 simple_gaussian_bench = SimpleGaussian(alpha=0.5)
 jastrow_bench = JastrowPade(alpha=1, beta=1)
 psi_bench = WavefunctionProduct(simple_gaussian_bench, jastrow_bench)
-psi_bench.parameters = [0.49482173, 1, 1, 0.39740186]
+psi_bench.parameters = [0.494_821_73, 1, 1, 0.397_401_86]
 psi_bench_sampler = ImportanceSampler(system, psi_bench, step_size=0.1)
 
 

@@ -4,14 +4,12 @@ import numpy as np
 from datetime import timedelta
 import pprint
 from mpi4py import MPI
-from tqdm import trange
 
 from qflow.mpi import mpiprint
 from qflow.hamiltonians import LennardJones
-from qflow.optimizers import AdamOptimizer, SgdOptimizer
+from qflow.optimizers import AdamOptimizer
 from qflow.samplers import HeliumSampler
 from qflow.statistics import compute_statistics_for_series
-from qflow.training import EnergyCallback, ParameterCallback, SymmetryCallback, train
 from qflow.wavefunctions import (
     Dnn,
     FixedWavefunction,
@@ -27,7 +25,6 @@ from qflow.wavefunctions.nn.activations import (
     sigmoid,
     tanh,
 )
-from qflow.wavefunctions.nn.layers import DenseLayer
 
 os.makedirs("logfiles", exist_ok=True)
 

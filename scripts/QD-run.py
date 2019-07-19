@@ -1,12 +1,10 @@
 import os
-import matplotlib.pyplot as plt
 import numpy as np
 from mpi4py import MPI
 
-from qflow.hamiltonians import CoulombHarmonicOscillator, HarmonicOscillator
-from qflow.optimizers import AdamOptimizer, SgdOptimizer
-from qflow.samplers import ImportanceSampler, MetropolisSampler
-from qflow.statistics import compute_statistics_for_series
+from qflow.hamiltonians import CoulombHarmonicOscillator
+from qflow.optimizers import AdamOptimizer
+from qflow.samplers import ImportanceSampler
 from qflow.training import EnergyCallback, ParameterCallback, SymmetryCallback, train
 from qflow.wavefunctions import (
     Dnn,

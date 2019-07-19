@@ -2,12 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib2tikz
 
-from qflow.wavefunctions import SimpleGaussian, RBMWavefunction
+from qflow.wavefunctions import SimpleGaussian
 from qflow.hamiltonians import HarmonicOscillator
-from qflow.samplers import MetropolisSampler, ImportanceSampler
-from qflow.optimizers import SgdOptimizer, AdamOptimizer
+from qflow.samplers import ImportanceSampler
+from qflow.optimizers import SgdOptimizer
 from qflow.training import train, EnergyCallback, ParameterCallback
-from qflow.statistics import compute_statistics_for_series, statistics_to_tex
 
 N, D = 10, 3
 system = np.empty((N, D))

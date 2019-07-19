@@ -5,7 +5,7 @@ import matplotlib2tikz
 from qflow.wavefunctions import SimpleGaussian
 from qflow.hamiltonians import HarmonicOscillator
 from qflow.samplers import ImportanceSampler
-from qflow.mpi import mpiprint, master_rank
+from qflow.mpi import master_rank
 
 N, D = 10, 3
 system = np.empty((N, D))

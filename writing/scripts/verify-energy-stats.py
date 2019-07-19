@@ -1,12 +1,8 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib2tikz
 
-from qflow.wavefunctions import SimpleGaussian, RBMWavefunction
+from qflow.wavefunctions import SimpleGaussian
 from qflow.hamiltonians import HarmonicOscillator
-from qflow.samplers import MetropolisSampler, ImportanceSampler
-from qflow.optimizers import SgdOptimizer, AdamOptimizer
-from qflow.training import train, EnergyCallback, ParameterCallback
+from qflow.samplers import ImportanceSampler
 from qflow.statistics import compute_statistics_for_series, statistics_to_tex
 from qflow.mpi import mpiprint
 
@@ -21,14 +17,12 @@ sampler_nopt = ImportanceSampler(system, psi_nopt, 0.1)
 sampler_opt.thermalize(10000)
 sampler_nopt.thermalize(10000)
 
-samples = 2**23
+samples = 2 ** 23
 
 stats = [
+    compute_statistics_for_series(H.local_energy_array(sampler_opt, psi_opt, 100) / N),
     compute_statistics_for_series(
-        H.local_energy_array(sampler_opt, psi_opt, 100) / N,
-    ),
-    compute_statistics_for_series(
-        H.local_energy_array(sampler_nopt, psi_nopt, samples) / N, method='blocking'
+        H.local_energy_array(sampler_nopt, psi_nopt, samples) / N, method="blocking"
     ),
 ]
 
@@ -38,12 +32,8 @@ mpiprint(statistics_to_tex(stats, labels, filename=__file__ + ".table1.tex"))
 
 
 stats = [
-    compute_statistics_for_series(
-        H.mean_radius_array(sampler_opt, samples),
-    ),
-    compute_statistics_for_series(
-        H.mean_squared_radius_array(sampler_opt, samples),
-    ),
+    compute_statistics_for_series(H.mean_radius_array(sampler_opt, samples)),
+    compute_statistics_for_series(H.mean_squared_radius_array(sampler_opt, samples)),
 ]
 
 labels = [r"$<r>$", r"$<r^2>$"]

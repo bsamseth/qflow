@@ -6,7 +6,7 @@ from qflow.wavefunctions import JastrowPade, SimpleGaussian, WavefunctionProduct
 from qflow.hamiltonians import CoulombHarmonicOscillator
 from qflow.samplers import ImportanceSampler
 from qflow.optimizers import AdamOptimizer
-from qflow.training import train, EnergyCallback, SymmetryCallback, ParameterCallback
+from qflow.training import EnergyCallback, ParameterCallback, train
 from qflow.statistics import compute_statistics_for_series, statistics_to_tex
 from qflow.mpi import mpiprint, master_rank
 

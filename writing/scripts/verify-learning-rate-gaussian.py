@@ -2,13 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib2tikz
 
-from qflow.wavefunctions import RBMWavefunction, SimpleGaussian
+from qflow.wavefunctions import SimpleGaussian
 from qflow.hamiltonians import HarmonicOscillator
 from qflow.samplers import ImportanceSampler
 from qflow.optimizers import SgdOptimizer, AdamOptimizer
-from qflow.training import train, EnergyCallback, ParameterCallback
-from qflow.statistics import compute_statistics_for_series, statistics_to_tex
-from qflow.mpi import mpiprint, master_rank
+from qflow.training import EnergyCallback, train
+from qflow.mpi import master_rank
 
 N, D = 1, 1
 system = np.empty((N, D))
@@ -61,5 +60,8 @@ if master_rank():
     for e, label in zip(E, labels):
         ax.semilogy(np.abs(e / N - D / 2), label=label)
     ax.legend()
-    matplotlib2tikz.save(__file__ + ".tex", extra_axis_parameters=["compat=newest", "legend pos=outer north east"])
+    matplotlib2tikz.save(
+        __file__ + ".tex",
+        extra_axis_parameters=["compat=newest", "legend pos=outer north east"],
+    )
     plt.show()
