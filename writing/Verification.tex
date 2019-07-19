@@ -75,11 +75,11 @@ get the exact analytic ground state energy, $\flatfrac{\expval{E_L}}{N} =
 precision of $\SI{64}{bit}$ floating point numbers.
 
 For the non-optimal $\alpha_G=0.51$ we get a larger energy, as we would expect.
-Furthermore, we get a reported standard error of $\sim \SI{2e-5}{\au}$. This
+Furthermore, we get a reported \gls{sem} of $\sim \SI{2e-5}{\au}$. This
 includes a correction from the automated blocking mechanism
 by~\textcite{Jonsson-2018}. The results were obtained using $2^{23}$ \gls{mc}
-samples, so by the standard prescription for standard error we should have
-gotten $\flatfrac{\SI{8e-4}{\au}}{\sqrt{2^{23}}} \approx \SI{3e-7}{\au}$ This
+samples, so by the standard prescription for \gls{sem} we should have
+gotten $\flatfrac{\SI{8e-4}{\au}}{\sqrt{2^{23}}} \approx \SI{3e-7}{\au}$. This
 large discrepancy can be explained by the presence of a large amount of
 autocorrelation in the energy estimates. Inherent to \gls{mci} is
 some degree of autocorrelation, but the reason for this large amount is because
@@ -88,7 +88,7 @@ step we move only a single particle. For large $N$ this means it takes a
 lot of samples to substantially change the positions of all particles. For smaller
 $N$ the correction from blocking is smaller, albeit still present. This
 exemplifies the importance of proper calculation of statistical errors. Every
-standard error presented in this thesis will include this correction.
+\gls{sem} presented in this thesis will include this correction.
 
 
 \begin{table}[h]
@@ -107,7 +107,7 @@ The results were obtained using $\alpha_G=0.5$ and $2^{23}$ \gls{mc} samples. Fo
 reference, the table also states the exact analytic results. Unlike the energy,
 which for the ideal $\alpha_G$ is independent of position, these results are not
 perfectly accurate. However, the results are correct to five significant digits,
-and both $\expval{r}$ and $\expval{r^2}$ are within a few standard errors from
+and both $\expval{r}$ and $\expval{r^2}$ are within a few \glspl{sem} from
 the analytic value. We take this as further confirmation of both the integration
 implementation and the validity of the statistical estimates.
 
@@ -368,12 +368,12 @@ particular problem at hand.
     \caption[Comparison of sampling strategies]{\label{fig:verify-sampling-step}\emph{Solid lines:} Acceptance rate of
     Metropolis and \gls{is} as a function of step size. Note that the
   interpretation of the step size is different for the two algorithms. \emph{Dashed
-  lines:} Standard error of energy estimates obtained using the corresponding
+  lines:} \gls{sem} of energy estimates obtained using the corresponding
   sampling algorithm and step size, using $\psi_G$ with $\alpha=0.51$.\citesource{writing/scripts/verify-sampling-step.py}}
 \end{figure}
 
 
-The dotted lines show the standard error obtained using the
+The dotted lines show the \gls{sem} obtained using the
 corresponding sampler and step size, when calculating the local energy with
 $\psi_G$ and $\alpha=0.51$.\footnote{The value $\alpha=0.51$ was used to avoid
   the zero variance of the ideal value $\alpha=0.5$, but still behaving
@@ -390,12 +390,12 @@ resulting in similar behavior; no effective change. When the system remains
 unchanged, either from rejected samples or effectively equivalent ones (for high
 and low step sizes, respectively), the resulting local energies must necessarily
 be very similar as well. Neither case is desirable considering accurate
-integration results. Recall that the standard error is a statistical measure of
+integration results. Recall that the \gls{sem} is a statistical measure of
 the \emph{precision} of the local energy estimate, and not a measure of its
 \emph{accuracy}.\footnote{The number $3.14159$ is more precise than the number
 $6$, but if the true value is $6.28$, then the latter is more accurate.}\\
 
-\Gls{is} shows different behavior with respect to the standard error.
+\Gls{is} shows different behavior with respect to the \gls{sem}.
 For the entire range of good step size choices, \gls{is} results in
 smaller statistical errors. This is to be expected, and \gls{is} will
 therefore be preferred whenever it is available to us.
