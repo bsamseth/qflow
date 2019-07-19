@@ -1,8 +1,7 @@
 import sys
-import os
 import time
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import timedelta
 import pprint
 from mpi4py import MPI
 from tqdm import trange

@@ -1,7 +1,7 @@
 import os
 import time
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import timedelta
 import pprint
 from mpi4py import MPI
 from tqdm import trange
@@ -73,10 +73,10 @@ for _ in range(steps):
     b_training.append(psi.parameters[0])
     eta = timedelta(seconds=round(t_average * (steps - _)))
     mpiprint(
-        f"Step {_+1:5d}/{steps:d} - {1 / t1:5.3f} it/s - ETA {eta} - AR = {sampler.acceptance_rate:.4f} - " +
-        f"<E> = {np.mean(E_training):3.5f} ({E_training[-1]:3.5f}) - " +
-        f"E_sem = {np.std(E_training) / np.sqrt(len(E_training)):3.3f}  - " +
-        f"params[0] = {np.mean(b_training):3.5f} ({b_training[-1]:3.5f})"
+        f"Step {_+1:5d}/{steps:d} - {1 / t1:5.3f} it/s - ETA {eta} - AR = {sampler.acceptance_rate:.4f} - "
+        + f"<E> = {np.mean(E_training):3.5f} ({E_training[-1]:3.5f}) - "
+        + f"E_sem = {np.std(E_training) / np.sqrt(len(E_training)):3.3f}  - "
+        + f"params[0] = {np.mean(b_training):3.5f} ({b_training[-1]:3.5f})"
     )
     if MPI.COMM_WORLD.rank == 0:
         np.savetxt(
@@ -103,6 +103,8 @@ energies = H.local_energy_array(sampler, psi, points) / P
 
 if MPI.COMM_WORLD.rank == 0:
     np.savetxt(
-        f"logfiles/helium-InputSorterDnn-P{P}-D{D}-energies.csv", energies, delimiter=","
+        f"logfiles/helium-InputSorterDnn-P{P}-D{D}-energies.csv",
+        energies,
+        delimiter=",",
     )
     pprint.pprint(compute_statistics_for_series(energies, method="blocking"))
