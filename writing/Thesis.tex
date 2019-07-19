@@ -23,11 +23,11 @@ Recent applications of machine learning for quantum mechanics have shown
 encouraging results in efforts to overcome the exponential scaling complexity of
 the many-body wave function. We continue this exploration by introducing a
 neural network as an additional Jastrow factor to the wave function ansatz
-within the framework of \acrlong{vmc}, with the hope of learning
+within the framework of variational Monte Carlo, with the hope of learning
 correlations beyond what traditional methods have been able to.
 
 We begin with a review of the relevant parts of quantum mechanics with particular
-emphasis on \acrlong{mc} methods. We then introduce central elements of machine
+emphasis on Monte Carlo methods. We then introduce central elements of machine
 learning, focusing on neural networks. Finally we discuss implementation
 challenges.
 
@@ -35,7 +35,7 @@ We test our approach first on two interacting electrons in a harmonic oscillator
 potential. Where the benchmark estimates $\expval{E_0}=\SI{3.00064(4)}{\au}$, we
 outperform this by a lowering of more than an order of magnitude, resulting in
 $\expval{E_0}=\SI{3.000021(4)}{\au}$. The energy estimates approach those of
-\acrlong{dmc}, which can produce exact solutions to the Schrödinger equation.
+diffusion Monte Carlo, which can produce exact solutions to the Schrödinger equation.
 
 Second we apply the same technique to the strongly correlated system of liquid
 $^4$He. Again we obtain significant lowering of the ground state energy, from
@@ -48,7 +48,7 @@ however, we argue that the time complexity can still be made to scale similarly 
 $\mathcal{O}(N^2)$ with the number of particles.
 \end{abstract}
 
-\glsresetall   % Accronyms will be defined in main text, not in abstract.
+
 
 \begin{acknowledgements}
   I acknowledge my acknowledgements.
