@@ -3,7 +3,7 @@
 \chapter{Machine Learning}
 \label{chp:machine-learning}
 
-Machine learning (ML) is a field of study concerned with building
+\Acrfull{ml} is a field of study concerned with building
 models\footnote{The term \emph{model} is used in a very general sense, and
 refers to anything that takes information as input and produces a corresponding
 output.} that can perform a task without the need for explicit instructions of
@@ -28,7 +28,7 @@ maximize the goodness (or minimize badness) of the metric. In short, Machine
 Learning is saying \emph{what} you want done, rather than saying \emph{how} you
 want it done.
 
-This chapter is dedicated to presenting the relevant bits of ML that will be
+This chapter is dedicated to presenting the relevant bits of \gls{ml} that will be
 relevant to the work in this thesis. As the field is vast, only a very minimal
 selection of topics will be covered, and the reader is encouraged to dive deeper
 into topics where interest is sparked. We start with an overview introduction of
@@ -50,7 +50,7 @@ learning model as follows:
   \item Minimize $C(\hat f_{\hat\valpha})$ with respect to $\valpha$
 \end{enumerate}
 
-It is common to divide ML into two main sub-domains: Supervised and Unsupervised
+It is common to divide \gls{ml} into two main sub-domains: Supervised and Unsupervised
 Learning. Supervised Learning is characterized by us having access to a data set
 where both inputs \emph{and} desired outputs are specified. This is possibly the
 most common case, or at least the case where most \emph{want} to work with.
@@ -148,7 +148,7 @@ $\hat\valpha\simeq\valpha$.
 In order to quantify which $\hat\valpha$ is optimal, we need metric to compare
 by. There are several conceivable choices here, many of which might lead us to
 the correct $\valpha$. Most common, at least in this case, is to use the
-so-called Mean Square Error (MSE):
+so-called \gls{mse}:
 
 \begin{align}
   \mathcal{C}_\text{MSE}(\hat f_{\hat\valpha}; \mathcal{D}) &= \frac{1}{n}\sum_{i=1}^n \abs{\hat f_{\hat\valpha}(\vx_i) - y_i}^2.
@@ -215,7 +215,7 @@ quadratic data.
 \label{sec:ml-optimization}
 
 Most supervised learning tasks rely on a gradient based optimization strategy,
-with the umbrella name \emph{Gradient Decent} (GD).
+with the umbrella name \gls{gd}.
 These methods can be summarized as follows: We want to find $\vx^*$ such that\footnote{For maximization, simply minimize $-f(\vx)$. }
 
 \begin{align}
@@ -236,10 +236,9 @@ for $g$.
 
 When $g=\mathcal{C}(\hat f_{\hat\valpha}; \mathcal{D})$ we have some choice in
 exactly how we should compute $\grad{\mathcal{C}}$. We could compute the cost
-for the entire data set, or just a single data point. These
-two options are referred to as Gradient Decent (GD) and Stochastic Gradient
-Decent (SGD), respectively. The latter is most often used because it is less
-computationally expensive for large data sets.
+for the entire data set, or just a single data point. These two options are
+referred to as \gls{gd} and \gls{sgd}, respectively. The latter is most often
+used because it is less computationally expensive for large data sets.
 
 Lastly we have various ways of extending the basic algorithm in
 \cref{eq:gradient-decent-definition}, with more sophisticated ways of
@@ -357,7 +356,7 @@ chances that all of them have the same optimal learning rate? ADAM allows us to
 account for different degrees of variability in the parameters.
 
 We will make extensive use of ADAM in our \gls{vmc} calculations, and as we will later
-see in \cref{prt:results}, it will prove to outperform vanilla SGD in all cases.
+see in \cref{prt:results}, it will prove to outperform vanilla \gls{sgd} in all cases.
 
 \section{Reinforcement Learning for \gls{vmc}}
 \label{sec:reinf-learning-for-vmc}
@@ -400,21 +399,22 @@ promising minima.
 
 \section{Artificial Neural Networks}
 \label{sec:artificial-neural-networks}
-
-Artificial Neural Networks (ANN, or just NN) are a broad category of
+\glsunset{ann}
+\glsunset{nn}
+Artificial neural networks (\glspl{ann}, or just \glspl{nn}) are a broad category of
 computational models, a representation of some general function $f:
 \mathbb{R}^m\to\mathbb{R}^n$.\footnote{While there is nothing inherent about
-  ANNs that limit us to only real values, we will not use
+  \glspl{ann} that limit us to only real values, we will not use
   complex valued networks in this work and therefore skip to mental burden of
   thinking about the complex numbers.} Their name and origin stems from an attempt to
 model how neurons in animal brains react to inputs, and how they adapt to learn
 new skills. As animals are quite effective at learning based on the inputs from
 their surroundings, it seemed promising to emulate this
-process when attempting to teach a computer new tricks. ANNs have since been the
+process when attempting to teach a computer new tricks. \Glspl{ann} have since been the
 target of extensive research, and has branched out in numerous variations that
 have little to no analog in animal brains.
 
-While the original idea to use ANNs first appeared around the middle of the 20th
+While the original idea to use \glspl{ann} first appeared around the middle of the 20th
 century, they where initially limited, in large part due to the lacking
 computational capacity of that time, and saw little use for a long time. As
 computing power increased exponentially, most state-of-the-art
@@ -432,7 +432,7 @@ architecture choices and training strategies.
 \begin{figure}[h]
   \centering
   \input{illustrations/neural-network.tex}
-  \caption[Illustration of an artificial neural network]{Illustration of a general Feed-Forward Neural Network architecture,
+  \caption[Illustration of an artificial neural network]{Illustration of a general feed-forward neural network architecture,
     here shown with four inputs nodes, one hidden layer of 5 nodes and a
     single output node.\citesource{writing/illustrations/neural-network.tex}}
   \label{fig:neural-network-example-diagram}

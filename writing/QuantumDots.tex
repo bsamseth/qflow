@@ -114,7 +114,7 @@ density is much more spread out to larger $r$.
 \begin{figure}[h]
   \centering
   \input{illustrations/rbm-diagram.tex}
-  \caption[Illustration of a Restricted Boltzmann Machine (RBM)]{Example diagram of a Guassian-Binary Restricted Boltzmann Machine, showed with four visible nodes
+  \caption[Illustration of a \acrfull{rbm}]{Example diagram of a Gaussian-binary \acrlong{rbm}, showed with four visible nodes
     and three hidden nodes. The red values are the parameters, and consist of
     visible layer bias, $\vb a$, hidden layer bias, $\vb b$ and connection
     weights $\mat W$.\citesource{writing/illustrations/rbm-diagram.tex}}
@@ -122,17 +122,17 @@ density is much more spread out to larger $r$.
 \end{figure}
 
 
-The first ML-inspired model we have applied is a Restricted Boltzmann Machine (RBM).
+The first \gls{ml}-inspired model we have applied is a \acrfull{rbm}.
 This type of model has seen a significant rise in usage
-since~\textcite{Carleo602} demonstrated the RBMs capability to
+since~\textcite{Carleo602} demonstrated the \glspl{rmb} capability to
 represent the wave function for some selected Hamiltonians. All the
 Hamiltonians for which they showed successful results, however, had discrete
 configuration spaces. The current system is continuous as the particles can have
-any real valued coordinates, and so the type of RBM must change as well.
+any real valued coordinates, and so the type of \gls{rbm} must change as well.
 
-While more than one choice exist, we have used a Gaussian-Binary RBM\@.
+While more than one choice exist, we have used a Gaussian-Binary \gls{rbm}\@.
 \cref{fig:rbm-diagram-example} shows and example diagram of the network
-structure. \textcite{Flugsrud-2018} has a full introduction to RBMs, including
+structure. \textcite{Flugsrud-2018} has a full introduction to \glspl{rbm}, including
 all details needed for \gls{vmc}\@. For our purposes it suffices to say that the
 resulting wave function looks as follows:
 
@@ -149,7 +149,7 @@ $\vb a, \vb b$ and $\mat W$, and we hold $\sigma^2=1$ constant in this case.
 
 If we set $\vb a = \vb 0$ we can recognize the first factor of~\cref{eq:rbm-def}
 as the non-interacting ground state. That way we can consider the second factor
-the Jastrow factor introduced by the RBM structure. It has an unconventional
+the Jastrow factor introduced by the \gls{rbm} structure. It has an unconventional
 form, as it is not a pure exponential.
 
 
@@ -165,10 +165,10 @@ choices, and the above is simply one such example.
 
 \cref{fig:QD-rbm-training} shows the ground state energy as a function of
 training steps, along with the progression of the variational
-parameters. While we see a clear improvement in the initial stages, the RBM
+parameters. While we see a clear improvement in the initial stages, the \gls{rbm}
 fails to converge as accurately as the benchmark. \cref{tab:rbm-energy-results}
 shows the precise results of the final model. While slightly different results
-are possible with different training settings, we have never observed the RBM
+are possible with different training settings, we have never observed the \gls{rbm}
 achieve energies below $\SI{3.07}{\au}$, which is an error of about two orders
 of magnitude larger than the benchmark.
 
@@ -179,7 +179,7 @@ of magnitude larger than the benchmark.
     \resizebox{\linewidth}{!}{%
         \input{scripts/QD-rbm.py.tex}
     }
-    \caption[Learning progression of an RBM on quantum dots]{\label{fig:QD-rbm-training}Left: Performance of the
+    \caption[Learning progression of an \gls{rbm} on quantum dots]{\label{fig:QD-rbm-training}Left: Performance of the
       wave function in \cref{eq:rbm-def} as a function of
       training steps. Right: Progression of variational parameters as a function
       of training steps.\citesource{writing/scripts/QD-rbm.py}}
@@ -187,7 +187,7 @@ of magnitude larger than the benchmark.
 
 \begin{table}[h]
   \centering
-  \caption[Energy estimates using an RBM on quantum dots]{Energy using the RBM wave function in~\cref{eq:rbm-def}, along with
+  \caption[Energy estimates using an \gls{rbm} on quantum dots]{Energy using the \gls{rbm} wave function in~\cref{eq:rbm-def}, along with
 the same wave function using input sorting to impose symmetry. Results obtained
 from $2^{23}$ samples and errors estimated by an automated blocking
 algorithm by~\textcite{Jonsson-2018}. Energies in atomic units $[\si{\au}]$. See
@@ -201,22 +201,22 @@ algorithm by~\textcite{Jonsson-2018}. Energies in atomic units $[\si{\au}]$. See
     \resizebox{\linewidth}{!}{%
         \input{scripts/QD-rbm.py.symmetry.tex}
     }
-    \caption[Symmetry and weight matrix of an RBM used on quantum dots]{\label{fig:QD-rbm-symmetry}Left: Permutation symmetry of the RBM wave
+    \caption[Symmetry and weight matrix of an \gls{rbm} used on quantum dots]{\label{fig:QD-rbm-symmetry}Left: Permutation symmetry of the \gls{rbm} wave
 function in~\cref{eq:rbm-def} as a function of training steps. Right: Color map
-of the weight matrix of the RBM after training. Weights have been scaled to
+of the weight matrix of the \gls{rbm} after training. Weights have been scaled to
 $[-1, 1]$ for simplicity. See \cref{fig:QD-rbm-training} for source code reference.}
 \end{figure}
 
 An important consideration that arises from this form of wave function model
 is that it has no guarantee of satisfying the required permutation symmetry.
 This is an attribute of most neural network based models. Because we know the
-true ground state must have the correct symmetry, we would hope that the RBM is
+true ground state must have the correct symmetry, we would hope that the \gls{rbm} is
 able to realize that a symmetric form is best. To this end we have defined a
 metric $S(\psi)$, which has the property of being equal to 1 for symmetric
 functions and $0$ for anti-symmetric ones. See \cref{app:symmetry-metric} for
 its definition and details. The left plot in \cref{fig:QD-rbm-symmetry} shows a
 plot of the symmetry metric of $\psi_{RBM}$ during training. Luckily we see
-that the RBM, initially starting fully non-symmetric, tends rapidly towards
+that the \gls{rbm}, initially starting fully non-symmetric, tends rapidly towards
 1. Still it is not purely symmetric, and we see significant
 oscillations around the maximum value.
 
@@ -225,7 +225,7 @@ In attempts to properly fix the symmetry of $\psi_{RBM}$, we have made two
 significant attempts. The first was reducing the biases $\vb a$ to be $\vb
 a\in\mathbb{R}^D$ and reducing the weights to $\mat W\in\mathbb{R}^{D\times N}$,
 i.e.\ have parameters per dimension and not per degree of freedom. While this ensured
-$S(\psi_{RBM})=1$, and the RBM could still learn the ground state if the
+$S(\psi_{RBM})=1$, and the \gls{rbm} could still learn the ground state if the
 particles where non-interacting (i.e.\ the pure Gaussian), it failed in the full
 system. The next section looks closer at the weights, and explains why this
 reduced form failed.
@@ -233,11 +233,11 @@ reduced form failed.
 More successfully we imposed symmetry by sorting the inputs prior to feeding
 them through $\psi_{RBM}$. While this was able to learn something, it stalled
 out at $>\SI{3.1}{\au}$. In general it is our experience that imposing the
-symmetry from the beginning of the training stops the RBM in getting anywhere.
+symmetry from the beginning of the training stops the \gls{rbm} in getting anywhere.
 This is a manifestation of the classical problem in learning of balancing
 exploitation and exploration, with this case suffering from a lack of exploration.
 
-The only truly successful way we found was to train the RBM as before, and then
+The only truly successful way we found was to train the \gls{rbm} as before, and then
 apply sorted inputs on it once it had been fully trained. The results of this is
 also shown in \cref{tab:rbm-energy-results} by $\psi_{SRBM}$. This lead to only a
 marginal, not statistically significant increase in energy, and as such was a
@@ -270,15 +270,15 @@ case:
                                                   -v_2 & 0 & 0 &  v_1
                                                   )
 \end{align}
-This relation is only approximately true, as the RBM has not learned set the
+This relation is only approximately true, as the \gls{rbm} has not learned set the
 weights exactly equal to each other, but it is close enough to show clear
 pattern.
 
 This pattern explains why the attempt at imposing symmetry with a reduced form
-of the RBM failed. This pattern is simply not possible to express with one
+of the \gls{rbm} failed. This pattern is simply not possible to express with one
 weight per degree of freedom.
 
-Having now observed this phenomena, we can seek to understand why the RBM learns
+Having now observed this phenomena, we can seek to understand why the \gls{rbm} learns
 this particular weight matrix. If we ignore the Gaussian factor of $\psi_{RBM}$
 and substitute in the above matrix for $\mat W$, we get:
 
@@ -289,16 +289,16 @@ and substitute in the above matrix for $\mat W$, we get:
   \end{split}
 \end{align}
 If $\vb{a}=a\vb{1}$ and $\vb{b}=b\vb{1}$ (i.e.\ biases are all equal in value),
-this leads to an RBM that is deceptively close to a fully permutation symmetric
-function, broken only by the sign on $(y_1-y_2)$. The RBM has, without direct
+this leads to an \gls{rbm} that is deceptively close to a fully permutation symmetric
+function, broken only by the sign on $(y_1-y_2)$. The \gls{rbm} has, without direct
 interactions, learned that the differences between the spacial coordinates of
 the two particles are important. In contrast to $\psi_{PJ}$, which has the
-distance $r_{12}$ explicitly incorporated, the RBM has learned the closest
+distance $r_{12}$ explicitly incorporated, the \gls{rbm} has learned the closest
 equivalent it has.
 
-The fact that the RBM is able to pick up on the importance of relative
+The fact that the \gls{rbm} is able to pick up on the importance of relative
 differences in position is encouraging for further work with less constrained
-neural networks. In this case, the RBM could not learn to square the differences
+neural networks. In this case, the \gls{rbm} could not learn to square the differences
 (e.g.\ $(x_1 - x_2)^2$ instead of $(x_1-x_2)$), simply because it had no means
 of expressing this.
 
@@ -490,7 +490,7 @@ Arguably, we should not attempt to assign physical meanings to any of the later
 layers. If anything, the weight matrix of the first layer could be insightful,
 as this is directly multiplied with the coordinates $\mat X$. Interestingly,
 two columns appear to have significant values. This is very similar to the
-effect seen in~\cref{fig:QD-rbm-symmetry} for the RBM. In fact, the same
+effect seen in~\cref{fig:QD-rbm-symmetry} for the \gls{rbm}. In fact, the same
 symmetry between the two columns is even present. The remaining columns are not
 as clearly zeroed out in the networks, perhaps due to the lack of
 regularization. While non-trivial to interpret, this points to the networks

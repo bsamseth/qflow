@@ -14,7 +14,7 @@ we would need to derive different equations, such as recurrent networks,
 residual networks, convolutional networks etc. However, they all still rely on the basic
 premise of applying the chain rule.
 
-One of the perhaps most appealing attributes of ML frameworks such as TensorFlow
+One of the perhaps most appealing attributes of \gls{ml} frameworks such as TensorFlow
 is how we can design arbitrary networks \emph{without} having to manually work
 out the associated derivatives. They way this is done is though \gls{ad}, an
 algorithmic application of the chain rule that can compute derivatives of any
@@ -107,12 +107,12 @@ per output). So in general, if $m \gg n$ we prefer reverse mode and when $m\ll
 n$ we prefer forward.
 
 Because of this, reverse mode automatic differentiation is by far the most
-prevailing choice in ML frameworks. This is because models almost always have
+prevailing choice in \gls{ml} frameworks. This is because models almost always have
 more inputs than outputs.
 
 \section{Automatic Differentiation for \gls{vmc}}
 
-\gls{ad} is the workhorse of modern ML which enables rapid development of complex
+\gls{ad} is the workhorse of modern \gls{ml} which enables rapid development of complex
 models by removing the need to manually implement derivatives. As \gls{vmc} also needs
 quite a lot of derivatives it is natural to wonder if we can have \gls{ad} tools work
 to our advantage also in this area.
@@ -172,7 +172,7 @@ unfeasible to use for even a moderate number of inputs.
 
 \section{Why Automatic Differentiation Failed}
 
-Because \gls{ad} is so central to most ML frameworks, like TensorFlow and PyTorch, a
+Because \gls{ad} is so central to most \gls{ml} frameworks, like TensorFlow and PyTorch, a
 great deal of effort was put in to attempt to make a viable \gls{vmc} implementation
 within these. That would give out-of-the-box functionality for neural networks,
 optimization strategies, \acrshort{gpu} acceleration etc. Sadly, the inefficiency of the
@@ -180,7 +180,7 @@ calculation of the Laplacian operator put a stop to such a marriage. The time
 spent by \gls{ad} to compute $\laplacian$ were orders of magnitude worse than the
 manually coded analytically expressions, and scaled significantly worse with
 increasing number of particles. This severe deficiency of \gls{ad} resulted
-in the unfortunate need to depart from the existing ML frameworks and
+in the unfortunate need to depart from the existing \gls{ml} frameworks and
 implement everything manually (i.e. analytically expressions for derivatives).
 This decision was not made lightly, and only after a painstaking effort to
 somehow attempt to defy the above mathematical argument. Unfortunately,
