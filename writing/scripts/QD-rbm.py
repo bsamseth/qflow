@@ -12,7 +12,7 @@ from qflow.mpi import mpiprint, master_rank
 
 
 def plot_training(energies, symmetries, parameters):
-    fig, (eax, pax) = plt.subplots(ncols=2)
+    _, (eax, pax) = plt.subplots(ncols=2)
     eax.plot(energies, label=r"$\langle E_L\rangle$")
     eax.set_ylabel(r"Ground state energy (a.u.)")
     eax.set_xlabel(r"% of training")
@@ -24,7 +24,7 @@ def plot_training(energies, symmetries, parameters):
 
     matplotlib2tikz.save(__file__ + ".tex")
 
-    fig, (sax, wax) = plt.subplots(ncols=2)
+    _, (sax, wax) = plt.subplots(ncols=2)
     sax.semilogx(symmetries, label=r"$S(\psi_{RBM})$")
     sax.set_ylabel("Symmetry")
     sax.set_xlabel(r"% of training")

@@ -12,7 +12,7 @@ from qflow.mpi import mpiprint, master_rank
 
 
 def plot_training(energies, parameters):
-    fig, (eax, pax) = plt.subplots(ncols=2)
+    _, (eax, pax) = plt.subplots(ncols=2)
     eax.plot(energies, label=r"$\langle E_L\rangle$ [a.u]")
     eax.set_xlabel(r"% of training")
     eax.set_ylabel(r"Ground state energy (a.u.)")
@@ -37,7 +37,7 @@ sampler.thermalize(10000)
 mpiprint("Acceptance rate after thermalization:", sampler.acceptance_rate)
 
 
-psi_energies = EnergyCallback(samples=5000000, verbose=True)
+psi_energies = EnergyCallback(samples=5_000_000, verbose=True)
 psi_parameters = ParameterCallback()
 
 train(
@@ -65,7 +65,7 @@ for P, step in zip([32, 64, 256], [0.5, 0.6, 0.8]):
     H = LennardJones(L)
     psi_ = JastrowMcMillian(5, 2.95, L)
     psi_.parameters = psi.parameters
-    samp = HeliumSampler(system, psi_, step, L)
+    _ = HeliumSampler(system, psi_, step, L)
     samp = HeliumSampler(system, psi_, step, L)
     samp.thermalize(10000)
     mpiprint(f"{P}: AR = {samp.acceptance_rate}")

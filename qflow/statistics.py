@@ -28,13 +28,14 @@ def compute_statistics_for_series(x, method="plain", **method_kwargs):
     }
 
 
-def statistics_to_tex(all_stats, labels, filename=None, quantity_name="$\\langle E_L\\rangle$"):
+def statistics_to_tex(
+    all_stats, labels, filename=None, quantity_name="$\\langle E_L\\rangle$"
+):
     """
     Produce LaTeX table from statistics produced from ``compute_statistics_for_series``.
     """
 
     used_stats = ("ci-", "ci+", "std", "var")
-    n_stats = len(used_stats) + 1
 
     digs = max([abs(int(math.floor(math.log10(stats["sem"])))) for stats in all_stats])
 
@@ -46,7 +47,11 @@ def statistics_to_tex(all_stats, labels, filename=None, quantity_name="$\\langle
 \\midrule
 \\addlinespace
 \\addlinespace
-    """ % (digs + 2, digs, quantity_name)
+    """ % (
+        digs + 2,
+        digs,
+        quantity_name,
+    )
 
     for stats, label in zip(all_stats, labels):
         stats = stats.copy()

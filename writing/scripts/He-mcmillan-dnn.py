@@ -11,21 +11,8 @@ from qflow.hamiltonians import LennardJones
 from qflow.optimizers import AdamOptimizer
 from qflow.samplers import HeliumSampler
 from qflow.statistics import compute_statistics_for_series, statistics_to_tex
-from qflow.wavefunctions import (
-    Dnn,
-    FixedWavefunction,
-    JastrowMcMillian,
-    SumPooling,
-    InputSorter,
-    WavefunctionProduct,
-)
-from qflow.wavefunctions.nn.activations import (
-    exponential,
-    identity,
-    relu,
-    sigmoid,
-    tanh,
-)
+from qflow.wavefunctions import Dnn, JastrowMcMillian, InputSorter, WavefunctionProduct
+from qflow.wavefunctions.nn.activations import exponential, tanh
 from qflow.wavefunctions.nn.layers import DenseLayer
 
 
@@ -33,7 +20,7 @@ def plot_training(energies, parameters):
     energies = np.asarray(energies)
     print(energies.shape)
     print(energies)
-    fig, (eax, pax) = plt.subplots(ncols=2)
+    _, (eax, pax) = plt.subplots(ncols=2)
     eax.plot(energies[:, 0], label=r"$\psi_{M}$")
     eax.plot(energies[:, 1], label=r"$\psi_{SDNN}$")
     eax.set_xlabel(r"% of training")

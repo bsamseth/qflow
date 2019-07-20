@@ -29,7 +29,6 @@ bins2 = bins ** 2
 if master_rank():
     rho = bins / np.trapz(np.trapz(bins, x=r), x=r)
     rho /= np.max(rho)
-    rx, ry = np.meshgrid(r, r)
     plt.imshow(
         rho,
         vmin=0,
@@ -48,7 +47,6 @@ if master_rank():
 
     rho = bins2 / np.trapz(np.trapz(bins2, x=r), x=r)
     rho /= np.max(rho)
-    rx, ry = np.meshgrid(r, r)
     plt.imshow(
         rho,
         vmin=0,

@@ -4,22 +4,13 @@ import numpy as np
 
 from qflow.wavefunctions import (
     JastrowPade,
-    JastrowOrion,
     SimpleGaussian,
     WavefunctionProduct,
-    FixedWavefunction,
     Dnn,
-    SumPooling,
     InputSorter,
 )
 from qflow.wavefunctions.nn.layers import DenseLayer
-from qflow.wavefunctions.nn.activations import (
-    sigmoid,
-    tanh,
-    relu,
-    identity,
-    exponential,
-)
+from qflow.wavefunctions.nn.activations import tanh, exponential
 from qflow.hamiltonians import CoulombHarmonicOscillator
 from qflow.samplers import ImportanceSampler
 from qflow.statistics import compute_statistics_for_series, statistics_to_tex
@@ -60,7 +51,8 @@ layers2 = [
 dnn2 = Dnn()
 for l in layers2:
     dnn2.add_layer(l)
-psi_sorted = WavefunctionProduct(simple_and_jastrow2, dnn2)
+psi_sorted_base = WavefunctionProduct(simple_and_jastrow2, dnn2)
+psi_sorted = InputSorter(psi_sorted_base)
 psi_sorted.parameters = psi.parameters
 psi_sorted_sampler = ImportanceSampler(system, psi_sorted, step_size=0.1)
 

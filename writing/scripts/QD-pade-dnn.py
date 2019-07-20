@@ -4,22 +4,13 @@ import matplotlib2tikz
 
 from qflow.wavefunctions import (
     JastrowPade,
-    JastrowOrion,
     SimpleGaussian,
     WavefunctionProduct,
-    FixedWavefunction,
     Dnn,
-    SumPooling,
     InputSorter,
 )
 from qflow.wavefunctions.nn.layers import DenseLayer
-from qflow.wavefunctions.nn.activations import (
-    sigmoid,
-    tanh,
-    relu,
-    identity,
-    exponential,
-)
+from qflow.wavefunctions.nn.activations import tanh, exponential
 from qflow.hamiltonians import CoulombHarmonicOscillator
 from qflow.samplers import ImportanceSampler
 from qflow.optimizers import AdamOptimizer
@@ -29,7 +20,7 @@ from qflow.mpi import mpiprint, master_rank
 
 
 def plot_training(energies, parameters, symmetries):
-    fig, (eax, pax) = plt.subplots(ncols=2)
+    _, (eax, pax) = plt.subplots(ncols=2)
     eax.semilogy(np.abs(3 - np.asarray(energies[2])), label=r"$\psi_{PJ}$")
     eax.semilogy(np.abs(3 - np.asarray(energies[0])), label=r"$\psi_{DNN}$")
     eax.semilogy(np.abs(3 - np.asarray(energies[1])), label=r"$\psi_{SDNN}$")
@@ -42,7 +33,7 @@ def plot_training(energies, parameters, symmetries):
 
     matplotlib2tikz.save(__file__ + ".tex")
 
-    fig, sax = plt.subplots()
+    _, sax = plt.subplots()
     sax.semilogx(symmetries, label=r"$S(\psi_{DNN})$")
     sax.set_ylabel("Symmetry")
     sax.set_xlabel(r"% of training")
@@ -119,7 +110,8 @@ layers2 = [
 dnn2 = Dnn()
 for l in layers2:
     dnn2.add_layer(l)
-psi_sorted = WavefunctionProduct(simple_and_jastrow2, dnn2)
+psi_sorted_base = WavefunctionProduct(simple_and_jastrow2, dnn2)
+psi_sorted = InputSorter(psi_sorted_base)
 psi.parameters = psi_sorted.parameters
 psi_sorted_sampler = ImportanceSampler(system, psi_sorted, step_size=0.1)
 
@@ -131,7 +123,7 @@ psi_bench = WavefunctionProduct(simple_gaussian_bench, jastrow_bench)
 psi_bench_sampler = ImportanceSampler(system, psi_bench, step_size=0.1)
 
 
-plot_samples = 1000000
+plot_samples = 1_000_000
 iters = 30000
 samples = 1000
 gamma = 0.0

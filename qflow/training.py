@@ -1,4 +1,4 @@
-from typing import Optional, Sequence, Callable
+from typing import Sequence, Callable
 from abc import ABC, abstractmethod
 
 import numpy as np

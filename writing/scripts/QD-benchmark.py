@@ -12,7 +12,7 @@ from qflow.mpi import mpiprint, master_rank
 
 
 def plot_training(energies, parameters):
-    fig, (eax, pax) = plt.subplots(ncols=2)
+    _, (eax, pax) = plt.subplots(ncols=2)
     eax.plot(energies, label=r"$\langle E_L\rangle$ [a.u]")
     eax.set_xlabel(r"% of training")
     eax.axhline(y=3, label="Exact", linestyle="--", color="k", alpha=0.5)
