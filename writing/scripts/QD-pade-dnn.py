@@ -145,6 +145,8 @@ train(
 )
 mpiprint("Training regular dnn complete")
 
+np.savetxt("QD-parameters-dnn-regular.txt", psi.parameters)
+
 psi_sorted_energies = EnergyCallback(samples=plot_samples, verbose=True)
 psi_sorted_parameters = ParameterCallback()
 
@@ -159,6 +161,8 @@ train(
     call_backs=(psi_sorted_energies, psi_sorted_parameters),
 )
 mpiprint("Training sorted dnn complete")
+
+np.savetxt("QD-parameters-dnn-sorted.txt", psi_sorted.parameters)
 
 psi_bench_energies = EnergyCallback(samples=plot_samples)
 
@@ -205,7 +209,6 @@ mpiprint(statistics_to_tex(stats, labels, filename=__file__ + ".table.tex"))
 # mpiprint(psi.parameters)
 
 if master_rank():
-    np.savetxt("Dnn-parameters.txt", psi.parameters)
     plot_training(
         [psi_energies, psi_sorted_energies, psi_bench_energies],
         [psi_parameters, psi_parameters],
