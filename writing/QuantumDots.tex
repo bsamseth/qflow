@@ -124,7 +124,7 @@ density is much more spread out to larger $r$.
 
 The first \gls{ml}-inspired model we have applied is a \acrfull{rbm}.
 This type of model has seen a significant rise in usage
-since~\textcite{Carleo602} demonstrated the \glspl{rmb} capability to
+since~\textcite{Carleo602} demonstrated the \glspl{rbm} capability to
 represent the wave function for some selected Hamiltonians. All the
 Hamiltonians for which they showed successful results, however, had discrete
 configuration spaces. The current system is continuous as the particles can have
@@ -494,7 +494,7 @@ effect seen in~\cref{fig:QD-rbm-symmetry} for the \gls{rbm}. In fact, the same
 symmetry between the two columns is even present. The remaining columns are not
 as clearly zeroed out in the networks, perhaps due to the lack of
 regularization. While non-trivial to interpret, this points to the networks
-learning, completely by them selves, some underlying physical structure in the
+learning, completely by themselves, some underlying physical structure in the
 inputs.
 
 
@@ -521,7 +521,7 @@ large, and this kind of complexity analysis is slightly unfair.
 
 In practice we found that we needed the second layer to have more
 nodes than we have inputs. We have not determined a strict relationship, but
-either $\mathcal{O}(N)$ or $\mathcal{O}{N^2}$ seems reasonable for the second
+either $\mathcal{O}(N)$ or $\mathcal{O}(N^2)$ seems reasonable for the second
 layer. Assuming the network shrinks from there on, the dominant operation is a
 matrix-vector operation with matrix dimensions of order $(N\times N)$ or $(N\times N^2)$,
 which works out to a complexity of $\mathcal{O}(N^2)$ or $\mathcal{O}(N^3)$. In
@@ -541,7 +541,7 @@ within reach.
 
 \subsection{Other Observables}
 
-So for we have only investigated the energies produced by the different wave
+So far we have only investigated the energies produced by the different wave
 functions. Other observables of interest could be the mean distance from the origin,
 $\expval{r}$, the mean squared distance from the origin, $\expval{r^2}$ and the mean
 inter-particle distance, $\expval{r_{12}}$. These are all quantities that should
