@@ -67,7 +67,7 @@ arbitrary number of machines, as long as they are connected in some way. These
 machines could in principle be placed all around the world and still work well
 for our purposes (some extra latency would be introduced by the distance).
 
-\subsection{Implementation API: Message Passing Interface}
+\subsection{Implementation \acrshort{api}: Message Passing Interface}
 
 For the actual communication between distributed memory processes, we have the
 standardized \gls{mpi}. This is typically implemented as a
@@ -150,7 +150,7 @@ multiple workers try to access (with at least one write operation) the same
 location in memory at the same time. The result of such behavior is undefined
 and must be avoided.
 
-\subsection{Implementation API: OpenMP}
+\subsection{Implementation \acrshort{api}: OpenMP}
 
 Similarly to how distributed memory parallelization has the MPI standard, we
 have the OpenMP standard for describing shared memory parallelization. The use
@@ -250,7 +250,7 @@ The recent (last decade) advancements in \gls{gpu} technology has been an integr
 part of the enormous amount of success in recent \gls{ml} applications. Their use has
 facilitated building models far beyond the capacity of an ordinary \gls{cpu}.
 
-\subsection{Implementation API: CUDA}
+\subsection{Implementation \acrshort{api}: CUDA}
 
 One popular way to program for a \gls{gpu} is through CUDA, a programming
 interface developed by NVIDIA. Similarly to \gls{mpi} programming, its use is (for
