@@ -1,8 +1,6 @@
 from typing import Sequence, Callable
 from abc import ABC, abstractmethod
 
-import numpy as np
-import matplotlib.pyplot as plt
 from .hamiltonians import Hamiltonian
 from .wavefunctions import Wavefunction
 from .samplers import Sampler

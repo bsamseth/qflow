@@ -35,8 +35,6 @@ def statistics_to_tex(
     Produce LaTeX table from statistics produced from ``compute_statistics_for_series``.
     """
 
-    used_stats = ("ci-", "ci+", "std", "var")
-
     digs = max([abs(int(math.floor(math.log10(stats["sem"])))) for stats in all_stats])
 
     tex = f"""\\begin{{tabular}}{{lS[table-format=1.%d]*2{{S[table-format=1.%d]}}*2{{S[table-format=1.1]}}}}
