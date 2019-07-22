@@ -11,12 +11,12 @@ the error estimates backwards through the network. While we could derive these
 equations relatively simply in the case of a pure feed-forward neural network
 such as the ones described here, there are a whole world of variants for which
 we would need to derive different equations, such as recurrent networks,
-residual networks, convolutional networks etc. However, they all still rely on the basic
-premise of applying the chain rule.
+residual networks, convolutional networks etc. Nevertheless, they all still rely
+on the basic premise of applying the chain rule.
 
 One of the perhaps most appealing attributes of \gls{ml} frameworks such as TensorFlow
 is how we can design arbitrary networks \emph{without} having to manually work
-out the associated derivatives. They way this is done is though \gls{ad}, an
+out the associated derivatives. The way this is done is though \gls{ad}, an
 algorithmic application of the chain rule that can compute derivatives of any
 function specified by a computer program.
 
@@ -49,11 +49,11 @@ Let the function we wish to differentiate be the following:\footnote{This exampl
 \end{align}
 where we have introduced the temporary variables $w_i$ for later notational brevity.
 Assume that we are interested in $\pdv*{y}{x_1}$ and $\pdv*{y}{x_2}$. There are
-two main approaches in use: Forward and Reverse mode.
+two main approaches in use: \emph{forward} and \emph{reverse} mode.
 
 \subsection{Forward Mode}
 
-We first decide on one independent variable to differentiation with respect to,
+We first decide on one independent variable to differentiate with respect to,
 say $x_1$. We then compute $\dot w_i = \pdv*{w_i}{x_1}$ in order of increasing
 $i$ (forward through the computation).
 
@@ -78,18 +78,18 @@ w_1$ and $\dot w_2$, while the rest remains the same. Because of this, these
 
 \subsection{Reverse Mode}
 
-Instead of first fixing the independent variable, we
-instead fix the dependent variable which should be differentiated (\(y\)), and
-then compute its derivative w.r.t. the different sub expressions $w_i$. We
-define \(\bar w_i = \pdv*{y}{w_i}\), and construct the following table of
-operations (backwards through the computation):
+Instead of first fixing the independent variable, we instead fix the dependent
+variable which should be differentiated (only one in this case, \(y\)), and then
+compute its derivative w.r.t. the different sub expressions $w_i$. We define
+\(\bar w_i = \pdv*{y}{w_i}\), and construct the following table of operations
+(backwards through the computation):
 
 \begin{align*}
   \bar w_5 &= \pdv{y}{w_5} = 1\\
   \bar w_4 &= \pdv{y}{w_4} = \bar w_5\pdv{w_5}{w_4} = \bar w_5\\
   \bar w_3 &= \pdv{y}{w_3} = \bar w_5\pdv{w_5}{w_3} = \bar w_5\\
   \bar w_2 &= \pdv{y}{w_2} = \bar w_3\pdv{w_3}{w_2} = \bar w_3 w_1\\
-  \bar w_1 &= \pdv{y}{w_1} = \bar w_4\pdv{w_4}{w_1} + \bar w_3 \pdv{w_3}{w_1}= \bar w_4 \cos(w_1) + \bar w_3w_2
+  \bar w_1 &= \pdv{y}{w_1} = \bar w_4\pdv{w_4}{w_1} + \bar w_3 \pdv{w_3}{w_1}= \bar w_4 \cos(w_1) + \bar w_3w_2.
 \end{align*}
 Notice how reverse mode required only one pass though the algorithm in order to
 find the derivatives of both independent variables, compared to two passes for
@@ -112,10 +112,8 @@ more inputs than outputs.
 
 \section{Automatic Differentiation for \gls{vmc}}
 
-\gls{ad} is the workhorse of modern \gls{ml} which enables rapid development of complex
-models by removing the need to manually implement derivatives. As \gls{vmc} also needs
-quite a lot of derivatives it is natural to wonder if we can have \gls{ad} tools work
-to our advantage also in this area.
+As \gls{vmc} also needs quite a lot of derivatives it is natural to wonder if we
+can have \gls{ad} tools work to our advantage also in this area.
 
 \subsection{First Order Derivatives}
 
@@ -134,13 +132,12 @@ $f:\mathbb{R}^m\to\mathbb{R}^n$ looks like:
     \pdv{f_2}{x_2} & \pdv{f_2}{x_2} & \dots & \pdv{f_2}{x_m}\\
     \vdots & \vdots & \ddots & \vdots\\
     \pdv{f_n}{x_1} & \pdv{f_n}{x_2} & \dots & \pdv{f_n}{x_m}\\
-  \end{pmatrix}
+  \end{pmatrix}\,.
 \end{align}
-A forward mode sweep calculates a column of $\mat J$,
-while a reverse mode sweep calculates a row of $\mat
-J$~\cite{auto-diff-Berland}. In our case, $f$ is a wave function which has a
-scalar output, and $\mat J$ is really a row vector. Reverse mode is clearly
-superior in this case, requiring only a single pass.\\
+A forward mode sweep calculates a column of $\mat J$, while a reverse mode sweep
+calculates a row~\cite{auto-diff-Berland}. In our case, $f$ is a wave function
+which has a scalar output, and $\mat J$ is really a row vector. Reverse mode is
+clearly superior in this case, requiring only a single pass.
 
 \subsection{Higher Orders}
 
@@ -155,12 +152,12 @@ operator, $\laplacian$. To see why this will be harder, we can consider the
     \pdv{f}{x_2}{x_1} & \pdv[2]{f}{x_2} & \dots & \pdv{f}{x_2}{x_m}\\
     \vdots & \vdots & \ddots & \vdots\\
     \pdv{f}{x_M}{x_1} & \pdv{f}{x_M}{x_2} & \dots & \pdv[2]{f}{x_m}\\
-  \end{pmatrix}
+  \end{pmatrix}\,.
 \end{align}
 We can compute these second order derivatives by applying \gls{ad} twice. First we do
 a reverse sweep and obtain the Jacobian (the row vector). The act of computing
 the Jacobian is it self a function, $f: \mathbb{R}^m\to\mathbb{R}^m$, and as
-such we can apply \gls{ad} to it an obtain the elements of $\mat H$.\\
+such we can apply \gls{ad} to it an obtain the elements of $\mat H$.
 
 Computing the required Laplace operator equates to computing the trace (sum of
 diagonal) of the Hessian matrix. Remember that a forward/reverse sweep
@@ -172,27 +169,25 @@ unfeasible to use for even a moderate number of inputs.
 
 \section{Why Automatic Differentiation Failed}
 
-Because \gls{ad} is so central to most \gls{ml} frameworks, like TensorFlow and PyTorch, a
-great deal of effort was put in to attempt to make a viable \gls{vmc} implementation
-within these. That would give out-of-the-box functionality for neural networks,
-optimization strategies, \acrshort{gpu} acceleration etc. Sadly, the inefficiency of the
-calculation of the Laplacian operator put a stop to such a marriage. The time
-spent by \gls{ad} to compute $\laplacian$ were orders of magnitude worse than the
-manually coded analytically expressions, and scaled significantly worse with
-increasing number of particles. This severe deficiency of \gls{ad} resulted
-in the unfortunate need to depart from the existing \gls{ml} frameworks and
-implement everything manually (i.e. analytically expressions for derivatives).
-This decision was not made lightly, and only after a painstaking effort to
-somehow attempt to defy the above mathematical argument. Unfortunately,
-mathematics was right this time as well.
+Because \gls{ad} is so central to most \gls{ml} frameworks, like TensorFlow and
+PyTorch, a great deal of effort was put in to attempt to make a viable \gls{vmc}
+implementation within these. That would give out-of-the-box functionality for
+neural networks, optimization strategies, \acrshort{gpu} acceleration etc.
+Sadly, the inefficiency of the calculation of the Laplacian operator put a stop
+to such a marriage. The time spent by \gls{ad} to compute $\laplacian$ were
+orders of magnitude worse than the manually coded analytically expressions, and
+scaled significantly worse with increasing number of particles. This severe
+deficiency of \gls{ad} resulted in the unfortunate need to depart from the
+existing \gls{ml} frameworks and implement everything manually (i.e.
+analytically expressions for derivatives). This decision was not made lightly,
+and only after a painstaking effort to somehow attempt to defy the above
+mathematical argument. Unfortunately, mathematics was right.
 
-We sincerely hope that \gls{ad} can somehow be efficiently incorporated in future
-works. Research into how \gls{ad} can be efficiently applied to higher order
-derivatives is ongoing, see for instance~\textcite{wang2017}. If nothing else,
-we could potentially use \gls{ad} for Hamiltonians which does not include the Laplacian
-operator.
-
-\glsreset{gpu}
+We sincerely hope that \gls{ad} can somehow be efficiently incorporated in
+future works. Research into how \gls{ad} can be efficiently applied to higher
+order derivatives is ongoing, see for instance~\textcite{wang2017}. If nothing
+else, we could potentially use \gls{ad} for Hamiltonians which does not include
+the Laplacian operator.
 
 
 \end{document}
