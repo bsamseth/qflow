@@ -129,7 +129,6 @@ legend style={at={(0.91,0.5)}, anchor=east, draw=white!80.0!black},
 tick align=outside,
 tick pos=left,
 ylabel={Parameters},
-ylabel style={rotate=-180},
 xlabel={\% of training},
 x grid style={white!69.01960784313725!black},
 xmin=-5, xmax=105,
@@ -138,7 +137,8 @@ y grid style={white!69.01960784313725!black},
 ymin=0.378191221816561, ymax=1.02960994181826,
 ytick style={color=black},
 ytick pos=right,
-ylabel near ticks
+ylabel near ticks,
+ylabel style={rotate=-180},
 ]
 \addplot [semithick, color0]
 table {%
