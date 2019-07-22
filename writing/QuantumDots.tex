@@ -563,15 +563,17 @@ from the three wave functions trained previously.
   \label{tab:QD-mean-distance-metrics}
 \end{table}
 We see first that, as one would expect, the predicted radii are larger when we
-have multiple interacting particles. Less clear is the differences between the
-benchmark wave function $\psi_{PJ}$ and the networks. In general, the results
+have multiple interacting particles, as opposed to the ideal non-interacting
+case. Less clear is the differences between the benchmark wave function
+$\psi_{PJ}$ and the networks. In general, the results
 indicate that $\psi_{PJ}$ slightly underestimates the effect of the Coulomb
-repulsion. While $\expval{r}$ and $\expval{r^2}$ are not significantly different
-from the networks, we see a larger difference in $\expval{r_{12}}$. This might
+repulsion with smaller estimates for all three quantities. While $\expval{r}$
+and $\expval{r^2}$ are only borderline significantly different from the networks, we see a
+larger difference in $\expval{r_{12}}$. This might
 be because $\expval{r_{12}}$ is the quantity which is most directly
 connected to the strength of the interaction
 
-The two network types seem to once again be equivalent, with the observed differences well
+The two network types seem to be equivalent, with the observed differences well
 within statistical expectations.
 
 \end{document}
