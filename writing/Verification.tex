@@ -122,12 +122,12 @@ implementation and the validity of the statistical estimates.
   \input{scripts/verify-energy-stats.py.table2.tex}
 \end{table}
 
-\section{One-Body Density}
+\section{One-body Density}
 
 Because the wave functions we typically encounter tend to be multidimensional,
 visualizing them can be quite challenging. One way of reducing the
 dimensionality is to integrate out the positions for all but one particle. The
-result is called the One-Body Density (OBD):
+result is a \gls{pdf} called the one-body density:
 
 \begin{align}
   \label{eq:one-body-density-def}
@@ -175,12 +175,11 @@ curves are indistinguishable, showing that our implementation is indeed correct.
     more samples. This result used $2^{23}$ \gls{mc} samples.\citesource{writing/scripts/verify-onebody-density.py}}
 \end{figure}
 
-\section{Two-Body Density}
+\section{Two-body Density}
 
 Similarly to the one-body density, we can integrate out all degrees of freedom
-except for two particles. This will give us a two-dimensional probability
-distribution showing how the two particles are likely to be located relative to
-each other.
+except for two particles. This will give us a two-dimensional \gls{pdf} showing
+how the two particles are likely to be located relative to each other.
 
 Mathematically we define it in a similar way,
 
