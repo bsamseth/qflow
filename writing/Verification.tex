@@ -8,7 +8,7 @@ verify that the software we have developed is indeed functioning as advertised.
 These types of tests are more large scale (integration tests) compared to low
 level unit tests which is a part of the source code for QFLOW. By checking that
 we can reproduce known benchmarks and observe behavior that is consistent with
-our expectations we can increase the amount of trust assigned to the implementation.
+our expectations we hope to increase the amount of trust assigned to the implementation.
 
 \section{Setup}
 
@@ -43,8 +43,7 @@ Gaussian form of the ground state it self:
 with $\alpha$ the only variational parameter. Learning the ideal parameters
 should be trivial in this case, and we should expect perfect results.
 
-Second, we use an ansatz resulting from a Gaussian-Binary Restricted Boltzmann
-Machine (RBM), given in \cref{eq:rbm-def}:
+Second, we use an ansatz resulting from a Gaussian-binary \gls{rbm}, presented in \cref{eq:rbm-def}:
 
 
 \begin{align}
@@ -248,20 +247,14 @@ this test is not the most challenging, it is nevertheless a useful check.
 
 Successful training is highly dependent on using the correct hyperparameters.
 Among the most important are the ones controlling the optimization scheme, such
-as the learning rate in Stochastic Gradient Decent (SGD). The following plots
-aim to illustrate this dependency, while also serving as a check that the
-implemented optimization schemes work as expected.
+as the learning rate in \gls{sgd}. The following plots aim to illustrate this
+dependency, while also serving as a check that the implemented optimization
+schemes work as expected.
 
 Importantly, these results are not meant to infer that some schemes or learning
 rates are superior to others. Which scheme works best for a given learning
-problem will depend on a number of factors, such as the:
-
-\begin{itemize}
-  \item Magnitude of the gradients
-  \item Number of parameters
-  \item Variance in gradient estimates
-  \item etc.
-\end{itemize}
+problem will depend on a number of factors, such as the magnitude of the
+gradients, number of parameters, variance in gradient estimates etc.
 
 
 \subsubsection{Simple Problem - $\psi_G$}
@@ -269,7 +262,7 @@ problem will depend on a number of factors, such as the:
 \cref{fig:verify-lr-gaussian} shows the absolute error of $\psi_G$ during
 training with several different schemes. For standard SGD we see that a learning
 rate around $\eta = 0.1$ performs best among these results, and SGD with $\eta
-=0.01$ showing the slowest convergence. Naturally, values of $0.1>\eta>0.01$
+=0.01$ is the slowest to converge. Naturally, values of $0.01<\eta<0.1$
 perform somewhere between the two.
 
 From these results alone it might seem like
