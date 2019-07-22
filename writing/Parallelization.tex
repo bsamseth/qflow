@@ -47,20 +47,21 @@ following basic algorithm:
 \item Repeat from \ref{temp:1} for $n$ total steps
 \item Let the result be $y_\text{final} = \flatfrac{y}{n}$
 \end{enumerate}
-The important note about this computation is that addition is commutative, and
+The important thing about this computation is that addition is commutative, and
 so the order of the samples (obviously) does not matter. As such we could run
-$p$ parallel processes, each of which computes $n / p$ terms before aggregating
-the partials sums together and taking the mean.
+$p$ parallel processes, each of which computes $\flatfrac{n}{p}$ terms before aggregating
+the partial sums together and taking the mean.
 
 This is a so called embarrassingly parallel problem, in the sense that it is
 trivial to divide the workload up into smaller tasks. It has as close to linear
 speedup potential\footnote{Linear speedup implies that if a task takes time $T$
-to finish with one process, then it takes $T/n$ time with $n$ processes.} as one
-can hope for, and is an ideal candidate for parallelization through distributed
-memory multi processing. We want to run $p$ independent instances of the
-algorithm, and pause momentarily to communicate the results. In the simple
-example above, we just send the final partial sum acquired by each process. The
-cost of sending the message is negligible compared to the main loop.
+to finish with one process, then it takes $\flatfrac{T}{n}$ time with $n$
+processes.} as one can hope for, and is an ideal candidate for parallelization
+through distributed memory multi-processing. We want to run $p$ independent
+instances of the algorithm, and pause momentarily to communicate the results. In
+the simple example above, we just send the final partial sum acquired by each
+process. The cost of sending the message is negligible compared to the main
+loop.
 
 The main benefit of distributed memory is that it is easy to scale up to any
 arbitrary number of machines, as long as they are connected in some way. These
@@ -101,8 +102,8 @@ double Hamiltonian::local_energy(Sampler& sampler, Wavefunction& psi, long sampl
         E_L += local_energy(sampler.next_configuration(), psi);
 
     double global_E_L;
-    MPI_Allreduce(
-        &E_L, &global_E_L, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&E_L, &global_E_L, 1,
+                  MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
     return global_E_L / samples;
 }
@@ -114,7 +115,7 @@ Listing~\ref{lst:mpi-example} on different number of cores. In particular, we co
 the local energy of a simple harmonic oscillator system of one particle in three
 dimensions. \cref{fig:mpi-example} shows the number of \gls{mc} iterations per second
 as a function of the number of cores used. As advertised, we see a speedup that
-follows closely the ideal linear curve.
+follows closely the ideal linear line.
 
 Still, we should emphasize that in order to obtain these results, we had to
 increase the total workload linearly with increasing number of \glspl{cpu}. If we
@@ -130,7 +131,8 @@ use a sufficiently large number of \gls{mc} samples.
     \resizebox{0.7\linewidth}{!}{%
         \input{scripts/mpi-speed-test.py.tex}
     }
-  \caption[Speedup using MPI parallelization]{Iterations per second when running \cref{lst:mpi-example} with
+  \caption[Speedup using MPI parallelization]{Iterations per second when running
+    Listing \ref{lst:mpi-example} with
 varying number of processors. These results where obtained by running a test on
 the Abel computing cluster. Exact results will vary greatly depending on the
 availability of the cores, size of the workload and several other
@@ -220,10 +222,10 @@ part forces the processing units to be in relative close proximity to each
 other.\footnote{You could in principle emulate shared memory for separate
   machines, but the emulation it self would have to use a message passing
   interface, which would defeat the purpose.} For this reason, we have focused
-our parallelization efforts to MPI, because we anticipate the need for a large
+our parallelization efforts to \gls{mpi}, because we anticipate the need for a large
 number of parallel jobs. To some extent, a happy marriage of the two is
 sometimes possible, but in general we expect that dedicating as many cores to
-MPI processes as possible to be the most beneficial strategy.
+\gls{mpi} processes as possible should be the most beneficial strategy.
 
 
 \section{GPU Acceleration}
@@ -244,7 +246,7 @@ C = \mat A \mat B$, or more explicitly:
 The order in which we do any of the above $\mathcal{O}(n^3)$ operations really
 doesn't matter, and so one can see how this can be an extremely parallel
 process. A high-end \gls{gpu} will have a number of cores in the four digit range,
-facilitating speedups of several orders of magnitude compared to a \gls{cpu}.
+facilitating speedups of several orders of magnitude compared to a single \gls{cpu}.
 
 The recent (last decade) advancements in \gls{gpu} technology has been an integral
 part of the enormous amount of success in recent \gls{ml} applications. Their use has
