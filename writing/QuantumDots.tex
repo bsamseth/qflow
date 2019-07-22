@@ -464,15 +464,17 @@ algorithm by~\textcite{Jonsson-2018}. Energies in atomic units $[\si{\au}]$. See
 \begin{figure}[h]
    \centering
     \resizebox{\linewidth}{!}{%
-        \input{scripts/QD-pade-dnn.py.weights-regular.tex}
+        \input{scripts/QD-plot-parameters.py.weights-regular.tex}
     }
-    \caption[Weights of a neural network trained on quantum dots]{\label{fig:QD-pade-dnn-weights}Color map representation of the
-weights and biases in the network of $\psi_{DNN}$. The left column of plots
-shows the weight matrices in each layer, and the corresponding biases are in the
-right column. The bottom right plot has only one color because there is only one
-output layer bias. Each rectangle represents a parameter, and they have been
-scaled to have the same total size. The size of the rectangles are not
-important. See \cref{fig:QD-pade-dnn-training} for source code reference.}
+    \caption[Weights of a neural network trained on quantum
+dots]{\label{fig:QD-pade-dnn-weights}Color map representation of the weights and
+biases in the network of $\psi_{DNN}$. The left column of plots shows the weight
+matrices in each layer, and the corresponding biases are in the right column.
+The bottom right plot has only one color because there is only one output layer
+bias. Each rectangle represents a parameter, and they have been scaled to have
+the same total size. The size of the rectangles are not important. The
+parameters of $\psi_{SDNN}$ are largely different, but show similar patterns.
+See \cref{fig:QD-pade-dnn-training} for source code reference.}
 \end{figure}
 
 \subsection{Interpreting the Networks}
@@ -489,13 +491,15 @@ representation of all the weights and biases of $\psi_{DNN}$ after training.
 Arguably, we should not attempt to assign physical meanings to any of the later
 layers. If anything, the weight matrix of the first layer could be insightful,
 as this is directly multiplied with the coordinates $\mat X$. Interestingly,
-two columns appear to have significant values. This is very similar to the
-effect seen in~\cref{fig:QD-rbm-symmetry} for the \gls{rbm}. In fact, the same
-symmetry between the two columns is even present. The remaining columns are not
-as clearly zeroed out in the networks, perhaps due to the lack of
-regularization. While non-trivial to interpret, this points to the networks
-learning, completely by themselves, some underlying physical structure in the
-inputs.
+only a few columns appear to have significant values. This is very similar to the
+effect seen in~\cref{fig:QD-rbm-symmetry} for the \gls{rbm}. In fact, a similar
+symmetry between two of the columns is even present, hinting that the network
+has realized the importance of relative differences in coordinates. The
+remaining columns are not as clearly zeroed out in the networks, perhaps partly due to
+the lack of regularization, but also evidence that more is happening here
+compared to the \gls{rbm}. While non-trivial to interpret, this points to the
+networks learning, completely by themselves, some underlying physical structure
+in the inputs.
 
 
 
