@@ -51,6 +51,10 @@ ytick style={color=black}
 \addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=15.5, ymin=31.5, ymax=-0.5] {scripts/QD-plot-parameters.py.weights-regular-002.png};
 
 \nextgroupplot[
+colorbar,
+colormap/viridis,
+point meta min=-1,
+point meta max=1,
 axis y line=right,
 tick align=outside,
 x grid style={white!69.01960784313725!black},
