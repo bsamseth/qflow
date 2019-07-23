@@ -19,7 +19,7 @@ as the McMillan form wave function~\cite{McMillan-1965}:
 \end{align}
 where $\beta$ is the only variational parameter and has units of angstrom. An
 important observation now is the lack of any single particle wave function
-factor. In the case of the Quantum Dot we had a Gaussian localized at the origin
+factor. In the case of \glspl{qd} we had a Gaussian localized at the origin
 as a result of the potential well. This system, however, is infinite and
 periodic without any such influence driving it towards particular points in
 space. Furthermore, because of the lack of an external field the single particle
@@ -47,8 +47,11 @@ computation time needed to run the simulations increase significantly with
 increasing numbers. The purpose of the following analysis is to test the
 \emph{relative} accuracy of different wave functions. With that in mind we have
 used a small number of particles in the main results, which introduces a
-significant error. The number of particles should still be large enough to
-introduce all the relevant effects and produce valid test results.
+significant error with respect to reality. The number of particles should nevertheless
+be large enough to introduce all the relevant effects and allow for a valid
+comparison of methods. With the same motivation, we limit our Hamiltonian to use
+only the Lennard-Jones potential (\cref{eq:Lennard-Jones-def}), and leave tests
+with HFDHE2 for future research.
 
 
 \subsection{Optimizing}
@@ -58,15 +61,15 @@ iterations of $\num{5000}$ \gls{mc} cycles each. We used standard Metropolis sam
 along with the ADAM optimizer. \cref{fig:He-benchmark-training} shows the
 progression of both the energy and variational parameter during training.
 Because of the strong correlations involved, there is significantly more
-variance in these results compared to the benchmark used for Quantum Dots. We
-see the value for $\beta$ oscillating without any indication of converging to a
+variance in these results compared to the benchmark used for \glspl{qd}. We
+see the value for $\beta$ oscillating without any signs of converging to a
 fixed value.
 
-\cref{tab:He-benchmark-results} show the energy estimates from the final model.
+\cref{tab:He-benchmark-results} shows the energy estimates from the final model.
 The same wave function (i.e. same value for $\beta$) has also been used on
-different number of particles to illustrate how the energy increases for larger
-systems. Based on computations with larger and larger systems, the value for $N
-= 256$ is quite close to the apparent convergence for $N\to\infty$.
+different numbers of particles to illustrate how the energy increases for larger
+simulation boxes. Based on computations with larger and larger systems, the
+value for $N = 256$ is quite close to the apparent convergence for $N\to\infty$.
 
 \begin{figure}[h]
   \centering
@@ -78,7 +81,7 @@ systems. Based on computations with larger and larger systems, the value for $N
     parameter $\beta$ of~\cref{eq:McMillan-wave-function-def} as a function of
     training steps. A convergence is clearly visible, although there is more
     variance in the value for $\beta$ compared to the parameters of the
-    benchmark used for Quantum Dots.\citesource{writing/scripts/He-benchmark.py}}
+    benchmark used for quantum dots.\citesource{writing/scripts/He-benchmark.py}}
 \end{figure}
 
 \begin{table}[h]
@@ -122,7 +125,7 @@ considering the substantial computational cost.
 The proposed network structure is one of many that are likely to perform well,
 and in all likelihood this is not the optimal form. A more in depth analysis of
 what structures perform best, including other types of networks (e.g.\ recurrent,
-convolutional, residual etc.) is left for future research.\\
+convolutional, residual etc.) is left for future research.
 
 Based on the experimental results observed for quantum dots, in conjunction with
 trail and error, we have used the following network structure:
@@ -145,21 +148,23 @@ trail and error, we have used the following network structure:
     \bottomrule
   \end{tabular}
 \end{center}
-Once again the number of nodes in the input layer is fixed by the number of
-degrees of freedom ($D\times N$ for $D$ dimensions). The number of nodes in the
-second layer is somewhat arbitrary, and could be changed. Importantly it is
-larger than $96$, allowing the network to learn more features. Still, it is not
-enough nodes to fully encode the relative difference between every pair of
-coordinates, as would be required to reproduce $\psi_M$ fully. This number was
-found to be large enough to allow learning, but still be reasonably efficient.
-Lastly, the second hidden layer was set to $36$ nodes. This is also somewhat
-arbitrary, but importantly it is smaller than $144$, allowing the gradual
-narrowing down to the single output. The activation functions are the same as
-those used for quantum dots.
+Once again the number of nodes in the input layer is fixed by the
+number of degrees of freedom ($N\times D$ for $D$ dimensions). The number of
+nodes in the second layer is somewhat arbitrary, and could be changed.
+Importantly it is larger than $96$, allowing the network to learn more features
+than it has inputs. Still, it is not enough nodes to fully encode the relative
+difference between every pair of coordinates, as would be required to reproduce
+$\psi_M$ fully. This number was found to be large enough to allow learning, but
+still be reasonably efficient. Lastly, the second hidden layer was set to $36$
+nodes. This is also somewhat arbitrary, but importantly it is smaller than
+$144$, allowing the gradual narrowing down to the single output. The activation
+functions are the same as those used for quantum dots.
 
-Finally, based on the success of applying sorting on the inputs to the network
-to impose symmetry we will reuse this strategy here. The wave function with
-input sorting applied is denoted as $\psi_{SDNN}$.
+Finally, we train two instances of the network, with and without input sorting
+applied to impose symmetry, denoted once again by $\psi_{DNN}$ and
+$\psi_{SDNN}$, respectively. (\textbf{TODO}: New plots including $\psi_{DNN}$
+are currently being produced. Short story: $\psi_{DNN}$ does not work at all in this
+case, and $\psi_{SDNN}$ is successful.)
 
 \subsection{Optimization}
 
@@ -186,18 +191,27 @@ significantly less room for error in this much more challenging problem.
 course of training for both wave functions. On this time scale (i.e.\ $\num{25}$
 times more training than used for the benchmark alone) we see $\psi_M$ converge
 immediately to the same energy level as we saw in
-\cref{fig:He-benchmark-training}. With the neural network, however, there is an
-apparent immediate lowering of energy. Furthermore, after
-about \SIrange{30}{60}{\percent} of the total training we see a gradual lowering
-in the energy before it plateaus again.
+\cref{fig:He-benchmark-training}. For $\psi_{SDNN}$, however, there is an
+apparent immediate lowering of energy. Furthermore, after about
+\SIrange{30}{60}{\percent} of the total training we see another gradual lowering
+in the energy before it finally plateaus again.
 
-\cref{tab:He-dnn-results} shows the final energies produced from the two wave
-functions after training. We see a significant lowering of the total energy.
+In contrast to the results seen for \glspl{qd}, the network without symmetry
+imposed ($\psi_{DNN}$) fails to learn anything beyond the benchmark. It appears
+that for this larger system, imposing the symmetry is vitally important in
+helping the networks learn the correlations. We hypothesize that for only two
+particles the network could learn the symmetry, allowing more
+flexible learning, where as in this case the inputs are too complex for the
+network to learn on its own. (\textbf{TODO:} Not seen plot yet,
+to be included.)
+
+\cref{tab:He-dnn-results} shows the final energies produced from $\psi_{M}$ and
+$\psi_{SDNN}$ after training. We see a significant lowering of the total energy.
 Unlike the results for quantum dots, however, we do not get a lowering of the
 variance, but rather a small increase. It is hard to say exactly how much of the
 total error in energy is corrected for by the inclusion of the networks, due to
 the lack of existing results using $N=32$ particles with the Lennard-Jones
-potential, with the same potential corrections that we have included.
+potential with the same potential corrections that we have included.
 Nevertheless, the networks continue to show their ability to improve upon the
 results of all the benchmark wave functions we have paired them with. As our
 main interest in this work is to demonstrate this general ability, as opposed to
