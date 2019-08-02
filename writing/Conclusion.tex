@@ -12,33 +12,34 @@ brings the two together. From this theory we have developed a code
 library suitable for rapid development and experimentation with
 variations of Hamiltonians, wave functions, sampling strategies,
 optimization schemes etc., which still performs well enough to
-handle large scale computations running on supercomputing clusters. The
+handle large scale computations running on supercomputing facilities. The
 code was thoroughly tested and verified by reproducing known analytical
 results. Finally we applied our techniques on two different test
 systems; quantum dots and liquid helium. In both cases we were able to
-outperform the classical benchmarks by a significant margin, at the
+outperform the traditional benchmarks by a significant margin, at the
 expense of increased computational cost.
 
 
 \section{Related Works}
 
 The initial motivation for this topic sprung out of the article by
-\textcite{Carleo602} which first showed the promise of neural networks (\glspl{rbm} in
-particular) for quantum many-body wave functions. Following this, in a thesis by
-\textcite{Flugsrud-2018}, attempts were made to apply \glspl{rbm} to Quantum dots. This
-saw some success, but the particular \gls{rbm} used proved to be insufficient for
-accurate reproduction of the ground state. At this point the idea of applying
-more general neural networks started to develop and the work on this thesis
-started around mid 2018. Since then we have seen a few articles arise with
-similar ideas. \textcite{Saito-2018} used a simple neural network with one
-hidden layer to represent the ground state wave function of
-selected few-body bosonic systems. The approach used here is very comparable to our,
-except that \citeauthor{Saito-2018} chose to pre-train the network instead of
-simply adding it as another correlation factor. \textcite{Han-2018} applied a
-much more complex network to other systems, including systems of many fermions,
-where part of the complexity was added to account for the Pauli exclusion
-principle. Others have used so called Backflow transformations expressed as
-neural networks, also with encouraging results~\cite{ruggeri2018,Luo-2019}.
+\textcite{Carleo602} which first showed the promise of neural networks
+(\glspl{rbm} in particular) for quantum many-body wave functions. Following
+this, in a thesis by \textcite{Flugsrud-2018}, attempts were made to apply
+\glspl{rbm} to quantum dots. This saw some success, but the particular \gls{rbm}
+used proved to be insufficient for accurate reproduction of the ground state. At
+this point the idea of applying more general neural networks started to develop
+and the work on this thesis started around mid 2018. Since then we have seen a
+few articles arise with similar ideas. \textcite{Saito-2018} used a simple
+neural network with one hidden layer to represent the ground state wave function
+of selected few-body bosonic systems. The approach used here is very comparable
+to our, except that \citeauthor{Saito-2018} chose to pre-train the network
+instead of simply adding it as another correlation factor. \textcite{Han-2018}
+applied a much more complex network to other systems, including systems of many
+fermions with a kinetic energy term, where part of the complexity was added to
+account for the Pauli exclusion principle. Others have used so called backflow
+transformations expressed as neural networks, also with encouraging
+results~\cite{ruggeri2018,Luo-2019}.
 
 \section{Our Contributions}
 
@@ -83,7 +84,7 @@ why not apply them where there is no prior knowledge to be found?
 
 In addition to the many areas of this work alone where there are much room for
 further research, a myriad of articles are surfacing each year with new and
-novel applications of machine learning withing quantum mechanics. As said by
+novel applications of machine learning within quantum mechanics. As said by
 \citeauthor{Melko-2019} in a recent article in Nature: \say{[...] the
 exploration of machine learning in many-body physics has just
 begun}~\cite{Melko-2019}.
@@ -95,19 +96,19 @@ this work:
 \item Incorporate \gls{gpu} acceleration. This is perhaps the most important point, if
   large scale \gls{vmc} calculations are ever going to utilize neural networks in a
   meaningful way. How to optimally combine \gls{mpi} acceleration on thousands of \glspl{cpu}
-  together with a (because of costs) much smaller number of \glspl{gpu} remains a
+  together with a (due to costs) much smaller number of \glspl{gpu} remains a
   challenging problem.
 \item Investigate systems of many fermions. We hypothesize that our approach
   should still prove useful as a correction factor on Slater determinants, and
   verifying this should be a high priority.
 \item Apply different types of neural networks. We limited our work to
-  Feed-Forward Neural Networks, but there are more exotic types which might
-  prove equally or better suited. In particular, Convolutional networks might
-  better learn spacial correlations for certain systems, and Recurrent networks
+  feed-forward neural networks, but there are more exotic types which might
+  prove equally or better suited. In particular, convolutional networks might
+  better learn spacial correlations for certain systems, and recurrent networks
   might be especially suitable for time-dependent \gls{vmc} extensions.
 \item Go deeper into optimization techniques. The methods we have applied are
-  relatively basic, at least compared to the current state of the art. For example,
-  Batch Normalization, which consistently improves training results, has not
+  fairly simple, at least compared to the current state of the art. For example,
+  batch normalization, which consistently improves training results, has not
   been applied. We have not placed much emphasis on this point simply because we
   wanted to demonstrate \emph{an} improvement, as opposed to obtaining the very
   best results possible.

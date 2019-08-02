@@ -21,7 +21,7 @@ would likely turn to our classical laws, such as Newton's second law of motion
 \end{align}
 %
 \noindent where $\vec F_i$ are the forces acting on the ball, and $\vec p$ is its momentum at
-any given point in time. Using the law of motion we can use our knowledge about how the
+any given point in time, $t$. Using the law of motion we can use our knowledge about how the
 environment affects the object to \emph{deterministically} calculate the resulting
 behaviour. The really nice thing is that, if we also know the mass of the object, we
 can derive the value of any other measurable physical quantity of interest. As such,
@@ -29,8 +29,8 @@ we can say that \emph{solving} a classical system consists of the following step
 
 \begin{enumerate}
     \item Define the environment, i.e.\ the forces acting on the object(s)
-    \item Use the Second Law of Motion to obtain momentum $\vec p(t)$ and position $\vx(t)$
-    \item Compute quantity of interest, $Q(\vec p, \vec x, t)$
+    \item Use the second law of motion to obtain momentum $\vec p(t)$ and position $\vx(t)$
+    \item Compute quantity of interest, $Q(\vec p, \vec x; t)$
 \end{enumerate}
 
 Moving to the quantum world, much of the same procedure remains the same. For the quantum
@@ -45,9 +45,10 @@ where $i=\sqrt{-1}$ is the imaginary unit and $\hbar=\flatfrac{h}{2\pi}$ is the 
 The thing we want to solve for in this case is the so called wave function $\ket{\Psi}$
 (explained momentarily), while the description of the system (analogous to the forces in
 classical mechanics) goes into $\hat H$. We refer to the latter as the Hamiltonian
-operator, and it should be a complete description of the kinetic and potential energies of
-the particles involved. As an example, we write the equation for a single particle in an energy
-potential $V$ as follows (where we explicitly use the position basis):
+operator, and it should be a complete description of the kinetic and potential
+energies of the particles involved. As an example, we write the equation for a
+single particle at position $\vx$ in an energy potential $V(\vx; t)$ as follows
+(where we explicitly use the position basis):
 
 \begin{align}
     \qty[-\frac{\hbar^2}{2m} \laplacian + V(\vb x; t)]\Psi(\vb x;t) =
@@ -58,14 +59,15 @@ where the first term constitutes the kinetic energy of the particle (with mass $
 naturally the potential energy. For the systems that we shall consider in this thesis, the
 Hamiltonians will all take this form, only varying the functional form of $V$.
 
-Knowing the wave function $\Psi$ of a system is analogous to knowing position and momentum
-in the classical view in that we can compute any observable quantity from it. As such,
-obtaining the full expression for the correct wave function is of immense use.
+Knowing the wave function $\Psi$ of a system is analogous to knowing position
+and momentum in the classical view in that we can compute any observable
+quantity from it (more on this in \cref{sec:obs-from-psi-to-Q}). As such, obtaining the full
+expression for the correct wave function is of immense use.
 
 The wave function lacks a clear physical intuition for what exactly it \emph{is},
-like we have for classical mechanics. Perhaps the most helpful way to view $\Psi$ is
+like we have for position and momentum in classical mechanics. Perhaps the most helpful way to view $\Psi$ is
 through the fact that its squared absolute value, $\abs{\Psi(\vb x; t)}^2$, is the
-probability to find a particle at position $\vb x$ at time $t$. Thinking of the (squared
+probability of finding a particle at position $\vb x$ at time $t$. Thinking of the (squared
 norm of the) wave function as a substitute for the classical position $\vb x$ can
 therefore be a helpful aid, as long as we keep the probabilistic nature of it in mind.
 
@@ -125,7 +127,7 @@ for some constant $A=\phi(0)$ determined by boundary conditions.
 The time-independent equation, known as the \gls{tise}, is:
 \begin{align}
     - \frac{\hbar^2}{2m} \laplacian\psi + V(\vb x)\psi =
-    E\psi\label{eq:schrodinger-time-independent-position-basis}
+    E\psi.\label{eq:schrodinger-time-independent-position-basis}
 \end{align}
 The solutions to this equation are the \emph{stationary states} of the system. If
 we are able to find these solutions, then we automatically have also the full time
@@ -134,14 +136,14 @@ dependent solution through \cref{eq:separatable-wave-func-def}.
 If we return \cref{eq:schrodinger-time-independent-position-basis} to the more general
 form,
 \begin{align}
-    \hat H \ket{\psi} &= E\ket{\psi}
+    \hat H \ket{\psi} &= E\ket{\psi},
 \end{align}
 we can recognize the problem as an eigenvalue problem where we seek the eigenvalues ($E$)
 and eigenvectors ($\ket{\psi}$) of the operator $\hat H$. In light of this, we prefer to
 explicitly label the equation to account for the possibility that the equation could have
 multiple (potentially infinite) solutions, and write this as
 \begin{align}
-    \hat H\ket{\psi_n} &= E_n\ket{\psi_n}
+    \hat H\ket{\psi_n} &= E_n\ket{\psi_n}.
 \end{align}
 Each of the $\ket{\psi_n}$ represents one possible stationary state, and could for instance be
 different levels of energy excitations within an atom. For our purposes, we will only care
@@ -171,7 +173,7 @@ $\vb x_i \defeq \sum_{d=1}^D x_{i,d} \vb e_d$ is a $D$-dimensional vector descri
 its coordinates $x_{i,d}$ (with unit vectors $\vb{e}_d$), and the corresponding Laplacian
 operator is
 \begin{align}
-    \laplacian_i \defeq \sum_{d = 1}^D \pdv[2]{}{x_{i,d}}.
+    \laplacian_k \defeq \sum_{d = 1}^D \pdv[2]{}{x_{k,d}}.
 \end{align}
 
 
@@ -192,15 +194,15 @@ In order to represent a physically observable system, a wave function $\Psi$ mus
     \item Obey suitable symmetry requirements
 \end{enumerate}
 %
-While the first requirement are obvious, points 2-4 boil down to $\Psi$ taking a
+While the first requirement is obvious, points 2-4 boil down to $\Psi$ taking a
 functional form that is well behaved, satisfying required boundary conditions and being
-possible to view as a probability distribution. The last point is perhaps less clear, and
+possible to view as a \gls{pdf}. The last point is perhaps less clear, and
 we devote some further attention to this point in particular.
 
 
 \subsection{Symmetry of Wave Functions}
 
-Nature has many example of systems made up of particles of the same
+Nature has many examples of systems made up of particles of the same
 species. That is, the particles all have the same mass, spin, electromagnetic
 charge etc.\ such that there is no way to  distinguish one from the other by
 measuring their properties. An example could be the electrons of an atom, all of
@@ -214,9 +216,9 @@ position in time and space is deterministically defined by their current state,
 which allows us to track them.
 
 In quantum mechanics, however, we no longer have this deterministic view. In
-this world, even if we know where all the individual electron are at a specific
+this world, even if we know where all the individual electrons are at a specific
 point in time, we cannot say with certainty where they will be at a later
-time. We blame this on the uncertainty principle. The result is that systems of
+time. We blame this on the uncertainty principle, and the result is that systems of
 identical particles become systems of \emph{indistinguishable} particles in
 quantum mechanics.
 
@@ -232,10 +234,10 @@ Because the particles are indistinguishable, this labeling of 1 and 2 is
 arbitrary, and so we should be able to relabel them:
 
 \begin{align}
-    \Psi(\vec x_2, \vec x_1)
+    \Psi(\vec x_2, \vec x_1).
 \end{align}
 
-These two equations, which represents exchanging the two particles, \emph{must}
+These two expressions, which represent exchanging the two particles, \emph{must}
 describe the same physical system. That is, the probabilities of both states
 must be equal:
 
@@ -244,13 +246,13 @@ must be equal:
     \iff \Psi(\vec x_1,\vec x_2) &= e^{i\alpha}\Psi(\vec x_2, \vec x_1),
 \end{align}
 i.e.\ they can only differ in their complex phase, which doesn't affect any measurable
-quantity. Repeating the exchange once more yields the original wave function, and so
+quantity. Repeating the exchange once more yields the original wave function,
 
 \begin{align}
     \Psi(\vec x_1,\vec x_2) &= e^{2i\alpha}\Psi(\vec x_1, \vec x_2)\\
     \iff e^{i\alpha} &= \pm 1.
 \end{align}
-This results states that any wave function, upon the exchange of
+This result states that any wave function, upon the exchange of
 indistinguishable particles, must be either symmetric (same sign) or
 anti-symmetric (opposite sign) to that of the original. This is generalizable to
 any number of particles, and is known as the \emph{Pauli exclusion principle}.
@@ -269,10 +271,11 @@ The following theorem summarizes the result~\cite{PhysRev-58-716}:
 \end{theorem}
 
 \section{Observables - From Wave Function to Measurement}
+\label{sec:obs-from-psi-to-Q}
 
-We have previously stated that armed with the correct wave function we can compute any
-measurable quantity of interest. This statement would not be of much use without going
-into exactly how one can go about this.
+We have repeatedly claimed that armed with the correct wave function we can compute any
+measurable quantity of interest. Finally, we consider how exactly how we can go
+about doing so.
 
 Assume we want to compute an observable $O$. The first step is to determine the
 corresponding \emph{operator} $\hat O$. This is in general done by taking the classical
@@ -282,13 +285,13 @@ find operator forms.} Most notably, we have for the following transformations fo
 position and momentum:
 
 \begin{align}
-    \vb x &\rightarrow \hat\vx\\
-    \vb p &\rightarrow -i\hbar\grad
+    \vb x &\rightarrow \hat\vx,\\
+    \vb p &\rightarrow -i\hbar\grad.
 \end{align}
 For example, as is often the case, let's say we want to compute the total energy of the
-system. For $N$ particles that would classically be
+system. For $N$ particles that would classically be:
 \begin{align}
-    H = \sum_{i=1}^N \frac{p_i^2}{2m_i} + V(\vb X)
+    H = \sum_{i=1}^N \frac{p_i^2}{2m_i} + V(\vb X),
 \end{align}
 where $\vb p_i$ denotes the momentum of particle $i$, all of which are placed in some
 spacial potential $V$. It is easily verified that if we perform the above mentioned
@@ -296,12 +299,16 @@ substitutions we will recover \cref{eq:Hamiltonian-operator-general} and recogni
 it as the Hamiltonian operator, $\hat H$.
 
 Finally, having both the wave function and the appropriate operator $\hat O$ we can
-compute the expectation of that observable:
+proceed. Observables no longer have definite values in general as in classical
+mechanics. Instead, we associate an expectation value with respect to the
+\gls{pdf} described by $\Psi$:\footnote{Note that quantities
+can still have definite values in certain states. This is then evident by the
+expectation values having zero associated variance.}
 
 \begin{align}
     \expval{O}=\expval{\hat O}&= \frac{\expval{\hat O}{\Psi}}{\braket{\Psi}} \\
     &= \frac{\int\dd{\vb X} \Psi^*(\vb X)\hat O(\vb X)\Psi(\vb X)}{\int\dd{\vb X}
-    \abs{\Psi(\vb X)}^2}
+    \abs{\Psi(\vb X)}^2},
 \end{align}
 where $\int\dd{\vb X}\qty(\cdot)$ indicates an integral over all possible configurations of the
 system (e.g.\ all possible position and spin values for each particle). Often we have
@@ -317,12 +324,12 @@ of degrees of freedom in the systems we shall investigate, we will use
 
 \section{Example Systems}
 
-So we have not presented any particular systems. In this thesis we focus our
+So far we have not presented any particular systems. In this thesis we focus our
 attention on two particular systems for illustration purposes. We chose these systems
 for their simplicity and/or the amount of preexisting results available
 in the literature. We do this so as to be able to benchmark the eventual results against
-know exact solutions, or when this does not exist, against the state-of-the-art results
-available.
+know exact solutions, or when this does not exist, against verified approximate
+results available in the literature.
 
 \subsection{Quantum Dots}
 \label{sec:quantum-dots-theory}
@@ -358,7 +365,7 @@ choice is to consider the mean square vibrational amplitude, $\expval{r^2}$, for
 a single particle at $T = \SI{0}{\kelvin}$ placed in the oscillator trap.
 Computing the expectation value we get
 $\expval{r^2}=\flatfrac{\hbar}{2m\omega}$, and we define the unit of length as the
-characteristic length of the trap, $a_{ho}=\qty(2\expval{r^2})^{\flatfrac{1}{2}}=\qty(\flatfrac{\hbar}{m\omega})^{\flatfrac{1}{2}}$.
+characteristic length of the trap, $a_{ho}=\qty(2\expval{r^2})^{\flatfrac{1}{2}}=\qty(\flatfrac{\hbar}{m\omega})^{\flatfrac{1}{2}}$~\cite{mhj-compphys-II}.
 
 In our case, we limit ourselves to $N=2$ interacting electrons in two
 dimensions in a trap with a frequency such that $\hbar \omega =
@@ -379,7 +386,7 @@ the standard harmonic oscillator Hamiltonian:
     \hat H_0 &= \sum_{i=1}^N\qty(-\frac{1}{2}\laplacian_i +
     \frac{1}{2}\omega^2 r_i^2).
 \end{align}
-This Hamiltonian lends it self to analytical solutions, and the stationary
+This Hamiltonian lends itself to analytical solutions, and the stationary
 single particle states are (in 2D)~\cite{griffiths_schroeter_2018}:
 \begin{align}\label{eq:ho-single-particle-orbitals}
     \phi_{n_x, n_y}(x, y) &= A H_{n_x}(\sqrt\omega x)H_{n_y}(\sqrt\omega y)
@@ -394,7 +401,7 @@ ground state, $n_x=n_y=0$ is simply
     \sqrt{\frac{\omega}{\pi}}e^{-\frac{\omega}{2}\qty(x^2+y^2)}.
 \end{align}
 Using this wavefunction we can calculate the ground state
-energy,
+energy for one particle,
 \begin{align}
     \epsilon_{00} = \frac{\expval{\hat H_0}{\phi_{00}}}{\braket{\phi_{00}}}
     = \omega = \SI{1}{\au}
@@ -423,7 +430,7 @@ spin. As electrons are fermions, their total wavefunction must be
 anti-symmetric upon interchanging the labels $1$ and $2$.
 \cref{eq:Phi-non-inter} is obviously symmetric, and so the
 spin-wavefunction must necessarily be anti-symmetric. For the combination of
-two spin-1/2 particles, there is only one candidate, namely the spin-0
+two spin-1/2 particles, there is only one candidate, namely the spin-$0$
 singlet:
 
 \begin{align}
@@ -434,7 +441,7 @@ A similar argument can be made for particles with different spins.
 
 \subsubsection{Considerations from the Virial Theorem}
 
-The Virial Theorem gives a general relation for the time-averaged kinetic
+The virial theorem gives a general relation for the time-averaged kinetic
 energy $\expval{K}$ and the corresponding potential energy
 $\expval{V_{pot}}$ of a stable system of $N$ particles. In general the
 theorem states:
@@ -458,11 +465,8 @@ Although the harmonic oscillator potential does not depend on the
 \emph{inter-particle} distance, but rather on each particles position, it
 works out to the same relation in our case. Computing the full relation for
 our Hamiltonian for two electrons in two dimensions, it even works out so
-that we can use the same relation on the HO potential and the Coulomb
-potential separately, and add the result.\footnote{We can (and have) work(ed) this out
-via \cref{eq:virial-theorem} directly using the corresponding forces for
-the harmonic oscillator and Coulomb potential. A write-up of the derivation is not given
-though, as this is a well known result.} This means that the Virial Theorem
+that we can use the same relation on the harmonic oscillator potential and the Coulomb
+potential separately, and add the result. This means that the virial theorem
 predicts the following~\cite{Katriel2012}:
 
 \begin{align}
@@ -502,7 +506,7 @@ the distance between all pairs of atoms. The mass $m$ is the mass of one $^4He$
 atom. The form of $V$ is not known analytically, but is experimentally probed to
 great accuracy. Theorists have since fitted specific functional forms to the
 experimental data, and we will do our calculations using one of these
-potentials. The most commonly used is the simple Lennard-Jones (LJ)
+potentials. Perhaps most commonly used is the simple Lennard-Jones (LJ)
 potential~\cite{Kalos-1981}:
 
 \begin{align}
@@ -596,7 +600,7 @@ calculating distances. Consider two particles, A and B, located at opposite
 corners of the simulation box. What is the distance between them? The intuitive
 answer is $\norm{\vb r_A - \vb r_B} = \sqrt{3}\,L$, i.e.\ the length of the
 diagonal of the cubic box. Nevertheless, the answer we should use is zero. The
-reason is that there is a periodic copy of the box stacked such A and the
+reason is that there is a periodic copy of the box stacked such that A and the
 periodic B copy are located at the same corner. This way of calculating
 distances is called minimum image, and says that we should use the shortest
 possible distance. In general, if two particles have a distance of $\Delta x =
@@ -611,7 +615,7 @@ the following prescription (example in Python):
 import numpy as np
 
 # Example coordinates.
-L = 5
+L = 5.0
 p1, p2 = np.array([0, 0, 0]), np.array([2, 3, 4])
 
 diff = p2 - p1  # [2, 3, 4]
@@ -622,7 +626,7 @@ vector and this is the one used for any further calculations.
 
 \subsubsection{Correcting for Periodicity in Potentials}
 
-The potential $V(r_{ij})$ depend on the inter-particles distances. However,
+The potential $V(r_{ij})$ depend on the inter-particle distances. However,
 there are an infinite amount of particle pairs if we consider the system as a
 whole. We use periodic boundary conditions, and shall only consider pairs where
 both particles are in the simulation box (but still respecting the minimum image

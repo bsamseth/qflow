@@ -4,7 +4,7 @@
 \label{chp:monte-carlo}
 
 In \cref{chp:variational-monte-carlo} we found that we needed a way to sample
-system configurations $\vX$ from the probability distribution described by the
+system configurations $\vX$ from the \gls{pdf} described by the
 wave function. We needed this as a means to evaluate integrals. Specifically, we
 needed to evaluate the expectation value of the Hamiltonian w.r.t. a given wave
 function $\psialpha$:
@@ -12,31 +12,34 @@ function $\psialpha$:
 \begin{align}
     \expval{\hat H} &= \frac{\expval{\hat H}{\psialpha}}{\braket{\psialpha}} = \int\dd{\vX} P_{\psi_{\valpha}} (\vX) E_L(\vX)\label{eq:chp-mc-anon-1}\\
     &\approx \frac{1}{N} \sum_{i = 1}^N E_L(\vX_i)
-    \qq{where} \vb X_i\sim P_{\psi_{\valpha}}
+    \qq{where} \vb X_i\disteq P_{\psi_{\valpha}}.
 \end{align}
 where $N$ is set sufficiently large to satisfy the required accuracy. Due to
 the central nature of this method, we will start by a proper presentation of
-\acrlong{mci} as it is used here, followed the details of how to
+this \gls{mc} technique as it is used here, followed the details of how to
 obtain the samples we need.
 
 \section{Monte Carlo Integration}
 
 \acrfull{mci} is a general technique for numeric evaluation of
 any arbitrary integral. In general it concerns evaluating any multidimensional
-definite integral, written as
+definite integral, written as:
 
 \begin{align}
-    I = \idotsint_\sigma\dd{\vx} f(\vx)
+    I = \idotsint_\sigma\dd{\vx} f(\vx),
 \end{align}
-where $\sigma$ denotes a subset of $\mathbb{R}^m$, with a $m$-dimensional volume given by
+for some integrand $f(\vx)$ and where $\sigma$ denotes a subset of $\mathbb{R}^m$ with a $m$-dimensional volume given by:
 \begin{align}
     V = \idotsint_\sigma\dd{\vx}
 \end{align}
 In its simplest form, \gls{mci} works by sampling $N$ \emph{uniformly} distributed points
-$\vx_1,\dots,\vx_N$ from $\sigma$, and uses a Riemann sum formulation of the integral $I$:
+$\vx_1,\dots,\vx_N$ from $\sigma$, and uses a Riemann sum formulation of the
+integral $I$:\footnote{Notice that $\vx_i$ now denotes one random sample, and
+  has nothing to do with the $i$'th particle. For the time being we don't talk
+  about particles, and the subscripts indicate different samples.}
 \begin{align}
   \label{eq:mci-def}
-    I = \lim_{N\to\infty} M_N \defeq \lim_{N\to\infty}\sum_{i=1}^N f(\vx_i) \frac{V}{N} = V\expval{f(\vx)}_\sigma
+    I = \lim_{N\to\infty} M_N \defeq \lim_{N\to\infty}\sum_{i=1}^N f(\vx_i) \frac{V}{N} = V\expval{f(\vx)}_\sigma,
 \end{align}
 where $\expval{\cdot}_\sigma$ denotes the expectation value over all points in
 $\sigma$ when all points are equally likely. The estimate becomes increasingly
@@ -51,9 +54,9 @@ two different wave functions. We perform the integrals and get (to the first
 five digits) $\expval{H}_A = \SI{1.0315}{eV}$ and $\expval{H}_B =
 \SI{1.0943}{eV}$. Recalling that the lowest energy is the most physically
 accurate, can we say that $A$ is better than $B$? As stated, these results are
-borderline meaningless, because we lack information of the precision of the
+borderline meaningless, because we lack information on the precision of the
 integrals. Assume that in reality, the numbers were
-$\expval{H}_A=\SI{1.03(8)}{eV}$ and $\expval{H}_B=\SI{1.09(4)}{eV}$, where the
+$\expval{H}_A=\SI{1.03(8)}{eV}$ and $\expval{H}_B=\SI{1.09(8)}{eV}$, where the
 numbers in parenthesis indicate the uncertainty in the last digit. Now we know
 that the two numbers are not different in a statistically significant way, and
 any difference could be entirely random. We would need to use more sample points
@@ -63,7 +66,7 @@ We obtain a statistical estimate of the error we make in approximating the
 integral by considering the variability of the individual terms of
 \cref{eq:mci-def}. Let's start by estimating the variance of the integrand:
 \begin{align}
-    \Var[f(\vx)] \defeq \sigma^2_N = \frac{1}{N-1} \sum_{i=1}^N\qty(f(\vx_i) - \frac{1}{N}\sum_{i=j}^N f(\vx_j))^2
+    \Var[f(\vx)] \defeq \sigma^2_N = \frac{1}{N-1} \sum_{i=1}^N\qty(f(\vx_i) - \frac{1}{N}\sum_{j=1}^N f(\vx_j))^2.
 \end{align}
 It then follows, by the properties of variance,
 \begin{align}
@@ -72,15 +75,23 @@ It then follows, by the properties of variance,
 \end{align}
 \begin{align}
   \label{eq:mci-sem-def}
-    \implies \Std[M_N] = \sqrt{\Var[M_N]} = \frac{V\sigma_N}{\sqrt N}
+    \implies \Std[M_N] = \sqrt{\Var[M_N]} = \frac{V\sigma_N}{\sqrt N}.
 \end{align}
 \cref{eq:mci-sem-def} is the standard deviation of the sample mean, otherwise
-known as the \gls{sem}. It is common to use this
-directly as the uncertainty of the expectation values.
+known as the \gls{sem}. It is common to one unit of this as the uncertainty on
+the expectation values. Another common choice is to give confidence intervals
+based on the \gls{sem}. Assuming the variance is normally
+distributed,\footnote{Which for our wave functions is often times at least
+  approximately true.} we can say with e.g.\ $\SI{95}{\percent}$ certainty that
+the true expectation value, I, is in the interval
 
-This tells us that the expected statistical error we make when using \gls{mci} goes
+\begin{align}
+  \qty[CI_{-}^{95}, CI_{+}^{95}] \defeq \qty[M_N - 1.96\Std[M_N], M_N + 1.96\Std[M_N]].
+\end{align}
+
+\cref{eq:mci-sem-def} tells us that the expected statistical error we make when using \gls{mci} goes
 like $\mathcal{O}(1 / \sqrt N)$, and depends linearly on the size of the volume
-and standard deviation of the integrand it self. This illustrates both the
+and standard deviation of the integrand itself. This illustrates both the
 advantage, and disadvantage of \gls{mci} compared to other,
 deterministic integration methods. Its advantage is its simple dependency on the
 volume, and its independence from the particular number of dimensions in the
@@ -92,8 +103,8 @@ much worse than other approaches~\cite{Numerical-Recipes-Press-et-al}.
 \subsubsection{Correction for Autocorrelation}
 
 Actually, \cref{eq:mci-annon-2} includes a mistake. We applied a property of
-variance on a sum of random of random variables. The equation is correct if and
-only if the samples $x_i$ are perfectly independent. Unfortunately for us,
+variance on a sum of random variables. The equation is correct if and
+only if the samples $\vx_i$ are perfectly independent. Unfortunately for us,
 the samples will not always be so, depending on the algorithm used to generate
 them. We can sample independently from a uniform distribution and some other
 notable distributions (\cref{sec:sampling-arb-prob-dist-funcs}), but not in
@@ -124,18 +135,18 @@ Yes, we are going to estimate the estimate of the error we make in an estimate.
 
 The strategy we shall use for all later error analysis is called \emph{blocking},
 and specifically we use an automated form presented in an article by
-\textcite{Jonsson-2018}. Say we have a sequence of sample value $f(x_i)$:
+\textcite{Jonsson-2018}. Say we have a sequence of sample values $f(x_i)$:
 
 \begin{align}
   D_0 = \mqty[f(x_1) & f(x_2) & \dots & f(x_N)],
 \end{align}
-and let's assume that there is some non-zero covariance between samples that are
-sufficiently close in the sequence. The idea of Blocking is to group
+and let's assume that there is some non-zero autocovariance between samples that are
+sufficiently close in the sequence. The idea of blocking is to group
 \say{blocks} of samples together, replacing them by their mean value. For
 instance, after one blocking transformation of the above sequence we get:
 
 \begin{align}
-  D_1 = \mqty[\qty(\frac{f(x_1) + f(x_2)}{2}) & \qty(\frac{f(x_3) + f(x_4)}{2}) & \dots & \qty(\frac{f(x_{n-1}) + f(x_n)}{2})]
+  D_1 = \mqty[\qty(\frac{f(x_1) + f(x_2)}{2}) & \qty(\frac{f(x_3) + f(x_4)}{2}) & \dots & \qty(\frac{f(x_{n-1}) + f(x_n)}{2})].
 \end{align}
 If $N = 2^d$ with $d > 1$ we can repeat the process to obtain $d$ different
 sequences $D_i$. These transformations conserve the value of \cref{eq:mci-annon-3}
@@ -208,12 +219,12 @@ would like to evaluate the following integral:
     \caption[Illustration of example probability distributions]{\label{fig:mci-importance-example-func-plot}Plot of the function in
       \cref{eq:mci-importance-example-func}, enveloped by a standard normal distribution.\citesource{writing/MonteCarlo.tex}}
 \end{figure}
-The integrand is plotted in \cref{fig:mci-importance-example-func-plot}, and
+\noindent The integrand is plotted in \cref{fig:mci-importance-example-func-plot}, and
 the observant reader might recognise this as the product of a normal
 distribution and a Student-t distribution. The correct value for the integral
 is also given, so we have a reference for the results.
 
-For comparison, lets start with the straightforward approach from before.
+For comparison, let's start with the straightforward approach from before.
 Because the integral goes to infinity the "volume" $V$ would not be well
 defined, and we are forced to truncate the region manually. From looking at the
 graph in \cref{fig:mci-importance-example-func-plot} we may say that $x\in
@@ -222,10 +233,10 @@ we use the following estimate:
 
 \begin{align}
     \label{eq:chp-mc-anon-2}
-    I\approx \frac{10}{N}\sum_{i=1}^Nf(x_i)\qq{where} x_i\sim\text{Uniform}(-5, 5)
+    I\approx \frac{10}{N}\sum_{i=1}^Nf(x_i)\qq{where} x_i\disteq\text{Uniform}(-5, 5).
 \end{align}
 
-The main issue with this approach is that 1) we need to truncate the integral
+\noindent The main issue with this approach is that 1) we need to truncate the integral
 manually and 2) now matter where we place the box boundaries we will tend to
 sample a lot of $x_i$'s in areas where $f$ gives very small contributions to
 the integral. Ideally we would like our sample points to be distributed as
@@ -235,14 +246,16 @@ distribution for sampling, we use some probability distribution which more
 closely resembles the integrand, call it $g(x)$. Formally we then restate the integral as follows:
 
 \begin{align}
-    I = \intfy\dd{x}f(x) = \intfy\dd{x} \frac{f(x)}{g(x)} g(x)
+    I = \intfy\dd{x}f(x) = \intfy\dd{x} \frac{f(x)}{g(x)} g(x).
 \end{align}
 This can be interpreted as the expectation of $z(x)=\flatfrac{f(x)}{g(x)}$ for $x$'s drawn from $g$, and so the corresponding estimation is then:
 
 \begin{align}
-    I \approx \frac{1}{N} \sum_{i=1}^N \frac{f(x_i)}{g(x_i)} \qq{where} x_i\sim g
+    I \approx \frac{1}{N} \sum_{i=1}^N \frac{f(x_i)}{g(x_i)} \qq{where} x_i\disteq g.
 \end{align}
-Setting $g = \text{Uniform}(-5, 5)$ recovers \cref{eq:chp-mc-anon-2}, so this is simply the natural generalization of the standard approach for an arbitrary distribution function $g$.
+Setting $g = \text{Uniform}(-5, 5)$ recovers \cref{eq:chp-mc-anon-2}, so this is
+simply the natural generalization of the standard approach for an arbitrary
+\gls{pdf}.
 
 
 Going back to the example, we should now chose a distribution function that
@@ -277,11 +290,13 @@ which are more accurate, and perhaps most importantly, tighter confidence
 bounds. In general, using better sampling distributions will tend to give us
 lower variance results.
 
-\section{Sampling from Arbitrary Probability Distribution Functions}
+\section{Sampling from Arbitrary Probability Density Functions}
 \label{sec:sampling-arb-prob-dist-funcs}
 
 So far we have taken for granted the ability to sample numbers from various
-probability distribution functions. We dedicate this section to discuss sampling from the bottom up, culminating in a detailed presentation of the most central algorithm in this thesis, the Metropolis-Hastings algorithm.
+\glspl{pdf}. We dedicate this section to discuss sampling from the bottom up,
+culminating in a detailed presentation of the most central algorithm in this
+thesis, the Metropolis-Hastings algorithm.
 
 \subsection{The Uniform Distribution}
 
@@ -289,7 +304,7 @@ The basic building block upon which we shall build all other random sampling
 techniques is the ability to sample random numbers from the uniform
 distribution, $\text{Uniform}(a, b)$. This is the simplest distribution
 possible, where all numbers in the range $[a, b]$ have the same probability
-density. The definition of its PDF is simply
+density. The definition of its \gls{pdf} is simply:
 
 \begin{align}\label{eq:uniform-pdf-definition}
     p_U\qty(x\;\middle|\; a, b) \defeq  \begin{cases}
@@ -302,11 +317,11 @@ Most commonly we operate only with the \emph{standard uniform distribution}, $\t
     p_U\qty(x\;\middle|\; a,b) = p_U\qty( \frac{x-a}{b-a} \;\middle|\; 0, 1).
 \end{align}
 
-But how exactly do we obtain random realizations from this PDF? Firstly we need
+But how exactly do we obtain random realizations from this \gls{pdf}? Firstly we need
 to depart from the typical notion of random, and realize that we are unable to
 write an algorithm which produces a truly random result. While we could in
-principle rely on nature to provide sources of complete, true randomness (so as
-the exact behaviour of a quantum mechanical obserable), this is impractical
+principle rely on nature to provide sources of complete, true randomness (such as
+the exact behavior of a quantum mechanical obserable), this is impractical
 when we need fast, on-demand samples. Instead we settle for
 \emph{pseudo-random} samples. A pseudo-random sequence $x_1, x_2,\dots x_n$
 implies that one cannot\footnote{In any practical way, barring exhaustive trial
@@ -316,10 +331,11 @@ pseudo-random sequence is indistinguishable from a truly random sequence for
 anyone observing the numbers $x_i$ alone.
 
 There are a multitude of algorithms that can generate a sequence of
-pseudo-random \emph{integers}, with a varying properties\footnote{Such properties
+pseudo-random \emph{integers}, all with varying properties.\footnote{Such properties
 could include range of possible numbers, period, level of bias and how
-cryptographically secure they are.}. One of oldest and most common family of
-such algorithms is a linear congruential generator (LCG)~\cite{Knuth-1997-ACP-270146}. It defines a pseudo-random sequence by the simple recurrence relation
+cryptographically secure they are.} The simplest family of
+such algorithms is a \gls{lcg}~\cite{Knuth-1997-ACP-270146}. It defines a
+pseudo-random sequence by the simple recurrence relation
 \begin{align}
     \label{eq:linear-congruential-generator-relation}
     x_{n+1} = (ax_n + c)\mod m,
@@ -351,32 +367,33 @@ the integers by $m$. The complete algorithm is shown in \cref{alg:uniform-LCG-sa
 \subsection{Inverse Transform Sampling}
 
 Armed with uniformly distributed random numbers, we now turn towards generating
-numbers from other PDFs. Let $U\sim\text{Uniform}(0,1)$ be a uniformly
+numbers from other \glspl{pdf}. Let $U\disteq\text{Uniform}(0,1)$ be a uniformly
 distributed stochastic variable, and let $X$ be a stochastic variable
-associated with a PDF, $p$, and a corresponding cumulative distribution
-function (CDF), $F$, i.e.
+associated with a \gls{pdf}, $p$, and a corresponding \gls{cdf}, $F$, i.e.
 
 \begin{align}
     F(x) = \text{Pr}\qty(X\leq x) = \int_{-\infty}^x \dd{t}p(t).
 \end{align}
-We would like to define a transformation $T:[0, 1]\mapsto\mathbb{R}$ that can map from uniform numbers to numbers that follow the given CDF, i.e. define $T$ such that $T(U)\disteq X$. We have:
+We would like to define a transformation $T:[0, 1]\mapsto\mathbb{R}$ that can map from uniform numbers to numbers that follow the given \gls{cdf}, i.e. define $T$ such that $T(U)\disteq X$. We have:
 \begin{align}
     F(x) = \text{Pr}\qty(X\leq x) = \text{Pr}\qty(T(U)\leq x) = \text{Pr}\qty(U \leq T^{-1}(x)) = T^{-1}(x),
 \end{align}
-because $T^{-1}(x)\in[0, 1]$ by definition, and assuming that $T^{-1}(x)$ is strictly monotone. It follows then that $F^{-1}(U)\disteq X$, i.e. if the CDF is strictly monotone (as CDFs should be) then we can get realizations of $X$ by applying $F^{-1}$ to realizations of $U$.
+because $T^{-1}(x)\in[0, 1]$ by definition, and assuming that $T^{-1}(x)$ is strictly monotone. It follows then that $F^{-1}(U)\disteq X$, i.e. if the \gls{cdf} is strictly monotone (as \glspl{cdf} should be) then we can get realizations of $X$ by applying $F^{-1}$ to realizations of $U$.
 
-The algorithm to sample from any PDF with a tractable inverse cumulative
-distribution function is then extremely simple, and for completeness it is
-listed in \cref{alg:inverse-transform-sampling}.
+The algorithm to sample from any \gls{pdf} with a tractable inverse \gls{cdf} is
+then extremely simple, and for completeness it is listed in
+\cref{alg:inverse-transform-sampling}.
 
 \begin{algorithm}[h]
     \caption{Inverse transform sampling}
     \label{alg:inverse-transform-sampling}
     \begin{algorithmic}[1]
         \Require Cumulative distribution function $F$
-        \Ensure Random $x$ with CDF equal to $F$
+        \Ensure Random $x$ with \gls{cdf} equal to $F$
         \Repeat
-          \State \Yield $F^{-1}(\text{unif}(0, 1))$
+          \State $u\gets\text{unif}(0,1)$
+          \State $x\gets F^{-1}(u)$
+          \State \Yield $x$
         \Until{done}
     \end{algorithmic}
 \end{algorithm}
@@ -385,14 +402,14 @@ listed in \cref{alg:inverse-transform-sampling}.
 \label{sec:metro-hastings-alg}
 
 \cref{alg:inverse-transform-sampling} works great for a number of standard
-PDFs. For many cases, however, we do not have a tractable form for the inverse
-CDF, which renders the algorithm useless. So what about the wave functions we
-are interested in? The PDF in question is, as defined in \cref{eq:wavefunc-probability-density-def},
+\glspl{pdf}. For many cases, however, we do not have a tractable form for the inverse
+\gls{cdf}, which renders the algorithm useless. So what about the wave functions we
+are interested in? The \gls{pdf} in question is, as defined in \cref{eq:wavefunc-probability-density-def},
 
 \begin{align}
     P_{\psi}(\vX) \defeq \frac{\abs{\psi}^2}{\int\dd{\vX}\abs{\psi}^2}.
 \end{align}
-Sadly, computing $F^{-1}$ for this PDF, if even possible, would be a very costly
+Sadly, computing $F^{-1}$ for this \gls{pdf}, if even possible, would be a very costly
 operation. In fact, the normalization integral in the denominator is enough to
 make practical sampling from $P_\psi$ impossible. Even worse, considering that
 $\psi$ is updated continuously throughout a \gls{vmc} calculation, we could not even
@@ -414,8 +431,8 @@ in~\cref{alg:metropolis-hastings-general}.
         \Ensure Random $\vx$ drawn from $P$
         \State Initialize $\vx$, randomly or otherwise
         \Repeat
-          \State Sample $\vx'\sim q\qty(\vx'\;\middle|\;\vx)$
-          \State Sample $u\sim\text{unif}(0, 1)$
+          \State $\vx'\gets q\qty(\vx'\;\middle|\;\vx)$
+          \State $u\gets\text{unif}(0, 1)$
           \State $A\gets \flatfrac{P(\vx')q\qty(\vx\;\middle|\;\vx')}{P(\vx)q\qty(\vx'\;\middle|\;\vx)}$
           \If{$u \leq A$}
             \State $\vx \gets \vx'$
@@ -451,7 +468,7 @@ For well behaved Markov Chains, as the number of steps in the chain increases,
 the distribution of the states will asymptotically approach a stationary
 distribution, $\pi(\vx)$. The Metropolis-Hastings algorithm works by carefully
 constructing $T\qty(\vx'\;\middle|\;\vx)$ such that $\pi(\vx)=P(\vx)$, where $P(\vx)$ is the
-desired probability distribution.
+desired \gls{pdf}.
 
 In order to find the correct $T\qty(\vx'\;\middle|\;\vx)$, we require that the stationary
 distribution $\pi(\vx)$ exists and that it is unique:
@@ -525,10 +542,10 @@ from this choice.
           \For{$i \gets 1:N$}
             \State $\vX'\gets \vX$
             \For{$d \gets 1:D$}
-              \State Sample $\delta\sim \text{unif}(-0.5, 0.5)$
+              \State $\delta\gets \text{unif}(-0.5, 0.5)$
               \State $X_{i,d}'\gets X_{i,d} + \Delta x \cdot \delta$
             \EndFor
-            \State Sample $u\sim\text{unif}(0, 1)$
+            \State $u\gets\text{unif}(0, 1)$
             \State $A\gets \flatfrac{P\qty(\vX')}{P\qty(\vX)}$
             \If{$u \leq A$}
               \State $\vX \gets \vX'$
@@ -574,7 +591,7 @@ equation we can get:
 where $\Delta t$ is a time step similar to $\Delta x$ for plain Metropolis, and
 $\vb{\xi}$ is a vector of values drawn from the standard normal distribution.
 This is our new recipe for generating proposals $\vx'$. The final piece is
-to find the corresponding probability distribution,
+to find the corresponding \gls{pdf},
 $q\qty(\vx'\;\middle|\;\vx)$.
 
 To this end, we consider the Fokker-Planck equation, which for one particle in
@@ -604,23 +621,25 @@ proposal distribution:
 Note that because we ever only need the ratio of $q$ values, there is no problem
 that \cref{eq:mc-annon-5} only gives the proportionality. The final algorithm is
 shown in \cref{alg:metropolis-importance}.
+See \cref{sec:verify-sampling} for a demonstration of how
+\cref{alg:metropolis-importance} compares to \cref{alg:metropolis-simple}.
 
 \begin{algorithm}[h]
     \caption{Metropolis-Hastings importance sampling}
     \label{alg:metropolis-importance}
     \begin{algorithmic}[1]
-        \Require Probability density $P(\vX) = \abs{\psi(\vX)}$, step size $\Delta t$
+        \Require Probability density $P(\vX) = \abs{\psi(\vX)}^2$, step size $\Delta t$
         \Ensure Random $\vX$ drawn from $P$
         \State Initialize $\vX$, randomly or otherwise
         \Repeat
           \For{$i \gets 1:N$}
             \State $\vX'\gets \vX$
             \For{$d \gets 1:D$}
-              \State Sample $\xi\sim \mathcal{N}(0, 1)$
+              \State $\xi\gets \mathcal{N}(0, 1)$
               \State $X_{i,d}'\gets X_{i,d} + \sqrt{\Delta t} \cdot \xi +
               \frac{1}{2}\Delta t\,(\vb{F}_i(\psi))_d$
             \EndFor
-            \State Sample $u\sim\text{unif}(0, 1)$
+            \State $u\gets\text{unif}(0, 1)$
             \State $A\gets \flatfrac{P\qty(\vX')}{P\qty(\vX)}$
             \State $A\gets A\cdot \flatfrac{q\qty(\vx_i\;\middle|\;\vx_i')}{q\qty(\vx_i'\;\middle|\;\vx_i)}$
             \If{$u \leq A$}
@@ -631,6 +650,4 @@ shown in \cref{alg:metropolis-importance}.
         \Until{done}
     \end{algorithmic}
 \end{algorithm}
-See \cref{sec:verify-sampling} for a demonstration of how
-\cref{alg:metropolis-importance} compares to \cref{alg:metropolis-simple}.
 \end{document}

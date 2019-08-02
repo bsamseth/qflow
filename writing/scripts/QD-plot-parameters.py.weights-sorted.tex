@@ -12,10 +12,9 @@ y grid style={white!69.01960784313725!black},
 ylabel={\(\displaystyle \mathbf{W}^{(0)}\)},
 ymin=-0.5, ymax=3.5,
 ytick pos=left,
-ytick style={color=black},
-ylabel style={rotate=-90},
+ytick style={color=black}
 ]
-\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=31.5, ymin=3.5, ymax=-0.5] {scripts/QD-pade-dnn.py.weights-000.png};
+\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=31.5, ymin=3.5, ymax=-0.5] {scripts/QD-plot-parameters.py.weights-sorted-000.png};
 
 \nextgroupplot[
 axis y line=right,
@@ -30,10 +29,9 @@ ymin=-0.5, ymax=0.5,
 ytick pos=left,
 ytick style={color=black},
 ytick={-0.6,-0.4,-0.2,0,0.2,0.4,0.6},
-yticklabels={−0.6,−0.4,−0.2,0.0,0.2,0.4,0.6},
-ylabel style={rotate=-90},
+yticklabels={−0.6,−0.4,−0.2,0.0,0.2,0.4,0.6}
 ]
-\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=31.5, ymin=0.5, ymax=-0.5] {scripts/QD-pade-dnn.py.weights-001.png};
+\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=31.5, ymin=0.5, ymax=-0.5] {scripts/QD-plot-parameters.py.weights-sorted-001.png};
 
 \nextgroupplot[
 tick align=outside,
@@ -45,10 +43,9 @@ y grid style={white!69.01960784313725!black},
 ylabel={\(\displaystyle \mathbf{W}^{(1)}\)},
 ymin=-0.5, ymax=31.5,
 ytick pos=left,
-ylabel style={rotate=-90},
 ytick style={color=black}
 ]
-\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=15.5, ymin=31.5, ymax=-0.5] {scripts/QD-pade-dnn.py.weights-002.png};
+\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=15.5, ymin=31.5, ymax=-0.5] {scripts/QD-plot-parameters.py.weights-sorted-002.png};
 
 \nextgroupplot[
 axis y line=right,
@@ -62,11 +59,10 @@ ylabel={\(\displaystyle \mathbf{b}^{(1)}\)},
 ymin=-0.5, ymax=0.5,
 ytick pos=left,
 ytick style={color=black},
-ylabel style={rotate=-90},
 ytick={-0.6,-0.4,-0.2,0,0.2,0.4,0.6},
 yticklabels={−0.6,−0.4,−0.2,0.0,0.2,0.4,0.6}
 ]
-\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=15.5, ymin=0.5, ymax=-0.5] {scripts/QD-pade-dnn.py.weights-003.png};
+\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=15.5, ymin=0.5, ymax=-0.5] {scripts/QD-plot-parameters.py.weights-sorted-003.png};
 
 \nextgroupplot[
 tick align=outside,
@@ -81,10 +77,9 @@ y grid style={white!69.01960784313725!black},
 ylabel={\(\displaystyle \mathbf{W}^{(2)}\)},
 ymin=-0.5, ymax=15.5,
 ytick pos=left,
-ylabel style={rotate=-90},
 ytick style={color=black}
 ]
-\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=0.5, ymin=15.5, ymax=-0.5] {scripts/QD-pade-dnn.py.weights-004.png};
+\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=0.5, ymin=15.5, ymax=-0.5] {scripts/QD-plot-parameters.py.weights-sorted-004.png};
 
 \nextgroupplot[
 axis y line=right,
@@ -101,11 +96,10 @@ ylabel={\(\displaystyle \mathbf{b}^{(2)}\)},
 ymin=-0.5, ymax=0.5,
 ytick pos=left,
 ytick style={color=black},
-ylabel style={rotate=-90},
 ytick={-0.6,-0.4,-0.2,0,0.2,0.4,0.6},
 yticklabels={−0.6,−0.4,−0.2,0.0,0.2,0.4,0.6}
 ]
-\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=0.5, ymin=0.5, ymax=-0.5] {scripts/QD-pade-dnn.py.weights-005.png};
+\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=0.5, ymin=0.5, ymax=-0.5] {scripts/QD-plot-parameters.py.weights-sorted-005.png};
 \end{groupplot}
 
 \end{tikzpicture}

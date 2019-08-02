@@ -19,10 +19,12 @@ xlabel={\% of training},
 xmin=-2.5, xmax=52.5,
 xtick style={color=black},
 y grid style={white!69.01960784313725!black},
-ylabel={\gls{sem} of energy [a.u.]},
+ylabel={Absolute error in energy [a.u.]},
 ymin=1.88824350685265e-11, ymax=0.0459154775931012,
 ymode=log,
-ytick style={color=black}
+ytick style={color=black},
+scaled x ticks={real:0.5},
+xtick scale label code/.code={},
 ]
 \addplot [semithick, color0]
 table {%

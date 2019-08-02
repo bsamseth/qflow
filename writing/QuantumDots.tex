@@ -4,15 +4,15 @@
 \label{chp:quantum-dots}
 
 We now present results for all methods discussed, applied on the example system
-of Quantum Dots (QD) from \cref{sec:quantum-dots-theory}. We present first some
+of \gls{qd} from \cref{sec:quantum-dots-theory}. We present first some
 benchmarks using a typical Slater-Jastrow wave function form, followed by
 introduction of neural network-based wave functions.
 
 \section{Benchmark}
 
-As we shall restrict this analysis to only two interacting particles in the QD,
+As we shall restrict this analysis to only two interacting particles for the \gls{qd},
 $\vX = (\vx_1\ \vx_2)$, our benchmark wave function is simple. We build
-it up using the product of single particle ground states (Gaussian), multiplied
+it up using the product of single particle ground states, multiplied
 by a Pade-Jastrow correlation term:\footnote{We drop the constant factor from~\cref{eq:Phi-non-inter} because we have not normalized the wave function.}
 
 \begin{align}
@@ -62,7 +62,7 @@ analytical result of $\SI{3}{\au}$ these results are in good agreement. For
 reference we have also given the results obtained without the Pade-Jastrow term,
 i.e.\ the non-interacting ground state.
 
-\subsection{Two-Body Density}
+\subsection{Two-body Density}
 
 Given that we now consider two interacting particles, a natural quantity to
 investigate is the two-body density. Recall \cref{fig:verify-twobody} which
@@ -82,15 +82,6 @@ density we get \cref{fig:QD-benchmark-pade-jastrow-onebody}. This shows that the
 most probable position for any single particle is still in the center, but the
 density is much more spread out to larger $r$.
 
-\begin{figure}[h]
-   \centering
-    \resizebox{0.7\linewidth}{!}{%
-        \input{scripts/QD-benchmark-onebody.py.tex}
-    }
-    \caption[One-body density using Pade-Jastrow wave function]{\label{fig:QD-benchmark-pade-jastrow-onebody}One-body density
-      described by $\psi_{PJ}$ with optimized parameters. For reference, the
-      exact OBD for the non-interacting system is indicated by the dotted line.\citesource{writing/scripts/QD-benchmark-onebody.py}}
-\end{figure}
 
 \begin{figure}[h]
    \centering
@@ -106,8 +97,16 @@ density is much more spread out to larger $r$.
       density along the diagonal $r_1=r_2$.\citesource{writing/scripts/QD-benchmark-density.py}}
 \end{figure}
 
+\begin{figure}[h]
+   \centering
+    \resizebox{0.7\linewidth}{!}{%
+        \input{scripts/QD-benchmark-onebody.py.tex}
+    }
+    \caption[One-body density using Pade-Jastrow wave function]{\label{fig:QD-benchmark-pade-jastrow-onebody}One-body density
+      described by $\psi_{PJ}$ with optimized parameters. For reference, the
+      exact OBD for the non-interacting system is indicated by the dotted line.\citesource{writing/scripts/QD-benchmark-onebody.py}}
+\end{figure}
 \clearpage
-
 
 \section{Restricted Boltzmann Machine}
 
@@ -124,13 +123,13 @@ density is much more spread out to larger $r$.
 
 The first \gls{ml}-inspired model we have applied is a \acrfull{rbm}.
 This type of model has seen a significant rise in usage
-since~\textcite{Carleo602} demonstrated the \glspl{rbm} capability to
+since~\textcite{Carleo602} demonstrated the \gls{rbm}'s capacity to
 represent the wave function for some selected Hamiltonians. All the
 Hamiltonians for which they showed successful results, however, had discrete
 configuration spaces. The current system is continuous as the particles can have
 any real valued coordinates, and so the type of \gls{rbm} must change as well.
 
-While more than one choice exist, we have used a Gaussian-Binary \gls{rbm}\@.
+While more than one choice exists, we have used a Gaussian-binary \gls{rbm}\@.
 \cref{fig:rbm-diagram-example} shows and example diagram of the network
 structure. \textcite{Flugsrud-2018} has a full introduction to \glspl{rbm}, including
 all details needed for \gls{vmc}\@. For our purposes it suffices to say that the
@@ -179,7 +178,7 @@ of magnitude larger than the benchmark.
     \resizebox{\linewidth}{!}{%
         \input{scripts/QD-rbm.py.tex}
     }
-    \caption[Learning progression of an \gls{rbm} on quantum dots]{\label{fig:QD-rbm-training}Left: Performance of the
+    \caption[Learning progression of an \acrshort{rbm} on quantum dots]{\label{fig:QD-rbm-training}Left: Performance of the
       wave function in \cref{eq:rbm-def} as a function of
       training steps. Right: Progression of variational parameters as a function
       of training steps.\citesource{writing/scripts/QD-rbm.py}}
@@ -201,7 +200,7 @@ algorithm by~\textcite{Jonsson-2018}. Energies in atomic units $[\si{\au}]$. See
     \resizebox{\linewidth}{!}{%
         \input{scripts/QD-rbm.py.symmetry.tex}
     }
-    \caption[Symmetry and weight matrix of an \gls{rbm} used on quantum dots]{\label{fig:QD-rbm-symmetry}Left: Permutation symmetry of the \gls{rbm} wave
+    \caption[Symmetry and weight matrix of an \acrshort{rbm} used on quantum dots]{\label{fig:QD-rbm-symmetry}Left: Permutation symmetry of the \gls{rbm} wave
 function in~\cref{eq:rbm-def} as a function of training steps. Right: Color map
 of the weight matrix of the \gls{rbm} after training. Weights have been scaled to
 $[-1, 1]$ for simplicity. See \cref{fig:QD-rbm-training} for source code reference.}
@@ -233,7 +232,7 @@ reduced form failed.
 More successfully we imposed symmetry by sorting the inputs prior to feeding
 them through $\psi_{RBM}$. While this was able to learn something, it stalled
 out at $>\SI{3.1}{\au}$. In general it is our experience that imposing the
-symmetry from the beginning of the training stops the \gls{rbm} in getting anywhere.
+symmetry from the beginning of the training stops the \gls{rbm} from getting anywhere.
 This is a manifestation of the classical problem in learning of balancing
 exploitation and exploration, with this case suffering from a lack of exploration.
 
@@ -270,8 +269,8 @@ case:
                                                   -v_2 & 0 & 0 &  v_1
                                                   )
 \end{align}
-This relation is only approximately true, as the \gls{rbm} has not learned set the
-weights exactly equal to each other, but it is close enough to show clear
+This relation is only approximately true, as the \gls{rbm} has not learned to set the
+weights exactly equal to each other, but it is close enough to show a clear
 pattern.
 
 This pattern explains why the attempt at imposing symmetry with a reduced form
@@ -286,12 +285,12 @@ and substitute in the above matrix for $\mat W$, we get:
   \begin{split}
   \psi_{RBM} \propto &\qty{1 + \exp[b_1 + \frac{1}{\sigma^2}\qty(v_1(x_1-x_2) + v_2(y_1-y_2))]}\\
                    \times &\qty{1 + \exp[b_4 + \frac{1}{\sigma^2}\qty(v_2(x_1-x_2) - v_1(y_1-y_2))]}
-  \end{split}
+  \end{split}.
 \end{align}
 If $\vb{a}=a\vb{1}$ and $\vb{b}=b\vb{1}$ (i.e.\ biases are all equal in value),
 this leads to an \gls{rbm} that is deceptively close to a fully permutation symmetric
 function, broken only by the sign on $(y_1-y_2)$. The \gls{rbm} has, without direct
-interactions, learned that the differences between the spacial coordinates of
+instructions, learned that the differences between the spacial coordinates of
 the two particles are important. In contrast to $\psi_{PJ}$, which has the
 distance $r_{12}$ explicitly incorporated, the \gls{rbm} has learned the closest
 equivalent it has.
@@ -304,10 +303,10 @@ of expressing this.
 
 \section{Neural Network}
 
-Finally we turn our attention to the new contribution of this thesis - applying
+Finally we turn our attention to the new contribution of this thesis -- applying
 general neural networks as wave functions.
 
-Firstly, we have not been able to simply replace the entire wave function with a
+We have not been able to simply replace the entire wave function with a
 neural network from the start. In order for \gls{vmc} optimization to work we need a
 stable enough starting point to avoid immediate divergence. The better approach
 is to bootstrap the network with an existing wave function as a starting point.
@@ -323,7 +322,10 @@ While there is a certain appeal to the first alternative, in the
 sense that we would end up with a pure neural network wave function, the
 downside is that pre-training will not be as accurate, as well as taking
 some time. Small inaccuracies could also lead to instabilities from non-satisfied
-cusp conditions/symmetry requirements.
+cusp conditions/symmetry requirements. More importantly, we might
+not know the correct form to pre-train until we have performed a \gls{vmc}
+optimization to begin with. By using the second alternative, we are able to
+train both network and base wave function simultaneously.
 
 Because of this, we opted to simply treat the network as a correction factor,
 aimed to fix the small discrepancy between the benchmark and the true ground
@@ -342,8 +344,8 @@ where $f$ represents some arbitrary neural network.
 
 \subsection{Network Architecture}
 
-We consider here only simple Feed Forward Neural Networks (FFNN) and leave other
-species of NNs for future research.
+We consider here only simple \glspl{ffnn} and leave other species of \glspl{nn} for
+future research.
 
 The size of the system determines the number of inputs.
 The output layer is also essentially forced as we want a
@@ -357,7 +359,7 @@ we found $\tanh$ to be the most suitable activation function, and we have used t
 in all cases. The number of nodes needs to be sufficiently large compared to the
 number of inputs. This is to allow the network to learn a large amount of
 different correlations, and not force it to settle right away.
-The specific choices are again empirically motivated, and stems
+The specific choices are again empirically motivated, and stem
 from observing worse results with much smaller values and diminishing returns
 for larger choices.
 
@@ -367,7 +369,7 @@ into a smaller space. We have used powers of two for no particular reason other
 than that it allows for even divisions.
 
 While a large family of architectures are likely to perform well in this case,
-we have found the following setup settled on the following setup:
+we have settled on the following setup:
 
 \begin{center}
   \begin{tabular}{lcc}
@@ -405,29 +407,44 @@ ADAM optimizer. Again, this is an example of hyperparameters, and we can
 achieve good results with a range of other choices.
 
 \cref{fig:QD-pade-dnn-training} shows a graph of the absolute error in energy
-during the course of training, for all three wave functions. The three curves
-closely follow each other in the early stages, likely because the Pade-Jastrow
-factor contributes most of the improvements at this point. Additionally, we have
-initialized the networks with rather small weights, which result in the having a
-weak effect in the early stages. This was done to ensure stability.
+during the course of training, for all three wave functions. To begin with,
+$\psi_{PJ}$ and $\psi_{DNN}$ closely follow each other,
+likely because the Pade-Jastrow factor contributes most of the improvements at
+this point. Additionally, we have initialized the networks with rather small
+weights, which results in the network in $\psi_{DNN}$ having a weak effect to
+start. This was done to ensure stability.
 
-While $\psi_{PJ}$ plateaus after a short amount of time, the
-networks continues to improve beyond this point. Interestingly, they do not
-continue immediately. This indicates that the networks are temporarily stuck in
-a local optimum, and it takes some time before they are able to find a better
-strategy. In our tests, $\psi_{SDNN}$ tend to exit the plateau quicker that its
-asymmetric counterpart, although the exact timing is random.
+While $\psi_{PJ}$ plateaus after a short amount of time, we see $\psi_{DNN}$
+continue to improve beyond this point once the weights reach a critical
+magnitude. In the end $\psi_{DNN}$ seems to converge at a little more than
+halfway through the training, and we achieve an order of magnitude better
+accuracy compared to $\psi_{PJ}$, with a corresponding reduction in the
+variance.
 
-In the end both networks converge to similar levels at about halfway through the
-training. We achieve an order of magnitude better accuracy compared to $\psi_{PJ}$, with a corresponding
-reduction in the variance.\\
+The symmetric counterpart, $\psi_{SDNN}$, acts quite differently. Ignoring the
+random spike in the beginning, we still see improvement compared to $\psi_{PJ}$,
+but distinctly worse than the network without input sorting. It also appears to
+have significantly more variance compared to $\psi_{DNN}$, however, the variance
+estimates for the final model (\cref{tab:pade-dnn-energy-results}) disagrees. It
+is possible that the variance was larger during training, and that the effect is
+amplified by the logarithmic scale on the axis. Regardless, we again
+conclude that imposing symmetry in this system seem to only hamper the learning.
+The symmetry metric for $\psi_{DNN}$ is very close to $1$ throughout training,
+so it seems the network learns the symmetry sufficiently well on its own.
 
 \cref{tab:pade-dnn-energy-results} shows the final energies produced from the
-three wave functions after training. The results solidify the graphical impression
-of~\cref{fig:QD-pade-dnn-training}, showing a clear improvement. These results
-approach the accuracy of \gls{dmc}, a technique that can obtain
-exact numerical results. \textcite{Pedersen-2011} lists $\SI{3.00000(1)}{\au}$
-as the \gls{dmc} result, which has an overlapping confidence interval with our results.
+three wave functions after training. The results solidify the graphical
+impression of~\cref{fig:QD-pade-dnn-training}, showing a clear improvement by
+both networks. The result from $\psi_{DNN}$ approaches the accuracy of \gls{dmc},
+a technique that can obtain exact numerical results. \textcite{Pedersen-2011}
+lists $\SI{3.00000(1)}{\au}$ as the \gls{dmc} result, which has an overlapping
+confidence interval with our results.
+
+Also included is the energy obtained by using the parameters from $\psi_{DNN}$
+in $\psi_{SDNN}$. Unlike for the \gls{rbm}, where this strategy barely changed the
+energy, the effect was much worse for the \gls{dnn}. In this small two-body
+system it seems the best strategy is to simply let the network learn the
+symmetry, despite it never learning a perfectly symmetric set of parameters.
 
 \begin{figure}[h]
    \centering
@@ -442,12 +459,14 @@ show a small selection of the total number of parameters.\citesource{writing/scr
 
 \begin{table}[h]
   \centering
-  \label{tab:pade-dnn-energy-results}
-  \caption[Energy estimates using a neural network on quantum dots]{Energy using the neural network wave function in~\cref{eq:pade-dnn}, along with
-the benchmark wave function after the same amount of optimization. Results obtained
-from $2^{22}$ samples and errors estimated by an automated blocking
-algorithm by~\textcite{Jonsson-2018}. Energies in atomic units $[\si{\au}]$. See
-\cref{fig:QD-pade-dnn-training} for source code reference.}
+
+  \caption[Energy estimates using a neural network on quantum
+  dots]{\label{tab:pade-dnn-energy-results}Energy using the neural networks
+$\psi_{DNN}$ and $\psi_{SDNN}$, along with the benchmark wave function after the
+same amount of optimization. $\hat\psi_{SDNN}$ shows the result of using the
+parameters from $\psi_{DNN}$ with input sorting applied only after training.
+Results obtained from $2^{22}$ samples and errors corrected for autocovariance by blocking. Energies in atomic units
+$[\si{\au}]$. See \cref{fig:QD-pade-dnn-training} for source code reference.}
   \input{scripts/QD-pade-dnn.py.table.tex}
 \end{table}
 
@@ -463,16 +482,18 @@ algorithm by~\textcite{Jonsson-2018}. Energies in atomic units $[\si{\au}]$. See
 
 \begin{figure}[h]
    \centering
-    \resizebox{\linewidth}{!}{%
-        \input{scripts/QD-pade-dnn.py.weights.tex}
+    \resizebox{!}{0.35\paperheight}{%
+        \input{scripts/QD-plot-parameters.py.weights-regular.tex}
     }
-    \caption[Weights of a neural network trained on quantum dots]{\label{fig:QD-pade-dnn-weights}Color map representation of the
-weights and biases in the network of $\psi_{DNN}$. The left column of plots
-shows the weight matrices in each layer, and the corresponding biases are in the
-right column. The bottom right plot has only one color because there is only one
-output layer bias. Each rectangle represents a parameter, and they have been
-scaled to have the same total size. The size of the rectangles are not
-important. See \cref{fig:QD-pade-dnn-training} for source code reference.}
+    \caption[Weights of a neural network trained on quantum
+dots]{\label{fig:QD-pade-dnn-weights}Color map representation of the weights and
+biases in the network of $\psi_{DNN}$. The left column of plots shows the weight
+matrices in each layer, and the corresponding biases are in the right column.
+The bottom right plot has only one color because there is only one output layer
+bias. Each rectangle represents a parameter, and they have been scaled to have
+the same total size. The size of the rectangles are not important. The
+parameters of $\psi_{SDNN}$ are largely different, but show similar patterns.
+See \cref{fig:QD-pade-dnn-training} for source code reference.}
 \end{figure}
 
 \subsection{Interpreting the Networks}
@@ -481,7 +502,7 @@ Given the apparent ability of the networks to improve upon our theoretically
 motivated ansatz, it would be interesting to see if we can learn something from
 the structure of the network. This is, however, notoriously difficult to do with
 neural networks. In most cases the interconnections that make up the network are
-simply treated as a black box, simply because we lack the understanding to do
+treated as a black box, simply because we lack the understanding to do
 anything else.
 
 Still, we can make an attempt. \cref{fig:QD-pade-dnn-weights} show a color map
@@ -489,13 +510,15 @@ representation of all the weights and biases of $\psi_{DNN}$ after training.
 Arguably, we should not attempt to assign physical meanings to any of the later
 layers. If anything, the weight matrix of the first layer could be insightful,
 as this is directly multiplied with the coordinates $\mat X$. Interestingly,
-two columns appear to have significant values. This is very similar to the
-effect seen in~\cref{fig:QD-rbm-symmetry} for the \gls{rbm}. In fact, the same
-symmetry between the two columns is even present. The remaining columns are not
-as clearly zeroed out in the networks, perhaps due to the lack of
-regularization. While non-trivial to interpret, this points to the networks
-learning, completely by themselves, some underlying physical structure in the
-inputs.
+only a few columns appear to have significant values. This is very similar to the
+effect seen in~\cref{fig:QD-rbm-symmetry} for the \gls{rbm}. In fact, a similar
+symmetry between two of the columns is even present, hinting that the network
+has realized the importance of relative differences in coordinates. The
+remaining columns are not as clearly zeroed out, partly due to
+the lack of regularization, but also evidence that more is happening here
+compared to the \gls{rbm}. While non-trivial to interpret, this points to the
+networks learning, completely by themselves, some underlying physical structure
+in the inputs.
 
 
 
@@ -511,39 +534,40 @@ is also calculated in $\mathcal{O}(N^2)$ time.
 
 The complexity of the neural network is a little harder to pin down, because of
 the inherent flexibility in how the network can be structured.
-
-The neural network computes a series of matrix-vector multiplications, both during
+It computes a series of matrix-vector multiplications, both during
 evaluation and for its derivatives. The input layer needs to scale equal to $N$,
 while the other layers could in principle be constant. This means we could say
 that the network only scales linearly, $\mathcal{O}(N)$, with increasing number
 of particles. Still, the \say{constant} part of the computation time is very
 large, and this kind of complexity analysis is slightly unfair.
 
-In practice we found that we needed the second layer to have more
-nodes than we have inputs. We have not determined a strict relationship, but
-either $\mathcal{O}(N)$ or $\mathcal{O}(N^2)$ seems reasonable for the second
-layer. Assuming the network shrinks from there on, the dominant operation is a
-matrix-vector operation with matrix dimensions of order $(N\times N)$ or $(N\times N^2)$,
-which works out to a complexity of $\mathcal{O}(N^2)$ or $\mathcal{O}(N^3)$. In
-this more realistic view, the networks are not improving upon the complexity of
-the benchmark, but rather the opposite is true.\\
+In practice we found that we needed the second layer to have more nodes than we
+have inputs. We have not determined a strict relationship, but either
+$\mathcal{O}(N)$ or $\mathcal{O}(N^2)$ seems reasonable for the number of nodes
+in the second layer. Assuming the network shrinks from there on, the dominant
+operation is a matrix-vector operation with matrix dimensions of order $(N\times
+N)$ or $(N\times N^2)$, which works out to a complexity of $\mathcal{O}(N^2)$ or
+$\mathcal{O}(N^3)$. In this more realistic view, the networks are not improving
+upon the complexity of the benchmark, but rather the opposite is true.
 
-Importantly the networks also depend highly on the depth (number of layers) as
+The networks also depend highly on the depth (number of layers) as
 well as obviously the sizes of subsequent layers. We should also note that while
 asymptotic cost might be equal to the benchmark, a more precise count of the
-required operations would show a substantial disparity.
+required operations would show a substantial disparity. Furthermore, we have
+found that the \glspl{nn} generally require more training iterations compared to
+the benchmark, which further compounds the computational cost.
 
-However, a constant cost difference can always be brought down with optimized code, more
-and better hardware, introducing \glspl{gpu} etc. And while computing power may no
-longer increase exponentially each year, it continues to grow nevertheless.
-Large scale use of networks for quantum mechanics might therefore be well
+Nevertheless, a constant cost difference can always be brought down with
+optimized code, more and better hardware, introducing \glspl{gpu} etc. And while
+computing power may no longer increase exponentially each year, it continues to
+grow. Large scale use of networks for quantum mechanics might therefore be well
 within reach.
 
 \subsection{Other Observables}
 
 So far we have only investigated the energies produced by the different wave
 functions. Other observables of interest could be the mean distance from the origin,
-$\expval{r}$, the mean squared distance from the origin, $\expval{r^2}$ and the mean
+$\expval{r}$, the mean squared distance from the origin, $\expval{r^2}$, and the mean
 inter-particle distance, $\expval{r_{12}}$. These are all quantities that should
 depend on the correlation between the particles.
 \cref{tab:QD-mean-distance-metrics} shows the three observables as predicted
@@ -563,15 +587,17 @@ from the three wave functions trained previously.
   \label{tab:QD-mean-distance-metrics}
 \end{table}
 We see first that, as one would expect, the predicted radii are larger when we
-have multiple interacting particles. Less clear is the differences between the
-benchmark wave function $\psi_{PJ}$ and the networks. In general, the results
+have multiple interacting particles, as opposed to the ideal non-interacting
+case. Less clear is the differences between the benchmark wave function
+$\psi_{PJ}$ and the networks. In general, the results
 indicate that $\psi_{PJ}$ slightly underestimates the effect of the Coulomb
-repulsion. While $\expval{r}$ and $\expval{r^2}$ are not significantly different
-from the networks, we see a larger difference in $\expval{r_{12}}$. This might
+repulsion with smaller estimates for all three quantities. While $\expval{r}$
+and $\expval{r^2}$ are only borderline significantly different from the networks, we see a
+larger difference in $\expval{r_{12}}$. This might
 be because $\expval{r_{12}}$ is the quantity which is most directly
 connected to the strength of the interaction
 
-The two network types seem to once again be equivalent, with the observed differences well
+The two network types seem to be equivalent, with the observed differences well
 within statistical expectations.
 
 \end{document}

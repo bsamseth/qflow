@@ -108,6 +108,7 @@ explicitly, all of the following statements about the elements of $\vx$ are equi
 
 \subsection{Statistics}
 
+Common statistical quantities use the following notation:
 \begin{center}
 \begin{tabular}{lr}
   Quantity & Notation\\
@@ -121,15 +122,14 @@ explicitly, all of the following statements about the elements of $\vx$ are equi
 \end{center}
 
 
-
 \section{Symmetry Metric}
 \label{app:symmetry-metric}
 
 In the context of our \gls{vmc} framework, we should in general
-take care that the ansatz we make for the functional form of $\Psi_T$ is such
+take care that the ansatz we make for the functional form of $\Psi$ is such
 that it obeys \autoref{theorem:spin-statistic}. Not all proposed wavefunctions
 will necessary \emph{guarantee} this property, however, and optimization might
-find a minima in which this is not true. A such, we shall define a metric to
+find a minimum in which this is not strictly true. A such, we shall define a metric to
 measure the \emph{symmetry-ness} of a wavefunction.
 
 Before giving a definition, there are a couple of desired properties such a
@@ -146,23 +146,23 @@ metric should have.
 
 \begin{definition}{Permutation Operator.}
 
-     Let $\mathcal{P}_n$ denote the set of all permutations of the first $n$
-     natural numbers, $\{1, 2, \dots, n\}$, and let $\vec\alpha\in \mathcal{P}_n$
-     be one of these. Given a function $\Psi(\vec X_1, \vec X_2,\dots,\vec X_n)$ of
-     $n$ vectors $\vec X_i\in \mathbb{R}^f$, we let $P_{\vec\alpha}$ be an
-     operator with the following property:
+    Let $\mathcal{P}_n$ denote the set of all permutations of the first $n$
+    natural numbers, $\{1, 2, \dots, n\}$, and let $\vec\alpha\in \mathcal{P}_n$ be
+    one of these. Given a function $\Psi(\vec x_1, \vec x_2,\dots,\vec x_n)$ of $n$
+    vectors $\vec x_i\in \mathbb{R}^d$, we let $P_{\vec\alpha}$ be an operator with
+    the following property:
 
     \begin{align}
-        P_{\vec\alpha}\Psi(\vec X_1,\vec X_2,\dots,\vec X_n)
+        P_{\vec\alpha}\Psi(\vec x_1,\vec x_2,\dots,\vec x_n)
         \defeq
-        \Psi(\vec X_{\alpha_1},\vec X_{\alpha_2},\dots,\vec X_{\alpha_n}).
+        \Psi(\vec x_{\alpha_1},\vec x_{\alpha_2},\dots,\vec x_{\alpha_n}).
     \end{align}
 \end{definition}
 
 \begin{definition}{Symmetry Metric.}
 
-    Given a function $\Psi(\vec X_1, \vec X_2,\dots,\vec X_n)$ of $n$ vectors $\vec
-    X_i\in \mathbb{R}^f$. We use the notation $\dd{\vec X}\defeq \dd{\vec X_1}\dots\dd{\vec X_n}$.
+    Given a function $\Psi(\vec x_1, \vec x_2,\dots,\vec x_n)$ of $n$ vectors $\vec
+    x_i\in \mathbb{R}^d$. We use the notation $\dd{\vec X}\defeq \dd{\vec x_1}\dots\dd{\vec x_n}$.
     The Symmetry Metric of $\Psi$ is then defined as the following:
 
     \begin{align}\label{eq:symmetry-metric-def}
@@ -218,7 +218,7 @@ metric should have.
     \begin{align}
         \sum_{\vec\alpha\in \mathcal{P}_n} P_{\vec\alpha}\Psi = 0,
     \end{align}
-    and thus the result following from this.
+    and the result follows directly.
 \end{proof}
 
 This definition of the symmetry metric has all the attributes we wanted, except
@@ -226,10 +226,11 @@ the computational cost. The asymptotic complexity of $S$ is $\mathcal{O}(n!)$,
 which is about as bad as asymptotic complexities get. In addition, the integrals
 are many-dimensional and intractable for any non-trivial $n$. In practice we
 will therefore approximate $S$ by only considering a random subset of all the
-permutations, and of course approximating the integrals with \gls{mci} as before.
+permutations, and of course approximating the integrals with \gls{mci} as
+before. In cases where $n$ is small we may compute the full set.
 
 This now provides a consistent metric for comparing potential wavefunctions in
-terms of their symmetry. This will be helpful when considering trail
+terms of their symmetry. This could be helpful when considering trail
 wave functions whose functional form does not guarantee symmetry, and to observe
 to what extent optimizing them changes the symmetry metric favorably.
 

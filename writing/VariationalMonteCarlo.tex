@@ -29,12 +29,12 @@ Let's formalize the above statement.
     Hilbert space, such that the \gls{tise} is satisfied,
 
     \begin{align}
-        \hat H\ket{\phi_n} = E_n\ket\phi_n.
+        \hat H\ket{\phi_n} = E_n\ket{\phi_n}.
     \end{align}
     For any arbitrary $\ket\psi$ in the Hilbert space, the expectation value of $\hat H$
     for this wave function must satisfy
     \begin{align}
-        \expval{\hat H}&\defeq \expval{\hat H}{\psi} \geq E_0.
+        \expval{\hat H}&\defeq \expval{\hat H}{\psi} \geq E_0,
     \end{align}
     where $E_0$ is the exact ground state energy, with equality if and only if
     $\ket\psi=\ket\phi_0$.
@@ -43,7 +43,7 @@ Let's formalize the above statement.
     Because $\{\ket{\phi_n}\}$ constitutes a complete orthonormal basis of the Hilbert
     space, we can expand $\ket\psi$ as
     \begin{align}
-        \ket\psi = \sum_n c_n\ket\phi_n \qq{with} \sum_n \abs{c_n}^2 = 1.
+        \ket\psi = \sum_n c_n\ket{\phi_n} \qq{with} \sum_n \abs{c_n}^2 = 1.
     \end{align}
     We then have
     \begin{align}
@@ -101,7 +101,7 @@ the true underlying ground state, or at least a good approximation of it. As an 
 take the simple case of the idealized one-dimensional harmonic oscillator presented in
 \cref{sec:simple-non-inter-HO}, with the ground state expressed as
 \begin{align}
-    \phi_0(x) \propto \exp(- \frac{1}{2} x^2)
+    \phi_0(x) \propto \exp(- \frac{1}{2} x^2).
 \end{align}
 If we proposed a trial wave function on a form
 \begin{align}
@@ -110,12 +110,12 @@ If we proposed a trial wave function on a form
 we could expect \gls{vmc} to produce the exact ground state after optimizing $\alpha$. The above
 is a good trial wave function because its functional form contains the exact state.
 
-Suppose now we proposed something different, maybe because a of lacking theoretical
+Suppose now we proposed something different, maybe because of a lack of theoretical
 understanding. For the sake of example, say we chose this visually similar
-function\footnote{Visually similar in the sense that plotting them both yield similar bell
-shaped curves, not in terms of their algebra}:
+function:\footnote{Visually similar in the sense that plotting them both yield similar bell
+shaped curves, not in terms of their algebra.}
 \begin{align}
-    \psi(x; \alpha)\propto \frac{1}{1 + \alpha x^2}
+    \psi(x; \alpha)\propto \frac{1}{1 + \alpha x^2}.
 \end{align}
 Now matter how we tune the $\alpha$ parameter here, we will never achieve the lowest
 ground state energy, simply because the ground state is not possible to express within this
@@ -129,33 +129,33 @@ In order to come up with good trail wave functions we have a standard approach w
 serves us well. Typically we are considering a system of many interacting particles in
 some external potential (e.g. the quantum dots system). In such cases the typical approach
 is to build a trial wave function as a product of a single-particle part, $S$, and a correlation
-part $J$
+part, $J$. The two are referred to as the \emph{Slater} factor and the
+\emph{Jastrow} factor, respectively:
 
 \begin{align}
-    \ket\psi = \ket{S} \ket{J}
+    \psi = S\cdot J.
 \end{align}
 
 \subsubsection*{Slater}
 
-The idea with this structure is that we put all the physical insight we have into these
+The idea behind the decomposition above is that we put all the physical insight we have into these
 two components individually. For the single particle part we include what we can deduce
 about the system if we idealize it in some way. Typically that involves looking at the
 states when there is only one particle, or considering some simplified interaction between
 all of them (e.g. Hartree-Fock approximation). The basis functions we obtain from such an
 analysis are then placed in a determinant/permanent structure so as to fix the symmetry
-requirements of fermions/bosons, respectively. This factor is then called the \emph{Slater
-factor}~\cite{Slater-1929,Dirac-1926}.
+requirements of fermions/bosons, respectively. This factor is then the Slater
+factor~\cite{Slater-1929,Dirac-1926}.
 
 
 For clarity, we present a couple different Slater forms. We consider the two-dimensional
-quantum dots system from \cref{sec:quantum-dots-theory} for $N$ particles.  We have
-$\vb x_i=(x_i, y_i)$ being the position of the particle $i$, and $\vb X\defeq (\vb x_1,
-\dots \vb x_N)$ defined as a shorthand. Let $\vb\Phi$ be a matrix defined by $\Phi_{i,j}
+quantum dots system from \cref{sec:quantum-dots-theory} for $N$ particles. We
+denote the position of particle $i$ by $\vb x_i=(x_i, y_i)$. Let $\vb\Phi$ be a matrix defined by $\Phi_{i,j}
 \defeq \phi_{i}(\vb x_j)$, where the $\phi_i$ is part of the set of orbitals
 $\{\phi_{0,0}, \phi_{1,0},\phi_{0,1}, \phi_{1,1},\dots\}$, as defined in
 \cref{eq:ho-single-particle-orbitals}. Lastly, let $\vb \Phi^{(M)}$ denote the
 resulting matrix with $M$ rows, one for each of the $M$ lowest energy orbitals. Finally,
-if the particles are fermions we define the Slater factor as\footnote{Spin considerations not mentioned here, as they will not be important for the particular systems we will investigate. In general though, the structure of the Slater factor needs to account for spin in a well defined way.}
+if the particles are fermions we define the Slater factor as:\footnote{Spin considerations not mentioned here, as they will not be important for the particular systems we will investigate. In general though, the structure of the Slater factor needs to account for spin in a well defined way.}
 
 \begin{align}
     S(\vb X)_\text{fermions} \defeq \text{determinant}\qty(\vb\Phi^{(M)}).
@@ -177,7 +177,7 @@ sufficient in this case.
 The general structure is constant across different systems, changing only the basis
 functions we use to express the matrix elements.
 
-In some cases however, we will struggle find basis functions that describe a meaningful
+In some cases, however, we will struggle to find basis functions that describe a meaningful
 portion of the systems behaviour in this way. In such challenging cases, the Slater factor
 could be reduced to only being responsible for supplying the correct symmetry. In the case
 of bosons, that would mean the complete removal of the Slater factor from the trial wave
@@ -191,9 +191,9 @@ Anything not covered by this analysis is meant to be accounted for in the correl
 term, $J$. This is typically a function on the following generalized form, commonly called a Jastrow
 factor~\cite{Jastrow-1955}:
 \begin{align}
-    J(\vb X) &= \exp(\sum_{i < j} U(r_{ij}))
+    J(\vb X) &= \exp(\sum_{i < j} U(r_{ij})),
 \end{align}
-where $U(r)$ is some function dependent on the inter-particle distance only. Note that by
+where $U(r_{ij})$ is some function dependent on the inter-particle distance only. Note that by
 convention the Slater factor has the correct symmetry, so the correlation factor should
 always be symmetrical in order to maintain the same total symmetry.
 
@@ -205,7 +205,7 @@ It is therefore typically expressed with a few free parameters.
 Again, for the sake of clarity, we state an example Jastrow factor. One of the most
 commonly used is the Pade-Jastrow factor~\cite{Drummond-Towler-Needs-2008}:
 \begin{align}
-    J(\vb X) = \prod_{i < j} \exp(\frac{\alpha r_{ij}}{1 + \beta r_{ij} } )
+    J(\vb X) = \prod_{i < j} \exp(\frac{\alpha r_{ij}}{1 + \beta r_{ij} } ).
 \end{align}
 Here $\beta$ is the only variational parameter, and $\alpha$ is fixed depending on the
 dimensionality and spin of the particles. More complicated versions exist, containing
@@ -230,9 +230,9 @@ determine an efficient way to evaluate said energy.
 \subsection{Local Energy}
 
 Denote the trial wave function as $\psi_{\vb\alpha}(\vb X)$, where $\vb\alpha$
-are the variational parameters and $\vX=(\vx_1, \vx_2,\dots,\vx_n)$ is the
+are the variational parameters and $\vX=(\vx_1\  \vx_2\ \dots\ \vx_n)^T$ is the
 matrix of all the degrees of freedom for each particle (e.g. position
-coordinates). The expectation value for the energy of the system is
+coordinates). The expectation value for the energy of the system is:
 
 \begin{align}
     \expval{\hat H} &= \frac{\expval{\hat H}{\vb\alpha}}{\braket{\vb\alpha}}\\
@@ -241,11 +241,11 @@ coordinates). The expectation value for the energy of the system is
 \end{align}
 %
 We now restructure this integral a bit. Remembering the interpretation of
-the wave function as a probability distribution, we can write the \emph{probability
-density} for a given system configuration $\vX$ as
+the wave function as a \gls{pdf}, we can write the \emph{probability
+density} for a given system configuration $\vX$ as:
 
 \begin{align}
-    P_{\psi_{\vb{\alpha}}}(\vX) \defeq \frac{\abs{\psialpha}^2}{\int\dd{\vX}\abs{\psialpha}^2}\label{eq:wavefunc-probability-density-def}
+    P_{\psi_{\vb{\alpha}}}(\vX) \defeq \frac{\abs{\psialpha}^2}{\int\dd{\vX}\abs{\psialpha}^2},\label{eq:wavefunc-probability-density-def}
 \end{align}
 where we account for the possibility of $\psialpha$ not being normalized to unity. Further, we define a quantity we will call the \emph{local energy},
 \begin{align}
@@ -260,10 +260,10 @@ Why is this better? Because this is simply the weighted average of the local
 energy, something which has a straightforward discrete formulation:
 \begin{align}\label{eq:vmc-local-energy-formulation}
     \expval{\hat H} &= \lim_{N\rightarrow \infty} \frac{1}{N} \sum_{i = 1}^N E_L(\vX_i)
-    \qq{where} \vb X_i\sim P_{\psi_{\valpha}}
+    \qq{where} \vb X_i\disteq P_{\psi_{\valpha}}.
 \end{align}
 So, if we can sample $\vX$ from the distribution described by our trial wave
-function, we simply need to evaluate the local energy at a sufficiently large
+function, we simply need to evaluate the local energy for a sufficiently large
 number of configurations  to obtain a good estimate of the expectation value of
 the Hamiltonian. How exactly to do the sampling is a rather large topic, and
 will be handled in \cref{chp:monte-carlo}.
@@ -284,9 +284,13 @@ of steepest ascent, so going the other way will be the direction of steepest
 decent. How exactly to make these changes are a topic of its own, and discussed in depth in \cref{chp:machine-learning}, but the simplest implementation is as follows:
 
 \begin{align}
-    \valpha^{(i+1)} = \valpha^{(i)} - \eta \grad_{\valpha}{\expval{\hat H}}
+    \valpha^{(i+1)} = \valpha^{(i)} - \eta \grad_{\valpha}{\expval{\hat H}},
 \end{align}
-for a suitably chosen hyperparameter $\eta\in\mathbb{R}$, typically $\eta\ll 1$. After a sufficient number of iterations, we hope that the parameters converge to their optimal values.
+for a suitably chosen hyperparameter $\eta\in\mathbb{R}$, typically $\eta\ll 1$.
+This says that the updated parameters $\valpha^{(i+1)}$ are equal to the
+previous ones, $\valpha^{(i)}$, minus a small step in the direction of the
+gradient of $\expval{\hat H}$ w.r.t. each parameter. After a sufficient number
+of iterations, we hope that the parameters converge to their optimal values.
 
 This raises another question, namely how to compute
 $\grad_{\valpha}{\expval{\hat H}}$. Using the basic properties of derivatives we get (temporarily omitting the subscript on $\psialpha$):
@@ -300,12 +304,12 @@ $\grad_{\valpha}{\expval{\hat H}}$. Using the basic properties of derivatives we
     \frac{\qty(\int\dd{\vX}\psi^*\hat
     H\psi)\qty(\int\dd{\vX}\grad_{\valpha}(\abs{\psi}^2))}{\qty(\int\dd{\vX}\abs{\psi}^2)^2} \\
     &= \expval{\frac{\grad_{\valpha}(\psi^*)\hat H\psi + \psi^*\hat H\grad_{\valpha}(\psi)}{\abs{\psi}^2}}
-    - \expval{\hat H}\expval{\frac{\grad_{\valpha}\abs{\psi}^2}{\abs{\psi}^2}}
+    - \expval{\hat H}\expval{\frac{\grad_{\valpha}\abs{\psi}^2}{\abs{\psi}^2}},
 \end{align}
 where we have used the fact that $\hat H$ does not depend on $\valpha$ in any way.
 
 To further simplify this, we use the trick $\flatfrac{\grad(f)}{f}=\grad(\ln
-f)$, and the hermiticity of $\hat H$:
+f)$, as well as the hermiticity of $\hat H$:
 \begin{align}
     \grad_{\valpha}\expval{\hat H}
     &= \expval{\frac{\grad_{\valpha}(\psi^*)\hat H\psi + \grad_{\valpha}(\psi)(\hat H\psi)^*}{\abs{\psi}^2}}

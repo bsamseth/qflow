@@ -32,7 +32,7 @@ required components for using QFLOW:
 \end{itemize}
 Every other dependency should be automatically resolved during installation.
 
-\section{Quickstart}
+\section{Usage}
 
 The following example aims to showcase the basic usage pattern of QFLOW.
 
@@ -57,9 +57,9 @@ a few readable lines of Python:\\
 
 \begin{figure}[h]
   \centering
-  % \resizebox{0.7\linewidth}{!}{%
+  \resizebox{\linewidth}{!}{%
       \input{scripts/quickstart.py_.tex}
-  % }
+  }
   \caption[Learning progression of an example \gls{vmc} optimization]{Learning progression in terms of energy (left) and variational
     parameters (right).\citesource{writing/scripts/quickstart.py}}
   \label{fig:quickstart-example}
@@ -105,15 +105,15 @@ function is implemented as a subclass to this.
 
 The neural networks are used to define wave functions, and as such their
 relevant definitions are structured under the \texttt{qflow.\-wavefunction} module. The
-class \texttt{qflow.\-wavefunctions.\-Dnn} (Deep Neural Network) is a subclass of \texttt{qflow.\-wavefunctions.\-Wavefunction}.
-Setting up the network it self is done by iteratively adding layer objects (see
-later examples).
+class \texttt{qflow.\-wavefunctions.\-Dnn}  is a subclass of
+\texttt{qflow.\-wavefunctions.\-Wavefunction} and allows us to define \glspl{dnn}.
+Setting up the network itself is done by iteratively adding layer objects (\texttt{qflow.\-wavefunctions.\-nn.\-layers}).
 
 \subsection{Samplers}
 
 \gls{mc} sampling is done through one of the implemented methods in the
-\texttt{qflow.samplers} module. Again the code is structured around a base
-class \texttt{qflow.samplers.Sampler}, which defines the basic interface to the
+\texttt{qflow.\-samplers} module. Again the code is structured around a base
+class, \texttt{qflow.\-samplers.\-Sampler}, which defines the basic interface to the
 sampler, including querying for samples (system configurations) and obtaining
 the acceptance rate. Specific algorithms are subclasses, such as
 \texttt{qflow.\-samplers.\-MetropolisSampler} and
@@ -123,8 +123,8 @@ the acceptance rate. Specific algorithms are subclasses, such as
 \subsection{Optimizers}
 
 The last major piece is the \texttt{qflow.optimizers} module. The base class
-here is \texttt{qflow.\-optimizers.\-SgdOptimzier} (Stochastic Gradient Decent),
-which is the vanilla implementation from
+here is \texttt{qflow.\-optimizers.\-SgdOptimzier}
+which is the vanilla implementation of \gls{sgd} from
 \cref{eq:fixed-learning-rate-update-rule}. Similarly we have
 \texttt{qflow.\-optimizers.\-AdamOptimizer} as a subclass of the former, which
 unsurprisingly implements \cref{eq:adam-default-parameters}.
@@ -140,7 +140,8 @@ template implementation would potentially give a speed increase, the inheritance
 method was chosen for the following reasons:
 
 \begin{itemize}
-\item The speed increase would likely be small.
+\item The speed increase would likely be small in comparison to the main
+  bottlenecks.
 \item Compilation time would increase significantly, as unique template
   instantiations would be required for each combination
 \item Selecting a different set of Hamiltonians, wave functions, samplers and
@@ -153,33 +154,34 @@ method was chosen for the following reasons:
 
 Vital to any large software project is thorough testing. To this end QFLOW is
 heavily tested, including unit tests of most functions in use and larger
-integration tests to test for correct interplay between components.
+integration tests to test for correct interplay between components. The next
+chapter presents some of these larger tests, while we here list the ways in
+which the code is tested on a continued basis.
 
 The tests are written in a mix of C++, using the
 \href{https://github.com/google/googletest}{Google Test framework}, and Python
 using \href{https://docs.pytest.org/en/latest/}{\texttt{pytest}}. The language
 mix is partly due to legacy code from before the Python bindings were included,
-but because large parts of the C++ code is not exposed to Python they continue
-to be useful.
+but also because large parts of the C++ code are not exposed to Python.
 
 In addition, were applicable we have made use of
 \href{https://hypothesis.readthedocs.io/en/latest/index.html}{Hypothesis} to do
-property based testing from Python. This makes test far superior to hand-crafted examples,
-and the package actively tries to come up with edge cases that will break the
-code. The amount of subtle (as well as obvious ones) bugs that this has found is
-astounding.
+property based testing from Python. This makes test far superior to hand-crafted
+examples, and the package actively tries to come up with edge cases that will
+break the code. The amount of subtle (as well as obvious) bugs that this has
+found is astounding, and much of our confidence in the code is owed to these
+property based unit tests.
 
 Because a lot of the code in QFLOW is implementing mathematical expressions for
 derivatives, we needed a good way to test this. If we want to go beyond testing
 just a few hand-made examples, we need a way to programmatically produce the
 expected derivatives. The problem then is quite typical when writing tests: How
 do you generate the expected answers without simply retyping the same code
-twice? This is a place where \gls{ad} actually became useful.
-The derivatives of all wave functions are compared with the values obtained
-through \gls{ad} by using the Python package
-\href{https://github.com/HIPS/autograd}{Autograd}. We were even able to use \gls{ad}
-to verify the Laplace operators, because the time inefficiency of \gls{ad} is less of
-an issue for unit tests.
+twice? This is a place where \gls{ad} actually became useful. The derivatives of
+all wave functions are compared with the values obtained through \gls{ad} by
+using the Python package \href{https://github.com/HIPS/autograd}{Autograd}. We
+were even able to use \gls{ad} to verify the Laplace operators, because the time
+inefficiency of \gls{ad} is less of an issue for unit tests.
 
 On top of all these tests, we have also included so called
 \href{https://docs.python.org/2/library/doctest.html}{doctests} in the
@@ -190,10 +192,9 @@ This is a useful way to both improve documentation and to make sure that usage
 does not break in unexpected ways.
 
 Finally, we use \href{https://travis-ci.org/}{Travis CI} for continuous
-integration. That means all tests are checked on every commit made to the version control
-system, by building the project on a remote server and running all tests. For
-convenience, Travis is also set up to build the HTML version of the
-documentation for QFLOW and update the project website.
-
+integration. That means all tests are checked on every commit made to the
+version control system, by building the project on a remote server and running
+all tests. For convenience, Travis is also set up to update the documentation at
+the project website, calculate test coverage and scan for potential code issues.
 
 \end{document}

@@ -36,7 +36,7 @@ for l in layers:
     dnn.add_layer(l)
 psi = WavefunctionProduct(simple_and_jastrow, dnn)
 psi_sampler = ImportanceSampler(system, psi, step_size=0.1)
-psi.parameters = np.loadtxt("Dnn-parameters-QD.txt")
+psi.parameters = np.loadtxt("QD-parameters-dnn-regular.txt")
 
 # Sorted
 simple_gaussian2 = SimpleGaussian(alpha=0.5)
@@ -53,7 +53,7 @@ for l in layers2:
     dnn2.add_layer(l)
 psi_sorted_base = WavefunctionProduct(simple_and_jastrow2, dnn2)
 psi_sorted = InputSorter(psi_sorted_base)
-psi_sorted.parameters = psi.parameters
+psi_sorted.parameters = np.loadtxt("QD-parameters-dnn-sorted.txt")
 psi_sorted_sampler = ImportanceSampler(system, psi_sorted, step_size=0.1)
 
 

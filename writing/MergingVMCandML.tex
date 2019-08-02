@@ -3,28 +3,29 @@
 \chapter{Merging Variational Monte Carlo and Machine Learning}
 \label{chp:mergin-vmc-with-ml}
 
-The purpose of \acrlong{vmc} is to find a (wave) function which
-minimizes the expected energy of the system. Stated like this, \gls{vmc} clearly fits
-under the Machine Learning umbrella as a problem of optimizing a function with
-respect to some metric. Still, it is not a standard Supervised Learning problem
-such as linear regression, because we don't have a data set of expected outputs
-for every input. Additionally there are some extra challenges introduced from
-the quantum problems themselves, such as symmetry requirements and cusp
-conditions. I believe these extra challenges are the reason why \gls{vmc}
-optimizations seem to have been done entirely independently of the rest of the
-\gls{ml} research advancements seen in the last few decades.
+The purpose of \gls{vmc} is to find a wave function which minimizes the expected
+energy of the system. Stated like this, \gls{vmc} clearly fits under the machine
+learning umbrella as a general function optimization problem. Still, it is not a
+standard supervised learning problem such as linear regression, because we don't
+have a data set of expected outputs for every input. Additionally there are some
+extra challenges introduced from the quantum problems themselves, such as
+symmetry requirements and cusp conditions. I believe these extra challenges are
+part of the reason why \gls{vmc} optimizations have traditionally been done
+independently from the rest of the \gls{ml} research advancements seen in the
+last few decades.
 
 In the last few years, more and more research seems to go into applying various
 techniques from the more general field of \gls{ml} into the natural sciences,
-including \gls{vmc}. A notable example is~\textcite{Carleo602}, who demonstrated that
-a \acrlong{rbm} was capable of representing the wave function for some notable
-systems to great effect.
+including quantum mechanics and \gls{vmc}. A notable example
+is~\textcite{Carleo602}, who demonstrated that an \gls{rbm}, a particular
+machine learning model, was capable of representing the wave function for some
+notable systems to great effect.
 
-Despite of these recent advancements, I would argue that there
-still exists a great deal of hesitancy towards using general models from Machine
-Learning for \gls{vmc}. This chapter aims to enable the use of \emph{any} arbitrary
-machine learning model, and in so doing open the door for many new applications
-and advancements in the field of \gls{vmc}.
+Despite of these recent advancements, we argue that there still exists a
+great deal of hesitancy towards using general models from machine learning for
+\gls{vmc}. This chapter aims to enable the use of \emph{any} arbitrary machine
+learning model, and in so doing open the door for many new applications and
+advancements in the field of \gls{vmc}.
 
 
 \section{Discriminative vs. Generative Models}
@@ -32,23 +33,22 @@ and advancements in the field of \gls{vmc}.
 
 The \gls{rbm} used by \textcite{Carleo602} was chosen (partly) because it is a
 \emph{generative} model. A distinction is often made between two general types
-of \gls{ml} models:
-\emph{discriminative} and \emph{generative}.\footnote{See for instance \textcite{Ng-2001} for
-a more in-depth discussion of the topic.} To understand their differences,
-imagine we have a data set $\mathcal{D} = \{\vx_i, \vy_i\}_{i=1}^n$ of $n$
-inputs $\vx_i$ and outputs $\vy_i$. In general we want to uncover the
-relationship between $\vx$ and $\vy$, and we can imagine two different ways of
-doing this. We could learn:
+of \gls{ml} models: \emph{discriminative} and \emph{generative}.\footnote{See
+for instance \textcite{Ng-2001} for a more in-depth discussion of the topic.} To
+understand their differences, imagine we have a data set $\mathcal{D} = \{\vx_i,
+\vy_i\}_{i=1}^n$ of $n$ inputs $\vx_i$ and outputs $\vy_i$. In general we want
+to uncover the relationship between $\vx$ and $\vy$, and we can imagine two
+different ways of doing this. We could learn:
 
 \begin{description}
 \item[$p(\vy | \vx)$]\hfill\\
-  The conditional probability of $\vy$ given $\vx$.
+  The conditional \gls{pdf} of $\vy$ given $\vx$.
 \item[$p(\vx, \vy)$] \hfill\\
-  The joint probability distribution of inputs and outputs.
+  The joint \gls{pdf} of inputs and outputs.
 \end{description}
 The most familiar option is the first one. Linear regression is an example of
 such a case where we have an input and want to get the corresponding output.
-Additionally, instead of considering the probability distribution $p(\vy|\vx)$ we
+Additionally, instead of considering the \gls{pdf} $p(\vy|\vx)$ we
 most often just define the output to be the output with the highest probability,
 $\vy = \argmax_{\vy}p(\vb{Y} = \vy | \vX = \vx)$.
 
@@ -62,7 +62,7 @@ correctly, but also to generate new images.
 \subsubsection{Benefits of a Generative Model}
 
 So what does this have to do with \gls{vmc}? Our ultimate
-goal in \gls{vmc} to model a probability amplitude for system configurations
+goal in \gls{vmc} is to model a probability amplitude for system configurations
 $\vX\rightarrow \psi(\vX)$. We want this, in part, so that we can sample
 configurations from it. So wouldn't it be nice if we could have the model
 generate the configurations directly, instead of having to go through the whole
@@ -86,7 +86,7 @@ decently. Ideally we would do both, but sometimes the trade off in accuracy is
 significant.
 
 Second, and arguably more importantly, limiting ourselves to generative models
-is - well, limiting. A vast pool of potential models are discriminative,
+is -- well, limiting. A vast pool of potential models are discriminative,
 including the neural networks from \cref{sec:artificial-neural-networks}. Given
 that we have the Metropolis-Hastings algorithm which works excellently in
 most situations, it seems unnecessary to completely disregard so many options.
@@ -106,7 +106,7 @@ follows:\footnote{These operations are rooted in the assumption that we are
   working with coordinates as the system configuration specification, and where
   the kinetic energy is part of the energy. We acknowledge that there are a
   whole class of Hamiltonians for which this is not suitable. In these cases,
-  the required operations will likely need some changes, however, the overarching
+  the required operations will likely need some changes. Nevertheless, the overarching
   procedure and techniques discussed should be agnostic to such changes.}
 
 \begin{description}
@@ -117,14 +117,14 @@ follows:\footnote{These operations are rooted in the assumption that we are
   quantity:
   \begin{align}
     \label{eq:ml-vmc-operation-gradient}
-    \frac{1}{\psialpha(\vX)}\grad_{\valpha}{\psialpha(\vX)} = \grad_{\valpha}{\ln\psialpha(\vX)}
+    \frac{1}{\psialpha(\vX)}\grad_{\valpha}{\psialpha(\vX)} = \grad_{\valpha}{\ln\psialpha(\vX)}.
   \end{align}
 \item[Gradient w.r.t. inputs:](optional)\hfill\\
   For use with \gls{is}, we need to compute the drift force
   associated with the wave function (for particle $k$):
   \begin{align}
     \label{eq:ml-vmc-operation-drfit-force}
-    \frac{2}{\psialpha(\vX)}\grad_k{\psialpha(\vX)} = 2 \grad_k{\ln\psialpha(\vX)}
+    \frac{2}{\psialpha(\vX)}\grad_k{\psialpha(\vX)} = 2 \grad_k{\ln\psialpha(\vX)}.
   \end{align}
   Note that this is only strictly needed when \gls{is} is used, and
   can be omitted.
@@ -133,7 +133,7 @@ follows:\footnote{These operations are rooted in the assumption that we are
   the Laplacian of the wave function with respect to the configuration $\vX$.
   \begin{align}
     \label{eq:ml-vmc-operation-laplacian}
-    \sum_k\frac{1}{\psialpha(\vX)}\laplacian_k\psialpha(\vX)
+    \sum_i\frac{1}{\psialpha(\vX)}\laplacian_i\psialpha(\vX).
   \end{align}
 \end{description}
 
@@ -144,21 +144,21 @@ to choose a model which is likely to be a good candidate.
 
 \subsection{Artificial Neural Networks as Trial Wave Functions}
 
-Artificial Neural Networks give us an incredibly flexible way to define
-computationally expressive models, and to easily adapt them by changing their
-architecture. For a long time, hand crafting Jastrow factors has been the task
-of theorists, resulting in (good) trial wave functions rooted in the physics of
-the problem. The problem is that hand crafting only goes so far, and we reach
-the limits of what we can construct and reason about analytically. Enter now a
-way to experiment and play with complex models, in a flexible manner. Using ANNs
-could enable us to prototype wave functions more rapidly, as well as possibly
-increase the accuracy of the resulting simulations.
+\glspl{ann} give us an incredibly flexible way to define computationally
+expressive models, and to easily adapt them by changing their architecture. For
+a long time, (human) theorists have hand crafted Jastrow factors,
+resulting in (good) trial wave functions rooted in the physics of the system.
+The problem is that hand crafting only goes so far, and we reach the limits of
+what we can construct and reason about analytically. Enter now a way to
+experiment and play with complex models, in a flexible manner. Using ANNs could
+enable us to prototype wave functions more rapidly, as well as possibly increase
+the accuracy of the resulting simulations.
 
 Convinced this is a great idea, we have some more working out to do. While
 evaluating the output of the network is easy enough (see last chapter), we need
 to derive the general expression for the other quantities we need.\\
 
-In the following, let $\psi(\vx)$ be a artificial neural network which has the
+In the following, let $\psi(\vx)$ be an artificial neural network which has the
 quantum numbers of every particle as its inputs. $\vx$ is the concatenation of
 all $\{\vx_i\}_{i=1}^N$ for $N$ particles. For our case, that means each
 particle coordinate is one input to the network, and the output is the value of
@@ -180,10 +180,10 @@ Computing the ``cost function'' gradient using backpropagation, we simply divide
 by $\psi(\vx)$ to get the quantity in \cref{eq:ml-vmc-operation-gradient}:
 
 \begin{align}
-    \frac{1}{\psi(\vX)}\grad_{\valpha}{\psi(\vX)} = \frac{1}{\psi(\vx)}\qty[\grad_{\valpha}{\mathcal{C}(f(\vx))}]
+    \frac{1}{\psi(\vX)}\grad_{\valpha}{\psi(\vX)} = \frac{1}{\psi(\vx)}\qty[\grad_{\valpha}{\mathcal{C}(f(\vx))}].
 \end{align}
 
-\subsubsection{First Order Partial Derivative w.r.t. inputs}
+\subsubsection{First Order Partial Derivative w.r.t. Inputs}
 
 \cref{eq:ml-vmc-operation-drfit-force} requires us to compute the first order
 derivatives of the networks output w.r.t. its individual inputs. With reference
@@ -199,7 +199,7 @@ to the notation used in \cref{sec:artificial-neural-networks}, we get:
 Once again we divide by $\psi$ (and multiply by 2) to get the values needed in
 \cref{eq:ml-vmc-operation-drfit-force}.
 
-\subsubsection{Second Order Partial Derivatives w.r.t. inputs}
+\subsubsection{Second Order Partial Derivatives w.r.t. Inputs}
 
 For \cref{eq:ml-vmc-operation-laplacian} we also need the second order
 derivatives. Continuing from \cref{eq:first-order-partial-nn} we get:
@@ -224,8 +224,7 @@ candidates to be symmetric, and add a Slater determinant for fermions if need
 be. Trouble is that arbitrary functions are not likely to be symmetric to the
 interchange of its inputs. Neural networks are intrinsically not symmetric.
 
-We present some different strategies of imposing such a symmetry, all of which
-will be evaluated later on:
+We present some different strategies of imposing such a symmetry:
 
 \subsubsection{Learn the Symmetry}
 
@@ -236,15 +235,15 @@ this.
 
 In practice this might be to much to ask, and the model might settle on a
 non-symmetric local minimum. Additionally, one might argue that the symmetry
-requirement \emph{must} be satisfied at all times during training, depending on
-the system we are investigating.
+requirement \emph{must} be satisfied at all times during training for the
+results to be physical. This will depend on the particular system we investigate.
 
 
 \subsubsection{Pool the Output}
 
-We can draw inspiration from the world of Convolutional Neural Networks (CNN),
-and obtain the symmetry by way of a pooling operation. Let $F(\vX)$ be the final
-model output and let $f(\vX)$ be the originally proposed model.
+We can draw inspiration from the world of \glspl{cnn}, and obtain the symmetry by
+way of a pooling operation. Let $F(\vX)$ be the final model output and let
+$f(\vX)$ be the originally proposed model.
 
 The simplest version is to let $F$ be the sum of $f$ applied to every
 permutation of $\vX$. We could use the product instead of the sum, or any other
@@ -257,11 +256,11 @@ two particles out of the $N$ available:
 
 \begin{align}
   \label{eq:sum-pooling}
-  F(\vX) &= \sum_{i=1}^N\sum_{j\neq i}^N f(\vx_i, \vx_j)\qq{(Sum Pooled)}
+  F(\vX) &= \sum_{i=1}^N\sum_{j\neq i}^N f(\vx_i, \vx_j)\qq{(Sum Pooled)}.
 \end{align}
 This has complexity $\mathcal{O}(N^2)$, but limits us to learn
 two-body interactions. Three-body interactions could be included with another
-sum, but increase the complexity accordingly. For problems which require higher
+sum, but would increase the complexity accordingly. For problems which require higher
 order correlations this approach might not be suitable.
 
 \subsubsection{Sort the Inputs}
@@ -279,8 +278,8 @@ model extract useful information more easily.\footnote{Consider a Hamiltonian
   that depends strongly on the closest/furthest distance of any particle to the
   origin. Any model will quickly be able to pick up on the fact that the
   first/last input is highly correlated with the energy. If these particles
-  could be at any input, understanding this connection could be more challenging.}
-
+  could be at any input, understanding this connection could be more
+  challenging.}\\
 
 \end{document}
 

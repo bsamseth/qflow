@@ -4,7 +4,7 @@
 \label{chp:introduction}
 
 \Gls{qm} is the fundamental theory which describes nature at its
-smallest scales. Its predictions have been verified by every experiment ever
+smallest scales. Its predictions have been verified by every experiment
 devised to test it, and it is considered by many to be our most successful physical
 theory ever developed. Still, \gls{qm} is far from fully understood, and there is an ocean of
 questions we still want to get out of it. Continued study of \gls{qm} is arguably one
@@ -21,12 +21,12 @@ never mind, \acrshort{led}s don't work anymore either.
 The point of this thought experiment is not to say everyone should become a
 theoretical physicist, but rather to point out the immense technological
 progress we have made as side effects of our pursuit to unravel natures inner
-workings. So while \acrshort{qm} may be the law of the microscopic, there are
-real life, large scale effects from which we benefit on a daily basis.\\
+workings. So while \acrshort{qm} may be the law of the microscopic, its study
+has real life, large scale effects from which we benefit on a daily basis.\\
 
 The most challenging problem in \gls{qm} is the study of strongly correlated
 many-body systems. Put $\num{100}$ electrons in a box and press play. What happens next
-turns out to be extremely complicated to accurately predict. To find out, we
+turns out to be extremely complicated to accurately predict. As the first step, we
 turn to the equation that governs this world, the Schrödinger equation:
 
 \begin{align}
@@ -95,8 +95,9 @@ The goal of this thesis is to build upon existing machinery for \gls{vmc} by ext
 theoretical guesses for $\ket\Psi$ with a neural network component, thus massively
 increasing the flexibility and expressiveness of our guesses. If successful, this
 network will be able to learn the physical correlations present in the system
-and correct for them more accurately than we could ever do ourselves.
-
+and correct for them more accurately than we could ever do ourselves. In
+addition, this could open up ways for us to investigate systems for which we
+have limited theoretical understanding by being less reliant on human-made guesses.
 
 
 \section*{Reading This Thesis}
@@ -129,7 +130,7 @@ discuss design choices (\cref{chp:parallelization,chp:auto-diff}), and culminate
 with presenting QFLOW, the library we have
 developed for all our computing needs (\cref{chp:qflow}). Lastly we make an effort to convince the
 reader that the code is correct by verifying the results on some
-selected idealized cases (\cref{chp:verfication}).
+selected, idealized cases (\cref{chp:verfication}).
 
 \cref{prt:results} finally presents the results of the new method we have
 developed, testing it on both a few-body system (\cref{chp:quantum-dots}) and a
@@ -157,7 +158,7 @@ generated it, leaving no doubt as to the details of any results.
 
 Another point of possible frustration is unclear use of notation and terminology. While we
 assume a certain general familiarity with mathematics, we strive to make our
-notation as clear as possible. All symbols should an accompanying
+notation as clear as possible. All symbols should have an accompanying
 explanation following their first use. Furthermore, while we attempt to use
 standard notation where possible, any doubt should be removed by consulting the
 notation reference in \cref{app:notation-reference}.
