@@ -33,7 +33,7 @@ H = LennardJones(L)
 psi = JastrowMcMillian(5, 2.85, L)
 
 sampler = HeliumSampler(system, psi, 0.5, L)
-sampler.thermalize(10000)
+sampler.thermalize(20000)
 mpiprint("Acceptance rate after thermalization:", sampler.acceptance_rate)
 
 
@@ -44,7 +44,7 @@ train(
     psi,
     H,
     sampler,
-    iters=10000,
+    iters=8000,
     samples=5000,
     gamma=0,
     optimizer=AdamOptimizer(len(psi.parameters), 0.0001),
@@ -72,7 +72,7 @@ for P, step in zip([32, 64, 256], [0.5, 0.6, 0.8]):
 
     stats.append(
         compute_statistics_for_series(
-            H.local_energy_array(samp, psi_, 2 ** 21) / P, method="blocking"
+            H.local_energy_array(samp, psi_, 2 ** 23) / P, method="blocking"
         )
     )
     labels.append(r"$\psi_M^{(%d)}$" % P)
@@ -81,4 +81,3 @@ for P, step in zip([32, 64, 256], [0.5, 0.6, 0.8]):
 
 
 mpiprint(statistics_to_tex(stats, labels, filename=__file__ + ".table.tex"))
-plt.show()
