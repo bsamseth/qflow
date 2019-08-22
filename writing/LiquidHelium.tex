@@ -91,7 +91,7 @@ $^4$He]{\label{tab:He-benchmark-results}Predicted ground state energy of helium
 atoms at density $\rho = \flatfrac{0.365}{\sigma^3}$ using $\psi_{M}$ with
 $\beta$ as determined after training. The number of particles used in the
 simulation box is indicated by the superscript on $\psi_M$. Values obtained
-using $2^{22}$ samples. Energies in units of Kelvin per particle
+using $2^{23}$ samples. Energies in units of Kelvin per particle
 $[\si{\kelvin\per N}]$. See \cref{fig:He-benchmark-training} for source code
 reference.}
   \input{scripts/He-benchmark.py.table.tex}
@@ -162,14 +162,13 @@ functions are the same as those used for quantum dots.
 
 Finally, we train two instances of the network, with and without input sorting
 applied to impose symmetry, denoted once again by $\psi_{DNN}$ and
-$\psi_{SDNN}$, respectively. (\textbf{TODO}: New plots including $\psi_{DNN}$
-are currently being produced. Short story: $\psi_{DNN}$ does not work at all in this
-case, and $\psi_{SDNN}$ is successful.)
+$\psi_{SDNN}$, respectively.
+
 
 \subsection{Optimization}
 
-We produced the following results by optimizing $\psi_M$ and $\psi_{SDNN}$ with
-similar hyperparameters. We initialized $\beta=\num{2.85}$ for both wave functions
+We produced the following results by optimizing $\psi_M$, $\psi_{DNN}$ and $\psi_{SDNN}$ with
+similar hyperparameters. We initialized $\beta=\num{2.85}$ for all wave functions
 for a fair comparison. We used $\num{250000}$ training iterations of
 $\num{5000}$ \gls{mc} cycles each. Contrary to the quantum dot system, where a large
 set of hyperparameters yielded good results, we have found this problem to be
@@ -182,46 +181,53 @@ significantly less room for error in this much more challenging problem.
 \begin{figure}[h]
   \centering
   \input{scripts/He-mcmillan-dnn.py.tex}
-  \caption[Learning progression of a neural network on liquid helium]{\label{fig:He-dnn-training}Performance of $\psi_M$ and $\psi_{SDNN}$
-    as a function of training steps. The network shows a clear energy reduction
-    compared to the traditional benchmark.\citesource{writing/scripts/He-mcmillan-dnn.py}}
+  \caption[Learning progression of a neural network on liquid
+  helium]{\label{fig:He-dnn-training}Performance of $\psi_M$, $\psi_{DNN}$ and $\psi_{SDNN}$
+    as a function of training steps. The network with input sorting, $\psi_{SDNN}$ shows a clear energy reduction
+    compared to the traditional benchmark, albeit not as significant as the
+    results of \cref{chp:quantum-dots}. The non-symmetric network, $\psi_{DNN}$, fails
+    to learn anything beyond the benchmark.\citesource{writing/scripts/He-mcmillan-dnn.py}}
 \end{figure}
 
 \cref{fig:He-dnn-training} shows a graph of the ground state energy during the
-course of training for both wave functions. On this time scale (i.e.\ $\num{25}$
+course of training for all three wave functions. On this time scale (i.e.\ $\num{25}$
 times more training than used for the benchmark alone) we see $\psi_M$ converge
 immediately to the same energy level as we saw in
 \cref{fig:He-benchmark-training}. For $\psi_{SDNN}$, however, there is an
-apparent immediate lowering of energy. Furthermore, after about
-\SIrange{30}{60}{\percent} of the total training we see another gradual lowering
-in the energy before it finally plateaus again.
+apparent immediate lowering of energy, followed by a gradual decrease throughout
+the remaining training time. It is not clear if $\psi_{SDNN}$ has completely
+converged, or if small reductions might still be achieved if we train for even
+longer. Nevertheless, such gains are likely small and not necessary to
+demonstrate an improvement.
+
 
 In contrast to the results seen for \glspl{qd}, the network without symmetry
 imposed ($\psi_{DNN}$) fails to learn anything beyond the benchmark. It appears
 that for this larger system, imposing the symmetry is vitally important in
-helping the networks learn the correlations. We hypothesize that for only two
+helping the networks learn the correct correlations. We hypothesize that for only two
 particles the network could learn the symmetry, allowing more
 flexible learning, where as in this case the inputs are too complex for the
-network to learn on its own. (\textbf{TODO:} Not seen plot yet,
-to be included.)
+network to learn on its own.
 
-\cref{tab:He-dnn-results} shows the final energies produced from $\psi_{M}$ and
-$\psi_{SDNN}$ after training. We see a significant lowering of the total energy.
-Unlike the results for quantum dots, however, we do not get a lowering of the
-variance, but rather a small increase. It is hard to say exactly how much of the
-total error in energy is corrected for by the inclusion of the networks, due to
-the lack of existing results using $N=32$ particles with the Lennard-Jones
-potential with the same potential corrections that we have included.
-Nevertheless, the networks continue to show their ability to improve upon the
-results of all the benchmark wave functions we have paired them with. As our
-main interest in this work is to demonstrate this general ability, as opposed to
-producing results closest to experimental results, we view these results as
-positive encouragement to continue this line of research.
+
+\cref{tab:He-dnn-results} shows the final energies produced from $\psi_{M}$,
+$\psi_{DNN}$ and $\psi_{SDNN}$ after training. As indicated by the plot, we see
+a statistically significant lowering of the total energy. Unlike the results for
+quantum dots, however, we do not get a lowering of the variance, but rather a
+negligible increase. It is hard to say exactly how much of the total error in energy
+is corrected for by the inclusion of the networks like we could for \gls{qd}, due to the lack of existing
+results using $N=32$ particles with the Lennard-Jones potential with the same
+potential corrections that we have included. Nevertheless, the networks continue
+to show their ability to improve upon the results of all the benchmark wave
+functions we have paired them with. As our main interest in this work is to
+demonstrate this general ability, as opposed to producing results closest to
+experimental results, we view these results as further positive encouragement to
+continue this line of research.
 
 \begin{table}[h]
   \centering
-  \caption[Energy estimates using a neural network on $^4$He]{\label{tab:He-dnn-results}Predicted ground state energy of both
-    $\psi_M$ and $\psi_{SDNN}$ after the same amount of optimization. Results
+  \caption[Energy estimates using a neural network on $^4$He]{\label{tab:He-dnn-results}Predicted ground state energy of
+    $\psi_M$, $\psi_{DNN}$ and $\psi_{SDNN}$ after the same amount of optimization. Results
     obtained from $2^{23}$ samples and with errors estimated using
     blocking. Energies in units of Kelvin per particle $[\si{\kelvin\per N}]$. See \cref{fig:He-dnn-training} for source code reference.}
   \input{scripts/He-mcmillan-dnn.py.table.tex}
