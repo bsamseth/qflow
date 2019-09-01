@@ -26,7 +26,7 @@ Let's formalize the above statement.
     Suppose a time-independent Hamiltonian, $\hat H$, an associated set of eigenvalues,
     $E_0\leq E_1\leq\dots$ and
     a set of orthonormal eigenvectors, $\{\ket{\phi_n}\}$ spanning the associated
-    Hilbert space, such that the \gls{tise} is satisfied,
+    Hilbert space, such that the \acrlong{tise} is satisfied,
 
     \begin{align}
         \hat H\ket{\phi_n} = E_n\ket{\phi_n}.
@@ -55,7 +55,7 @@ Let's formalize the above statement.
         &= \sum_n \abs{c_n}^2 E_n\\
         &\geq\sum_n \abs{c_n}^2 E_0 = E_0.
     \end{align}
-    It is clear that equality only occurs when $c_n = \delta_{0n}$, which implies
+    It is clear that the equality only occurs when $c_n = \delta_{0n}$, which implies
     $\ket\psi=\ket{\phi_0}$.
 \end{proof}
 
@@ -117,7 +117,7 @@ shaped curves, not in terms of their algebra.}
 \begin{align}
     \psi(x; \alpha)\propto \frac{1}{1 + \alpha x^2}.
 \end{align}
-Now matter how we tune the $\alpha$ parameter here, we will never achieve the lowest
+No matter how we tune the $\alpha$ parameter here, we will never achieve the lowest
 ground state energy, simply because the ground state is not possible to express within this
 functional form. We can now only hope to get approximations, acting as upper bounds on the
 ground state energy.
@@ -136,7 +136,7 @@ part, $J$. The two are referred to as the \emph{Slater} factor and the
     \psi = S\cdot J.
 \end{align}
 
-\subsubsection*{Slater}
+\subsubsection*{Slater Factor}
 
 The idea behind the decomposition above is that we put all the physical insight we have into these
 two components individually. For the single particle part we include what we can deduce
@@ -148,7 +148,7 @@ requirements of fermions/bosons, respectively. This factor is then the Slater
 factor~\cite{Slater-1929,Dirac-1926}.
 
 
-For clarity, we present a couple different Slater forms. We consider the two-dimensional
+For clarity, we present a couple of different Slater forms. We consider the two-dimensional
 quantum dots system from \cref{sec:quantum-dots-theory} for $N$ particles. We
 denote the position of particle $i$ by $\vb x_i=(x_i, y_i)$. Let $\vb\Phi$ be a matrix defined by $\Phi_{i,j}
 \defeq \phi_{i}(\vb x_j)$, where the $\phi_i$ is part of the set of orbitals
@@ -178,14 +178,14 @@ The general structure is constant across different systems, changing only the ba
 functions we use to express the matrix elements.
 
 In some cases, however, we will struggle to find basis functions that describe a meaningful
-portion of the systems behaviour in this way. In such challenging cases, the Slater factor
+portion of the system's behaviour in this way. In such challenging cases, the Slater factor
 could be reduced to only being responsible for supplying the correct symmetry. In the case
 of bosons, that would mean the complete removal of the Slater factor from the trial wave
 function. We will see this when looking further into the liquid helium system.
 
 
 
-\subsubsection*{Jastrow}
+\subsubsection*{Jastrow Factor}
 
 Anything not covered by this analysis is meant to be accounted for in the correlation
 term, $J$. This is typically a function on the following generalized form, commonly called a Jastrow
@@ -202,7 +202,7 @@ factor. The Slater factor represents everything we are sure should be included
 from a theoretical approach, while the Jastrow term should ideally account for all our ignorance.
 It is therefore typically expressed with a few free parameters.
 
-Again, for the sake of clarity, we state an example Jastrow factor. One of the most
+Again, for the sake of clarity, we state an example of a Jastrow factor. One of the most
 commonly used is the Pade-Jastrow factor~\cite{Drummond-Towler-Needs-2008}:
 \begin{align}
     J(\vb X) = \prod_{i < j} \exp(\frac{\alpha r_{ij}}{1 + \beta r_{ij} } ).
@@ -223,9 +223,9 @@ theoretical intuition we have. The wave function has by design some free
 parameters $\vb\alpha$ which we now want to pin down to their optimal values.
 
 From the variational principle (\cref{thm:variational-principle}), we know
-that the best set of parameters are those that minimizes the expected energy,
+that the best set of parameters are those that minimize the expected energy,
 $\expval{\hat H}{\vb\alpha}$. As such, a natural place to start would be to
-determine an efficient way to evaluate said energy.
+determine an efficient way to evaluate the energy.
 
 \subsection{Local Energy}
 
@@ -265,7 +265,7 @@ energy, something which has a straightforward discrete formulation:
 So, if we can sample $\vX$ from the distribution described by our trial wave
 function, we simply need to evaluate the local energy for a sufficiently large
 number of configurations  to obtain a good estimate of the expectation value of
-the Hamiltonian. How exactly to do the sampling is a rather large topic, and
+the Hamiltonian. How exactly to do the sampling is a rather involved topic, and
 will be handled in \cref{chp:monte-carlo}.
 
 \subsection{Updating Parameters}
@@ -280,8 +280,8 @@ methods should be pursued.
 Perhaps the most common optimization strategy relies on computing the gradient
 of the energy w.r.t. $\valpha$, and then change $\valpha$ in the opposite
 direction of this. After all, a gradient by definition points in the direction
-of steepest ascent, so going the other way will be the direction of steepest
-decent. How exactly to make these changes are a topic of its own, and discussed in depth in \cref{chp:machine-learning}, but the simplest implementation is as follows:
+of steepest (local) ascent, so going the other way will be the direction of steepest
+descent. How exactly to make these changes is a topic of its own, and discussed in depth in \cref{chp:machine-learning}, but the simplest implementation is as follows:
 
 \begin{align}
     \valpha^{(i+1)} = \valpha^{(i)} - \eta \grad_{\valpha}{\expval{\hat H}},

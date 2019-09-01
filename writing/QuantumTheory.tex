@@ -13,7 +13,7 @@ thesis, we shall assume that the systems we consider do not show any significant
 relativistic behaviour, so that no such considerations are necessary.}
 
 If our system of interest consisted of non-quantum entities (e.g.\ the
-trajectory of a base ball as it's thrown through the air towards a batter), we
+trajectory of a baseball as it is thrown through the air towards a batter), we
 would likely turn to our classical laws, such as Newton's second law of motion
 %
 \begin{align}
@@ -76,13 +76,13 @@ classical approach, we have the following plan:
 \begin{enumerate}
     \item Define the environment through choosing a form for the Hamiltonian $\hat H$
     \item Use the \gls{tdse} to obtain the wave function $\ket\Psi$
-    \item Use wave function to compute quantity of interest, $Q$
+    \item Use the wave function to compute quantities $Q$ of interest
 \end{enumerate}
 
 \section{Stationary States}
 
 The \gls{tdse} (\cref{eq:schrodinger-time-dependent-position-basis}) is a partial differential equation,
-as it contains partial derivatives of the wave function with respect to both position and
+since it contains partial derivatives of the wave function with respect to both position and
 time. The standard approach to solving this equation is through \emph{separation of
 variables}. We assume that we can factorize the full wave function as follows:
 
@@ -118,7 +118,7 @@ The time dependent equation becomes:
 \begin{align}
     i\hbar \dv{\phi}{t} &= E\phi(t),
 \end{align}
-which is trivially solvable:
+which is trivial to solve:
 \begin{align}
     \phi(t) &= Ae^{-iEt/\hbar},
 \end{align}
@@ -261,11 +261,11 @@ The following theorem summarizes the result~\cite{PhysRev-58-716}:
 \begin{theorem}[Spin-Statistic
     Theorem]\label{theorem:spin-statistic}
 
-    The wave function of a system of identical integer-spin particles has the same value
+    The wave function of a system of identical integer spin particles has the same value
     when the positions of any two particles are swapped. Particles with wave functions
     symmetric under exchange are called bosons.
 
-    The wave function of a system of identical half-integer–spin particles changes sign
+    The wave function of a system of identical half-integer spin particles changes sign
     when two particles are swapped. Particles with wave functions antisymmetric under
     exchange are called fermions.
 \end{theorem}
@@ -274,7 +274,7 @@ The following theorem summarizes the result~\cite{PhysRev-58-716}:
 \label{sec:obs-from-psi-to-Q}
 
 We have repeatedly claimed that armed with the correct wave function we can compute any
-measurable quantity of interest. Finally, we consider how exactly how we can go
+measurable quantity of interest. Finally, we consider how exactly we can go
 about doing so.
 
 Assume we want to compute an observable $O$. The first step is to determine the
@@ -320,15 +320,15 @@ to compute analytically. In practice we employ a numerical strategy to evaluate 
 integrals, where the technique we use depends on the dimensionality of the integral and
 the required level of accuracy. In our case, due to the large number
 of degrees of freedom in the systems we shall investigate, we will use
-\gls{mci}. This is will be discussed in more detail in \cref{chp:monte-carlo}.
+\gls{mci}. This will be discussed in more detail in \cref{chp:monte-carlo}.
 
 \section{Example Systems}
 
 So far we have not presented any particular systems. In this thesis we focus our
-attention on two particular systems for illustration purposes. We chose these systems
+attention on two particular systems for illustrative purposes. We chose these systems
 for their simplicity and/or the amount of preexisting results available
-in the literature. We do this so as to be able to benchmark the eventual results against
-know exact solutions, or when this does not exist, against verified approximate
+in the literature. We do this in order to benchmark our results against
+known exact solutions, or when these do not exist, against verified approximate
 results available in the literature.
 
 \subsection{Quantum Dots}
@@ -462,7 +462,8 @@ where $V_{TOT}$ denotes the sum of the potential energy $V(r)$ over all
 pairs of particles.
 
 Although the harmonic oscillator potential does not depend on the
-\emph{inter-particle} distance, but rather on each particles position, it
+\emph{inter-particle} distance, but rather on the positions of each particle,
+it % TODO, what was the edit?
 works out to the same relation in our case. Computing the full relation for
 our Hamiltonian for two electrons in two dimensions, it even works out so
 that we can use the same relation on the harmonic oscillator potential and the Coulomb
@@ -496,17 +497,17 @@ together. ~\cref{fig:pbc-illustration} shows an illustration of the idea.
 \end{figure}
 
 
-The Hamiltonian for this system is taken as
+The Hamiltonian for this system is
 
 \begin{align}
     \hat H &= -\sum_{i=1}^N \frac{\hbar^2}{2m}\laplacian_i + \sum_{i < j} V(r_{ij})
 \end{align}
-i.e.\ the kinetic energy of all atoms, plus a interaction potential dependent on
+i.e.\ the kinetic energy of all atoms, plus an interaction potential dependent on
 the distance between all pairs of atoms. The mass $m$ is the mass of one $^4He$
 atom. The form of $V$ is not known analytically, but is experimentally probed to
 great accuracy. Theorists have since fitted specific functional forms to the
 experimental data, and we will do our calculations using one of these
-potentials. Perhaps most commonly used is the simple Lennard-Jones (LJ)
+potentials. The most commonly used is the simple Lennard-Jones (LJ)
 potential~\cite{Kalos-1981}:
 
 \begin{align}
@@ -584,7 +585,7 @@ If we use SI units for the constants involved we get:
 \begin{align}
   \frac{\hbar^2}{2m\kappa} = \SI{6.059651974e-20}{\metre^2\kelvin} = \SI{6.059651974}{\angstrom^2\kelvin},
 \end{align}
-which turns out to be a reasonably sized number when we use angstrom for
+which turns out to be a reasonably sized number when we use angstrom as units for
 lengths.\footnote{Note that $\laplacian$ has units of $\text{length}^{-2}$, so
   the units work out to Kelvin.} We will use these values in the implementation,
 and simply refer to energies in Kelvin when we study this system. However, if
@@ -627,7 +628,7 @@ vector and this is the one used for any further calculations.
 \subsubsection{Correcting for Periodicity in Potentials}
 
 The potential $V(r_{ij})$ depend on the inter-particle distances. However,
-there are an infinite amount of particle pairs if we consider the system as a
+there is an infinite amount of particle pairs if we consider the system as a
 whole. We use periodic boundary conditions, and shall only consider pairs where
 both particles are in the simulation box (but still respecting the minimum image
 convention). This limitation excludes any interactions that act on length scales
