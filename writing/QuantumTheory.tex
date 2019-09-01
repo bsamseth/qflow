@@ -6,11 +6,11 @@
 
 \section{Problem Statement}
 
-Say you want to investigate the properties of some quantum
-mechanical system. The first step is then to firmly establish how we should describe this
-system and the laws that govern its behaviour. For the entirety of this thesis, we shall
-assume that the systems we consider do not show any significant relativistic behaviour, so
-that no such considerations are necessary.
+Say you want to investigate the properties of some quantum mechanical system.
+The first step is then to firmly establish how we should describe this system
+and the laws that govern its behaviour.\footnote{For the entirety of this
+thesis, we shall assume that the systems we consider do not show any significant
+relativistic behaviour, so that no such considerations are necessary.}
 
 If our system of interest consisted of non-quantum entities (e.g.\ the
 trajectory of a base ball as it's thrown through the air towards a batter), we
@@ -96,7 +96,7 @@ will, however, restrict ourself to consider only Hamiltonians for which this des
 is valid} With these assumptions, we can divide through with $\Psi$ in
 \cref{eq:schrodinger-time-dependent-position-basis} and obtain the
 following:\footnote{It could be tempting to simply strike $\Psi$ from the lhs.\ of
-\cref{eq:schrodinger-time-dependent-position-basis} when diving by $\Psi$. Nevertheless, we
+\cref{eq:schrodinger-time-dependent-position-basis} when dividing by $\Psi$. Nevertheless, we
 must remember that the Hamiltonian is an operator (specifically seen through the
 $\laplacian$ in this case), and so we must divide only after letting this operate on
 $\Psi$.}
@@ -111,7 +111,7 @@ equal to the rhs, a function of $t$, they must both be equal to a constant. If
 this was not true, we could vary one of $\vx$ or $t$ and alter only one side of
 the equation, leaving it invalid.
 As both sides have units of energy, let's denote this constant energy as $E$, and proceed
-to solve each equation by it self.
+to solve each equation by itself.
 
 The time dependent equation becomes:
 
@@ -587,7 +587,7 @@ If we use SI units for the constants involved we get:
 which turns out to be a reasonably sized number when we use angstrom for
 lengths.\footnote{Note that $\laplacian$ has units of $\text{length}^{-2}$, so
   the units work out to Kelvin.} We will use these values in the implementation,
-and simply refer to energies in kelvin when we study this system. However, if
+and simply refer to energies in Kelvin when we study this system. However, if
 the reader ever wants to convert the units, for comparison with other works
 perhaps, simply multiplying with the value of $\kappa$ in the unit system of
 choice should yield the corresponding energy.

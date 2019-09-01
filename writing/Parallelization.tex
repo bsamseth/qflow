@@ -35,7 +35,7 @@ between the workers. We have two options for how to achieve this:
 
 \section{Distributed Memory}
 
-The main bottle neck in \gls{vmc} computations is the evaluation of expectation
+The main bottleneck in \gls{vmc} computations is the evaluation of expectation
 values, such as \cref{eq:vmc-local-energy-formulation} and
 \cref{eq:local-energy-gradient-alpha}. These calculations boil down to the
 following basic algorithm:
@@ -68,7 +68,7 @@ arbitrary number of machines, as long as they are connected in some way. These
 machines could in principle be placed all around the world and still work well
 for our purposes (some extra latency would be introduced by the distance).
 
-\subsection{Implementation \acrshort{api}: Message Passing Interface}
+\subsection[Implementation \acrshort{api}: Message Passing Interface]{Implementation \acrshort{api}\footnote{\Acrfull{api}.}: Message Passing Interface}
 
 For the actual communication between distributed memory processes, we have the
 standardized \gls{mpi}. This is typically implemented as a

@@ -28,8 +28,8 @@ correlations beyond what traditional methods have been able to do.
 
 We begin with a review of the relevant parts of quantum mechanics with particular
 emphasis on Monte Carlo methods. We then introduce central elements of machine
-learning, focusing on neural networks. Finally we discuss implementation
-considerations and challenges.
+learning, focusing on neural networks, followed by the necessary glue to bring
+it all together. Finally we discuss implementation considerations and challenges.
 
 We test our approach first on two interacting electrons in a harmonic oscillator
 potential. Where the benchmark estimates $\expval{E_0}=\SI{3.00064(4)}{\au}$, we
@@ -37,15 +37,15 @@ outperform this by a lowering of more than an order of magnitude, resulting in
 $\expval{E_0}=\SI{3.000021(4)}{\au}$. The energy estimates approach those of
 diffusion Monte Carlo, which can produce exact solutions to the Schrödinger equation.
 
-Second we apply the same technique to the strongly correlated system of liquid
+Secondly we apply the same technique to the strongly correlated system of liquid
 $^4$He. Again we obtain significant lowering of the ground state energy, from
 the benchmark result of $\expval{E_0}=\SI{6.76(2)}{\kelvin}$ to
 $\expval{E_0}=\SI{6.96(2)}{\kelvin}$, although the optimization problem proves far
 more challenging.
 
-These improvements come at the cost of greatly increased computing time,
-however, we argue that the time complexity can still be made to scale similarly to
-$\mathcal{O}(N^2)$ with the number of particles.
+These improvements come at the cost of greatly increased computing time.
+Nevertheless, we argue that the time complexity can be made to scale as
+$\mathcal{O}(N^2)$ with the number of particles, while still offering improvements.
 \end{abstract}
 
 
