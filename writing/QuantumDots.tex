@@ -53,7 +53,7 @@ similar results for other choices.
   \label{tab:pade-jastrow-benchmark-energy}
 \end{table}
 
-\cref{fig:QD-benchmark-pade-jastrow-training} shows the optimization as function
+\Cref{fig:QD-benchmark-pade-jastrow-training} shows the optimization as function
 of percentage of training completed. We can observe that the optimizations
 quickly settles down to a set of optimal values, where it only oscillates
 slightly back and forth. \cref{tab:pade-jastrow-benchmark-energy} shows
@@ -130,7 +130,7 @@ configuration spaces. The current system is continuous as the particles can have
 any real valued coordinates, and so the type of \gls{rbm} must change as well.
 
 While more than one choice exists, we have used a Gaussian-binary \gls{rbm}\@.
-\cref{fig:rbm-diagram-example} shows and example diagram of the network
+\Cref{fig:rbm-diagram-example} shows and example diagram of the network
 structure. \textcite{Flugsrud-2018} has a full introduction to \glspl{rbm}, including
 all details needed for \gls{vmc}\@. For our purposes it suffices to say that the
 resulting wave function looks as follows:
@@ -162,7 +162,7 @@ of mild $L2$ regularization, which serves to drive parameters that do not
 contribute towards zero. The results are similar for different hyperparameter
 choices, and the above is simply one such example.
 
-\cref{fig:QD-rbm-training} shows the ground state energy as a function of
+\Cref{fig:QD-rbm-training} shows the ground state energy as a function of
 training steps, along with the progression of the variational
 parameters. While we see a clear improvement in the initial stages, the \gls{rbm}
 fails to converge as accurately as the benchmark. \cref{tab:rbm-energy-results}
@@ -406,7 +406,7 @@ regularization in this case, and as usual we used \acrlong{is} and the
 ADAM optimizer. Again, this is an example of hyperparameters, and we can
 achieve good results with a range of other choices.
 
-\cref{fig:QD-pade-dnn-training} shows a graph of the absolute error in energy
+\Cref{fig:QD-pade-dnn-training} shows a graph of the absolute error in energy
 during the course of training, for all three wave functions. To begin with,
 $\psi_{PJ}$ and $\psi_{DNN}$ closely follow each other,
 likely because the Pade-Jastrow factor contributes most of the improvements at
@@ -432,7 +432,7 @@ conclude that imposing symmetry in this system seem to only hamper the learning.
 The symmetry metric for $\psi_{DNN}$ is very close to $1$ throughout training,
 so it seems the network learns the symmetry sufficiently well on its own.
 
-\cref{tab:pade-dnn-energy-results} shows the final energies produced from the
+\Cref{tab:pade-dnn-energy-results} shows the final energies produced from the
 three wave functions after training. The results solidify the graphical
 impression of~\cref{fig:QD-pade-dnn-training}, showing a clear improvement by
 both networks. The result from $\psi_{DNN}$ approaches the accuracy of \gls{dmc},
@@ -570,7 +570,7 @@ functions. Other observables of interest could be the mean distance from the ori
 $\expval{r}$, the mean squared distance from the origin, $\expval{r^2}$, and the mean
 inter-particle distance, $\expval{r_{12}}$. These are all quantities that should
 depend on the correlation between the particles.
-\cref{tab:QD-mean-distance-metrics} shows the three observables as predicted
+\Cref{tab:QD-mean-distance-metrics} shows the three observables as predicted
 from the three wave functions trained previously.
 
 \begin{table}[h]

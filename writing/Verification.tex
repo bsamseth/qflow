@@ -67,7 +67,7 @@ We start by verifying that we can reproduce expected values for $\expval{E_L}$,
 $\expval{r}$ and $\expval{r^2}$ for the ideal harmonic oscillator. We still use
 $D=3$ dimensions and set $N=100$ particles.
 
-\cref{tab:verify-energy-estimates} shows the energy obtained using $\psi_G$ with
+\Cref{tab:verify-energy-estimates} shows the energy obtained using $\psi_G$ with
 two different values of $\alpha_G$. For the optimal choice $\alpha_G = 0.5$ we
 get the exact analytic ground state energy, $\flatfrac{\expval{E_L}}{N} =
 \flatfrac{D}{2}$. The reported variance is entirely due to the limited
@@ -156,7 +156,7 @@ histogram we must account for the different volumes (or areas or lengths in two
 and one dimensions) of the bins. Greater $r$ will correspond to greater volumes,
 and because of this they will receive a correspondingly greater proportion of
 the samples. Dividing the bin counts by their respective volumes fixes this.}
-\cref{fig:verify-onebody} shows the resulting plot of $\rho(r_1)$ in a harmonic
+\Cref{fig:verify-onebody} shows the resulting plot of $\rho(r_1)$ in a harmonic
 oscillator with $N=100$ three-dimensional particles, using $2^{23}$
 samples. After normalizing both the result and \cref{eq:ver-annon-1} the two
 curves are indistinguishable, showing that our implementation is indeed correct.
@@ -195,7 +195,7 @@ analytically:
 \end{align}
 
 Again we can perform the integral numerically using \gls{mci}.
-\cref{fig:verify-twobody} shows a contour plot of the density along with the
+\Cref{fig:verify-twobody} shows a contour plot of the density along with the
 exact contour lines from \cref{eq:two-body-analytic} indicated by the dashed
 lines. Visually distinguishing the two is a little harder now, as we have turned
 to colors to visualize the three-dimensional plot. Still, the two sets of
@@ -259,7 +259,7 @@ gradients, number of parameters, variance in gradient estimates etc.
 
 \subsubsection{Simple Problem - $\psi_G$}
 
-\cref{fig:verify-lr-gaussian} shows the absolute error of $\psi_G$ during
+\Cref{fig:verify-lr-gaussian} shows the absolute error of $\psi_G$ during
 training with several different schemes. For standard SGD we see that a learning
 rate around $\eta = 0.1$ performs best among these results, and SGD with $\eta
 =0.01$ is the slowest to converge. Naturally, values of $0.01<\eta<0.1$
@@ -344,7 +344,7 @@ step size that balances two opposing attributes:
 \end{itemize}
 
 
-\cref{fig:verify-sampling-step} shows how the \gls{ar} changes with
+\Cref{fig:verify-sampling-step} shows how the \gls{ar} changes with
 different step sizes. For both Metropolis and \gls{is}, the \gls{ar} tends
 to $\SI{100}{\percent}$ for low step sizes, and to $\SI{0}{\percent}$ for large
 values. Both algorithms show a similar pattern in the middle region, with
