@@ -8,7 +8,8 @@
 \usepackage{float}
 
 
-\usepackage[hyperref, backend=biber, backref, backrefstyle=none, sorting=none]{biblatex}
+\usepackage[hyperref, backend=biber, backref, backrefstyle=none, sorting=none,
+date=year, doi=false,isbn=false, giveninits=true]{biblatex}
    \addbibresource{references.bib}
 
 \usepackage{amsmath, amssymb, amsthm} % Enhanced math formatting
@@ -36,6 +37,7 @@
 \usepackage{perpage}
 \usepackage{dirtytalk}
 \MakePerPage{footnote}
+
 
 \usepackage[chapter]{algorithm}
 \usepackage{algpseudocode}
@@ -126,10 +128,16 @@
   \usebibmacro{title}%
   \addperiod%
   \newunit\newblock%
-  \usebibmacro{journal}%
-  \printfield{volume}%
-  \addcomma\addspace%
-  \printfield{pages}%
+  % \iffieldequalstr{journal}{arXiv e-prints}%
+  % {%
+  %   \printfield{eprint}%
+  % }%
+  % {%
+    \usebibmacro{journal}%
+    \printfield{volume}%
+    \addcomma\addspace%
+    \printfield{pages}
+  % }%
   \addspace%
   \usebibmacro{date}%
   \newunit\newblock%
