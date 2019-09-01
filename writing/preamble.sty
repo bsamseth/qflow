@@ -101,6 +101,46 @@
 
 
 \newcommand{\citesource}[1]{\\Source~\cite[\href{https://github.com/bsamseth/qflow/blob/master/#1}{\texttt{\detokenize{#1}}}]{qflow}}
+\DeclareFieldFormat{pages}{#1}
+
+% \DeclareBibliographyDriver{article}{%
+%     \printnames{author}%
+%     \printfield{year}%
+%     \printfield{title}%
+%     \usebibmacro{journal}%
+% %   \usebibmacro{volume+number+eid}%
+%     \printfield{volume}%
+%     \iffieldundef{number}
+%     {\addcomma\space}
+%     {\printfield{number}\adddot\space}%
+%     \iffieldundef{pages}
+%     {}
+%     {\printfield{pages}\adddot}%
+% }
+\DeclareBibliographyDriver{article}{%
+  \usebibmacro{bibindex}%
+  \usebibmacro{begentry}%
+  \usebibmacro{author/translator+others}%
+  \setunit{\labelnamepunct}\newblock%
+  \addperiod%
+  \usebibmacro{title}%
+  \addperiod%
+  \newunit\newblock%
+  \usebibmacro{journal}%
+  \printfield{volume}%
+  \addcomma\addspace%
+  \printfield{pages}%
+  \addspace%
+  \usebibmacro{date}%
+  \newunit\newblock%
+  \usebibmacro{pageref}%
+  \usebibmacro{finentry}
+}
+\DeclareFieldFormat{parens}{\mkbibparens{#1}}
+\renewbibmacro*{date}{\printtext[parens]{\printdate}}
+\DeclareFieldFormat[article]{volume}{\textbf{#1}}
+
+
 
 
 % Colors for pgfplots - rgb colors for matplotlib style 'seaborn-colorblind'
