@@ -7,8 +7,8 @@
 
 We now present results for all methods discussed, applied on the example system
 of \gls{qd} from \cref{sec:quantum-dots-theory}. We present first some
-benchmarks using a typical Slater-Jastrow wave function form, followed by
-introduction of neural network-based wave functions.
+traditional VMC benchmarks using a typical Slater-Jastrow wave function form,
+followed by the introduction of neural network-based wave functions.
 
 \section{Benchmark}
 
@@ -23,16 +23,20 @@ by a Pade-Jastrow correlation term:\footnote{We drop the constant factor from~\c
   &= \exp(-\alpha_G\sum_{i=1}^N \norm{\vx_i}^2 + \sum_{i < j} \frac{\alpha_{PJ}
     r_{ij}}{1 + \beta_{PJ} r_{ij}}),
 \end{align}
-where cusp conditions fix $\alpha_{PJ} = 1$, and $\alpha_G$ and $\beta_{PJ}$
-are the only two variational parameters.
+where requirements of wave functions fix $\alpha_{PJ} = 1$~\cite{Kato-1957}, and $\alpha_G$ and $\beta_{PJ}$
+are the only two variational parameters.\footnote{The specific requirement which
+fixes the value of $\alpha_{PJ}$ is called Kato's cusp condition, after Japanese
+mathematician T. Kato. It is a condition
+on how the wave function should behave around the singularity of the Coulomb
+potential, and ensures stability in our calculations.}
 
 \subsection{Optimizing}
 
 We have run a simple optimization of the above wave function, using initial
 values of $\alpha_G = 0.5$ and $\beta_{PJ} = 1$. We used \acrlong{is} and the
 ADAM optimization scheme. We used $\num{2000}$ optimization steps, each with
-$\num{5000}$ \gls{mc} cycles. The values are somewhat arbitrarily, and we get
-similar results for other choices.
+$\num{5000}$ \gls{mc} cycles. These values are examples, and we get
+similar results for several other choices.
 
 \begin{figure}[h]
    \centering
@@ -41,25 +45,29 @@ similar results for other choices.
     }
     \caption[Learning progression of Pade-Jastrow wave function]{\label{fig:QD-benchmark-pade-jastrow-training}Left: Performance of the
       wave function in \cref{eq:qd-pade-jastrow-anzats} as a function of
-      training steps. Right: Progression of variational parameters as a function
+      training steps. Right: Corresponding progression of variational parameters as a function
       of training steps.\citesource{writing/scripts/QD-benchmark.py}}
 \end{figure}
 
 \begin{table}[h]
   \centering
-  \caption[Energy estimates of Pade-Jastrow wave function]{Energy benchmark using Pade-Jastrow wave function, using $2^{22}$
-    samples and errors estimated by an automated blocking algorithm
-    by~\textcite{Jonsson-2018}. Energies in atomic units $[\si{\au}]$. See \cref{fig:QD-benchmark-pade-jastrow-training}
-    for source code reference.}
+  \caption[Energy estimates of Pade-Jastrow wave function]{Energy benchmark
+using the Pade-Jastrow wave function, with $2^{22}$ samples and errors estimated
+by an automated blocking algorithm by~\textcite{Jonsson-2018}. Energies in
+atomic units $[\si{\au}]$. The symbols $CI_{-}^{95}$ and $CI_{+}^{95}$ represent
+the lower and upper limits of a $\SI{95}{\percent}$ confidence interval, respectively. $\Std$
+is the standard deviation of the energy and $\Var$ is the corresponding
+variance. See \cref{fig:QD-benchmark-pade-jastrow-training} for source code
+reference.}
   \input{scripts/QD-benchmark.py.table.tex}
   \label{tab:pade-jastrow-benchmark-energy}
 \end{table}
 
 \Cref{fig:QD-benchmark-pade-jastrow-training} shows the optimization as function
 of percentage of training completed. We can observe that the optimizations
-quickly settles down to a set of optimal values, where it only oscillates
+quickly settles down to a set of optimal values, where they only oscillate
 slightly back and forth. \cref{tab:pade-jastrow-benchmark-energy} shows
-statistics for the energy obtained with the final state. Comparing to the
+statistics for the energy estimate obtained with the final parameter values. Comparing to the
 analytical result of $\SI{3}{\au}$ these results are in good agreement. For
 reference we have also given the results obtained without the Pade-Jastrow term,
 i.e.\ the non-interacting ground state.
@@ -82,7 +90,7 @@ while showcasing the highly non-trivial behavior that the two particles exhibit.
 If we integrate out one of the particle positions, i.e.\ compute the one-body
 density we get \cref{fig:QD-benchmark-pade-jastrow-onebody}. This shows that the
 most probable position for any single particle is still in the center, but the
-density is much more spread out to larger $r$.
+density is much more spread out to larger values of $r$.
 
 
 \begin{figure}[h]
@@ -106,7 +114,9 @@ density is much more spread out to larger $r$.
     }
     \caption[One-body density using Pade-Jastrow wave function]{\label{fig:QD-benchmark-pade-jastrow-onebody}One-body density
       described by $\psi_{PJ}$ with optimized parameters. For reference, the
-      exact OBD for the non-interacting system is indicated by the dotted line.\citesource{writing/scripts/QD-benchmark-onebody.py}}
+      exact one-body density for the non-interacting system is indicated by the
+      dotted line. As expected, the Coulomb interaction pushes the particles to
+      a greater distance from the origin, flattening out the density. \citesource{writing/scripts/QD-benchmark-onebody.py}}
 \end{figure}
 \clearpage
 
@@ -118,7 +128,8 @@ density is much more spread out to larger $r$.
   \caption[Illustration of a \acrfull{rbm}]{Example diagram of a Gaussian-binary \acrlong{rbm}, showed with four visible nodes
     and three hidden nodes. The red values are the parameters, and consist of
     visible layer bias, $\vb a$, hidden layer bias, $\vb b$ and connection
-    weights $\mat W$.\citesource{writing/illustrations/rbm-diagram.tex}}
+    weights $\mat W$. $M = \text{\# of particles}\times \text{\# of
+      dimensions}=P\times D$ is the number of degrees of freedom in the system.\citesource{writing/illustrations/rbm-diagram.tex}}
   \label{fig:rbm-diagram-example}
 \end{figure}
 
@@ -132,7 +143,7 @@ configuration spaces. The current system is continuous as the particles can have
 any real valued coordinates, and so the type of \gls{rbm} must change as well.
 
 While more than one choice exists, we have used a Gaussian-binary \gls{rbm}\@.
-\Cref{fig:rbm-diagram-example} shows and example diagram of the network
+\Cref{fig:rbm-diagram-example} shows an example diagram of the network
 structure. \textcite{Flugsrud-2018} has a full introduction to \glspl{rbm}, including
 all details needed for \gls{vmc}\@. For our purposes it suffices to say that the
 resulting wave function looks as follows:
@@ -143,7 +154,7 @@ resulting wave function looks as follows:
         e^{-\sum_i^{M} \frac{\qty(X_i-a_i)^2}{2\sigma^2}}
         \prod_j^N \qty(1 + e^{b_j+\sum_i^M \frac{X_iW_{ij}}{\sigma^2}}),
 \end{align}
-where $M = P\cdot D$ is the number of degrees of freedom and $N$ is the number
+where $M = \text{\# of particles}\times \text{\# of dimensions}$ is the number of degrees of freedom and $N$ is the number
 of hidden nodes. Note also that $X_i$ in the above refers to the $i$'th degree
 of freedom, counting through $\mat X$ in row major order. The parameters are
 $\vb a, \vb b$ and $\mat W$, and we hold $\sigma^2=1$ constant in this case.
@@ -156,11 +167,11 @@ form, as it is not a pure exponential.
 
 \subsection{Optimizing}
 
-We produced the following with normally distributed random
+We produced the following results using normally distributed random
 initial values for the parameters, running $\num{60000}$ optimization steps with
 $\num{2000}$ \gls{mc} cycles each. We have also once again used \acrlong{is}
 and ADAM\@. A new addition (not strictly necessary for similar results) is the use
-of mild $L2$ regularization, which serves to drive parameters that do not
+of mild $L2$ regularization (\cref{sec:regularization}), which serves to drive parameters that do not
 contribute towards zero. The results are similar for different hyperparameter
 choices, and the above is simply one such example.
 
@@ -218,7 +229,7 @@ functions and $0$ for anti-symmetric ones. See \cref{app:symmetry-metric} for
 its definition and details. The left plot in \cref{fig:QD-rbm-symmetry} shows a
 plot of the symmetry metric of $\psi_{RBM}$ during training. Luckily we see
 that the \gls{rbm}, initially starting fully non-symmetric, tends rapidly towards
-1. Still it is not purely symmetric, and we see significant
+$S(\psi_{RBM})=1$. Still it is not purely symmetric, and we see significant
 oscillations around the maximum value.
 
 
@@ -240,7 +251,7 @@ exploitation and exploration, with this case suffering from a lack of exploratio
 
 The only truly successful way we found was to train the \gls{rbm} as before, and then
 apply sorted inputs on it once it had been fully trained. The results of this is
-also shown in \cref{tab:rbm-energy-results} by $\psi_{SRBM}$. This lead to only a
+also shown in \cref{tab:rbm-energy-results} by $\psi_{SRBM}$ (symmetric \gls{rbm}). This lead to only a
 marginal, not statistically significant increase in energy, and as such was a
 successful way to impose the symmetry.
 
@@ -417,7 +428,7 @@ weights, which results in the network in $\psi_{DNN}$ having a weak effect to
 start. This was done to ensure stability.
 
 While $\psi_{PJ}$ plateaus after a short amount of time, we see $\psi_{DNN}$
-continue to improve beyond this point once the weights reach a critical
+continues to improve beyond this point once the weights reach a critical
 magnitude. In the end $\psi_{DNN}$ seems to converge at a little more than
 halfway through the training, and we achieve an order of magnitude better
 accuracy compared to $\psi_{PJ}$, with a corresponding reduction in the
@@ -446,7 +457,7 @@ Also included is the energy obtained by using the parameters from $\psi_{DNN}$
 in $\psi_{SDNN}$. Unlike for the \gls{rbm}, where this strategy barely changed the
 energy, the effect was much worse for the \gls{dnn}. In this small two-body
 system it seems the best strategy is to simply let the network learn the
-symmetry, despite it never learning a perfectly symmetric set of parameters.
+symmetry, despite that it never learns a perfectly symmetric set of parameters.
 
 \begin{figure}[h]
    \centering
@@ -507,17 +518,17 @@ neural networks. In most cases the interconnections that make up the network are
 treated as a black box, simply because we lack the understanding to do
 anything else.
 
-Still, we can make an attempt. \cref{fig:QD-pade-dnn-weights} show a color map
+Still, we can make an attempt. \Cref{fig:QD-pade-dnn-weights} shows a color map
 representation of all the weights and biases of $\psi_{DNN}$ after training.
 Arguably, we should not attempt to assign physical meanings to any of the later
 layers. If anything, the weight matrix of the first layer could be insightful,
 as this is directly multiplied with the coordinates $\mat X$. Interestingly,
 only a few columns appear to have significant values. This is very similar to the
 effect seen in~\cref{fig:QD-rbm-symmetry} for the \gls{rbm}. In fact, a similar
-symmetry between two of the columns is even present, hinting that the network
+symmetry between two of the columns is present, hinting that the network
 has realized the importance of relative differences in coordinates. The
 remaining columns are not as clearly zeroed out, partly due to
-the lack of regularization, but also evidence that more is happening here
+the lack of regularization, but also indicating that more is happening here
 compared to the \gls{rbm}. While non-trivial to interpret, this points to the
 networks learning, completely by themselves, some underlying physical structure
 in the inputs.
@@ -531,7 +542,7 @@ correlation function, this does come at a considerable computational cost.
 
 The benchmark function has complexity $\mathcal{O}(N^2)$ for $N$ particles,
 rooted in the double sum in~\cref{eq:qd-pade-jastrow-anzats}. Thanks to
-analytic expressions for the derivatives, the otherwise heavy Laplace operator
+analytic expressions for the derivatives, the otherwise computationally expensive Laplace operator
 is also calculated in $\mathcal{O}(N^2)$ time.
 
 The complexity of the neural network is a little harder to pin down, because of
