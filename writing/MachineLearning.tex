@@ -6,13 +6,13 @@
 \Acrfull{ml} is a field of study concerned with building
 models\footnote{The term \emph{model} is used in a very general sense, and
 refers to anything that takes information as input and produces a corresponding
-output.} that can perform a task without the need for explicit instructions of
+output.} that can perform a task without the need for explicit instructions on
 how to do so. The key word is \emph{learning}; we want to enable the model to
 discover the best way to solve the task at hand within the constraints that we
 have imposed on it.
 
-A simple example of a \gls{ml} algorithm is linear regression, where we endeavor to
-find a linear function that best fits some observed data, with respect to some
+A simple example of an \gls{ml} algorithm is linear regression, where we aim at
+finding a linear function that best fits some observed data, with respect to some
 metric of what constitutes a \emph{good fit}. Other examples include
 dimensionality reduction, image classification, algorithmic trading and playing
 chess. All of these examples \emph{could} be implemented in terms of a
@@ -93,10 +93,10 @@ In general for a supervised learning task, we have the following ingredients:
   and corresponding expected outputs $\vy_i$
 \item A proposed model $\hat\vy = \hat f_{\hat\valpha}(\vx)$ that we want to
     fit to the data
-\item A cost function $\mathcal{C}(\hat f_{\hat\valpha}; \mathcal{D})$ which
+\item A cost function $\mathcal{C}(\hat f_{\hat\valpha}; \mathcal{D})$
   to minimize with respect to the model parameters $\hat \valpha$. Note that for
   supervised learning, the cost function is dependent on the data set, allowing
-  us to define metrics of how well the model reproduces the data.
+  us to define metrics on how well the model reproduces the data.
 \item An optimization strategy for how we should approach the minimization
 \end{itemize}
 
@@ -174,7 +174,7 @@ rows, and $\vy$ is the column vector of all outputs.
 
 \subsubsection{Regularization}
 
-Often times it turns out to be useful to add an extra term to the cost function
+Often it turns out to be useful to add an extra term to the cost function
 that depends on the size of the parameters $\hat\valpha$. This typically takes
 the following form:
 
@@ -192,7 +192,7 @@ $y_i = 3x_i$ is the underlying function. Without any regularization, all of the
 following models are equally good:
 
 \begin{align}
-  \hat\valpha^{(1)} = (3, 0),\ \hat\valpha^{(2)} = (1, 1),\ \hat\valpha^{(3)} = (-997, 500)
+  \hat\valpha^{(1)} = (3, 0),\ \hat\valpha^{(2)} = (1, 1),\ \hat\valpha^{(3)} = (-997, 500).
 \end{align}
 The problem is that without regularization, this particular
 optimization problem ill-formed, and does not have a unique solution. While all
@@ -239,7 +239,7 @@ for $g$.
 When $g=\mathcal{C}(\hat f_{\hat\valpha}; \mathcal{D})$ we have some choice in
 exactly how we should compute $\grad{\mathcal{C}}$. We could compute the cost
 for the entire data set, or just a single data point. These two options are
-referred to as \gls{gd} and \gls{sgd}, respectively. The latter is most often
+referred to as \gls{gd} and \gls{sgd}, respectively. The latter is most
 used because it is less computationally expensive for large data sets, as well
 as less likely to get stuck in local minima. A hybrid of the two is also
 possible, called mini-batch \gls{gd}.
@@ -378,11 +378,11 @@ wave function by measuring the expected ground state energy.
 Even though reinforcement learning typically differs quite a lot from supervised
 learning in both model type, optimization strategy etc., they are not so
 by definition. When considering \gls{vmc} in particular, we can treat
-it exactly the same as we would a supervised problem, with one major difference:
+it exactly the same way we would on a supervised problem, with one major difference:
 The cost function is \emph{not} dependent on a data set. We use the same type
 of models, and the same strategies to minimize the cost function.
 
-With this key change comes some differences. In particular, in some sense it
+With this key change follows some differences. In particular, in some sense it
 is impossible to overfit a model. Overfitting happens when a model performs
 significantly better on the training data compared to data it has not seen
 before. We detect overfitting in supervised learning by withholding some of
@@ -390,19 +390,19 @@ the training data and then evaluate the performance on this test data. This
 measures the models ability to generalize information, as opposed to memorizing
 exact values from the training data.
 
-For reinforcement learning, however, what would the equivalent be? There is no
+For reinforcement learning, however, what would the equivalent be? There are no
 data to withhold. If a \gls{vmc} calculation suddenly results in an amazingly accurate
 result, then we simply have an amazingly accurate wave
 function. With this in
 mind, why not use an incredibly complex model? To some extent, this is the exact
 argument of this thesis, and we will use some highly complex models later on.
-There is, however, two limiting issues with this approach. First of is the
+There is, however, two limiting issues with this approach. First is the
 computational cost, which limits what we can feasibly do. Second, and more
 importantly, learning becomes harder with more complex models. Just because the
 model is theoretically capable of representing the wave function to great
 accuracy, it does not mean that we will ever be able to learn the correct
 parameters. With increasing complexity we increase the number of local
-minima in the parameter space. In here lies the challenge, attempting balance
+minima in the parameter space. In here lies the challenge, attempting to balance
 the \emph{exploration} of all possible parameter configurations with \emph{exploitation} of
 promising minima.
 
@@ -599,7 +599,7 @@ need exponentially many nodes, but if allowed to be deeper (more layers), we can
 have reasonable number of nodes as well and still achieve arbitrarily good
 results~\cite{Hanin-2017}. This result is known as the Universal Approximation
 Theorem~\cite{Cybenko-1989, Hanin-2017}. A formal description for this is not
-reproduced here, as to main point is to stress the expressive power of
+reproduced here, as the main point is to stress the expressive power of
 neural networks.
 \clearpage
 
@@ -639,7 +639,7 @@ where
 \pdv{\mathcal{C}}{a^{(L)}_{i}}\pdv{\sigma^{(L)}(z_i^{(L)})}{z_k^{(L)}} \defeq
 \pdv{\mathcal{C}}{a^{(L)}_{k}}\dot\sigma^{(L)}(z_k^{(L)}).
 \end{align}
-This last expression we can calculate easily as the product of the derivative of
+We can easily calculate this last expression as the product of the derivative of
 the cost function w.r.t. the network output (which should be doable for any
 sensible cost function), and the derivative of the output layer activation
 function evaluated at $z_k^{(L)}$ (which again is easy for any reasonable choice
