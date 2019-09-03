@@ -2,6 +2,8 @@
 \begin{document}
 \chapter{Verification and Benchmarking}
 \label{chp:verfication}
+\glsresetall
+
 
 This chapter is dedicated to presenting some of the tests that we have done to
 verify that the software we have developed is indeed functioning as advertised.
@@ -35,7 +37,7 @@ where as before we have defined $\mat X$ as
 \end{align}
 
 For the trail wave function we shall use two different ones. First, the simple
-Gaussian form of the ground state it self:
+Gaussian form of the ground state itself:
 
 \begin{align}
   \psi_G(\mat X) = \exp(-\alpha\sum_{i = 1}^N r_i^2),
@@ -43,7 +45,7 @@ Gaussian form of the ground state it self:
 with $\alpha$ the only variational parameter. Learning the ideal parameters
 should be trivial in this case, and we should expect perfect results.
 
-Second, we use an ansatz resulting from a Gaussian-binary \gls{rbm}, presented in \cref{eq:rbm-def}:
+Second, we use an ansatz resulting from a Gaussian-binary \gls{rbm}~\cite{Flugsrud-2018}, presented in \cref{eq:rbm-def}:
 
 
 \begin{align}
@@ -51,7 +53,7 @@ Second, we use an ansatz resulting from a Gaussian-binary \gls{rbm}, presented i
         \exp[-\sum_i^{M} \frac{\qty(X_i-a_i)^2}{2\sigma^2}]
         \prod_j^H \qty(1 + \exp[b_j+\sum_i^M \frac{X_iW_{ij}}{\sigma^2}]),
 \end{align}
-where $M = P\cdot D$ is the number of degrees of freedom and $H$ is
+where $M = \text{\# of particles}\times \text{\# of dimensions}$ is the number of degrees of freedom and $H$ is
 the number of hidden nodes (set to 4 through this section). Note also that $X_i$
 in the above refers to the $i$'th degree of freedom, counting through $\mat X$
 in row major order. The variational parameters are $\vb a, \vb b$ and $\mat W$,
@@ -63,7 +65,7 @@ setting $\vb{a}, \vb b$ and $\mat W$ all to zero yields the correct ground state
 
 \section{Energy Estimates and Statistics}
 
-We start by verifying that we can reproduce expected values for $\expval{E_L}$,
+We start by verifying that we can reproduce the expected values for $\expval{E_L}$,
 $\expval{r}$ and $\expval{r^2}$ for the ideal harmonic oscillator. We still use
 $D=3$ dimensions and set $N=100$ particles.
 

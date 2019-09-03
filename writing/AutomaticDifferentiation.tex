@@ -3,6 +3,8 @@
 \chapter{Automatic Differentiation}
 \label{chp:auto-diff}
 
+\glsresetall
+
 One of the central parts of the success of neural networks in machine learning
 is the backpropagation algorithm of
 \cref{eq:backprop-delta-recursive,eq:backprop-grads-recursive}. The algorithm is able to
@@ -110,7 +112,7 @@ Because of this, reverse mode automatic differentiation is by far the most
 prevailing choice in \gls{ml} frameworks. This is because models almost always have
 more inputs than outputs.
 
-\section{Automatic Differentiation for \gls{vmc}}
+\section{Automatic Differentiation for VMC}
 
 As \gls{vmc} also needs quite a lot of derivatives it is natural to wonder if we
 can have \gls{ad} tools work to our advantage also in this area.

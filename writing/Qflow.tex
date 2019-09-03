@@ -1,7 +1,9 @@
 \documentclass[Thesis.tex]{subfiles}
 \begin{document}
-\chapter{QFLOW: Software Package for \gls{vmc} with Neural Networks}
+\chapter{QFLOW: Software Package for VMC with Neural Networks}
 \label{chp:qflow}
+
+\glsresetall
 
 Everything discussed so far has culminated into the development of a self
 contained package available to the public under the permissive MIT license. All
@@ -111,7 +113,7 @@ Setting up the network itself is done by iteratively adding layer objects (\text
 
 \subsection{Samplers}
 
-\gls{mc} sampling is done through one of the implemented methods in the
+\Gls{mc} sampling is done through one of the implemented methods in the
 \texttt{qflow.\-samplers} module. Again the code is structured around a base
 class, \texttt{qflow.\-samplers.\-Sampler}, which defines the basic interface to the
 sampler, including querying for samples (system configurations) and obtaining
