@@ -54,7 +54,7 @@ $\vy = \argmax_{\vy}p(\vb{Y} = \vy | \vX = \vx)$.
 
 Less familiar for most is the second case. Here we model both inputs and outputs
 at the same time. Using Bayes rule we can get both $p(\vy|\vx)$ and $p(\vx |
-\vy)$ from the joint distribution. This enables us to do not only make predictions of
+\vy)$ from the joint distribution. This enables us to not only make predictions on
 outputs, but also to generate inputs. This means if we train a generative model
 on images of cats and dogs, it could learn to not only classify the images
 correctly, but also to generate new images.
@@ -161,8 +161,8 @@ to derive the general expression for the other quantities we need.\\
 In the following, let $\psi(\vx)$ be an artificial neural network which has the
 quantum numbers of every particle as its inputs. $\vx$ is the concatenation of
 all $\{\vx_i\}_{i=1}^N$ for $N$ particles. For our case, that means each
-particle coordinate is one input to the network, and the output is the value of
-wave function.
+particle coordinate is one input to the network, and the output of the network
+is the value of wave function.
 
 \subsubsection{Gradient w.r.t. Parameters}
 
@@ -221,7 +221,7 @@ Assuming we pick a model that is suitably smooth and continuous, the most
 challenging requirement is that of particle exchange symmetry. As discussed in
 \cref{sec:slater-jastrow}, we typically want to design our wave function
 candidates to be symmetric, and add a Slater determinant for fermions if need
-be. Trouble is that arbitrary functions are not likely to be symmetric to the
+be. The problem is that arbitrary functions are not likely to be symmetric to the
 interchange of its inputs. Neural networks are intrinsically not symmetric.
 
 We present some different strategies of imposing such a symmetry:
@@ -233,7 +233,7 @@ realize on its own that  it is best to be symmetric. After all we know the ideal
 wave function is, so an ideally trained model \emph{should} be able to learn
 this.
 
-In practice this might be to much to ask, and the model might settle on a
+In practice this might be too much to ask, and the model might settle on a
 non-symmetric local minimum. Additionally, one might argue that the symmetry
 requirement \emph{must} be satisfied at all times during training for the
 results to be physical. This will depend on the particular system we investigate.
