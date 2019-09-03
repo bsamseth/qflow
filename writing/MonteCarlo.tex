@@ -320,11 +320,11 @@ Most commonly we operate only with the \emph{standard uniform distribution}, $\t
     p_U\qty(x\;\middle|\; a,b) = p_U\qty( \frac{x-a}{b-a} \;\middle|\; 0, 1).
 \end{align}
 
-But how exactly do we obtain random realizations from this \gls{pdf}? Firstly we need
-to depart from the typical notion of random, and realize that we are unable to
+But how exactly do we obtain random realizations from this \gls{pdf}? First we need
+to depart from the typical notion of randomness, and realize that we are unable to
 write an algorithm which produces a truly random result. While we could in
 principle rely on nature to provide sources of complete, true randomness (such as
-the exact behavior of a quantum mechanical obserable), this is impractical
+the exact behavior of a quantum mechanical observable), this is impractical
 when we need fast, on-demand samples. Instead we settle for
 \emph{pseudo-random} samples. A pseudo-random sequence $x_1, x_2,\dots x_n$
 implies that one cannot\footnote{In any practical way, barring exhaustive trial
@@ -419,7 +419,7 @@ $\psi$ is updated continuously throughout a \gls{vmc} calculation, we could not 
 cache the result of the integral after computing it once.
 
 Luckily, we have a solution: The Metropolis-Hastings Algorithm. This algorithm
-is the workhorse behind of a great ocean of applications, including \gls{vmc}, and is
+is the workhorse behind thousands of applications, including \gls{vmc}, and is
 considered to be among the most influential algorithms of the 20th century.
 While the algorithm itself is quite simple, the argument for \emph{why} it
 works is a little more involved. The following sections will be dedicated to the
@@ -458,14 +458,14 @@ possible.
 
 \subsubsection{Formal Derivation}
 
-The Metropolis-Hastings algorithm builds what is called a \emph{Markov Chain}. A
+The Metropolis-Hastings algorithm builds on what is called a \emph{Markov Chain}. A
 Markov Chain is a type of stochastic model that describes a sequence of possible
 states. We imagine some space of possible states and a set of transition
 probabilities, $T\qty(\vx'\;\middle|\;\vx)$, describing the likelihood of moving between them.
 The defining property of a Markov Chain, as opposed to other stochastic
 processes is that the transition probabilities $T\qty(\vx'\;\middle|\;\vx)$ from a state $\vx$
 to a state $\vx'$ depends only on the current state and not on any previous
-states. In other words, it matter only where you are, not where you have been.
+states. In other words, it matters only where you are, not where you have been.
 
 For well behaved Markov Chains, as the number of steps in the chain increases,
 the distribution of the states will asymptotically approach a stationary
@@ -503,12 +503,12 @@ We can now freely choose an acceptance ratio that satisfies the above. The
 common choice is:
 
 \begin{align}
-  A\qty(\vx',\vx) = \min\qty(1, \frac{P\qty(\vx')}{P\qty(\vx)}\frac{q\qty(\vx\;\middle|\;\vx')}{q\qty(\vx'\;\middle|\;\vx)})
+  A\qty(\vx',\vx) = \min\qty(1, \frac{P\qty(\vx')}{P\qty(\vx)}\frac{q\qty(\vx\;\middle|\;\vx')}{q\qty(\vx'\;\middle|\;\vx)}).
 \end{align}
 
 At this point, all that remains is to specify a proposal distribution
 $q\qty(\vx'\;\middle|\;\vx)$. Depending on the choice of $q$ we get a sampler with
-different attributes. We have implemented two version, presented in the follwing
+different attributes. We have implemented two version, presented in the following
 sections.
 
 \subsubsection{Metropolis Algorithm}
@@ -578,7 +578,7 @@ motivation, we define the drift force acting on particle $k$ as follows:
 which points in the direction of greatest increase in $\Psi$ with respect to
 particle $k$'s position. We also expect the
 system to exhibit some degree of random motion, as it is a quantum system. This
-combination of drift and random motion is described by the Langevin equation,
+combination of drift and random motion is described by the Langevin equation~\cite{Langevin-1908}, % TODO, what is the correction?
 
 \begin{align}
  \pdv{\vx_k}{t} &= D\vb{F}_k + \vb{\eta},
@@ -621,7 +621,7 @@ proposal distribution:
 \begin{align}
   q\qty(\vx'\;\middle|\;\vx) &=G\qty(\vx', \,\vx,\,\Delta t).
 \end{align}
-Note that because we ever only need the ratio of $q$ values, there is no problem
+Note that because we only need the ratio of $q$ values, there is no problem
 that \cref{eq:mc-annon-5} only gives the proportionality. The final algorithm is
 shown in \cref{alg:metropolis-importance}.
 See \cref{sec:verify-sampling} for a demonstration of how
