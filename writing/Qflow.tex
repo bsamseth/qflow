@@ -40,8 +40,9 @@ The following example aims to showcase the basic usage pattern of QFLOW.
 
 Say we want run a \gls{vmc} optimization of two electrons in two
 dimensions confined in a harmonic oscillator trap, i.e. the quantum dot system
-described in \cref{sec:quantum-dots-theory}. The following complete code runs an
-optimization using a Pade-Jastrow wave function and evaluates the result. All in
+described in \cref{sec:quantum-dots-theory}. The following complete code uses a
+Pade-Jastrow wave function and optimizes the variational parameters before
+evaluating the final ground state energy integral. All in
 a few readable lines of Python:\\
 
 \lstinputlisting[language=Python, lastline=42, basicstyle=\scriptsize]{scripts/quickstart.py}
@@ -56,14 +57,19 @@ a few readable lines of Python:\\
       'std':  0.005391695501040196,
       'var':  2.9070380375937085e-05}
 \end{lstlisting}
-
+The reported output is the full energy estimate produced after having optimized
+the variational parameters (the \texttt{mean} field), along with various related
+statistics about the energy estimate. \Cref{fig:quickstart-example} shows how the
+energy estimate decreases as we tune the parameters, before eventually converging.
 \begin{figure}[h]
   \centering
   \resizebox{\linewidth}{!}{%
       \input{scripts/quickstart.py_.tex}
   }
-  \caption[Learning progression of an example \gls{vmc} optimization]{Learning progression in terms of energy (left) and variational
-    parameters (right).\citesource{writing/scripts/quickstart.py}}
+  \caption[Learning progression of an example \gls{vmc}
+  optimization]{Optimization of variational parameters as a function of update
+    iterations. The left plot shows the expected local energy and the right plot
+    shows the corresponding variational parameters at each point during the training.\citesource{writing/scripts/quickstart.py}}
   \label{fig:quickstart-example}
 \end{figure}
 
