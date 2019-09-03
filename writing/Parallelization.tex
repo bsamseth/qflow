@@ -37,20 +37,12 @@ between the workers. We have two options for how to achieve this:
 
 The main bottleneck in \gls{vmc} computations is the evaluation of expectation
 values, such as \cref{eq:vmc-local-energy-formulation} and
-\cref{eq:local-energy-gradient-alpha}. These calculations boil down to the
-following basic algorithm:
-
-\begin{enumerate}
-\item Initialize sum $y = 0$
-\item Sample new configuration, $\vX$\label{temp:1}
-\item Add the output of some function, $y = y + f(\vX)$
-\item Repeat from \ref{temp:1} for $n$ total steps
-\item Let the result be $y_\text{final} = \flatfrac{y}{n}$
-\end{enumerate}
-The important thing about this computation is that addition is commutative, and
-so the order of the samples (obviously) does not matter. As such we could run
-$p$ parallel processes, each of which computes $\flatfrac{n}{p}$ terms before aggregating
-the partial sums together and taking the mean.
+\cref{eq:local-energy-gradient-alpha}. They entail computing a large number of
+individual terms and taking the average. The important thing about this
+computation is that addition is commutative, and so the order of the terms
+(obviously) does not matter to the result. As such we could run $p$ parallel processes, each
+of which computes $\flatfrac{n}{p}$ terms (for $n$ total terms) before aggregating the partial sums
+together and taking the mean.
 
 This is a so called embarrassingly parallel problem, in the sense that it is
 trivial to divide the workload up into smaller tasks. It has as close to linear
@@ -113,7 +105,7 @@ double Hamiltonian::local_energy(Sampler& sampler, Wavefunction& psi, long sampl
 To illustrate the speedup we obtain from using \gls{mpi} parallelization, we have run
 Listing~\ref{lst:mpi-example} on different number of cores. In particular, we computed
 the local energy of a simple harmonic oscillator system of one particle in three
-dimensions. \cref{fig:mpi-example} shows the number of \gls{mc} iterations per second
+dimensions. \Cref{fig:mpi-example} shows the number of \gls{mc} iterations per second
 as a function of the number of cores used. As advertised, we see a speedup that
 follows closely the ideal linear line.
 
@@ -270,7 +262,7 @@ a matter of time and realizing that it would require a considerable amount of ef
 to get right. With the introduction of neural networks as wave functions, we see
 no obvious reason why using \glspl{gpu} would not cause significant speedups also in
 our application of \gls{ml}. The main challenge will likely be to join
-\glspl{gpu} into the existing \gls{mpi} codes. We leave this a potential point
+\glspl{gpu} into the existing \gls{mpi} codes. We leave this as a potential point
 of future work.
 
 
