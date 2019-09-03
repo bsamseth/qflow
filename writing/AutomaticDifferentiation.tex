@@ -5,18 +5,18 @@
 
 One of the central parts of the success of neural networks in machine learning
 is the backpropagation algorithm of
-\cref{eq:backprop-delta-recursive,eq:backprop-grads-recursive}, which is able to
+\cref{eq:backprop-delta-recursive,eq:backprop-grads-recursive}. The algorithm is able to
 describe how parameters should be updated in arbitrary networks by propagating
 the error estimates backwards through the network. While we could derive these
 equations relatively simply in the case of a pure feed-forward neural network
-such as the ones described here, there are a whole world of variants for which
+such as the ones described here, there is a whole world of variants for which
 we would need to derive different equations, such as recurrent networks,
 residual networks, convolutional networks etc. Nevertheless, they all still rely
 on the basic premise of applying the chain rule.
 
-One of the perhaps most appealing attributes of \gls{ml} frameworks such as TensorFlow
+One of the perhaps most appealing attributes of \gls{ml} frameworks such as TensorFlow~\cite{tensorflow2015-whitepaper}
 is how we can design arbitrary networks \emph{without} having to manually work
-out the associated derivatives. The way this is done is though \gls{ad}, an
+out the associated derivatives. The way this is done is through \gls{ad}, an
 algorithmic application of the chain rule that can compute derivatives of any
 function specified by a computer program.
 
@@ -174,7 +174,7 @@ PyTorch, a great deal of effort was put in to attempt to make a viable \gls{vmc}
 implementation within these. That would give out-of-the-box functionality for
 neural networks, optimization strategies, \acrshort{gpu} acceleration etc.
 Sadly, the inefficiency of the calculation of the Laplacian operator put a stop
-to such a marriage. The time spent by \gls{ad} to compute $\laplacian$ were
+to such a marriage. The time spent by \gls{ad} to compute $\laplacian$ was
 orders of magnitude worse than the manually coded analytically expressions, and
 scaled significantly worse with increasing number of particles. This severe
 deficiency of \gls{ad} resulted in the unfortunate need to depart from the
@@ -186,7 +186,7 @@ mathematical argument. Unfortunately, mathematics was right.
 We sincerely hope that \gls{ad} can somehow be efficiently incorporated in
 future works. Research into how \gls{ad} can be efficiently applied to higher
 order derivatives is ongoing, see for instance~\textcite{wang2017}. If nothing
-else, we could potentially use \gls{ad} for Hamiltonians which does not include
+else, we could potentially use \gls{ad} for Hamiltonians which do not include
 the Laplacian operator.
 
 
