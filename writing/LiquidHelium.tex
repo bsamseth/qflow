@@ -7,7 +7,7 @@
 
 We turn now to the much more challenging system of liquid helium, presented
 in~\cref{sec:liquid-helium-theory}. As before, we will first present the
-benchmark result followed by the neural networks.
+traditional benchmark result followed by the neural networks.
 
 
 \section{Benchmark}
@@ -45,7 +45,7 @@ the number of particles $N$:
 \noindent As the assumption of periodicity is a simplifying approximation, we
 introduce some erroneous effects because of it. These generally disappear as we
 increase the number of particles (and hence the size of box), but the
-computation time needed to run the simulations increase significantly with
+computation time needed to run the simulations increases significantly with
 increasing numbers. The purpose of the following analysis is to test the
 \emph{relative} accuracy of different wave functions. With that in mind we have
 used a small number of particles in the main results, which introduces a
@@ -58,7 +58,7 @@ with HFDHE2 for future research.
 
 \subsection{Optimizing}
 
-We have optimized~\cref{eq:McMillan-wave-function-def} using $\num{10000}$
+We have optimized the parameters of~\cref{eq:McMillan-wave-function-def} using $\num{10000}$
 iterations of $\num{5000}$ \gls{mc} cycles each. We used standard Metropolis sampling
 along with the ADAM optimizer. \cref{fig:He-benchmark-training} shows the
 progression of both the energy and variational parameter during training.
@@ -94,7 +94,10 @@ atoms at density $\rho = \flatfrac{0.365}{\sigma^3}$ using $\psi_{M}$ with
 $\beta$ as determined after training. The number of particles used in the
 simulation box is indicated by the superscript on $\psi_M$. Values obtained
 using $2^{23}$ samples. Energies in units of Kelvin per particle
-$[\si{\kelvin\per N}]$. See \cref{fig:He-benchmark-training} for source code
+$[\si{\kelvin\per N}]$. The symbols $CI_{-}^{95}$ and $CI_{+}^{95}$ represent
+the lower and upper limits of a $\SI{95}{\percent}$ confidence interval, respectively. $\Std$
+is the standard deviation of the energy and $\Var$ is the corresponding
+variance. See \cref{fig:He-benchmark-training} for source code
 reference.}
   \input{scripts/He-benchmark.py.table.tex}
 \end{table}
@@ -126,7 +129,7 @@ considering the substantial computational cost.
 
 The proposed network structure is one of many that are likely to perform well,
 and in all likelihood this is not the optimal form. A more in depth analysis of
-what structures perform best, including other types of networks (e.g.\ recurrent,
+which structures perform best, including other types of networks (e.g.\ recurrent,
 convolutional, residual etc.) is left for future research.
 
 Based on the experimental results observed for quantum dots, in conjunction with
@@ -151,15 +154,15 @@ trail and error, we have used the following network structure:
   \end{tabular}
 \end{center}
 Once again the number of nodes in the input layer is fixed by the
-number of degrees of freedom ($N\times D$ for $D$ dimensions). The number of
+number of degrees of freedom ($N\times D$ for $N=32$ particles and $D=3$ dimensions). The number of
 nodes in the second layer is somewhat arbitrary, and could be changed.
-Importantly it is larger than $96$, allowing the network to learn more features
-than it has inputs. Still, it is not enough nodes to fully encode the relative
+Importantly it is larger than $N\times D$, allowing the network to learn more features
+than it has inputs. Still, it does not have enough nodes to fully encode the relative
 difference between every pair of coordinates, as would be required to reproduce
-$\psi_M$ fully. This number was found to be large enough to allow learning, but
+$\psi_M$ fully. This number (144) was found to be large enough to allow learning, but
 still be reasonably efficient. Lastly, the second hidden layer was set to $36$
 nodes. This is also somewhat arbitrary, but importantly it is smaller than
-$144$, allowing the gradual narrowing down to the single output. The activation
+the last layer, allowing the gradual narrowing down to the single output. The activation
 functions are the same as those used for quantum dots.
 
 Finally, we train two instances of the network, with and without input sorting
@@ -177,7 +180,7 @@ set of hyperparameters yielded good results, we have found this problem to be
 highly sensitive to good hyperparameters. We had to reduce the learning rate to
 $\eta=\num{0.0001}$ to avoid divergence during training. We also found that the
 networks performed better with a small degree of L2 regularization,
-$\gamma=\num{0.00001}$. While other choices might still be better, there were
+$\gamma=\num{0.00001}$ (\cref{sec:regularization}). While other choices might still be better, there were
 significantly less room for error in this much more challenging problem.
 
 \begin{figure}[h]
