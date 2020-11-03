@@ -5,7 +5,7 @@ import subprocess
 import sys
 from distutils.version import LooseVersion
 
-from setuptools import Extension, setup
+from setuptools import Extension
 from setuptools.command.build_ext import build_ext
 
 PACKAGE_NAME = "qflow"
