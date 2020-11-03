@@ -42,6 +42,7 @@ before_install:
   - $MPI_CC --version
   - $MPI_CXX --version
   - $MPI_EXEC --version
+  - poetry --version
   # Setup variables for build
   - export CMAKE_C_COMPILER=$C_COMPILER
   - export CMAKE_CXX_COMPILER=$CXX_COMPILER
@@ -60,7 +61,7 @@ install:
 
 script:
   # Install package
-  - poetry run python setup.py develop
+  - poetry install
 
   # Build docs
   - set -e
@@ -73,7 +74,7 @@ script:
   - poetry run doctr deploy . --built-docs docs/_build/html
 
   # Run tests
-  - poetry run python setup.py test
+  - poetry run pytest tests
 
   # Check that the tests can run with MPI (if Travis has more than one CPU available).
   - $MPI_EXEC -n 2 build-py/unit_tests.x || $MPI_EXEC -n 1 build-py/unit_tests.x
@@ -91,6 +92,6 @@ after_success:
   - poetry run cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DMPI_C_COMPILER=$MPI_CC -DMPI_CXX_COMPILER=$MPI_CXX -DMPI_CXX_SKIP_MPICXX=1
   - poetry run make -j3
   - cd -
-  - poetry run python setup.py develop
+  - poetry install
   - $MPI_EXEC -n 2 poetry run python scripts/benchmark.py || $MPI_EXEC -n 1 poetry run python scripts/benchmark.py
 
