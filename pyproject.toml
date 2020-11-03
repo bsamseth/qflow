@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "qflow-vmc"
+packages = [ {"include" = "qflow"} ]
+version = "0.2.0"
+description = "Quantum Variational Monte Carlo"
+authors = ["Bendik Samseth <b.samseth@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+build = "build.py"
+homepage = "https://bsamseth.github.io/qflow"
+repository = "https://github.com/bsamseth/qflow"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+mpi4py = "^3.0.3"
+
+[tool.poetry.dev-dependencies]
+pre-commit = "^2.8.2"
+black = "^20.8b1"
+numpy = "^1.19.4"
+autograd = "^1.3"
+matplotlib = "^3.3.2"
+scipy = "^1.5.3"
+seaborn = "^0.11.0"
+mypy = "^0.790"
+flake8 = "^3.8.4"
+hypothesis = "^5.41.1"
+sympy = "^1.6.2"
+pytest = "^6.1.2"
+pytest-benchmark = "^3.2.3"
+pytest-cov = "^2.10.1"
+Sphinx = "^3.3.0"
+sphinx-rtd-theme = "^0.5.0"
+Jinja2 = ">=2.10.1"
+matplotlib2tikz = "^0.7.6"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
