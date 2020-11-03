@@ -50,7 +50,7 @@ before_install:
   - export MPI_CXX_COMPILER=$MPI_CXX
   - export MPI_CXX_SKIP_MPICXX=1
   - export CMAKE_BUILD_TYPE=Coverage
-  - env MPICC=$MPI_CC poetry install --skip-lock --dev
+  - env MPICC=$MPI_CC poetry install
 
 install:
   # Build, being super explicit about where to find stuff!
