@@ -5,7 +5,7 @@ import subprocess
 import sys
 from distutils.version import LooseVersion
 
-from setuptools import Extension, setup
+from setuptools import Extension
 from setuptools.command.build_ext import build_ext
 
 PACKAGE_NAME = "qflow"
@@ -83,17 +83,11 @@ class CMakeBuild(build_ext):
         )
 
 
-if __name__ == "__main__":
-    setup(
-        name=PACKAGE_NAME,
-        version="0.1.0",
-        author="Bendik Samseth",
-        author_email="b.samseth@gmail.com",
-        description="Variational Monte Carlo Framework",
-        long_description="",
-        ext_modules=[CMakeExtension(BACKEND_NAME)],
-        cmdclass=dict(build_ext=CMakeBuild),
-        zip_safe=False,
-        setup_requires=["pytest-runner"],
-        tests_require=["pytest"],
+def build(setup_kwargs):
+    setup_kwargs.update(
+        dict(
+            ext_modules=[CMakeExtension(BACKEND_NAME)],
+            cmdclass=dict(build_ext=CMakeBuild),
+            zip_safe=False,
+        )
     )

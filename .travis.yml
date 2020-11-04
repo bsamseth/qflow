@@ -33,7 +33,7 @@ before_install:
   - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-7 90
   # Setup Python environemnt
   - pyenv global $(pyenv whence 2to3)
-  - pip install pipenv
+  - pip install poetry
   # Setup MPI
   - export MPI_BUILD_DIR=$TRAVIS_BUILD_DIR/openmpi-build
   - export MPI_VERSION="3.1"
@@ -42,6 +42,7 @@ before_install:
   - $MPI_CC --version
   - $MPI_CXX --version
   - $MPI_EXEC --version
+  - poetry --version
   # Setup variables for build
   - export CMAKE_C_COMPILER=$C_COMPILER
   - export CMAKE_CXX_COMPILER=$CXX_COMPILER
@@ -49,31 +50,31 @@ before_install:
   - export MPI_CXX_COMPILER=$MPI_CXX
   - export MPI_CXX_SKIP_MPICXX=1
   - export CMAKE_BUILD_TYPE=Coverage
-  - env MPICC=$MPI_CC pipenv install --skip-lock --dev
+  - env MPICC=$MPI_CC poetry install --no-root
 
 install:
   # Build, being super explicit about where to find stuff!
   - mkdir build-py && cd build-py
-  - pipenv run cmake .. -DCMAKE_BUILD_TYPE=Coverage -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DMPI_C_COMPILER=$MPI_CC -DMPI_CXX_COMPILER=$MPI_CXX -DMPI_CXX_SKIP_MPICXX=1
-  - pipenv run make -j3
+  - poetry run cmake .. -DCMAKE_BUILD_TYPE=Coverage -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DMPI_C_COMPILER=$MPI_CC -DMPI_CXX_COMPILER=$MPI_CXX -DMPI_CXX_SKIP_MPICXX=1
+  - poetry run make -j3
   - cd -
 
 script:
   # Install package
-  - pipenv run python setup.py develop
+  - poetry install
 
   # Build docs
   - set -e
   - cd docs
-  - pipenv run make html
-  - pipenv run make doctest
+  - poetry run make html
+  - poetry run make doctest
   - find _build -type f -exec sed -i 's/_qflow_backend/qflow/' {} +
   - cd ..
-  - pipenv run pip install doctr
-  - pipenv run doctr deploy . --built-docs docs/_build/html
+  - poetry run pip install doctr
+  - poetry run doctr deploy . --built-docs docs/_build/html
 
   # Run tests
-  - pipenv run python setup.py test
+  - poetry run pytest tests
 
   # Check that the tests can run with MPI (if Travis has more than one CPU available).
   - $MPI_EXEC -n 2 build-py/unit_tests.x || $MPI_EXEC -n 1 build-py/unit_tests.x
@@ -88,9 +89,9 @@ after_success:
   # Run benchmark on release build
   - export CMAKE_BUILD_TYPE=Release
   - cd build-py
-  - pipenv run cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DMPI_C_COMPILER=$MPI_CC -DMPI_CXX_COMPILER=$MPI_CXX -DMPI_CXX_SKIP_MPICXX=1
-  - pipenv run make -j3
+  - poetry run cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DMPI_C_COMPILER=$MPI_CC -DMPI_CXX_COMPILER=$MPI_CXX -DMPI_CXX_SKIP_MPICXX=1
+  - poetry run make -j3
   - cd -
-  - pipenv run python setup.py develop
-  - $MPI_EXEC -n 2 pipenv run python scripts/benchmark.py || $MPI_EXEC -n 1 pipenv run python scripts/benchmark.py
+  - poetry install
+  - $MPI_EXEC -n 2 poetry run python scripts/benchmark.py || $MPI_EXEC -n 1 poetry run python scripts/benchmark.py
 
