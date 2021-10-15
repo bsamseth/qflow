@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "qflow-vmc"
 packages = [ {"include" = "qflow"} ]
-version = "0.2.0"
+version = "0.2.1"
 description = "Quantum Variational Monte Carlo"
 authors = ["Bendik Samseth <b.samseth@gmail.com>"]
 license = "MIT"

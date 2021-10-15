@@ -88,7 +88,7 @@ def blocking(x):
     # preliminaries
     n = len(x)
     d = int(np.log2(n))
-    x_blocks = []
+    x_blocks = [x]
     s = np.empty(d)
     gamma = np.empty(d)
     mu = np.mean(x)
